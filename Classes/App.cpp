@@ -259,6 +259,11 @@ App::App(std::string title, int w, int h, int argc, char const *argv[])
     ImStrncpy(font_cfg.Name, "Roboto Mono Regular", 40);
     _fonts[font_cfg.Name] = io.Fonts->AddFontFromMemoryTTF(RobotoMono_Regular_ttf, RobotoMono_Regular_ttf_len, 15.0f, &font_cfg);
     io.Fonts->AddFontFromMemoryTTF(fa_solid_900_ttf, fa_solid_900_ttf_len, 14.0f, &icons_config, fa_ranges);
+
+    //setting custom font as default
+    ImFont* font = io.Fonts->Fonts[4];
+    font->Scale = 1.2;
+    io.FontDefault = font;
 }
 
 App::~App()

@@ -3,7 +3,16 @@ project(BrokerApp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(BrokerApp Editor.cpp Editor.h)
+add_executable(BrokerApp
+        Classes/Editor.cpp
+        Classes/Editor.h
+        Classes/Widgets/Widget.cpp
+        Classes/Widgets/Widget.h
+        Classes/Contexts/Context.cpp
+        Classes/Contexts/Context.h
+        Classes/Widgets/Widget_MainMenuBar.cpp
+        Classes/Widgets/Widget_MainMenuBar.h
+        Classes/Contexts/BackTestingContext.cpp Classes/Contexts/BackTestingContext.h)
 
 #--EXTERNAL ------------------
 add_subdirectory(external/fmt)
@@ -32,7 +41,7 @@ set(IMGUI_HEADER
        external/imgui/imgui_demo.cpp
        external/imgui/backends/imgui_impl_glfw.cpp
        external/imgui/backends/imgui_impl_opengl3.cpp
-        )
+        Classes/Data/Symbol.cpp Classes/Data/Symbol.h Classes/Data/DataSource.cpp Classes/Data/DataSource.h Classes/Data/BarData.cpp Classes/Data/BarData.h Classes/Data/DataManager.cpp Classes/Data/DataManager.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -66,24 +75,24 @@ target_link_libraries(implot PUBLIC imgui)
 
 #-APP----------------------------
 add_library(app STATIC
-        common/App.h
-        common/App.cpp
-        common/Fonts/FontAwesome5.cpp
-        common/Fonts/FontAwesome5Brands.cpp
-        common/Fonts/Fonts.h
-        common/Fonts/IconsFontAwesome5.h
-        common/Fonts/IconsFontAwesome5Brands.h
-        common/Fonts/RobotoBold.cpp
-        common/Fonts/RobotoItalic.cpp
-        common/Fonts/RobotoMonoBold.cpp
-        common/Fonts/RobotoMonoItalic.cpp
-        common/Fonts/RobotoMonoRegular.cpp
-        common/Fonts/RobotoRegular.cpp
+        Classes/App.h
+        Classes/App.cpp
+        Resources/Fonts/FontAwesome5.cpp
+        Resources/Fonts/FontAwesome5Brands.cpp
+        Resources/Fonts/Fonts.h
+        Resources/Fonts/IconsFontAwesome5.h
+        Resources/Fonts/IconsFontAwesome5Brands.h
+        Resources/Fonts/RobotoBold.cpp
+        Resources/Fonts/RobotoItalic.cpp
+        Resources/Fonts/RobotoMonoBold.cpp
+        Resources/Fonts/RobotoMonoItalic.cpp
+        Resources/Fonts/RobotoMonoRegular.cpp
+        Resources/Fonts/RobotoRegular.cpp
         )
 
 target_include_directories(app PUBLIC
-        common
-        common/Fonts
+        Resources/Fonts
+        Resources/
         )
 
 target_link_libraries(app PUBLIC
@@ -95,7 +104,7 @@ target_link_libraries(app PUBLIC
 
 #-APPLICATION-HEADERS-------------
 set(INCLUDES
-        common
+        Resources
         external
         external/glfw/include
         external/imgui
