@@ -41,7 +41,7 @@ set(IMGUI_HEADER
        external/imgui/imgui_demo.cpp
        external/imgui/backends/imgui_impl_glfw.cpp
        external/imgui/backends/imgui_impl_opengl3.cpp
-        Classes/Data/Symbol.cpp Classes/Data/Symbol.h Classes/Data/DataSource.cpp Classes/Data/DataSource.h Classes/Data/BarData.cpp Classes/Data/BarData.h Classes/Data/DataManager.cpp Classes/Data/DataManager.h)
+        Classes/Data/Symbol.cpp Classes/Data/Symbol.h Classes/Data/DataSource.cpp Classes/Data/DataSource.h Classes/Data/BarData.cpp Classes/Data/BarData.h Classes/Data/DataManager.cpp Classes/Data/DataManager.h Classes/Tickables/Tickable.cpp Classes/Tickables/Tickable.h Classes/Tickables/Indicator.cpp Classes/Tickables/Indicator.h Classes/Tickables/Strategy.cpp Classes/Tickables/Strategy.h Classes/Data/Position.cpp Classes/Data/Position.h Classes/Data/Order.cpp Classes/Data/Order.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
