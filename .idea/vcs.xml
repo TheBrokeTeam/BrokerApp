@@ -2,29 +2,11 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/'./external/'glad" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/'external'/glad" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/imgui" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot_demos" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot_demos/build/_deps/fmt-src" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot_demos/build/_deps/glfw-src" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot_demos/build/_deps/iir-src" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/imgui" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot_demos" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot_demos/build/_deps/fmt-src" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot_demos/build/_deps/glfw-src" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot_demos/build/_deps/iir-src" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot_demos/build/imgui" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot_demos/build/implot" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ImplotDemos/implot_demos/build/implot_demos" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/external/glad" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/external/imgui" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/external/implot" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/external/implot_demos" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/external/implot_demos/build/_deps/fmt-src" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/external/implot_demos/build/_deps/glfw-src" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/external/implot_demos/build/_deps/iir-src" vcs="Git" />
   </component>
 </project>

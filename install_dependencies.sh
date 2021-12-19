@@ -10,6 +10,7 @@ else
     git clone https://github.com/gelldur/EventBus.git "$DIR/eventBus"
     git clone https://github.com/btzy/nativefiledialog-extended.git "$DIR/nativefiledialog-extended"
     git clone https://github.com/d99kris/rapidcsv.git "$DIR/rapidcsv"
+    git clone https://github.com/nothings/stb.git "$DIR/stb"
 
 #    FORKS TEAM
     git clone --branch docking git@github.com:TheBrokeTeam/imgui.git "$DIR/imgui"
