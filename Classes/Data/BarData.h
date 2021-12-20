@@ -5,9 +5,19 @@
 #ifndef BROKERAPP_BARDATA_H
 #define BROKERAPP_BARDATA_H
 
+#include <cstring>
 
-class BarData {
-
+struct BarData {
+public:
+    double time;
+    double open;
+    double high;
+    double low;
+    double close;
+    double volume;
+    // Functions
+    BarData()    { Clear(); }
+    void Clear()    { memset(this, 0, sizeof(*this)); }
 };
 
 

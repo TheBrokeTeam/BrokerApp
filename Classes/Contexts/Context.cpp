@@ -4,10 +4,10 @@
 
 #include "Context.h"
 
-BrokerApp::Context::Context() {
+Context::Context() {
 
 }
 
-BrokerApp::Context::~Context() {
+Context::~Context() {
 
 }
