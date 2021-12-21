@@ -13,6 +13,7 @@ struct TickData {
     double time;
     TickData()    { Clear(); }
     void Clear()    { memset(this, 0, sizeof(*this)); }
+    bool operator < (const TickData& rhs) const {return time<rhs.time;}
 };
 
 #endif //BROKERAPP_TICKDATA_H
