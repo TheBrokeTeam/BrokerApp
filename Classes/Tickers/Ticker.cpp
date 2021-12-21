@@ -16,9 +16,6 @@ void Ticker::addTickable(Tickable *tickable)
 {
     _tickables.push_back(tickable);
     tickable->onLoad(_symbol);
-
-    if(!_data.empty())
-        loadTickable(tickable);
 }
 
 void Ticker::open(const TickData& tickData) {
