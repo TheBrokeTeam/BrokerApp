@@ -11,6 +11,7 @@
 //#include "../Events/UIEvents.h"
 #include <set>
 #include <vector>
+#include "../Data/BarHistory.h"
 
 class Tickable;
 class BarData;
@@ -23,9 +24,10 @@ public:
     Ticker(Context* context,std::shared_ptr<Symbol> symbol);
     virtual ~Ticker() = default;
     void addTickable(Tickable* tickable);
+
+    //TODO:: fazer agregação dos dados aqui baseado no time interval in minutes do symbol
     virtual void append(const TickData& data);
     void updateTickerDataOnTickable(const BarData& data, Tickable* tickable, int countTicks);
-
 
 private:
     void reset();
@@ -41,7 +43,7 @@ private:
 
     //to save loaded data
     std::set<TickData> _data;
-
+    BarHistory _barHistory;
     std::shared_ptr<Symbol> _symbol{nullptr};
 };
 

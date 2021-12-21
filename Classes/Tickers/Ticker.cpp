@@ -8,7 +8,6 @@
 #include "../Data/Symbol.h"
 #include "../Tickables/Tickable.h"
 
-
 Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol):
 _context(context),
 _symbol(std::move(symbol)) {}
@@ -18,77 +17,59 @@ void Ticker::addTickable(Tickable *tickable)
     _tickables.push_back(tickable);
     tickable->onLoad(_symbol);
 
-    if(!_context->getData().empty())
+    if(!_data.empty())
         loadTickable(tickable);
 }
 
-void Ticker::tick(const TickData &tickData)
-{
+void Ticker::open(const TickData& tickData) {
+    BarData data;
+
+    data.time = tickData.time;
+    data.volume = tickData.volume;
+
+    data.open = tickData.price;
+    data.high = tickData.price;
+    data.low = tickData.price;
+    data.close = tickData.price;
+
+    _barHistory.append(data);
+
     for(auto& t : _tickables){
-        t->onTick(tickData);
+        t->onOpen(&_barHistory);
     }
 }
 
-void Ticker::open(const TickData &tickData)
-{
+void Ticker::tick(const TickData& tickData) {
+    BarData data = _barHistory[0];
+
+    data.volume = tickData.volume;
+    data.high = tickData.price > data.high ? tickData.price : data.high;
+    data.low = tickData.price < data.low ? tickData.price : data.low;;
+
+    _barHistory[0] = data;
+
     for(auto& t : _tickables){
-        t->onOpen(tickData);
+        t->onTick(&_barHistory);
     }
 }
 
-void Ticker::close(const TickData &tickData)
-{
+void Ticker::close(const TickData& tickData) {
+    BarData data = _barHistory[0];
+
+    data.volume = tickData.volume;
+    data.high = tickData.price > data.high ? tickData.price : data.high;
+    data.low = tickData.price < data.low ? tickData.price : data.low;;
+    data.close = tickData.price;
+
+    _barHistory[0] = data;
+
     for(auto& t : _tickables){
-        t->onClose(tickData);
+        t->onClose(&_barHistory);
     }
 }
 
-void Ticker::reset()
-{
-    for(auto& t : _tickables){
-        t->reset();
-    }
-}
-
-
-void Ticker::loadTickable(Tickable *tickable)
-{
-    for (auto &d : _context->getData())
-    {
-        //loading the past candles - OHLC
-        for(int i = 1; i <= 4; i++)
-            updateTickerDataOnTickable(d,tickable,i);
-    }
-}
-
-void Ticker::updateTickerDataOnTickable(const BarData& data, Tickable* tickable, int countTicks)
-{
-    TickData tickData;
-    tickData.volume = data.volume;
-    tickData.time = data.time;
-
-    switch (countTicks) {
-        case 1:
-            tickData.price = data.open;
-            tickable->onOpen(tickData);
-            break;
-        case 2:
-            tickData.price = data.low;
-            tickable->onTick(tickData);
-            break;
-        case 3:
-            tickData.price = data.high;
-            tickable->onTick(tickData);
-            break;
-        case 4:
-            tickData.price = data.close;
-            tickable->onClose(tickData);
-        default:
-            break;
-    }
-}
+void Ticker::reset() {}
 
 void Ticker::append(const TickData& data) {
-    //TODO:: fazer agregação dos dados aqui baseado no time interval in minutes do symbol
     _data.insert(data);
 }
