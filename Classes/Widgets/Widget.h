@@ -9,19 +9,19 @@
 #include <string>
 #include <functional>
 #include <imgui.h>
+#include "../Contexts/Contextualizable.h"
 
 //================================
 
 //= FORWARD DECLARATIONS ===========================
 struct ImGuiWindow;
 class Editor;
-class Context;
 //==================================================
 
 const float k_widget_default_propery        = -1.0f;
 const float k_widget_position_screen_center = -2.0f;
 
-class Widget
+class Widget : public Contextualizable
 {
 public:
     Widget(Editor* editor);
@@ -54,7 +54,6 @@ protected:
     ImVec2 _size_max   =   _default_value;
     ImVec2 _padding    =   _default_value;
     Editor* _editor                 = nullptr;
-    Context* _context    = nullptr;
     ImGuiWindow* _window            = nullptr;
     std::string _title              = "Title";
 

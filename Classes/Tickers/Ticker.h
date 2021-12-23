@@ -12,21 +12,22 @@
 #include <set>
 #include <vector>
 #include "../Data/BarHistory.h"
+#include "../Contexts/Contextualizable.h"
 
 class Tickable;
 class BarData;
 class Symbol;
 struct TickData;
-class Context;
 
-class Ticker {
+class Ticker : public Contextualizable{
 public:
-    Ticker(Context* context,std::shared_ptr<Symbol> symbol);
+    Ticker(Context* context, std::shared_ptr<Symbol> symbol);
     virtual ~Ticker() = default;
     void addTickable(Tickable* tickable);
 
-    //TODO:: fazer agregação dos dados aqui baseado no time interval in minutes do symbol
     void tick(const TickData &tickData);
+    Symbol* getSymbol();
+
 
 private:
     void reset();
@@ -37,12 +38,12 @@ private:
 
     //hold all the tickables
     std::vector<Tickable*> _tickables;
-    Context* _context{nullptr};
 
     //to save loaded data
     BarHistory _barHistory;
 
     std::shared_ptr<Symbol> _symbol{nullptr};
+
 };
 
 

@@ -3,6 +3,3 @@
 //
 
 #include "Context.h"
-void Context::loadSymbol(const Symbol& symbol) {
-
-}

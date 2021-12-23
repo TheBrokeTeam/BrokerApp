@@ -8,22 +8,20 @@
 #include "../Data/BarData.h"
 #include "../Data/TickData.h"
 #include "../Data/Symbol.h"
-#include "../Contexts/Context.h"
 #include "../Data/BarHistory.h"
+#include "../Contexts/Contextualizable.h"
+#include "../Tickers/Ticker.h"
 
-class Tickable {
+class Tickable : public Contextualizable {
 public:
-    Tickable(Context* context,std::shared_ptr<Symbol> symbol);
-
+    Tickable(Ticker* ticker);
     virtual void onOpen(BarHistory* barHistory);
     virtual void onClose(BarHistory* barHistory);
     virtual void onTick(BarHistory* barHistory);
-    virtual void onLoad(std::shared_ptr<Symbol> symbol);
 
 protected:
-    std::shared_ptr<Symbol> _symbol{nullptr};
-    Context* _context{nullptr};
-private:
+    Ticker* _ticker{nullptr};
+    BarHistory* _barHistory{nullptr};
 };
 
 

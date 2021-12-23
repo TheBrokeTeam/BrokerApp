@@ -10,6 +10,8 @@
 #include "Widgets/DataLoader.h"
 
 #include "Contexts/BackTestingContext.h"
+#include "Widget+Tickables/CandleChart.h"
+#include "Tickers/Ticker.h"
 
 namespace _editor
 {
@@ -97,6 +99,11 @@ Context* Editor::getContext(){
 }
 
 Editor::~Editor() {}
+
+void Editor::addChartWidget(Ticker *ticker) {
+    _widgets.emplace_back(std::make_shared<CandleChart>(this,ticker));
+    _context->loadTicker(*ticker->getSymbol());
+}
 
 int main(int argc, char const* argv[]){
     Editor app("",1400,750,argc,argv);

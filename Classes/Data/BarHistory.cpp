@@ -19,6 +19,8 @@ int BarHistory::fixedIndex(int reversedIndex) {
 
 void BarHistory::append(const BarData &data) {
     _barData.push_back(data);
+    _time.push_back(data.time);
+    _volume.push_back(data.volume);
 }
 
 const std::vector<BarData>& BarHistory::getData(){
@@ -27,4 +29,13 @@ const std::vector<BarData>& BarHistory::getData(){
 
 int BarHistory::size() {
     return _barData.size();
+}
+
+const std::vector<double> &BarHistory::getTimeData() {
+    return _time;
+}
+
+const std::vector<double> &BarHistory::getVolumeData() {
+    return _volume;
+
 }

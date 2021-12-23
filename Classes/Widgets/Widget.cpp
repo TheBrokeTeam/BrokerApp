@@ -6,10 +6,9 @@
 #include <imgui_internal.h>
 #include "../Editor.h"
 
-Widget::Widget(Editor* editor)
+Widget::Widget(Editor* editor): Contextualizable(editor->getContext())
 {
     _editor    = editor;
-    _context   = editor->getContext();
     _window    = nullptr;
 }
 

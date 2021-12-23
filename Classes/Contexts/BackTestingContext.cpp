@@ -18,9 +18,7 @@ static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
                                         "3d", "1w", "1mo"};
 
-void BackTestingContext::loadSymbol(const Symbol& symbol) {
-    Context::loadSymbol(symbol);
-
+Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     puts("TODO load symbol!");
 
     std::string filename = "data.zip";
@@ -30,9 +28,15 @@ void BackTestingContext::loadSymbol(const Symbol& symbol) {
     if(!dataAlreadyExists(symbol))
         auto resp = download_file(url,filename);
 
-    fillData(symbol);
+    //create a ticker for the symbol loaded
+    auto ticker = Ticker(this,std::make_shared<Symbol>(symbol));
+    _tickers.emplace(symbol,ticker);
 
-    loadTicker(symbol);
+    //load tickdata from symbol file already donwloaded
+    _data.emplace(symbol.getName(),loadCsv(symbol));
+
+    return &_tickers.at(symbol);
+
 }
 
 BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {
@@ -98,13 +102,6 @@ bool BackTestingContext::dataAlreadyExists(const Symbol &symbol) {
 
 void BackTestingContext::fillData(const Symbol& symbol) {
 
-    //create a ticker for the symbol loaded
-    auto ticker = Ticker(this,std::make_shared<Symbol>(symbol));
-    _tickers.emplace(symbol,ticker);
-
-    //load tickdata from symbol file already donwloaded
-    _data.emplace(symbol.getName(),loadCsv(symbol));
-
 }
 
 std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
@@ -160,7 +157,6 @@ std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
 }
 
 void BackTestingContext::loadTicker(const Symbol &symbol) {
-
     auto& ticker = _tickers.at(symbol);
     auto& vec = _data.at(symbol.getName());
     for(auto& d : vec)

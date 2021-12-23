@@ -9,7 +9,6 @@
 #include "Context.h"
 #include <map>
 #include <set>
-#include "../Tickers/Ticker.h"
 
 class BackTestingContext : public Context {
 public:
@@ -20,10 +19,10 @@ public:
 
     BackTestingContext() = default;
 
-    void loadSymbol(const Symbol &symbol) override;
+    Ticker* loadSymbol(const Symbol &symbol) override;
+    void loadTicker(const Symbol& symbol) override;
 
 private:
-    void loadTicker(const Symbol& symbol);
 
     bool dataAlreadyExists(const Symbol& symbol);
     void fillData(const Symbol& symbol);

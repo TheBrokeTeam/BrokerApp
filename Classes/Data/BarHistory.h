@@ -14,10 +14,15 @@ public:
     void append(const BarData& data);
     const std::vector<BarData>& getData();
     int size();
+    const  std::vector<double>& getTimeData();
+    const  std::vector<double>& getVolumeData();
 
 private:
     std::vector<BarData> _barData;
     int fixedIndex(int reversedIndex);
+    std::vector<double> _time;
+    std::vector<double> _volume;
+
 
 };
 

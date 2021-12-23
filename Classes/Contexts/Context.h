@@ -9,10 +9,13 @@
 #include "../Data/BarData.h"
 #include "../Data/TickData.h"
 #include "../Data/Symbol.h"
+#include "../Tickers/Ticker.h"
+
 
 class Context {
 public:
-        virtual void loadSymbol(const Symbol& symbol);
+        virtual Ticker* loadSymbol(const Symbol& symbol) = 0;
+        virtual void loadTicker(const Symbol &symbol) = 0;
 
 private:
     std::vector<TickData> _data;

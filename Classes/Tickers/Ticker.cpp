@@ -9,15 +9,13 @@
 #include "../Data/Symbol.h"
 #include "../Tickables/Tickable.h"
 
-Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol):
-_context(context),
-_symbol(std::move(symbol)) {}
+Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol): Contextualizable(context), _symbol(std::move(symbol)) {}
 
 void Ticker::addTickable(Tickable *tickable)
 {
     _tickables.push_back(tickable);
     //TODO:: passar aqui o bar history para nao precisar do methodo load tickable
-    tickable->onLoad(_symbol);
+//    tickable->onLoad(_symbol);
 }
 
 void Ticker::open(const TickData& tickData) {
@@ -67,8 +65,6 @@ void Ticker::tick(const TickData& tickData) {
     for(auto& t : _tickables){
         t->onTick(&_barHistory);
     }
-
-    std::cout << "Size history: " << _barHistory.size() << std::endl;
 }
 
 void Ticker::close(const TickData& tickData) {
@@ -87,3 +83,7 @@ void Ticker::close(const TickData& tickData) {
 }
 
 void Ticker::reset() {}
+
+Symbol *Ticker::getSymbol() {
+    return _symbol.get();
+}

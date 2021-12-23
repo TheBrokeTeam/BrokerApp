@@ -5,6 +5,7 @@
 #include "DataLoader.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
+#include "../Editor.h"
 
 namespace _DataLoader
 {
@@ -65,6 +66,7 @@ void DataLoader::updateVisible(float dt)
         Symbol symbol("ETHUSDT");
         symbol.setTimeInterval(Symbol::Interval::Interval_1Minute);
 
-        _context->loadSymbol(symbol);
+        auto ticker = _context->loadSymbol(symbol);
+        _editor->addChartWidget(ticker);
     }
 }

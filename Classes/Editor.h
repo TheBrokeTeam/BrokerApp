@@ -10,6 +10,7 @@
 #include "Widgets/Widget.h"
 #include "Contexts/Context.h"
 
+class Ticker;
 class Editor : public App {
 public:
     using App::App;
@@ -32,6 +33,8 @@ public:
     }
 
     Context* getContext();
+
+    void addChartWidget(Ticker* ticker);
 
 private:
     std::vector<std::shared_ptr<Widget>> _widgets;
