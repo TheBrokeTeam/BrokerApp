@@ -19,5 +19,6 @@ private:
     std::set<BarData> _barData;
     int fixedIndex(int reversedIndex);
 
-}
+};
+
 #endif //BROKERAPP_BARHISTORY_H

@@ -38,7 +38,7 @@ public:
     Symbol() = default;
     explicit Symbol(std::string name) : _name(std::move(name)) {}
 
-    const std::string& getName(){
+    const std::string& getName() const{
         return _name;
     }
 
@@ -46,17 +46,25 @@ public:
         _name = symbol;
     }
 
-    long getTimeIntervalInMinutes(){
-        return _timeIntervalInMinutes;
+    long getTimeIntervalInMinutes() const{
+        return getMinutesFromTimeInterval(_interval);
+    }
+
+    Interval getTimeInterval() const{
+        return _interval;
     }
 
     void setTimeInterval(Interval timeInterval){
         _interval = timeInterval;
     }
 
+    static int getMinutesFromTimeInterval(Interval interval) {
+        std::vector<int> intArr = {1,3,5,15,39,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
+        return intArr[int(interval)];
+    }
+
 private:
     std::string _name{""};
-    long _timeIntervalInMinutes{0};
     Interval _interval;
     TimeRange _range{0,0};
 };

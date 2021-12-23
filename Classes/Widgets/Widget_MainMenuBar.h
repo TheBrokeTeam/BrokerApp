@@ -12,7 +12,6 @@
 #include <memory>
 //========================================
 
-namespace Spartan { class Context; }
 class Widget_Toolbar;
 
 class Widget_MainMenuBar : public Widget

@@ -7,7 +7,9 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include "Widgets/Widget_MainMenuBar.h"
-#include "Contexts/Context.h"
+#include "Widgets/DataLoader.h"
+
+#include "Contexts/BackTestingContext.h"
 
 namespace _editor
 {
@@ -16,10 +18,12 @@ namespace _editor
 
 void Editor::start() {
     // Initialize the context
-    _context = std::make_shared<BrokerApp::Context>();
+    _context = std::make_shared<BackTestingContext>();
 
     // Initialise Editor/ImGui
     _widgets.emplace_back(std::make_shared<Widget_MainMenuBar>(this));
+    _widgets.emplace_back(std::make_shared<DataLoader>(this));
+
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -88,6 +92,9 @@ float Editor::getDeltaTime(){
     return dt;
 }
 
+Context* Editor::getContext(){
+    return _context.get();
+}
 
 Editor::~Editor() {}
 

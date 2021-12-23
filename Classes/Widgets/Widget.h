@@ -9,12 +9,13 @@
 #include <string>
 #include <functional>
 #include <imgui.h>
+
 //================================
 
 //= FORWARD DECLARATIONS ===========================
 struct ImGuiWindow;
 class Editor;
-namespace BrokerApp { class Context; }
+class Context;
 //==================================================
 
 const float k_widget_default_propery        = -1.0f;
@@ -53,7 +54,7 @@ protected:
     ImVec2 _size_max   =   _default_value;
     ImVec2 _padding    =   _default_value;
     Editor* _editor                 = nullptr;
-    BrokerApp::Context* _context    = nullptr;
+    Context* _context    = nullptr;
     ImGuiWindow* _window            = nullptr;
     std::string _title              = "Title";
 

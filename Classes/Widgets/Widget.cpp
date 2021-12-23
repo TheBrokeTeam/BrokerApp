@@ -3,8 +3,8 @@
 //
 
 #include "Widget.h"
-#include "../Editor.h"
 #include <imgui_internal.h>
+#include "../Editor.h"
 
 Widget::Widget(Editor* editor)
 {

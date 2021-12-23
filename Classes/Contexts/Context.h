@@ -7,17 +7,15 @@
 
 #include <vector>
 #include "../Data/BarData.h"
+#include "../Data/TickData.h"
+#include "../Data/Symbol.h"
 
 class Context {
-    public:
-        Context();
-        ~Context();
+public:
+        virtual void loadSymbol(const Symbol& symbol);
 
-        const std::vector<BarData>& getData(){
-            return _data;
-        }
-
-    std::vector<BarData> _data;
+private:
+    std::vector<TickData> _data;
 };
 
 #endif //BROKERAPP_CONTEXT_H

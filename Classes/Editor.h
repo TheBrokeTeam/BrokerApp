@@ -8,9 +8,7 @@
 #include "App.h"
 #include <vector>
 #include "Widgets/Widget.h"
-
-
-namespace BrokerApp {class Context;}
+#include "Contexts/Context.h"
 
 class Editor : public App {
 public:
@@ -33,15 +31,13 @@ public:
         return nullptr;
     }
 
-    BrokerApp::Context* getContext(){
-        return _context.get();
-    }
+    Context* getContext();
 
 private:
     std::vector<std::shared_ptr<Widget>> _widgets;
     void BeginWindow();
     bool _editor_begun = false;
-    std::shared_ptr<BrokerApp::Context> _context{nullptr};
+    std::shared_ptr<Context> _context{nullptr};
 
     //delta time helpers
     float _lastTime = 0;
