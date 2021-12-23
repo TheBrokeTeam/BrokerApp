@@ -12,23 +12,23 @@ add_executable(BrokerApp
         Classes/Contexts/Context.h
         Classes/Widgets/Widget_MainMenuBar.cpp
         Classes/Widgets/Widget_MainMenuBar.h
-        Classes/Contexts/BackTestingContext.cpp Classes/Contexts/BackTestingContext.h Classes/Widgets/DataLoader.cpp Classes/Widgets/DataLoader.h Classes/Widget+Tickables/CandleChart.cpp Classes/Widget+Tickables/CandleChart.h Classes/Contexts/Contextualizable.cpp Classes/Contexts/Contextualizable.h)
+        Classes/Contexts/BackTestingContext.cpp Classes/Contexts/BackTestingContext.h Classes/Widgets/DataLoader.cpp Classes/Widgets/DataLoader.h Classes/Widget+Tickables/CandleChart.cpp Classes/Widget+Tickables/CandleChart.h Classes/Contexts/Contextualizable.cpp Classes/Contexts/Contextualizable.h Classes/Widgets/Charts.cpp Classes/Widgets/Charts.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
 ###############################################################################
 
-include(FetchContent)
-
-FetchContent_Declare(curl
-        URL                    https://github.com/curl/curl/releases/download/curl-7_75_0/curl-7.75.0.tar.xz
-        URL_HASH               SHA256=fe0c49d8468249000bda75bcfdf9e30ff7e9a86d35f1a21f428d79c389d55675 # the file hash for curl-7.75.0.tar.xz
-        USES_TERMINAL_DOWNLOAD TRUE)
-FetchContent_MakeAvailable(curl)
-add_library(curl_int INTERFACE)
-target_link_libraries(curl_int INTERFACE libcurl)
-target_include_directories(curl_int INTERFACE ${curl_SOURCE_DIR}/include ${curl_BINARY_DIR}/include/curl)
-add_library(CURL::libcurl ALIAS curl_int)
+#include(FetchContent)
+#
+#FetchContent_Declare(curl
+#        URL                    https://github.com/curl/curl/releases/download/curl-7_75_0/curl-7.75.0.tar.xz
+#        URL_HASH               SHA256=fe0c49d8468249000bda75bcfdf9e30ff7e9a86d35f1a21f428d79c389d55675 # the file hash for curl-7.75.0.tar.xz
+#        USES_TERMINAL_DOWNLOAD TRUE)
+#FetchContent_MakeAvailable(curl)
+#add_library(curl_int INTERFACE)
+#target_link_libraries(curl_int INTERFACE libcurl)
+#target_include_directories(curl_int INTERFACE ${curl_SOURCE_DIR}/include ${curl_BINARY_DIR}/include/curl)
+#add_library(CURL::libcurl ALIAS curl_int)
 
 #-END---FETCH CONTENT LIBS----------------------------
 
@@ -38,6 +38,15 @@ add_subdirectory(external/fmt)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
+#add_subdirectory(external/curl)
+
+set(CURL_LIBRARY "-lcurl")
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIR})
+
+if(CURL_FOUND)
+message("CURL FOUND!!!")
+endif()
 
 set(IMGUI_SOURCE
         external/imgui/imgui.h
@@ -149,7 +158,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         imgui
         implot
         rapidcsv
-        CURL::libcurl
+        CURL
         )
 #-APPLICATION-LIBRARIES-END-------------------
 

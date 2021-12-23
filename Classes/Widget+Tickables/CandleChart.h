@@ -23,11 +23,10 @@ public:
 
     void updateVisible(float dt) override;
 //    void reset() override;
-
 //    void setSpeed(const ui_event::SliderChanged &event);
 //    void setData(const data_event::DataLoaded& event);
 //    void playSimulation(const ui_event::PlaySimulationClicked &event);
-//
+
 
 protected:
 //    void plotIndicators();

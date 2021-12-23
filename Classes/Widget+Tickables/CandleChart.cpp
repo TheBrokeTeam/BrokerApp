@@ -18,7 +18,7 @@ inline static float randomNumber(){
 
 CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker)
 {
-    _title                  = ticker->getSymbol()->getName();
+    _title                  = "Candle Chart";
     _is_window              = true;
 }
 

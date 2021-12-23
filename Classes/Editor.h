@@ -37,6 +37,7 @@ public:
     void addChartWidget(Ticker* ticker);
 
 private:
+
     std::vector<std::shared_ptr<Widget>> _widgets;
     void BeginWindow();
     bool _editor_begun = false;
