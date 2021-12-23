@@ -63,6 +63,9 @@ public:
         return intArr[int(interval)];
     }
 
+    bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
+
+
 private:
     std::string _name{""};
     Interval _interval;

@@ -7,6 +7,9 @@
 
 
 #include "Context.h"
+#include <map>
+#include <set>
+#include "../Tickers/Ticker.h"
 
 class BackTestingContext : public Context {
 public:
@@ -19,9 +22,18 @@ public:
 
     void loadSymbol(const Symbol &symbol) override;
 
+private:
+    bool dataAlreadyExists(const Symbol& symbol);
+    void fillData(const Symbol& symbol);
+    std::set<TickData> loadCsv(const Symbol& symbol);
+    std::string getFilePathFromSymbol(const Symbol& symbol);
+
     std::string build_url(std::string symbol, std::string year, std::string month, std::string interval);
 
     DownloadResponse download_file(std::string url, std::string filename);
+
+    std::map<Symbol,Ticker> _tickers;
+    std::map<std::string,std::set<TickData>> _data;
 
 };
 
