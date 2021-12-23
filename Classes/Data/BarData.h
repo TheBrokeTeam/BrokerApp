@@ -18,7 +18,6 @@ public:
     // Functions
     BarData()    { Clear(); }
     void Clear()    { memset(this, 0, sizeof(*this)); }
-    bool operator < (const BarData& rhs) const {return time < rhs.time;}
 };
 
 

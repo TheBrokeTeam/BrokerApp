@@ -31,6 +31,8 @@ void BackTestingContext::loadSymbol(const Symbol& symbol) {
         auto resp = download_file(url,filename);
 
     fillData(symbol);
+
+    loadTicker(symbol);
 }
 
 BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {
@@ -105,9 +107,9 @@ void BackTestingContext::fillData(const Symbol& symbol) {
 
 }
 
-std::set<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
+std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
 
-    std::set<TickData> output;
+    std::vector<TickData> output;
     auto filePath = getFilePathFromSymbol(symbol);
 
     std::cout << "Start Loading file: " << filePath << std::endl;
@@ -132,15 +134,15 @@ std::set<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
         data_low.price = doc.GetCell<double>(3,i);
         data_close.price = doc.GetCell<double>(4,i);
 
-        data_open.volume = doc.GetCell<double>(5,i)/4;
-        data_high.volume = doc.GetCell<double>(5,i)/4;
-        data_low.volume = doc.GetCell<double>(5,i)/4;
-        data_close.volume = doc.GetCell<double>(5,i)/4;
+        data_open.volume = doc.GetCell<double>(5,i)*0.25;
+        data_high.volume = doc.GetCell<double>(5,i)*0.5;
+        data_low.volume = doc.GetCell<double>(5,i)*0.75;
+        data_close.volume = doc.GetCell<double>(5,i);
 
-        output.insert(data_open);
-        output.insert(data_high);
-        output.insert(data_low);
-        output.insert(data_close);
+        output.push_back(data_open);
+        output.push_back(data_high);
+        output.push_back(data_low);
+        output.push_back(data_close);
     }
 
     return output;
@@ -155,6 +157,14 @@ std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
             "01");
 
     return out;
+}
+
+void BackTestingContext::loadTicker(const Symbol &symbol) {
+
+    auto& ticker = _tickers.at(symbol);
+    auto& vec = _data.at(symbol.getName());
+    for(auto& d : vec)
+        ticker.tick(d);
 }
 
 

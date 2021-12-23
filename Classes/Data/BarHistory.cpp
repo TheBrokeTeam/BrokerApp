@@ -18,10 +18,10 @@ int BarHistory::fixedIndex(int reversedIndex) {
 }
 
 void BarHistory::append(const BarData &data) {
-    _barData.insert(data);
+    _barData.push_back(data);
 }
 
-const std::set<BarData>& BarHistory::getData(){
+const std::vector<BarData>& BarHistory::getData(){
     return _barData;
 }
 

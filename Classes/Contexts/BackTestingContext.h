@@ -23,9 +23,11 @@ public:
     void loadSymbol(const Symbol &symbol) override;
 
 private:
+    void loadTicker(const Symbol& symbol);
+
     bool dataAlreadyExists(const Symbol& symbol);
     void fillData(const Symbol& symbol);
-    std::set<TickData> loadCsv(const Symbol& symbol);
+    std::vector<TickData> loadCsv(const Symbol& symbol);
     std::string getFilePathFromSymbol(const Symbol& symbol);
 
     std::string build_url(std::string symbol, std::string year, std::string month, std::string interval);
@@ -33,7 +35,7 @@ private:
     DownloadResponse download_file(std::string url, std::string filename);
 
     std::map<Symbol,Ticker> _tickers;
-    std::map<std::string,std::set<TickData>> _data;
+    std::map<std::string,std::vector<TickData>> _data;
 
 };
 

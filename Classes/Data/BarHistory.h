@@ -5,18 +5,18 @@
 #ifndef BROKERAPP_BARHISTORY_H
 #define BROKERAPP_BARHISTORY_H
 
-#include <set>
+#include <vector>
 #include "BarData.h"
 
 class BarHistory {
 public:
     BarData &operator[](int reversedIndex);
     void append(const BarData& data);
-    const std::set<BarData>& getData();
+    const std::vector<BarData>& getData();
     int size();
 
 private:
-    std::set<BarData> _barData;
+    std::vector<BarData> _barData;
     int fixedIndex(int reversedIndex);
 
 };

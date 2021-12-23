@@ -26,24 +26,22 @@ public:
     void addTickable(Tickable* tickable);
 
     //TODO:: fazer agregação dos dados aqui baseado no time interval in minutes do symbol
-    virtual void append(const TickData& data);
-    void updateTickerDataOnTickable(const BarData& data, Tickable* tickable, int countTicks);
+    void tick(const TickData &tickData);
 
 private:
     void reset();
-    void loadTickable(Tickable* tickable);
-
-    void tick(const TickData &tickData);
     void open(const TickData &tickData);
     void close(const TickData &tickData);
+
+    bool lastWasClosed = false;
 
     //hold all the tickables
     std::vector<Tickable*> _tickables;
     Context* _context{nullptr};
 
     //to save loaded data
-    std::set<TickData> _data;
     BarHistory _barHistory;
+
     std::shared_ptr<Symbol> _symbol{nullptr};
 };
 
