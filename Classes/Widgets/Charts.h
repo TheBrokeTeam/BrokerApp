@@ -6,11 +6,17 @@
 #define BROKERAPP_CHARTS_H
 
 #include "Widget.h"
+#include "../Widget+Tickables/CandleChart.h"
+#include <memory>
 
 class Charts : public Widget {
 public:
     Charts(Editor* editor);
     void updateVisible(float dt) override;
+    void addChart(std::shared_ptr<CandleChart> candleChart);
+
+private:
+    std::vector<std::shared_ptr<CandleChart>> _charts;
 };
 
 #endif //BROKERAPP_CHARTS_H

@@ -12,8 +12,12 @@ Charts::Charts(Editor *editor) : Widget(editor) {
 void Charts::updateVisible(float dt) {
     ImGui::SetNextItemWidth(400);
     if (ImGui::BeginTabBar("Symbols")) {
-
+        for(auto c : _charts)
+            c->updateVisible(dt);
         ImGui::EndTabBar();
     }
+}
 
+void Charts::addChart(std::shared_ptr<CandleChart> candleChart){
+    _charts.push_back(candleChart);
 }
