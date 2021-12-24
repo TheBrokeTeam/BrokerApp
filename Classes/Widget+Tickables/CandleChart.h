@@ -32,6 +32,8 @@ protected:
 //    void plotIndicators();
 private:
     void render(float dt);
+    void showDemoDragAndDrop();
+
 
     //    std::vector<std::unique_ptr<Indicator>> _indicators;
 //    std::unique_ptr<TestStrategy> _strategy{nullptr};

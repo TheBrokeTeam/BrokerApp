@@ -17,6 +17,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<CandleChart>> _charts;
+
 };
 
 #endif //BROKERAPP_CHARTS_H

@@ -12,7 +12,7 @@ add_executable(BrokerApp
         Classes/Contexts/Context.h
         Classes/Widgets/Widget_MainMenuBar.cpp
         Classes/Widgets/Widget_MainMenuBar.h
-        Classes/Contexts/BackTestingContext.cpp Classes/Contexts/BackTestingContext.h Classes/Widgets/DataLoader.cpp Classes/Widgets/DataLoader.h Classes/Widget+Tickables/CandleChart.cpp Classes/Widget+Tickables/CandleChart.h Classes/Contexts/Contextualizable.cpp Classes/Contexts/Contextualizable.h Classes/Widgets/Charts.cpp Classes/Widgets/Charts.h)
+        Classes/Contexts/BackTestingContext.cpp Classes/Contexts/BackTestingContext.h Classes/Widgets/DataLoader.cpp Classes/Widgets/DataLoader.h Classes/Widget+Tickables/CandleChart.cpp Classes/Widget+Tickables/CandleChart.h Classes/Contexts/Contextualizable.cpp Classes/Contexts/Contextualizable.h Classes/Widgets/Charts.cpp Classes/Widgets/Charts.h Classes/Widgets/Indicators.cpp Classes/Widgets/Indicators.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

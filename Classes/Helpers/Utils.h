@@ -8,6 +8,7 @@
 #include <random>
 #include <sstream>
 #include <iostream>
+#include <imgui_internal.h>
 
 namespace uuid {
     static std::random_device              rd;
