@@ -4,11 +4,12 @@
 
 #include <implot.h>
 #include "Widget_MainMenuBar.h"
+#include "../Editor.h"
 
 namespace _Widget_MainMenuBar
 {
     static bool show_downloader = false;
-    static bool show_candle_graph = false;
+    static bool show_charts = false;
     static bool show_study_chart = false;
     static bool show_indicator_controller = false;
     static bool showShortcutsWindow = false;
@@ -45,9 +46,8 @@ void Widget_MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Downloader", "CTRL+D",&_Widget_MainMenuBar::show_downloader)){}
-            if (ImGui::MenuItem("Candle Graph", "CTRL+G",&_Widget_MainMenuBar::show_candle_graph)){}
-            if (ImGui::MenuItem("Study Graph", "CTRL+G",&_Widget_MainMenuBar::show_study_chart)){}
+            if (ImGui::MenuItem("Data Loader", "CTRL+D",&_Widget_MainMenuBar::show_downloader)){}
+            if (ImGui::MenuItem("Charts", "CTRL+G",&_Widget_MainMenuBar::show_charts)){}
             if (ImGui::MenuItem("Indicators", "",&_Widget_MainMenuBar::show_indicator_controller)){}
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_Widget_MainMenuBar::imgui_metrics);
@@ -69,6 +69,10 @@ void Widget_MainMenuBar::updateAlways(float dt)
     }
 
     ImGui::PopStyleVar(2);
+
+    //update editor
+    _editor->showDataLoader(_Widget_MainMenuBar::show_downloader);
+    _editor->showCharts(_Widget_MainMenuBar::show_charts);
 
     if (_Widget_MainMenuBar::imgui_metrics)
     {

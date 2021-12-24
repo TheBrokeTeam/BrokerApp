@@ -42,10 +42,11 @@ add_subdirectory(external/rapidcsv)
 
 set(CURL_LIBRARY "-lcurl")
 find_package(CURL REQUIRED)
-include_directories(${CURL_INCLUDE_DIR})
 
-if(CURL_FOUND)
-message("CURL FOUND!!!")
+if(NOT CURL_FOUND)
+    message(FATAL_ERROR "CURL NOT FOUND!")
+else()
+    message("CURL FOUND!")
 endif()
 
 set(IMGUI_SOURCE
@@ -142,6 +143,7 @@ set(INCLUDES
         external/implot
         ${CMAKE_CURRENT_BINARY_DIR}/external/glad/include
         external/rapidcsv/src
+        ${CURL_INCLUDE_DIR}
         )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -158,7 +160,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         imgui
         implot
         rapidcsv
-        CURL
+        curl
         )
 #-APPLICATION-LIBRARIES-END-------------------
 

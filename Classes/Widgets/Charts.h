@@ -5,8 +5,12 @@
 #ifndef BROKERAPP_CHARTS_H
 #define BROKERAPP_CHARTS_H
 
-class Charts {
+#include "Widget.h"
 
+class Charts : public Widget {
+public:
+    Charts(Editor* editor);
+    void updateVisible(float dt) override;
 };
 
 #endif //BROKERAPP_CHARTS_H

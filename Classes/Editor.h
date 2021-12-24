@@ -19,7 +19,7 @@ public:
     void update() override;
 
     template<typename T>
-    T* GetWidget()
+    T* getWidget()
     {
         for (const auto& widget : _widgets)
         {
@@ -35,6 +35,9 @@ public:
     Context* getContext();
 
     void addChartWidget(Ticker* ticker);
+    void showDataLoader(bool show);
+    void showCharts(bool show);
+
 
 private:
 

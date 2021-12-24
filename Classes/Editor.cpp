@@ -8,15 +8,11 @@
 #include <imgui_internal.h>
 #include "Widgets/Widget_MainMenuBar.h"
 #include "Widgets/DataLoader.h"
+#include "Widgets/Charts.h"
 
 #include "Contexts/BackTestingContext.h"
 #include "Widget+Tickables/CandleChart.h"
 #include "Tickers/Ticker.h"
-
-namespace _editor
-{
-
-}
 
 void Editor::start() {
     // Initialize the context
@@ -25,6 +21,7 @@ void Editor::start() {
     // Initialise Editor/ImGui
     _widgets.emplace_back(std::make_shared<Widget_MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
+    _widgets.emplace_back(std::make_shared<Charts>(this));
 
 
     //enable the docking on this application
@@ -103,6 +100,14 @@ Editor::~Editor() {}
 void Editor::addChartWidget(Ticker *ticker) {
     _widgets.emplace_back(std::make_shared<CandleChart>(this,ticker));
     _context->loadTicker(*ticker->getSymbol());
+}
+
+void Editor::showDataLoader(bool show) {
+    getWidget<DataLoader>()->SetVisible(show);
+}
+
+void Editor::showCharts(bool show) {
+    getWidget<Charts>()->SetVisible(show);
 }
 
 int main(int argc, char const* argv[]){
