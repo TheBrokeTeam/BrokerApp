@@ -56,7 +56,7 @@ void CandleChart::render(float dt)
             if (ImPlot::BeginPlot("##OHLC"))
             {
                 ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-                ImPlot::SetupAxisLimits(ImAxis_X1, barHist[0].time, barHist[_barHistory->size()-1].time);
+                ImPlot::SetupAxisLimits(ImAxis_X1, barHist[_barHistory->size()-1].time, barHist[0].time);
                 ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
 
                 ImDrawList* drawList =  ImPlot::GetPlotDrawList();
@@ -93,14 +93,16 @@ void CandleChart::render(float dt)
                     ImPlotRect bnds = ImPlot::GetPlotLimits();
 //                        double x = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_Hr).ToDouble();
                     double x = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
-                    int close_idx = PlotHelper::BinarySearch<double>(_barHistory->getTimeData().data(), 0, _barHistory->size() - 1, x);
+                    int lastIdx = _barHistory->size() - 1;
+                    int close_idx = PlotHelper::BinarySearch<double>(_barHistory->getTimeData().data(), 0, lastIdx, x);
                     if (close_idx == -1)
-                        close_idx = _barHistory->size() - 1;
+                        close_idx = lastIdx;
 
-                    double close_val = barHist[close_idx].close;
-                    double open_val = barHist[close_idx].open;
+                    double close_val = _barHistory->getData()[close_idx].close;
+                    double open_val =  _barHistory->getData()[close_idx].open;
 
                     ImPlot::TagY(close_val, open_val < close_val ? bull_color : bear_color);
+
 
                     //TICKER TOOL TIP ##################
                     const bool hovered = ImPlot::IsSubplotsHovered();

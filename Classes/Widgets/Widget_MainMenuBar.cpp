@@ -8,8 +8,8 @@
 
 namespace _Widget_MainMenuBar
 {
-    static bool show_downloader = false;
-    static bool show_charts = false;
+    static bool show_downloader = true;
+    static bool show_charts = true;
     static bool show_study_chart = false;
     static bool show_indicator_controller = false;
     static bool showShortcutsWindow = false;

@@ -41,7 +41,12 @@ public:
     bool& GetVisible()                { return _is_visible; }
     void SetVisible(bool is_visible)  { _is_visible = is_visible; }
 
+    const std::string& getId(){
+        return _widgetId;
+    };
+
 protected:
+    std::string _widgetId{""};
     bool _is_window                  = true;
     bool _is_visible                 = true;
     int _flags                       = ImGuiWindowFlags_NoCollapse;

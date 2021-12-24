@@ -5,11 +5,14 @@
 #include "Widget.h"
 #include <imgui_internal.h>
 #include "../Editor.h"
+#include "../Helpers/Utils.h"
+
 
 Widget::Widget(Editor* editor): Contextualizable(editor->getContext())
 {
     _editor    = editor;
     _window    = nullptr;
+    _widgetId = uuid::generate_uuid_v4();
 }
 
 void Widget::updateAlways(float dt)
