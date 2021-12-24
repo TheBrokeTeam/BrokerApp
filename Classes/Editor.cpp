@@ -111,6 +111,10 @@ void Editor::showCharts(bool show) {
     getWidget<Charts>()->SetVisible(show);
 }
 
+void Editor::showIndicators(bool show) {
+    getWidget<Charts>()->enableIndicatorsOnCharts(show);
+}
+
 int main(int argc, char const* argv[]){
     Editor app("",1400,750,argc,argv);
     app.run();

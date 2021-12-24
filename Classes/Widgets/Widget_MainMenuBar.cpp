@@ -10,8 +10,7 @@ namespace _Widget_MainMenuBar
 {
     static bool show_downloader = true;
     static bool show_charts = true;
-    static bool show_study_chart = false;
-    static bool show_indicator_controller = false;
+    static bool show_indicators = false;
     static bool showShortcutsWindow = false;
     static bool showAboutWindow     = false;
     static bool imgui_metrics         = false;
@@ -48,7 +47,7 @@ void Widget_MainMenuBar::updateAlways(float dt)
         {
             if (ImGui::MenuItem("Data Loader", "CTRL+D",&_Widget_MainMenuBar::show_downloader)){}
             if (ImGui::MenuItem("Charts", "CTRL+G",&_Widget_MainMenuBar::show_charts)){}
-            if (ImGui::MenuItem("Indicators", "",&_Widget_MainMenuBar::show_indicator_controller)){}
+            if (ImGui::MenuItem("Indicators", "",&_Widget_MainMenuBar::show_indicators)){}
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_Widget_MainMenuBar::imgui_metrics);
             ImGui::MenuItem("ImGui Style",   nullptr, &_Widget_MainMenuBar::imgui_style);
@@ -73,6 +72,7 @@ void Widget_MainMenuBar::updateAlways(float dt)
     //update editor
     _editor->showDataLoader(_Widget_MainMenuBar::show_downloader);
     _editor->showCharts(_Widget_MainMenuBar::show_charts);
+    _editor->showIndicators(_Widget_MainMenuBar::show_indicators);
 
     if (_Widget_MainMenuBar::imgui_metrics)
     {

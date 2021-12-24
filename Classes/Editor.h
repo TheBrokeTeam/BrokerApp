@@ -37,7 +37,7 @@ public:
     void addChartWidget(Ticker* ticker);
     void showDataLoader(bool show);
     void showCharts(bool show);
-
+    void showIndicators(bool show);
 private:
 
     std::vector<std::shared_ptr<Widget>> _widgets;

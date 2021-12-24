@@ -14,6 +14,7 @@ public:
     Charts(Editor* editor);
     void updateVisible(float dt) override;
     void addChart(std::shared_ptr<CandleChart> candleChart);
+    void enableIndicatorsOnCharts(bool show);
 
 private:
     std::vector<std::shared_ptr<CandleChart>> _charts;

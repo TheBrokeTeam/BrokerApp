@@ -21,3 +21,8 @@ void Charts::updateVisible(float dt) {
 void Charts::addChart(std::shared_ptr<CandleChart> candleChart){
     _charts.push_back(candleChart);
 }
+
+void Charts::enableIndicatorsOnCharts(bool show) {
+    for(auto c : _charts)
+        c->showIndicators(show);
+}
