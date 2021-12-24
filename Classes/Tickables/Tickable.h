@@ -12,8 +12,11 @@
 #include "../Contexts/Contextualizable.h"
 #include "../Tickers/Ticker.h"
 
+#define barHist (*_barHistory)
+
 class Tickable : public Contextualizable {
 public:
+    typedef ;
     Tickable(Ticker* ticker);
     virtual void onOpen(BarHistory* barHistory);
     virtual void onClose(BarHistory* barHistory);

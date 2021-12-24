@@ -56,7 +56,7 @@ void CandleChart::render(float dt)
             if (ImPlot::BeginPlot("##OHLC"))
             {
                 ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-                ImPlot::SetupAxisLimits(ImAxis_X1, _barHistory->getData()[0].time, _barHistory->getData()[_barHistory->size()-1].time);
+                ImPlot::SetupAxisLimits(ImAxis_X1, barHist[0].time, barHist[_barHistory->size()-1].time);
                 ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
 
                 ImDrawList* drawList =  ImPlot::GetPlotDrawList();
@@ -68,19 +68,19 @@ void CandleChart::render(float dt)
                     // fit data on screen even when zooming
                     if (ImPlot::FitThisFrame()) {
                         for (int i = 0; i < _barHistory->size(); ++i) {
-                            ImPlot::FitPoint(ImPlotPoint(_barHistory->getData()[i].time, _barHistory->getData()[i].low));
-                            ImPlot::FitPoint(ImPlotPoint(_barHistory->getData()[i].time, _barHistory->getData()[i].high));
+                            ImPlot::FitPoint(ImPlotPoint(barHist[i].time, barHist[i].low));
+                            ImPlot::FitPoint(ImPlotPoint(barHist[i].time, barHist[i].high));
                         }
                     }
 
                     for (int i = 0; i < _barHistory->size(); i++) {
-                        ImU32 color = ImGui::GetColorU32(_barHistory->getData()[i].open > _barHistory->getData()[i].close ? bear_color : bull_color);
-                        ImVec2 openPos = ImPlot::PlotToPixels(_barHistory->getData()[i].time - candleWidth / 2, _barHistory->getData()[i].open);
-                        ImVec2 closePos = ImPlot::PlotToPixels(_barHistory->getData()[i].time + candleWidth / 2, _barHistory->getData()[i].close);
+                        ImU32 color = ImGui::GetColorU32(barHist[i].open > barHist[i].close ? bear_color : bull_color);
+                        ImVec2 openPos = ImPlot::PlotToPixels(barHist[i].time - candleWidth / 2, barHist[i].open);
+                        ImVec2 closePos = ImPlot::PlotToPixels(barHist[i].time + candleWidth / 2, barHist[i].close);
                         drawList->AddRectFilled(openPos, closePos, color);
 
-                        ImVec2 lowPos = ImPlot::PlotToPixels(_barHistory->getData()[i].time, _barHistory->getData()[i].low);
-                        ImVec2 highPos = ImPlot::PlotToPixels(_barHistory->getData()[i].time, _barHistory->getData()[i].high);
+                        ImVec2 lowPos = ImPlot::PlotToPixels(barHist[i].time, barHist[i].low);
+                        ImVec2 highPos = ImPlot::PlotToPixels(barHist[i].time, barHist[i].high);
                         drawList->AddLine(lowPos, highPos, color, ImMax(1.0f, (closePos.x - openPos.x) / 10.0f));
                     }
 
@@ -97,8 +97,8 @@ void CandleChart::render(float dt)
                     if (close_idx == -1)
                         close_idx = _barHistory->size() - 1;
 
-                    double close_val = _barHistory->getData()[close_idx].close;
-                    double open_val = _barHistory->getData()[close_idx].open;
+                    double close_val = barHist[close_idx].close;
+                    double open_val = barHist[close_idx].open;
 
                     ImPlot::TagY(close_val, open_val < close_val ? bull_color : bear_color);
 
@@ -178,13 +178,13 @@ void CandleChart::render(float dt)
                     if (ImPlot::IsPlotHovered() && idx != -1) {
                         ImGui::BeginTooltip();
                         char buff[32];
-                        ImPlot::FormatDate(ImPlotTime::FromDouble(_barHistory->getData()[idx].time),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
+                        ImPlot::FormatDate(ImPlotTime::FromDouble(barHist[idx].time),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
                         ImGui::Text("Date:");   ImGui::SameLine(60); ImGui::Text("%s",  buff);
-                        ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", _barHistory->getData()[idx].open);
-                        ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", _barHistory->getData()[idx].close);
-                        ImGui::Text("High:");   ImGui::SameLine(60); ImGui::Text("$%.2f", _barHistory->getData()[idx].high);
-                        ImGui::Text("Low:");    ImGui::SameLine(60); ImGui::Text("$%.2f", _barHistory->getData()[idx].low);
-                        ImGui::Text("Volume:"); ImGui::SameLine(60); ImGui::Text(fmt::format(std::locale("en_US.UTF-8"),"{:L}", (int)(_barHistory->getData()[idx].volume)).c_str());
+                        ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", barHist[idx].open);
+                        ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", barHist[idx].close);
+                        ImGui::Text("High:");   ImGui::SameLine(60); ImGui::Text("$%.2f", barHist[idx].high);
+                        ImGui::Text("Low:");    ImGui::SameLine(60); ImGui::Text("$%.2f", barHist[idx].low);
+                        ImGui::Text("Volume:"); ImGui::SameLine(60); ImGui::Text(fmt::format(std::locale("en_US.UTF-8"),"{:L}", (int)(barHist[idx].volume)).c_str());
                         ImGui::EndTooltip();
                     }
                 }
