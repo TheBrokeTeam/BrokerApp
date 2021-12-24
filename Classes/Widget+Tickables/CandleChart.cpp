@@ -6,6 +6,7 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 #include "iostream"
+#include "../Tickables/SMA.h"
 
 //#include "../Indicators/SMA.h"
 //#include "../Helpers/PlotHelper.h"
@@ -123,8 +124,8 @@ void CandleChart::render(float dt)
                         drawList->AddLine(lowPos, highPos, color, ImMax(1.0f, (closePos.x - openPos.x) / 10.0f));
                     }
 
-                    //plot indicators
-//                        plotIndicators();
+                    //plot caindicators
+                    plotIndicators();
 
 //                        _strategy->render();
 
@@ -191,13 +192,21 @@ void CandleChart::render(float dt)
                         _indicatorsView->getIndicators()[i].Plt = 1;
                         _indicatorsView->getIndicators()[i].Yax = ImAxis_Y1;
                         puts("AGORA é a hora de plotar!!!");
+
+                        std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker,10);
+                        sma->setup("SMA " + std::to_string(10));
+
+                        _indicators.push_back(std::move(sma));
+                        _ticker->addTickable(_indicators.back().get());
                     }
                     ImPlot::EndDragDropTarget();
                 }
                 //######################################################
 
+
                 ImPlot::EndPlot();
             }
+
 
             if (ImPlot::BeginPlot("##Volume")) {
 
@@ -258,7 +267,9 @@ void CandleChart::showIndicators(bool show) {
 }
 
 void CandleChart::plotIndicators() {
-
+    for(auto& i : _indicators) {
+        i->render();
+    }
 }
 
 // oid CandleChart::addIndicator(const ui_event::AddIndicatorCLicked &event) {

@@ -15,7 +15,7 @@ void Ticker::addTickable(Tickable *tickable)
 {
     _tickables.push_back(tickable);
     //TODO:: passar aqui o bar history para nao precisar do methodo load tickable
-//    tickable->onLoad(_symbol);
+    tickable->onLoad(&_barHistory);
 }
 
 void Ticker::open(const TickData& tickData) {

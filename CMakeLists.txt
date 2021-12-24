@@ -12,7 +12,44 @@ add_executable(BrokerApp
         Classes/Contexts/Context.h
         Classes/Widgets/Widget_MainMenuBar.cpp
         Classes/Widgets/Widget_MainMenuBar.h
-        Classes/Contexts/BackTestingContext.cpp Classes/Contexts/BackTestingContext.h Classes/Widgets/DataLoader.cpp Classes/Widgets/DataLoader.h Classes/Widget+Tickables/CandleChart.cpp Classes/Widget+Tickables/CandleChart.h Classes/Contexts/Contextualizable.cpp Classes/Contexts/Contextualizable.h Classes/Widgets/Charts.cpp Classes/Widgets/Charts.h Classes/Widgets/Indicators.cpp Classes/Widgets/Indicators.h)
+        Classes/Contexts/BackTestingContext.cpp
+        Classes/Contexts/BackTestingContext.h
+        Classes/Widgets/DataLoader.cpp
+        Classes/Widgets/DataLoader.h
+        Classes/Widget+Tickables/CandleChart.cpp
+        Classes/Widget+Tickables/CandleChart.h
+        Classes/Contexts/Contextualizable.cpp
+        Classes/Contexts/Contextualizable.h
+        Classes/Widgets/Charts.cpp
+        Classes/Widgets/Charts.h
+        Classes/Widgets/Indicators.cpp
+        Classes/Widgets/Indicators.h
+        Classes/Data/Symbol.cpp
+        Classes/Data/Symbol.h
+        Classes/Data/DataSource.cpp
+        Classes/Data/DataSource.h
+        Classes/Data/BarData.cpp
+        Classes/Data/BarData.h
+        Classes/Data/DataManager.cpp
+        Classes/Data/DataManager.h
+        Classes/Tickables/Tickable.cpp
+        Classes/Tickables/Tickable.h
+        Classes/Tickables/Indicator.cpp
+        Classes/Tickables/Indicator.h
+        Classes/Tickables/Strategy.cpp
+        Classes/Tickables/Strategy.h
+        Classes/Data/Position.cpp
+        Classes/Data/Position.h
+        Classes/Data/Order.cpp
+        Classes/Data/Order.h
+        Classes/Tickers/Ticker.cpp
+        Classes/Tickers/Ticker.h
+        Classes/Data/TickData.cpp
+        Classes/Data/TickData.h
+        Classes/Data/BarHistory.cpp
+        Classes/Data/BarHistory.h
+        Classes/Helpers/PlotHelper.h
+        Classes/Helpers/Utils.h Classes/Tickables/SMA.cpp Classes/Tickables/SMA.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -62,15 +99,15 @@ set(IMGUI_SOURCE
         )
 
 set(IMGUI_HEADER
-       external/imgui/imgui.cpp
-       external/imgui/misc/cpp/imgui_stdlib.cpp
-       external/imgui/imgui_draw.cpp
-       external/imgui/imgui_widgets.cpp
-       external/imgui/imgui_tables.cpp
-       external/imgui/imgui_demo.cpp
-       external/imgui/backends/imgui_impl_glfw.cpp
-       external/imgui/backends/imgui_impl_opengl3.cpp
-        Classes/Data/Symbol.cpp Classes/Data/Symbol.h Classes/Data/DataSource.cpp Classes/Data/DataSource.h Classes/Data/BarData.cpp Classes/Data/BarData.h Classes/Data/DataManager.cpp Classes/Data/DataManager.h Classes/Tickables/Tickable.cpp Classes/Tickables/Tickable.h Classes/Tickables/Indicator.cpp Classes/Tickables/Indicator.h Classes/Tickables/Strategy.cpp Classes/Tickables/Strategy.h Classes/Data/Position.cpp Classes/Data/Position.h Classes/Data/Order.cpp Classes/Data/Order.h Classes/Tickers/Ticker.cpp Classes/Tickers/Ticker.h Classes/Data/TickData.cpp Classes/Data/TickData.h Classes/Data/BarHistory.cpp Classes/Data/BarHistory.h Classes/Helpers/PlotHelper.h Classes/Helpers/Utils.h)
+        external/imgui/imgui.cpp
+        external/imgui/misc/cpp/imgui_stdlib.cpp
+        external/imgui/imgui_draw.cpp
+        external/imgui/imgui_widgets.cpp
+        external/imgui/imgui_tables.cpp
+        external/imgui/imgui_demo.cpp
+        external/imgui/backends/imgui_impl_glfw.cpp
+        external/imgui/backends/imgui_impl_opengl3.cpp
+       )
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -89,7 +126,7 @@ set(IMPLOT_SOURCE
         )
 
 set(IMPLOT_HEADER
-        external/implot//implot.h
+        external/implot/implot.h
         external/implot/implot_internal.h
         )
 

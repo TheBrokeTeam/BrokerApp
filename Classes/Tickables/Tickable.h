@@ -16,11 +16,12 @@
 
 class Tickable : public Contextualizable {
 public:
-    typedef ;
     Tickable(Ticker* ticker);
     virtual void onOpen(BarHistory* barHistory);
     virtual void onClose(BarHistory* barHistory);
     virtual void onTick(BarHistory* barHistory);
+
+    virtual void onLoad(BarHistory* barHistory);
 
 protected:
     Ticker* _ticker{nullptr};
