@@ -45,7 +45,7 @@ public:
 
 private:
         void drawView();
-        const int _numberOfItems = 20;
+        const int _numberOfItems = 3;
         std::vector<MyDndItem>  _dragAndDropItems;
 };
 

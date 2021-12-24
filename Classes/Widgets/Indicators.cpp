@@ -3,6 +3,7 @@
 //
 
 #include "Indicators.h"
+#include "../Editor.h"
 
 Indicators::Indicators(Editor *editor) : Widget(editor) {
 
@@ -32,16 +33,22 @@ void Indicators::drawView() {
     for (int k = 0; k < _dragAndDropItems.size(); ++k) {
         if (_dragAndDropItems[k].Plt > 0)
             continue;
-        ImPlot::ItemIcon(_dragAndDropItems[k].Color);
-        ImGui::SameLine();
-        ImGui::Selectable(_dragAndDropItems[k].Label, false, 0, ImVec2(100, 0));
+
+        auto info = _editor->getTexture(Editor::Icons::indicator_ma);
+        ImGui::BeginChild("##Icon Button");
+        ImGui::ImageButton((void*)(intptr_t)info.my_image_texture, ImVec2(info.my_image_width*0.5, info.my_image_height*0.5));
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
             ImGui::SetDragDropPayload(Indicators::CANDLE_INDICATORS, &k, sizeof(int));
-            ImPlot::ItemIcon(_dragAndDropItems[k].Color);
-            ImGui::SameLine();
-            ImGui::TextUnformatted(_dragAndDropItems[k].Label);
+            auto info = _editor->getTexture(Editor::Icons::indicator_ma);
+            ImGui::Image((void*)(intptr_t)info.my_image_texture, ImVec2(info.my_image_width*0.5, info.my_image_height*0.5));
             ImGui::EndDragDropSource();
         }
+        const bool hovered = ImGui::IsItemHovered();
+        if (hovered) {
+            puts("Mouse no indicador ICON");
+        }
+        ImGui::EndChild();
+
     }
     ImGui::EndChild();
 
