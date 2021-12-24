@@ -64,7 +64,7 @@ void DataLoader::updateVisible(float dt)
     if (ImGui::Button("Fetch")) {
         puts("Clicou no botão fetch!!!");
         Symbol symbol(_info.fetchSymbol);
-        symbol.setTimeInterval(Symbol::Interval::Interval_15Minutes);
+        symbol.setTimeInterval(Symbol::Interval(interval));
 
         auto ticker = _context->loadSymbol(symbol);
         _editor->addChartWidget(ticker);

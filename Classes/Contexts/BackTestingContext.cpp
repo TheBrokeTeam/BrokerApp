@@ -122,9 +122,9 @@ std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
 
         //converting ms to sec and add simulated time for the sub tick on the bars
         data_open.time  = doc.GetCell<long>(0,i)/1000.0;
-        data_high.time  = doc.GetCell<long>(0,i)/1000.0 + 20;
-        data_low.time  = doc.GetCell<long>(0,i)/1000.0 + 40;
-        data_close.time  = doc.GetCell<long>(0,i)/1000.0 + 59;
+        data_high.time  = doc.GetCell<long>(0,i)/1000.0 + symbol.getTimeIntervalInMinutes()*0.25 * 60;
+        data_low.time  = doc.GetCell<long>(0,i)/1000.0 + symbol.getTimeIntervalInMinutes()*0.5* 60;
+        data_close.time  = doc.GetCell<long>(0,i)/1000.0 + symbol.getTimeIntervalInMinutes()*60 - 1;
 
         data_open.price = doc.GetCell<double>(1,i);
         data_high.price = doc.GetCell<double>(2,i);
