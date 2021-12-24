@@ -13,8 +13,12 @@
 #include "Contexts/BackTestingContext.h"
 #include "Widget+Tickables/CandleChart.h"
 #include "Tickers/Ticker.h"
+#include "Helpers/ImageLoader.h"
 
 void Editor::start() {
+    //loading images
+    loadResources();
+
     // Initialize the context
     _context = std::make_shared<BackTestingContext>();
 
@@ -113,6 +117,27 @@ void Editor::showCharts(bool show) {
 
 void Editor::showIndicators(bool show) {
     getWidget<Charts>()->enableIndicatorsOnCharts(show);
+}
+
+void Editor::loadResources() {
+    int my_image_width = 0;
+    int my_image_height = 0;
+    GLuint my_image_texture = 0;
+
+    bool ret = ImageLoader::loadTexture("../Resources/Icons/ma.png", &my_image_texture, &my_image_width, &my_image_height);
+
+    ImageInfo info;
+    info.my_image_width = my_image_width;
+    info.my_image_height = my_image_height;
+    info.my_image_texture = my_image_texture;
+
+    _imagesRef.emplace(Icons::indicator_ma,info);
+
+    IM_ASSERT(ret);
+}
+
+Editor::ImageInfo Editor::getTexture(Editor::Icons icon) {
+    return _imagesRef.at(icon);
 }
 
 int main(int argc, char const* argv[]){

@@ -49,7 +49,11 @@ add_executable(BrokerApp
         Classes/Data/BarHistory.cpp
         Classes/Data/BarHistory.h
         Classes/Helpers/PlotHelper.h
-        Classes/Helpers/Utils.h Classes/Tickables/SMA.cpp Classes/Tickables/SMA.h)
+        Classes/Helpers/Utils.h
+        Classes/Tickables/SMA.cpp
+        Classes/Tickables/SMA.h
+        Classes/Helpers/ImageLoader.cpp
+        Classes/Helpers/ImageLoader.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -106,8 +110,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp
-       )
+        external/imgui/backends/imgui_impl_opengl3.cpp)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -178,6 +181,7 @@ set(INCLUDES
         external/imgui/misc/cpp
         external/imgui/backends
         external/implot
+        external/stb
         ${CMAKE_CURRENT_BINARY_DIR}/external/glad/include
         external/rapidcsv/src
         ${CURL_INCLUDE_DIR}

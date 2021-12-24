@@ -13,6 +13,23 @@
 class Ticker;
 class Editor : public App {
 public:
+    struct ImageInfo {
+        int my_image_width = 0;
+        int my_image_height = 0;
+        GLuint my_image_texture = 0;
+    };
+
+    enum class Icons{
+        none,
+        indicator_ma,
+    };
+
+
+    ImageInfo getTexture(Icons icon);
+
+
+    std::map<Icons,ImageInfo> _imagesRef;
+
     using App::App;
     virtual ~Editor();
     void start() override;
@@ -48,6 +65,8 @@ private:
     //delta time helpers
     float _lastTime = 0;
     float getDeltaTime();
+
+    void loadResources();
 };
 
 

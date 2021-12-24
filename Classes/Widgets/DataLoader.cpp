@@ -69,4 +69,11 @@ void DataLoader::updateVisible(float dt)
         auto ticker = _context->loadSymbol(symbol);
         _editor->addChartWidget(ticker);
     }
+
+    auto info = _editor->getTexture(Editor::Icons::indicator_ma);
+    ImGui::Begin("OpenGL Texture Text");
+    ImGui::Text("pointer = %p", info.my_image_texture);
+    ImGui::Text("size = %d x %d", info.my_image_width, info.my_image_height);
+    ImGui::Image((void*)(intptr_t)info.my_image_texture, ImVec2(info.my_image_width, info.my_image_height));
+    ImGui::End();
 }
