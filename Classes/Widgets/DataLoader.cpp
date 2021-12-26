@@ -30,7 +30,6 @@ DataLoader::DataLoader(Editor *editor) : Widget(editor)
 void DataLoader::updateVisible(float dt)
 {
     //change background of window
-    PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8,8));
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
