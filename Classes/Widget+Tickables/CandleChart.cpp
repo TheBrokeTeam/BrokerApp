@@ -50,9 +50,10 @@ CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickab
     _title                  = "Candle Chart";
     _is_window              = false;
     _indicatorsView = std::make_unique<Indicators>(editor);
-//
-//    for(int i = 0; i< _numberOfItems; i++)
-//        _dragAndDropItems.push_back(MyDndItem());
+
+    _indicatorsView->setTrashCallback([this](){
+        _indicators.clear();
+    });
 }
 
 void CandleChart::updateVisible(float dt) {
@@ -188,9 +189,9 @@ void CandleChart::render(float dt)
                 //allow candles plot area to be a DRAG AND DROP target ##
                 if (ImPlot::BeginDragDropTargetPlot()) {
                     if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Indicators::CANDLE_INDICATORS)) {
+                        //indice of dragged item
                         int i = *(int*)payload->Data;
-                        _indicatorsView->getIndicators()[i].Plt = 1;
-                        _indicatorsView->getIndicators()[i].Yax = ImAxis_Y1;
+
                         puts("AGORA é a hora de plotar!!!");
 
                         std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker,10);

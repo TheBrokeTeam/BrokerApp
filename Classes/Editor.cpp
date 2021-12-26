@@ -20,6 +20,7 @@ void Editor::start() {
     //loading images
     loadImage(Icons::indicator_ma,"../Resources/Icons/ma.png");
     loadImage(Icons::close_window,"../Resources/Icons/close.png");
+    loadImage(Icons::trash,"../Resources/Icons/trash.png");
 
     // Initialize the context
     _context = std::make_shared<BackTestingContext>();

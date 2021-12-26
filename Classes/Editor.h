@@ -31,7 +31,8 @@ public:
     enum class Icons{
         none,
         indicator_ma,
-        close_window
+        close_window,
+        trash
     };
 
 

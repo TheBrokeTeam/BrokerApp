@@ -4,11 +4,13 @@
 
 #include "Indicators.h"
 #include "../Editor.h"
+#include "../Tickables/SMA.h"
+
 
 Indicators::Indicators(Editor *editor) : Widget(editor) {
 
     for(int i = 0; i< _numberOfItems; i++)
-        _dragAndDropItems.push_back(MyDndItem());
+        _dragAndDropItems.push_back(DragAndDropIndicatorItem(static_cast<CandleIndicators>(i)));
 }
 
 void Indicators::updateVisible(float dt) {
@@ -20,45 +22,70 @@ void Indicators::updateVisible(float dt) {
 void Indicators::drawView() {
 
     // child window to serve as initial source for our DND items
-    ImGui::BeginChild("INDICATORS_ITEMS", ImVec2(100, 600));
+//    PushStyleColor(ImGuiCol_Button,Editor::broker_black);
+//    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_light_grey);
+//    PushStyleColor(ImGuiCol_Button,Editor::broker_yellow);
 
-    //button reset data
-    if (ImGui::Button("Clear")) {
-        for (int k = 0; k < _dragAndDropItems.size(); ++k)
-            _dragAndDropItems[k].Reset();
-//        dndx = dndy = NULL;
-    }
+    ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_black);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow);
+
+    ImGui::BeginChild("INDICATORS_ITEMS", ImVec2(50, 600));
 
     //add items to the view
     for (int k = 0; k < _dragAndDropItems.size(); ++k) {
-        if (_dragAndDropItems[k].Plt > 0)
-            continue;
 
-        auto info = _editor->getTexture(Editor::Icons::indicator_ma);
-        ImGui::BeginChild("##Icon Button");
-        ImGui::ImageButton((void*)(intptr_t)info.my_image_texture, ImVec2(info.my_image_width*0.5, info.my_image_height*0.5));
-        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
-            ImGui::SetDragDropPayload(Indicators::CANDLE_INDICATORS, &k, sizeof(int));
-            auto info = _editor->getTexture(Editor::Icons::indicator_ma);
-            ImGui::Image((void*)(intptr_t)info.my_image_texture, ImVec2(info.my_image_width*0.5, info.my_image_height*0.5));
-            ImGui::EndDragDropSource();
-        }
-        const bool hovered = ImGui::IsItemHovered();
-        if (hovered) {
-            puts("Mouse no indicador ICON");
-        }
-        ImGui::EndChild();
+        if(ImGui::BeginChild("##indicator item")) {
 
+            ImGui::Button(_dragAndDropItems[k].label.c_str(), ImVec2(50, 30));
+
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+                ImGui::SetDragDropPayload(Indicators::CANDLE_INDICATORS, &k, sizeof(int));
+                auto info = _editor->getTexture(Editor::Icons::indicator_ma);
+                ImGui::Image((void *) (intptr_t) info.my_image_texture,
+                             ImVec2(info.my_image_width * 0.5, info.my_image_height * 0.5));
+                ImGui::EndDragDropSource();
+            }
+
+            const bool hovered = ImGui::IsItemHovered();
+
+            if (hovered) {
+                puts((std::string("Mouse no indicador: ") + _dragAndDropItems[k].label).c_str());
+            }
+
+            //AddC lose button if finish indicator list
+            if (k == (_dragAndDropItems.size() - 1)) {
+                ImGui::Spacing();
+                auto info = _editor->getTexture(Editor::Icons::trash);
+                //change the background of trash button
+
+                ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
+                ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - info.my_image_width / 2 - 4);
+                if (ImGui::ImageButton((void *) (intptr_t) info.my_image_texture,
+                                       ImVec2(info.my_image_width, info.my_image_height))) {
+                    if (_trashCallback)
+                        _trashCallback();
+                }
+                ImGui::PopStyleColor();
+            }
+
+            ImGui::Spacing();
+
+            ImGui::EndChild();
+        }
     }
+
     ImGui::EndChild();
 
-    if (ImGui::BeginDragDropTarget()) {
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(Indicators::CANDLE_INDICATORS)) {
-            int i = *(int *) payload->Data;
-            _dragAndDropItems[i].Reset();
-        }
-        ImGui::EndDragDropTarget();
-    }
+    ImGui::PopStyleColor(3);
+//
+//    if (ImGui::BeginDragDropTarget()) {
+//        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(Indicators::CANDLE_INDICATORS)) {
+//            int i = *(int *) payload->Data;
+//            _dragAndDropItems[i].Reset();
+//        }
+//        ImGui::EndDragDropTarget();
+//    }
 }
 
 //void CandleChart::showDemoDragAndDrop() {
@@ -212,6 +239,10 @@ void Indicators::drawView() {
 //}
 
 
-std::vector<Indicators::MyDndItem> &Indicators::getIndicators() {
+std::vector<Indicators::DragAndDropIndicatorItem> &Indicators::getIndicators() {
     return _dragAndDropItems;
+}
+
+void Indicators::setTrashCallback(TrashClickCallback callback) {
+    _trashCallback = callback;
 }
