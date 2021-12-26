@@ -55,6 +55,8 @@ public:
         return _widgetId;
     };
 
+    virtual int getWindowFlags();
+
 protected:
     std::string _widgetId{""};
     bool _is_window                  = true;

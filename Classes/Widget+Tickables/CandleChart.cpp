@@ -48,7 +48,7 @@ inline static float randomNumber(){
 CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker)
 {
     _title                  = "Candle Chart";
-    _is_window              = true;
+    _is_window              = false;
     _indicatorsView = std::make_unique<Indicators>(editor);
 //
 //    for(int i = 0; i< _numberOfItems; i++)

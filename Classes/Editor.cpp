@@ -6,7 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_internal.h>
-#include "Widgets/Widget_MainMenuBar.h"
+#include "Widgets/MainMenuBar.h"
+#include "Widgets/Workspace.h"
 #include "Widgets/DataLoader.h"
 #include "Widgets/Charts.h"
 
@@ -23,7 +24,9 @@ void Editor::start() {
     _context = std::make_shared<BackTestingContext>();
 
     // Initialise Editor/ImGui
-    _widgets.emplace_back(std::make_shared<Widget_MainMenuBar>(this));
+    _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
+    _widgets.emplace_back(std::make_shared<Workspace>(this));
+
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
     _widgets.emplace_back(std::make_shared<Charts>(this));
 
@@ -39,7 +42,7 @@ void Editor::BeginWindow() {
     // Set window flags
 
     // Begin dock space
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+//    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
     const auto window_flags =
             ImGuiWindowFlags_MenuBar               |

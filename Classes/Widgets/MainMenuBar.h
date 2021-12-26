@@ -2,8 +2,8 @@
 // Created by Arthur Abel Motelevicz on 19/12/21.
 //
 
-#ifndef BROKERAPP_WIDGET_MAINMENUBAR_H
-#define BROKERAPP_WIDGET_MAINMENUBAR_H
+#ifndef BROKERAPP_MAINMENUBAR_H
+#define BROKERAPP_MAINMENUBAR_H
 
 
 
@@ -14,10 +14,10 @@
 
 class Widget_Toolbar;
 
-class Widget_MainMenuBar : public Widget
+class MainMenuBar : public Widget
 {
 public:
-    Widget_MainMenuBar(Editor* editor);
+    MainMenuBar(Editor* editor);
 
     void updateVisible(float dt) override;
     void onShow() override;
@@ -27,4 +27,4 @@ public:
 private:
 };
 
-#endif //BROKERAPP_WIDGET_MAINMENUBAR_H
+#endif //BROKERAPP_MAINMENUBAR_H

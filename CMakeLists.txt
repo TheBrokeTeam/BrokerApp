@@ -10,8 +10,8 @@ add_executable(BrokerApp
         Classes/Widgets/Widget.h
         Classes/Contexts/Context.cpp
         Classes/Contexts/Context.h
-        Classes/Widgets/Widget_MainMenuBar.cpp
-        Classes/Widgets/Widget_MainMenuBar.h
+        Classes/Widgets/MainMenuBar.cpp
+        Classes/Widgets/MainMenuBar.h
         Classes/Contexts/BackTestingContext.cpp
         Classes/Contexts/BackTestingContext.h
         Classes/Widgets/DataLoader.cpp
@@ -53,7 +53,7 @@ add_executable(BrokerApp
         Classes/Tickables/SMA.cpp
         Classes/Tickables/SMA.h
         Classes/Helpers/ImageLoader.cpp
-        Classes/Helpers/ImageLoader.h)
+        Classes/Helpers/ImageLoader.h Classes/Widgets/Workspace.cpp Classes/Widgets/Workspace.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

@@ -104,7 +104,7 @@ void Widget::update(float dt)
         onPushStyleColor();
 
         // Begin
-        if (ImGui::Begin(_title.c_str(), &_is_visible, _flags))
+        if (ImGui::Begin(_title.c_str(), nullptr, getWindowFlags()))
         {
             _window = ImGui::GetCurrentWindow();
             _height = ImGui::GetWindowHeight();
@@ -148,5 +148,9 @@ void Widget::popStyles() {
     //Pop color variables
     ImGui::PopStyleColor(_color_pushes);
     _color_pushes = 0;
+}
+
+int Widget::getWindowFlags() {
+    return _flags;
 }
 

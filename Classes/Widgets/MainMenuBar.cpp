@@ -3,10 +3,11 @@
 //
 
 #include <implot.h>
-#include "Widget_MainMenuBar.h"
+#include <imgui_internal.h>
+#include "MainMenuBar.h"
 #include "../Editor.h"
 
-namespace _Widget_MainMenuBar
+namespace _MainMenuBar
 {
     static bool show_downloader = true;
     static bool show_charts = true;
@@ -19,13 +20,13 @@ namespace _Widget_MainMenuBar
     static bool implot_demo            = false;
 }
 
-Widget_MainMenuBar::Widget_MainMenuBar(Editor *editor) : Widget(editor)
+MainMenuBar::MainMenuBar(Editor *editor) : Widget(editor)
 {
     _title                  = "MainMenuBar";
     _is_window              = false;
 }
 
-void Widget_MainMenuBar::updateAlways(float dt)
+void MainMenuBar::updateAlways(float dt)
 {
 //    puts("updateAlways");
     PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(GetPadding(), GetPadding()));
@@ -47,65 +48,64 @@ void Widget_MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Data Loader", "CTRL+D",&_Widget_MainMenuBar::show_downloader)){}
-            if (ImGui::MenuItem("Charts", "CTRL+G",&_Widget_MainMenuBar::show_charts)){}
-            if (ImGui::MenuItem("Indicators", "",&_Widget_MainMenuBar::show_indicators)){}
+            if (ImGui::MenuItem("Data Loader", "CTRL+D",&_MainMenuBar::show_downloader)){}
+            if (ImGui::MenuItem("Charts", "CTRL+G",&_MainMenuBar::show_charts)){}
+            if (ImGui::MenuItem("Indicators", "",&_MainMenuBar::show_indicators)){}
 
-            ImGui::MenuItem("ImGui Metrics", nullptr, &_Widget_MainMenuBar::imgui_metrics);
-            ImGui::MenuItem("ImGui Style",   nullptr, &_Widget_MainMenuBar::imgui_style);
-            ImGui::MenuItem("ImGui Demo",    nullptr, &_Widget_MainMenuBar::imgui_demo);
-            ImGui::MenuItem("ImPlot Demo",    nullptr, &_Widget_MainMenuBar::implot_demo);
+            ImGui::MenuItem("ImGui Metrics", nullptr, &_MainMenuBar::imgui_metrics);
+            ImGui::MenuItem("ImGui Style",   nullptr, &_MainMenuBar::imgui_style);
+            ImGui::MenuItem("ImGui Demo",    nullptr, &_MainMenuBar::imgui_demo);
+            ImGui::MenuItem("ImPlot Demo",    nullptr, &_MainMenuBar::implot_demo);
 
             ImGui::EndMenu();
         }
 
         if (ImGui::BeginMenu("Help"))
         {
-            ImGui::MenuItem("About", nullptr, &_Widget_MainMenuBar::showAboutWindow);
-            ImGui::MenuItem("Shortcuts & Input Reference", "Ctrl+P", &_Widget_MainMenuBar::showShortcutsWindow);
+            ImGui::MenuItem("About", nullptr, &_MainMenuBar::showAboutWindow);
+            ImGui::MenuItem("Shortcuts & Input Reference", "Ctrl+P", &_MainMenuBar::showShortcutsWindow);
             ImGui::EndMenu();
         }
-
         ImGui::EndMainMenuBar();
     }
 
     //update editor
-    _editor->showDataLoader(_Widget_MainMenuBar::show_downloader);
-    _editor->showCharts(_Widget_MainMenuBar::show_charts);
-    _editor->showIndicators(_Widget_MainMenuBar::show_indicators);
+    _editor->showDataLoader(_MainMenuBar::show_downloader);
+    _editor->showCharts(_MainMenuBar::show_charts);
+    _editor->showIndicators(_MainMenuBar::show_indicators);
 
-    if (_Widget_MainMenuBar::imgui_metrics)
+    if (_MainMenuBar::imgui_metrics)
     {
         ImGui::ShowMetricsWindow();
     }
 
-    if (_Widget_MainMenuBar::imgui_style)
+    if (_MainMenuBar::imgui_style)
     {
         ImGui::Begin("Style Editor", nullptr, ImGuiWindowFlags_NoDocking);
         ImGui::ShowStyleEditor();
         ImGui::End();
     }
 
-    if (_Widget_MainMenuBar::imgui_demo)
+    if (_MainMenuBar::imgui_demo)
     {
-        ImGui::ShowDemoWindow(&_Widget_MainMenuBar::imgui_demo);
+        ImGui::ShowDemoWindow(&_MainMenuBar::imgui_demo);
     }
 
-    if (_Widget_MainMenuBar::implot_demo)
+    if (_MainMenuBar::implot_demo)
     {
-        ImPlot::ShowDemoWindow(&_Widget_MainMenuBar::implot_demo);
+        ImPlot::ShowDemoWindow(&_MainMenuBar::implot_demo);
     }
 }
 
-void Widget_MainMenuBar::updateVisible(float dt) {
+void MainMenuBar::updateVisible(float dt) {
     puts("updateVisible");
 }
 
-void Widget_MainMenuBar::onShow() {
+void MainMenuBar::onShow() {
     puts("onShow");
 }
 
-void Widget_MainMenuBar::onHide() {
+void MainMenuBar::onHide() {
     puts("onHide");
 }
 
