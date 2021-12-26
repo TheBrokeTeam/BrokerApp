@@ -33,6 +33,16 @@ public:
     virtual void updateVisible(float dt);     // Called only when the widget is visible
     virtual void onShow();          // Called when the window becomes visible
     virtual void onHide();          // called when the window becomes invisible
+    virtual void onPushStyleVar();  // Called just before ImGui::Begin()
+    virtual void onPushStyleColor();  // Called just before ImGui::Begin()
+
+    // Use this to push style variables. They will be automatically popped.
+    template<typename T>
+    void PushStyleVar(ImGuiStyleVar idx, T val) { ImGui::PushStyleVar(idx, val); _var_pushes++; }
+
+    // Use this to push style colors. They will be automatically popped.
+    template<typename T>
+    void PushStyleColor(ImGuiCol_ idx, T val) { ImGui::PushStyleColor(idx, val); _color_pushes++; }
 
     // Properties
     float GetHeight()           const { return _height; }
@@ -63,6 +73,11 @@ protected:
     std::string _title              = "Title";
 
 private:
+    uint8_t _var_pushes = 0;
+    uint8_t _color_pushes = 0;
+
+    void popStyles();
+
 };
 
 

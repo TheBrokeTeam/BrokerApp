@@ -28,8 +28,10 @@ Widget_MainMenuBar::Widget_MainMenuBar(Editor *editor) : Widget(editor)
 void Widget_MainMenuBar::updateAlways(float dt)
 {
 //    puts("updateAlways");
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(GetPadding(), GetPadding()));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(GetPadding(), GetPadding()));
+    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    PushStyleColor(ImGuiCol_MenuBarBg,Editor::broker_dark_grey);
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -66,8 +68,6 @@ void Widget_MainMenuBar::updateAlways(float dt)
 
         ImGui::EndMainMenuBar();
     }
-
-    ImGui::PopStyleVar(2);
 
     //update editor
     _editor->showDataLoader(_Widget_MainMenuBar::show_downloader);

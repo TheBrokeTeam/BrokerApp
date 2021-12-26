@@ -13,6 +13,13 @@
 class Ticker;
 class Editor : public App {
 public:
+
+    inline static const ImVec4 broker_yellow = ImVec4(255.0f/255, 191.0f/255,64.0f/255, 1.00f);
+    inline static const ImVec4 broker_white = ImVec4(220.0f/255, 220.0f/255,220.0f/255, 1.00f);
+    inline static const ImVec4 broker_dark_grey = ImVec4(24.0f/255, 26.0f/255,31.0f/255, 1.00f);
+    inline static const ImVec4 broker_light_grey = ImVec4(62.0f/255, 62.0f/255,62.0f/255, 1.00f);
+    inline static const ImVec4 broker_black = ImVec4(0.0f, 0.0f,0.0f, 1.00f);
+
     struct ImageInfo {
         int my_image_width = 0;
         int my_image_height = 0;

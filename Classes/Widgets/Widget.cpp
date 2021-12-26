@@ -35,15 +35,27 @@ void Widget::onHide()
 
 }
 
+void Widget::onPushStyleVar() {
+
+}
+
+void Widget::onPushStyleColor() {
+
+}
+
+
 
 void Widget::update(float dt)
 {
     updateAlways(dt);
 
-    if (!_is_window)
+    if (!_is_window){
+        popStyles();
         return;
+    }
 
     bool begun = false;
+
     {
         if (!_is_visible)
             return;
@@ -61,18 +73,18 @@ void Widget::update(float dt)
         }
 
         // Padding
-        if (_padding.x != _default_value.x)
-        {
+//        if (_padding.x != _default_value.x)
+//        {
 //            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, _padding);
 //            _var_pushes++;
-        }
+//        }
 
         // Alpha
-        if (_alpha != k_widget_default_propery)
-        {
+//        if (_alpha != k_widget_default_propery)
+//        {
 //            ImGui::PushStyleVar(ImGuiStyleVar_Alpha, _alpha);
 //            _var_pushes++;
-        }
+//        }
 
         // Position
         if (_position.x != _default_value.x)
@@ -88,7 +100,8 @@ void Widget::update(float dt)
         }
 
         // Callback
-//        OnPushStyleVar();
+        onPushStyleVar();
+        onPushStyleColor();
 
         // Begin
         if (ImGui::Begin(_title.c_str(), &_is_visible, _flags))
@@ -123,11 +136,17 @@ void Widget::update(float dt)
         {
             // End
             ImGui::End();
-
-            // Pop style variables
-//            ImGui::PopStyleVar(_var_pushes);
-//            _var_pushes = 0;
-
+            popStyles();
         }
     }
 }
+
+void Widget::popStyles() {
+    //Pop style variables
+    ImGui::PopStyleVar(_var_pushes);
+    _var_pushes = 0;
+    //Pop color variables
+    ImGui::PopStyleColor(_color_pushes);
+    _color_pushes = 0;
+}
+
