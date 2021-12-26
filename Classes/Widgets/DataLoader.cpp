@@ -44,9 +44,6 @@ void DataLoader::updateVisible(float dt)
     //change background of items on combos
     PushStyleColor(ImGuiCol_PopupBg,Editor::broker_white);
 
-//    ImGui::Separator();
-
-    ImGui::SameLine();
     ImGui::TextColored(Editor::broker_white,"Data downloader");
     ImGui::SameLine();
 
