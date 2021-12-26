@@ -3,10 +3,11 @@
 //
 
 #include "SMA.h"
+#include <implot.h>
+#include <implot_internal.h>
 
-SMA::SMA(Ticker *ticker, int maSize): Indicator(ticker) {
-    _averageSize = maSize;
-
+SMA::SMA(Ticker *ticker): Indicator(ticker) {
+    setName("MA_" + std::to_string(_averageSize));
 }
 
 void SMA::calculate()
@@ -46,5 +47,24 @@ void SMA::onLoad(BarHistory *barHistory) {
             _time.push_back(data[idx].time);
         }
     }
+}
+
+void SMA::render() {
+    Indicator::render();
+
+    // custom legend context menu
+    if (ImPlot::BeginLegendPopup(_name.c_str())) {
+        ImGui::Separator();
+        if(ImGui::SliderInt("Average size", &_averageSize, 0, 200)){
+            reset();
+            onLoad(_barHistory);
+            setName("MA_" + std::to_string(_averageSize));
+        }
+        ImGui::ColorEdit4("Color",{&_color.x});
+        ImGui::Separator();
+        ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
+        ImPlot::EndLegendPopup();
+    }
+
 }
 

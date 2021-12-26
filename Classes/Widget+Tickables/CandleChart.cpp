@@ -83,7 +83,7 @@ void CandleChart::render(float dt)
 
     const double candleWidth = _ticker->getSymbol()->getTimeIntervalInMinutes() * 60;
 
-    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
+//    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
 
         if(_showIndicators){
             // showDemoDragAndDrop();
@@ -188,17 +188,12 @@ void CandleChart::render(float dt)
 
                 //allow candles plot area to be a DRAG AND DROP target ##
                 if (ImPlot::BeginDragDropTargetPlot()) {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Indicators::CANDLE_INDICATORS)) {
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Indicators::CANDLE_INDICATORS_DRAG_ID)) {
                         //indice of dragged item
                         int i = *(int*)payload->Data;
 
                         puts("AGORA é a hora de plotar!!!");
-
-                        std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker,10);
-                        sma->setup("SMA " + std::to_string(10));
-
-                        _indicators.push_back(std::move(sma));
-                        _ticker->addTickable(_indicators.back().get());
+                        loadIndicator(_indicatorsView->getIndicators()[i].type);
                     }
                     ImPlot::EndDragDropTarget();
                 }
@@ -259,8 +254,8 @@ void CandleChart::render(float dt)
 
             ImPlot::EndSubplots();
         }
-        ImGui::EndTabItem();
-    }
+//        ImGui::EndTabItem();
+//    }
 }
 
 void CandleChart::showIndicators(bool show) {
@@ -270,6 +265,30 @@ void CandleChart::showIndicators(bool show) {
 void CandleChart::plotIndicators() {
     for(auto& i : _indicators) {
         i->render();
+    }
+}
+
+void CandleChart::loadIndicator(Indicators::CandleIndicatorsTypes type) {
+
+    switch (type) {
+        case Indicators::CandleIndicatorsTypes::MA:
+            {
+                std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker);
+                _indicators.push_back(std::move(sma));
+                _ticker->addTickable(_indicators.back().get());
+            }
+            break;
+        case Indicators::CandleIndicatorsTypes::EMA:
+        case Indicators::CandleIndicatorsTypes::WMA:
+        case Indicators::CandleIndicatorsTypes::BOLL:
+        case Indicators::CandleIndicatorsTypes::AVL:
+        case Indicators::CandleIndicatorsTypes::VWAP:
+        case Indicators::CandleIndicatorsTypes::TRIX:
+        case Indicators::CandleIndicatorsTypes::SAR :
+            //TODO:: popup para o luiz aqui pedindo pra implementar o indicador = )
+        break;
+        default:
+            break;
     }
 }
 

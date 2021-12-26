@@ -10,11 +10,6 @@ Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {
 
 }
 
-
-void Indicator::setup(const std::string &name) {
-    _name = name;
-}
-
 Indicator::~Indicator() {
     _ys.clear();
     _time.clear();
@@ -61,6 +56,11 @@ void Indicator::reset()
 void Indicator::onLoad(BarHistory *barHistory) {
     Tickable::onLoad(barHistory);
 }
+
+void Indicator::setName(const std::string& name) {
+    _name = name;
+}
+
 //double Indicator::value(int indexBar){
 //    return _ys[0][fixedIndex(indexBar)];
 //}

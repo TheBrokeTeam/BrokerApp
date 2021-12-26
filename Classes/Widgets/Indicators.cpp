@@ -10,7 +10,7 @@
 Indicators::Indicators(Editor *editor) : Widget(editor) {
 
     for(int i = 0; i< _numberOfItems; i++)
-        _dragAndDropItems.push_back(DragAndDropIndicatorItem(static_cast<CandleIndicators>(i)));
+        _dragAndDropItems.push_back(DragAndDropIndicatorItem(static_cast<CandleIndicatorsTypes>(i)));
 }
 
 void Indicators::updateVisible(float dt) {
@@ -35,7 +35,7 @@ void Indicators::drawView() {
             ImGui::Button(_dragAndDropItems[k].label.c_str(), ImVec2(50, 30));
 
             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
-                ImGui::SetDragDropPayload(Indicators::CANDLE_INDICATORS, &k, sizeof(int));
+                ImGui::SetDragDropPayload(Indicators::CANDLE_INDICATORS_DRAG_ID, &k, sizeof(int));
                 auto info = _editor->getTexture(Editor::Icons::indicator_ma);
                 ImGui::Image((void *) (intptr_t) info.my_image_texture,
                              ImVec2(info.my_image_width * 0.5, info.my_image_height * 0.5));

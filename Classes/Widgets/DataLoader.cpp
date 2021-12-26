@@ -61,9 +61,8 @@ void DataLoader::updateVisible(float dt)
 
     ImGui::Separator();
 
-    ImGui::Dummy(ImVec2(200,20));
-
-
+    ImGui::Spacing();
+//    ImGui::Dummy(ImVec2(200,20));
 
     //change background from other buttons
     PushStyleColor(ImGuiCol_Button,Editor::broker_white);

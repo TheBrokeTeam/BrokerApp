@@ -9,13 +9,14 @@
 
 class SMA : public Indicator{
 public:
-    SMA(Ticker* ticker, int maSize);
+    SMA(Ticker* ticker);
     ~SMA();
     void calculate() override;
     void onLoad(BarHistory* barHistory) override;
+    void render() override;
 
 private:
-    int _averageSize = 3; // minimum size is 2
+    int _averageSize = 2; // minimum size is 2
 };
 
 

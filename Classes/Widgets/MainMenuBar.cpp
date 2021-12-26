@@ -46,17 +46,19 @@ void MainMenuBar::updateAlways(float dt)
             ImGui::MenuItem("Show tabbars on views", "", &_show_tabbars);
 
             static int ui_num = 1;
-            if(ImGui::InputInt("ui number",&ui_num)){}
+
+//            if(ImGui::InputInt("ui number",&ui_num)){}
 
             if(ImGui::Button("Save UI")){
                 std::string _filePath = fmt::format("ui_num_{}",ui_num);
                 ImGui::SaveIniSettingsToDisk(_filePath.c_str());
             }
 
-            if(ImGui::Button("Load UI")){
-                std::string _filePath = fmt::format("ui_num_{}",ui_num);
-                ImGui::LoadIniSettingsFromDisk(_filePath.c_str());
-            }
+//            if(ImGui::Button("Load UI")){
+//                std::string _filePath = fmt::format("ui_num_{}",ui_num);
+//                //TODO:: this do not work properly here need to be called before the first newFrame call.
+//                ImGui::LoadIniSettingsFromDisk(_filePath.c_str());
+//            }
 
             ImGui::EndMenu();
         }

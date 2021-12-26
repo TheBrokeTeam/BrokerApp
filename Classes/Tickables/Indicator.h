@@ -14,12 +14,11 @@ public:
     Indicator(Ticker* ticker);
     virtual ~Indicator();
 
-    void setup(const std::string &name);
-
     /** For Now calculate will be called at onClose bar */
     virtual void calculate();
     virtual void reset();
 
+    void setName(const std::string& name);
     std::string getName();
 
     const std::vector<std::vector<double>> &getYs();

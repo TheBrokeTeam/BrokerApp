@@ -16,11 +16,11 @@ class Indicators : public Widget {
 public:
     typedef std::function<void(void)> TrashClickCallback;
 
-    static inline const char* CANDLE_INDICATORS = "CANDLE_INDICATOR";
-    static inline const char* VOLUME_INDICATORS = "VOLUME_INDICATOR";
+    static inline const char* CANDLE_INDICATORS_DRAG_ID = "CANDLE_INDICATOR";
+    static inline const char* VOLUME_INDICATORS_DRAG_ID = "VOLUME_INDICATOR";
 
-    enum class CandleIndicators{
-        MMA,
+    enum class CandleIndicatorsTypes{
+        MA,
         EMA,
         WMA,
         BOLL,
@@ -31,11 +31,11 @@ public:
     };
 
     struct DragAndDropIndicatorItem {
-            CandleIndicators _type;
+            CandleIndicatorsTypes type;
             std::string      label{""};
-            DragAndDropIndicatorItem(CandleIndicators type): _type(type){
+            DragAndDropIndicatorItem(CandleIndicatorsTypes type): type(type){
                 static std::string names[8]{"MA","EMA","WMA","BOLL","VWAP","AVL","TRIX","SAR"};
-                label = names[int(_type)];
+                label = names[int(type)];
         }
     };
 

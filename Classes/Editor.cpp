@@ -39,6 +39,8 @@ void Editor::start() {
     style.Colors[ImGuiCol_SeparatorHovered] = Editor::broker_yellow;
     style.Colors[ImGuiCol_SeparatorActive] = Editor::broker_yellow;
 
+    //TODO:: make a way to change the layout configuration at run time
+    ImGui::LoadIniSettingsFromDisk("ui_num_1");
 }
 
 void Editor::update() {

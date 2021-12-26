@@ -24,6 +24,7 @@ public:
 
 protected:
 private:
+    void loadIndicator(Indicators::CandleIndicatorsTypes type);
     void render(float dt);
     void plotIndicators();
 
