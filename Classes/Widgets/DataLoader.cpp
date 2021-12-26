@@ -141,5 +141,4 @@ int DataLoader::getWindowFlags() {
 
 void DataLoader::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
-
 }

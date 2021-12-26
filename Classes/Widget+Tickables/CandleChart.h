@@ -21,6 +21,7 @@ public:
     CandleChart(Editor* editor, Ticker* ticker);
     void updateVisible(float dt) override;
     void showIndicators(bool show);
+
 protected:
 private:
     void render(float dt);

@@ -273,6 +273,7 @@ void CandleChart::plotIndicators() {
     }
 }
 
+
 // oid CandleChart::addIndicator(const ui_event::AddIndicatorCLicked &event) {
 //    std::cout << "Indicator SMA Study: " << event.info.mma << std::endl;
 //

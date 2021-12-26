@@ -3,6 +3,7 @@
 //
 
 #include "Charts.h"
+#include "../Editor.h"
 
 Charts::Charts(Editor *editor) : Widget(editor) {
     _title                  = "Charts";
@@ -25,4 +26,9 @@ void Charts::addChart(std::shared_ptr<CandleChart> candleChart){
 void Charts::enableIndicatorsOnCharts(bool show) {
     for(auto c : _charts)
         c->showIndicators(show);
+}
+
+
+void Charts::onPushStyleVar() {
+    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
