@@ -18,18 +18,15 @@
 void Editor::start() {
 
     //loading images
-    loadResources();
+    loadImage(Icons::indicator_ma,"../Resources/Icons/ma.png");
+    loadImage(Icons::close_window,"../Resources/Icons/close.png");
 
     // Initialize the context
     _context = std::make_shared<BackTestingContext>();
 
-    _mainMenuBar = std::make_shared<MainMenuBar>(this);
-    // Initialise Editor/ImGui
-//    _widgets.emplace_back((this));
-
+    _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
     _widgets.emplace_back(std::make_shared<Charts>(this));
-
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -41,7 +38,6 @@ void Editor::update() {
     //calculate deltime
     auto dt = getDeltaTime();
 
-    _mainMenuBar->update(dt);
     showDockSpace();
 
     // Editor - update widgets
@@ -71,36 +67,46 @@ void Editor::addChartWidget(Ticker *ticker) {
 }
 
 void Editor::showDataLoader(bool show) {
-    getWidget<DataLoader>()->SetVisible(show);
+    auto donwloader = getWidget<DataLoader>();
+    if(donwloader)
+        donwloader->SetVisible(show);
+
+    MainMenuBar::_show_downloader = show;
 }
 
 void Editor::showCharts(bool show) {
     auto charts = getWidget<Charts>();
     if(charts)
         getWidget<Charts>()->SetVisible(show);
+
+    MainMenuBar::_show_charts = show;
+
 }
 
 void Editor::showIndicators(bool show) {
     auto charts = getWidget<Charts>();
     if(charts)
         charts->enableIndicatorsOnCharts(show);
+
+    MainMenuBar::_show_indicators = show;
 }
 
-void Editor::loadResources() {
+void Editor::loadImage(Icons icon,const std::string& filepath)
+{
     int my_image_width = 0;
     int my_image_height = 0;
     GLuint my_image_texture = 0;
 
-    bool ret = ImageLoader::loadTexture("../Resources/Icons/ma.png", &my_image_texture, &my_image_width, &my_image_height);
+    bool ret = ImageLoader::loadTexture(filepath.c_str() , &my_image_texture, &my_image_width, &my_image_height);
+
+    IM_ASSERT(ret);
 
     ImageInfo info;
     info.my_image_width = my_image_width;
     info.my_image_height = my_image_height;
     info.my_image_texture = my_image_texture;
 
-    _imagesRef.emplace(Icons::indicator_ma,info);
-
-    IM_ASSERT(ret);
+    _imagesRef.emplace(icon,info);
 }
 
 Editor::ImageInfo Editor::getTexture(Editor::Icons icon) {
@@ -111,6 +117,7 @@ void Editor::showTabBars(bool show) {
     for(auto& w :_widgets){
         w->showTabBar(show);
     }
+    MainMenuBar::_show_tabbars = show;
 }
 
 void Editor::showDockSpace()

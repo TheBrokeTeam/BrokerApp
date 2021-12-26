@@ -24,7 +24,6 @@ public:
     int getWindowFlags() override;
     void onPushStyleVar() override;
 
-
 private:
     FetchInfo _info;
 };

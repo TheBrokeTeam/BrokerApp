@@ -8,20 +8,6 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 
-
-namespace _MainMenuBar
-{
-    static bool show_downloader = true;
-    static bool show_charts = true;
-    static bool show_indicators = true;
-    static bool show_tabbars = false;
-    static bool showAboutWindow     = false;
-    static bool imgui_metrics         = false;
-    static bool imgui_style           = false;
-    static bool imgui_demo            = false;
-    static bool implot_demo            = false;
-}
-
 MainMenuBar::MainMenuBar(Editor *editor) : Widget(editor)
 {
     _title                  = "MainMenuBar";
@@ -50,15 +36,15 @@ void MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Data Loader", "CTRL+D",&_MainMenuBar::show_downloader)){}
-            if (ImGui::MenuItem("Charts", "CTRL+G",&_MainMenuBar::show_charts)){}
-            if (ImGui::MenuItem("Indicators", "",&_MainMenuBar::show_indicators)){}
+            if (ImGui::MenuItem("Data Loader", "CTRL+D",&_show_downloader)){}
+            if (ImGui::MenuItem("Charts", "CTRL+G",&_show_charts)){}
+            if (ImGui::MenuItem("Indicators", "",&_show_indicators)){}
 
-            ImGui::MenuItem("ImGui Metrics", nullptr, &_MainMenuBar::imgui_metrics);
-            ImGui::MenuItem("ImGui Style",   nullptr, &_MainMenuBar::imgui_style);
-            ImGui::MenuItem("ImGui Demo",    nullptr, &_MainMenuBar::imgui_demo);
-            ImGui::MenuItem("ImPlot Demo",    nullptr, &_MainMenuBar::implot_demo);
-            ImGui::MenuItem("Show tabbars on views", "", &_MainMenuBar::show_tabbars);
+            ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);
+            ImGui::MenuItem("ImGui Style",   nullptr, &_imgui_style);
+            ImGui::MenuItem("ImGui Demo",    nullptr, &_imgui_demo);
+            ImGui::MenuItem("ImPlot Demo",    nullptr, &_implot_demo);
+            ImGui::MenuItem("Show tabbars on views", "", &_show_tabbars);
 
             static int ui_num = 1;
             if(ImGui::InputInt("ui number",&ui_num)){}
@@ -78,38 +64,38 @@ void MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("Help"))
         {
-            ImGui::MenuItem("About", nullptr, &_MainMenuBar::showAboutWindow);
+            ImGui::MenuItem("About", nullptr, &_showAboutWindow);
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
 
     //update editor
-    _editor->showDataLoader(_MainMenuBar::show_downloader);
-    _editor->showCharts(_MainMenuBar::show_charts);
-    _editor->showIndicators(_MainMenuBar::show_indicators);
-    _editor->showTabBars(_MainMenuBar::show_tabbars);
+    _editor->showDataLoader(_show_downloader);
+    _editor->showCharts(_show_charts);
+    _editor->showIndicators(_show_indicators);
+    _editor->showTabBars(_show_tabbars);
 
-    if (_MainMenuBar::imgui_metrics)
+    if (_imgui_metrics)
     {
         ImGui::ShowMetricsWindow();
     }
 
-    if (_MainMenuBar::imgui_style)
+    if (_imgui_style)
     {
         ImGui::Begin("Style Editor", nullptr, ImGuiWindowFlags_NoDocking);
         ImGui::ShowStyleEditor();
         ImGui::End();
     }
 
-    if (_MainMenuBar::imgui_demo)
+    if (_imgui_demo)
     {
-        ImGui::ShowDemoWindow(&_MainMenuBar::imgui_demo);
+        ImGui::ShowDemoWindow(&_imgui_demo);
     }
 
-    if (_MainMenuBar::implot_demo)
+    if (_implot_demo)
     {
-        ImPlot::ShowDemoWindow(&_MainMenuBar::implot_demo);
+        ImPlot::ShowDemoWindow(&_implot_demo);
     }
 }
 

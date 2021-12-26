@@ -18,6 +18,8 @@ public:
     inline static const ImVec4 broker_white = ImVec4(220.0f/255, 220.0f/255,220.0f/255, 1.00f);
     inline static const ImVec4 broker_dark_grey = ImVec4(24.0f/255, 26.0f/255,31.0f/255, 1.00f);
     inline static const ImVec4 broker_light_grey = ImVec4(62.0f/255, 62.0f/255,62.0f/255, 1.00f);
+    inline static const ImVec4 broker_clear = ImVec4(0, 0,0, 0.00f);
+
     inline static const ImVec4 broker_black = ImVec4(0.0f, 0.0f,0.0f, 1.00f);
 
     struct ImageInfo {
@@ -29,6 +31,7 @@ public:
     enum class Icons{
         none,
         indicator_ma,
+        close_window
     };
 
 
@@ -67,7 +70,6 @@ public:
     void showDockSpace();
 
 private:
-    std::shared_ptr<Widget> _mainMenuBar{nullptr};
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::shared_ptr<Context> _context{nullptr};
 
@@ -75,7 +77,7 @@ private:
     float _lastTime = 0;
     float getDeltaTime();
 
-    void loadResources();
+    void loadImage(Icons icon,const std::string& filepath);
 };
 
 
