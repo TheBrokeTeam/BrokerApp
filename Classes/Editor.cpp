@@ -32,6 +32,12 @@ void Editor::start() {
     ImGuiIO &io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+    auto& style = ImGui::GetStyle();
+
+    style.Colors[ImGuiCol_Separator] = Editor::broker_black;
+    style.Colors[ImGuiCol_SeparatorHovered] = Editor::broker_yellow;
+    style.Colors[ImGuiCol_SeparatorActive] = Editor::broker_yellow;
+
 }
 
 void Editor::update() {

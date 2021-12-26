@@ -29,6 +29,10 @@ DataLoader::DataLoader(Editor *editor) : Widget(editor)
 
 void DataLoader::updateVisible(float dt)
 {
+    //change background of window
+    PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8,8));
+    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
     //change color text
     PushStyleColor(ImGuiCol_Text,Editor::broker_black);
@@ -52,11 +56,9 @@ void DataLoader::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
 
-
-
     //adding the close button
     auto info = _editor->getTexture(Editor::Icons::close_window);
-    ImGui::SetCursorPosX( 200 - info.my_image_width);
+    ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
     if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
         _editor->showDataLoader(false);
     }
@@ -139,4 +141,5 @@ int DataLoader::getWindowFlags() {
 
 void DataLoader::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+
 }

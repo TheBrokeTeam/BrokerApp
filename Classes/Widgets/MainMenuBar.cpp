@@ -16,11 +16,10 @@ MainMenuBar::MainMenuBar(Editor *editor) : Widget(editor)
 
 void MainMenuBar::updateAlways(float dt)
 {
-//    puts("updateAlways");
     PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(GetPadding(), GetPadding()));
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    PushStyleColor(ImGuiCol_MenuBarBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_MenuBarBg,Editor::broker_black);
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -36,7 +35,7 @@ void MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Data Loader", "CTRL+D",&_show_downloader)){}
+            if (ImGui::MenuItem("Data downloader", "CTRL+D",&_show_downloader)){}
             if (ImGui::MenuItem("Charts", "CTRL+G",&_show_charts)){}
             if (ImGui::MenuItem("Indicators", "",&_show_indicators)){}
 
