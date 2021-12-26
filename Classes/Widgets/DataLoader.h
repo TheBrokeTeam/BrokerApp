@@ -21,6 +21,9 @@ public:
     };
 
     void updateVisible(float dt) override;
+    int getWindowFlags() override;
+    void onPushStyleVar() override;
+
 
 private:
     FetchInfo _info;

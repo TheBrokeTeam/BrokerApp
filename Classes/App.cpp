@@ -212,6 +212,7 @@ App::App(std::string title, int w, int h, int argc, char const *argv[])
         StyeColorsApp();
     }
 
+
     ImGuiIO &io = ImGui::GetIO();
 
     // add fonts

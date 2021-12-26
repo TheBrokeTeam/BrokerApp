@@ -55,13 +55,15 @@ public:
         return _widgetId;
     };
 
+    void showTabBar(bool show);
+
     virtual int getWindowFlags();
 
 protected:
     std::string _widgetId{""};
     bool _is_window                  = true;
     bool _is_visible                 = true;
-    int _flags                       = ImGuiWindowFlags_NoCollapse;
+    int _flags                       = ImGuiWindowFlags_None;
     float _height                    = 0;
     float _alpha                     = -1.0f;
     ImVec2 _default_value = ImVec2(k_widget_default_propery,k_widget_default_propery);
@@ -77,6 +79,7 @@ protected:
 private:
     uint8_t _var_pushes = 0;
     uint8_t _color_pushes = 0;
+    bool _shouldShowTabbar = false;
 
     void popStyles();
 

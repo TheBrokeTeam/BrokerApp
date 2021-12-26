@@ -6,13 +6,15 @@
 #include <imgui_internal.h>
 #include "MainMenuBar.h"
 #include "../Editor.h"
+#include <fmt/format.h>
+
 
 namespace _MainMenuBar
 {
     static bool show_downloader = true;
     static bool show_charts = true;
-    static bool show_indicators = false;
-    static bool showShortcutsWindow = false;
+    static bool show_indicators = true;
+    static bool show_tabbars = false;
     static bool showAboutWindow     = false;
     static bool imgui_metrics         = false;
     static bool imgui_style           = false;
@@ -56,6 +58,20 @@ void MainMenuBar::updateAlways(float dt)
             ImGui::MenuItem("ImGui Style",   nullptr, &_MainMenuBar::imgui_style);
             ImGui::MenuItem("ImGui Demo",    nullptr, &_MainMenuBar::imgui_demo);
             ImGui::MenuItem("ImPlot Demo",    nullptr, &_MainMenuBar::implot_demo);
+            ImGui::MenuItem("Show tabbars on views", "", &_MainMenuBar::show_tabbars);
+
+            static int ui_num = 1;
+            if(ImGui::InputInt("ui number",&ui_num)){}
+
+            if(ImGui::Button("Save UI")){
+                std::string _filePath = fmt::format("ui_num_{}",ui_num);
+                ImGui::SaveIniSettingsToDisk(_filePath.c_str());
+            }
+
+            if(ImGui::Button("Load UI")){
+                std::string _filePath = fmt::format("ui_num_{}",ui_num);
+                ImGui::LoadIniSettingsFromDisk(_filePath.c_str());
+            }
 
             ImGui::EndMenu();
         }
@@ -63,7 +79,6 @@ void MainMenuBar::updateAlways(float dt)
         if (ImGui::BeginMenu("Help"))
         {
             ImGui::MenuItem("About", nullptr, &_MainMenuBar::showAboutWindow);
-            ImGui::MenuItem("Shortcuts & Input Reference", "Ctrl+P", &_MainMenuBar::showShortcutsWindow);
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
@@ -73,6 +88,7 @@ void MainMenuBar::updateAlways(float dt)
     _editor->showDataLoader(_MainMenuBar::show_downloader);
     _editor->showCharts(_MainMenuBar::show_charts);
     _editor->showIndicators(_MainMenuBar::show_indicators);
+    _editor->showTabBars(_MainMenuBar::show_tabbars);
 
     if (_MainMenuBar::imgui_metrics)
     {

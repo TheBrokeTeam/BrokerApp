@@ -77,3 +77,15 @@ void DataLoader::updateVisible(float dt)
 //    ImGui::Image((void*)(intptr_t)info.my_image_texture, ImVec2(info.my_image_width, info.my_image_height));
 //    ImGui::End();
 }
+
+int DataLoader::getWindowFlags() {
+//    ImGui::SetNextWindowPos(ImVec2(0,35));
+    return  ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoCollapse            ;
+            //            ImGuiWindowFlags_NoMove;
+}
+
+void DataLoader::onPushStyleVar() {
+    ImGui::SetNextWindowSize(ImVec2(200,ImGui::GetMainViewport()->Size.y));
+    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+}

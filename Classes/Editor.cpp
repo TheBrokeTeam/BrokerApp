@@ -7,7 +7,6 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include "Widgets/MainMenuBar.h"
-#include "Widgets/Workspace.h"
 #include "Widgets/DataLoader.h"
 #include "Widgets/Charts.h"
 
@@ -17,15 +16,16 @@
 #include "Helpers/ImageLoader.h"
 
 void Editor::start() {
+
     //loading images
     loadResources();
 
     // Initialize the context
     _context = std::make_shared<BackTestingContext>();
 
+    _mainMenuBar = std::make_shared<MainMenuBar>(this);
     // Initialise Editor/ImGui
-    _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
-    _widgets.emplace_back(std::make_shared<Workspace>(this));
+//    _widgets.emplace_back((this));
 
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
     _widgets.emplace_back(std::make_shared<Charts>(this));
@@ -37,58 +37,18 @@ void Editor::start() {
 
 }
 
-
-void Editor::BeginWindow() {
-    // Set window flags
-
-    // Begin dock space
-//    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-
-    const auto window_flags =
-            ImGuiWindowFlags_MenuBar               |
-            ImGuiWindowFlags_NoDocking             |
-            ImGuiWindowFlags_NoTitleBar            |
-            ImGuiWindowFlags_NoCollapse            |
-            ImGuiWindowFlags_NoResize              |
-            ImGuiWindowFlags_NoMove                |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoNavFocus;
-
-    // Set window position and size
-    const ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
-    ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
-    ImGui::SetNextWindowViewport(viewport->ID);
-
-    // Set window style
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::SetNextWindowBgAlpha(0.0f);
-
-    // Begin window
-    std::string name = "##main_window";
-    bool open = true;
-    _editor_begun = ImGui::Begin(name.c_str(), &open, window_flags);
-    ImGui::PopStyleVar(3);
-}
-
 void Editor::update() {
     //calculate deltime
     auto dt = getDeltaTime();
 
-    // Editor - Begin
-    BeginWindow();
+    _mainMenuBar->update(dt);
+    showDockSpace();
 
     // Editor - update widgets
     for (std::shared_ptr<Widget>& widget : _widgets)
     {
         widget->update(dt);
     }
-
-    // Editor - End
-    if (_editor_begun)
-        ImGui::End();
 }
 
 float Editor::getDeltaTime(){
@@ -115,11 +75,15 @@ void Editor::showDataLoader(bool show) {
 }
 
 void Editor::showCharts(bool show) {
-    getWidget<Charts>()->SetVisible(show);
+    auto charts = getWidget<Charts>();
+    if(charts)
+        getWidget<Charts>()->SetVisible(show);
 }
 
 void Editor::showIndicators(bool show) {
-    getWidget<Charts>()->enableIndicatorsOnCharts(show);
+    auto charts = getWidget<Charts>();
+    if(charts)
+        charts->enableIndicatorsOnCharts(show);
 }
 
 void Editor::loadResources() {
@@ -141,6 +105,17 @@ void Editor::loadResources() {
 
 Editor::ImageInfo Editor::getTexture(Editor::Icons icon) {
     return _imagesRef.at(icon);
+}
+
+void Editor::showTabBars(bool show) {
+    for(auto& w :_widgets){
+        w->showTabBar(show);
+    }
+}
+
+void Editor::showDockSpace()
+{
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 }
 
 int main(int argc, char const* argv[]){

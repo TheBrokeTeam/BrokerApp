@@ -61,16 +61,16 @@ void Widget::update(float dt)
             return;
 
         // Size
-        if (_size.x != _default_value.x)
-        {
-            ImGui::SetNextWindowSize(_size, ImGuiCond_FirstUseEver);
-        }
+//        if (_size.x != _default_value.x)
+//        {
+//            ImGui::SetNextWindowSize(_size, ImGuiCond_FirstUseEver);
+//        }
 
         // Max size
-        if (_size_min.x != _default_value.x || _size_max.x != _default_value.x)
-        {
-            ImGui::SetNextWindowSizeConstraints(_size_min, _size_max);
-        }
+//        if (_size_min.x != _default_value.x || _size_max.x != _default_value.x)
+//        {
+//            ImGui::SetNextWindowSizeConstraints(_size_min, _size_max);
+//        }
 
         // Padding
 //        if (_padding.x != _default_value.x)
@@ -86,7 +86,7 @@ void Widget::update(float dt)
 //            _var_pushes++;
 //        }
 
-        // Position
+//         Position
         if (_position.x != _default_value.x)
         {
             if (_position.x == k_widget_position_screen_center)
@@ -102,6 +102,16 @@ void Widget::update(float dt)
         // Callback
         onPushStyleVar();
         onPushStyleColor();
+
+        //Tabbar handle-----------------
+        ImGuiWindowClass window_class;
+        if(!_shouldShowTabbar)
+            window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+        else
+            window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_None;
+        ImGui::SetNextWindowClass(&window_class);
+        //---------------------------------------
+
 
         // Begin
         if (ImGui::Begin(_title.c_str(), nullptr, getWindowFlags()))
@@ -152,5 +162,9 @@ void Widget::popStyles() {
 
 int Widget::getWindowFlags() {
     return _flags;
+}
+
+void Widget::showTabBar(bool show) {
+    _shouldShowTabbar = show;
 }
 

@@ -62,11 +62,13 @@ public:
     void showDataLoader(bool show);
     void showCharts(bool show);
     void showIndicators(bool show);
-private:
+    void showTabBars(bool show);
 
+    void showDockSpace();
+
+private:
+    std::shared_ptr<Widget> _mainMenuBar{nullptr};
     std::vector<std::shared_ptr<Widget>> _widgets;
-    void BeginWindow();
-    bool _editor_begun = false;
     std::shared_ptr<Context> _context{nullptr};
 
     //delta time helpers
