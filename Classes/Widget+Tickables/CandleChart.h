@@ -37,8 +37,9 @@ private:
     bool _showIndicators = true;
     bool _initTime = false;
 
-    std::vector<std::unique_ptr<Indicator>> _indicators;
+    bool _shouldShowLuizPopup = false;
 
+    std::vector<std::unique_ptr<Indicator>> _indicators;
 
 };
 

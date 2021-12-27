@@ -266,6 +266,30 @@ void CandleChart::plotIndicators() {
     for(auto& i : _indicators) {
         i->render();
     }
+
+    if(_shouldShowLuizPopup){
+        {
+            //TODO:: popup para o luiz aqui pedindo pra implementar o indicador = )
+
+            ImGui::OpenPopup("Indicator missing!");
+
+            // Always center this window when appearing
+            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+            if (ImGui::BeginPopupModal("Indicator missing!", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::Text("Hey Luiz, it seems like you are not working too hard.. \nWhat about work on this right now?\n\n");
+                ImGui::Separator();
+                if (ImGui::Button("OK", ImVec2(120, 0))) {
+                    _shouldShowLuizPopup = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SetItemDefaultFocus();
+                ImGui::EndPopup();
+            }
+        }
+
+    }
 }
 
 void CandleChart::loadIndicator(Indicators::CandleIndicatorsTypes type) {
@@ -285,7 +309,7 @@ void CandleChart::loadIndicator(Indicators::CandleIndicatorsTypes type) {
         case Indicators::CandleIndicatorsTypes::VWAP:
         case Indicators::CandleIndicatorsTypes::TRIX:
         case Indicators::CandleIndicatorsTypes::SAR :
-            //TODO:: popup para o luiz aqui pedindo pra implementar o indicador = )
+            _shouldShowLuizPopup = true;
         break;
         default:
             break;
