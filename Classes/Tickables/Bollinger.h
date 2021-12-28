@@ -17,7 +17,6 @@ public:
 private:
     int _avarageSize = 20;
     std::vector<double> _bollinger_top;
-    std::vector<double> _bollinger_mid;
     std::vector<double> _bollinger_bot;
 
 };

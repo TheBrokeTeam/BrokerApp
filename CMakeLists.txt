@@ -20,8 +20,8 @@ add_executable(BrokerApp
         Classes/Widget+Tickables/CandleChart.h
         Classes/Contexts/Contextualizable.cpp
         Classes/Contexts/Contextualizable.h
-        Classes/Widgets/Charts.cpp
-        Classes/Widgets/Charts.h
+        Classes/Widgets/Chart.cpp
+        Classes/Widgets/Chart.h
         Classes/Widgets/Indicators.cpp
         Classes/Widgets/Indicators.h
         Classes/Data/Symbol.cpp

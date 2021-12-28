@@ -2,17 +2,17 @@
 // Created by Arthur Abel Motelevicz on 23/12/21.
 //
 
-#include "Charts.h"
+#include "Chart.h"
 #include "../Editor.h"
 
-Charts::Charts(Editor *editor) : Widget(editor) {
-    _title                  = "Charts";
+Chart::Chart(Editor *editor) : Widget(editor) {
+    _title                  = "Chart";
     _is_window              = true;
 }
 
-void Charts::updateVisible(float dt) {
+void Chart::updateVisible(float dt) {
 
-    ImGui::TextColored(Editor::broker_white,"Charts");
+    ImGui::TextColored(Editor::broker_white,"Chart");
     ImGui::SameLine();
 
     //change the background of close button
@@ -39,16 +39,16 @@ void Charts::updateVisible(float dt) {
 //    }
 }
 
-void Charts::addChart(std::shared_ptr<CandleChart> candleChart){
+void Chart::addChart(std::shared_ptr<CandleChart> candleChart){
     _charts.push_back(candleChart);
 }
 
-void Charts::enableIndicatorsOnCharts(bool show) {
+void Chart::enableIndicatorsOnCharts(bool show) {
     for(auto c : _charts)
         c->showIndicators(show);
 }
 
 
-void Charts::onPushStyleVar() {
+void Chart::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }

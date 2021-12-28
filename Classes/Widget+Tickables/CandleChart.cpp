@@ -9,41 +9,7 @@
 #include "../Tickables/SMA.h"
 #include "../Tickables/Bollinger.h"
 
-
 #define dataHist (*_ticker->getBarHistory())
-
-//#include "../Indicators/SMA.h"
-//#include "../Helpers/PlotHelper.h"
-
-
-// convenience struct to manage DND items; do this however you like
-//struct MyDndItem {
-//    int              Idx;
-//    int              Plt;
-//    ImAxis           Yax;
-//    char             Label[16];
-//    ImVector<ImVec2> Data;
-//    ImVec4           Color;
-//    MyDndItem()        {
-//        static int i = 0;
-//        Idx = i++;
-//        Plt = 0;
-//        Yax = ImAxis_Y1;
-//        sprintf(Label, "%02d Hz", Idx+1);
-//        Color = PlotHelper::RandomColor();
-//        Data.reserve(1001);
-//        for (int k = 0; k < 1001; ++k) {
-//            float t = k * 1.0f / 999;
-//            Data.push_back(ImVec2(t, 0.5f + 0.5f * sinf(2*3.14f*t*(Idx+1))));
-//        }
-//    }
-//    void Reset() { Plt = 0; Yax = ImAxis_Y1; }
-//};
-//
-//const int         k_dnd = 20;
-//static MyDndItem  dnd[k_dnd];
-//static MyDndItem* dndx = NULL; // for plot 2
-//static MyDndItem* dndy = NULL; // for plot 2
 
 inline static float randomNumber(){
     return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);

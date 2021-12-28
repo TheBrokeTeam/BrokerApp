@@ -8,7 +8,7 @@
 #include <imgui_internal.h>
 #include "Widgets/MainMenuBar.h"
 #include "Widgets/DataLoader.h"
-#include "Widgets/Charts.h"
+#include "Widgets/Chart.h"
 
 #include "Contexts/BackTestingContext.h"
 #include "Widget+Tickables/CandleChart.h"
@@ -27,7 +27,7 @@ void Editor::start() {
 
     _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
-    _widgets.emplace_back(std::make_shared<Charts>(this));
+    _widgets.emplace_back(std::make_shared<Chart>(this));
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -70,7 +70,7 @@ Context* Editor::getContext(){
 Editor::~Editor() {}
 
 void Editor::addChartWidget(Ticker *ticker) {
-    auto charts = getWidget<Charts>();
+    auto charts = getWidget<Chart>();
     charts->addChart(std::make_shared<CandleChart>(this,ticker));
     _context->loadTicker(*ticker->getSymbol());
 }
@@ -84,16 +84,16 @@ void Editor::showDataLoader(bool show) {
 }
 
 void Editor::showCharts(bool show) {
-    auto charts = getWidget<Charts>();
+    auto charts = getWidget<Chart>();
     if(charts)
-        getWidget<Charts>()->SetVisible(show);
+        getWidget<Chart>()->SetVisible(show);
 
     MainMenuBar::_show_charts = show;
 
 }
 
 void Editor::showIndicators(bool show) {
-    auto charts = getWidget<Charts>();
+    auto charts = getWidget<Chart>();
     if(charts)
         charts->enableIndicatorsOnCharts(show);
 

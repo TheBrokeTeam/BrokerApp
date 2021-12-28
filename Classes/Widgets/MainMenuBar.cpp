@@ -36,7 +36,7 @@ void MainMenuBar::updateAlways(float dt)
         if (ImGui::BeginMenu("View"))
         {
             if (ImGui::MenuItem("Data downloader", "CTRL+D",&_show_downloader)){}
-            if (ImGui::MenuItem("Charts", "CTRL+G",&_show_charts)){}
+            if (ImGui::MenuItem("Chart", "CTRL+G",&_show_charts)){}
             if (ImGui::MenuItem("Indicators", "",&_show_indicators)){}
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);

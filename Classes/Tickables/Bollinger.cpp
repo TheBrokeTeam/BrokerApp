@@ -8,7 +8,7 @@
 #include <implot_internal.h>
 
 Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
-    setName("Bollinger");
+    setName("BOLL");
 }
 
 void Bollinger::calculate(BarHistory* barHistory)
@@ -50,7 +50,6 @@ void Bollinger::render() {
     ImPlot::SetNextFillStyle(ImVec4(0.5,0.5,1,1),0.25f);
     ImPlot::PlotShaded(_name.c_str(),_time.data(),_bollinger_top.data(),_bollinger_bot.data(),_data.size());
     ImPlot::SetNextLineStyle(ImVec4(0.5,0.5,1,1));
-//    ImPlot::PlotLine("BB",_time.data(),_data.data(),_data.size());
 
 }
 
