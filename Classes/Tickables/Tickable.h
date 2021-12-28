@@ -9,12 +9,11 @@
 #include "../Data/TickData.h"
 #include "../Data/Symbol.h"
 #include "../Data/BarHistory.h"
-#include "../Contexts/Contextualizable.h"
 #include "../Tickers/Ticker.h"
 
 #define barHist (*_barHistory)
 
-class Tickable : public Contextualizable {
+class Tickable {
 public:
     Tickable(Ticker* ticker);
     virtual void onOpen(BarHistory* barHistory);

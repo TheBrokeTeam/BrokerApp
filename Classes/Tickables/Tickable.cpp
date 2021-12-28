@@ -5,7 +5,7 @@
 #include "Tickable.h"
 #include <imgui_internal.h>
 
-Tickable::Tickable(Ticker* ticker): Contextualizable(ticker->getContext()), _ticker(ticker){
+Tickable::Tickable(Ticker* ticker): _ticker(ticker){
     _ticker->addTickable(this);
 }
 

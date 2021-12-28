@@ -5,8 +5,10 @@
 #include "Contextualizable.h"
 #include "Context.h"
 
-Contextualizable::Contextualizable(Context *context): _context(context){}
-
 Context* Contextualizable::getContext(){
     return _context;
+}
+
+void Contextualizable::setContext(Context *context) {
+    _context = context;
 }

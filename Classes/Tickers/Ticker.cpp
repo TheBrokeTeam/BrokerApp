@@ -9,7 +9,9 @@
 #include "../Data/Symbol.h"
 #include "../Tickables/Tickable.h"
 
-Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol): Contextualizable(context), _symbol(std::move(symbol)) {}
+Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol): _symbol(std::move(symbol)) {
+    setContext(context);
+}
 
 void Ticker::addTickable(Tickable *tickable)
 {
