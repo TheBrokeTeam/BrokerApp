@@ -25,7 +25,6 @@ public:
 private:
 
     bool dataAlreadyExists(const Symbol& symbol);
-    void fillData(const Symbol& symbol);
     std::vector<TickData> loadCsv(const Symbol& symbol);
     std::string getFilePathFromSymbol(const Symbol& symbol);
 

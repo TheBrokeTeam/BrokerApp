@@ -97,12 +97,9 @@ std::string BackTestingContext::build_url(std::string symbol, std::string year, 
 }
 
 bool BackTestingContext::dataAlreadyExists(const Symbol &symbol) {
-    return false;
+    return std::filesystem::exists(getFilePathFromSymbol(symbol));
 }
 
-void BackTestingContext::fillData(const Symbol& symbol) {
-
-}
 
 std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
 

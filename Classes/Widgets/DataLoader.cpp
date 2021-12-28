@@ -124,6 +124,7 @@ void DataLoader::updateVisible(float dt)
         Symbol symbol(_info.fetchSymbol);
         symbol.setTimeInterval(Symbol::Interval(interval));
 
+        //TODO:: the ticker should  be created by charts widget
         auto ticker = _context->loadSymbol(symbol);
         _editor->addChartWidget(ticker);
     }
