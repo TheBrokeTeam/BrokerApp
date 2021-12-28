@@ -59,6 +59,8 @@ public:
         _interval = timeInterval;
     }
 
+    double getMaxRangeSize();
+
     void setRange(double start, double end);
 
     TimeRange getRange() const;
@@ -75,6 +77,10 @@ private:
     std::string _name{""};
     Interval _interval;
     TimeRange _range{0,0};
+
+    //test max zoom out
+    double _maxBarsToRenderOnChart = 3000.0;
+
 };
 
 

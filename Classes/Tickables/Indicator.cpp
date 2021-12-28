@@ -6,7 +6,7 @@
 #include <implot.h>
 #include <implot_internal.h>
 
-Indicator::Indicator(Ticker *ticker) : Tickable(ticker), Contextualizable(ticker->getContext()) {
+Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {
 
 }
 

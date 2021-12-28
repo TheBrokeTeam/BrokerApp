@@ -12,3 +12,7 @@ void Symbol::setRange(double start, double end) {
 Symbol::TimeRange Symbol::getRange() const{
     return _range;
 }
+
+double Symbol::getMaxRangeSize() {
+    return getTimeIntervalInMinutes()*_maxBarsToRenderOnChart*60;
+}

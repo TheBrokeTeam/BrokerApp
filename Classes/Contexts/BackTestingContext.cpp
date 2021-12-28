@@ -36,6 +36,10 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     //load tickdata from symbol file already donwloaded
     _data.emplace(symbol.getName(),loadCsv(symbol));
 
+    //calculate first timelimit for symbol
+    _end_Idx = _time.size() - 1;
+    _start_Idx = 0;
+
     return &_tickers.at(symbol);
 
 }
@@ -165,9 +169,7 @@ void BackTestingContext::loadTicker(const Symbol &symbol) {
 //    auto& vec = _data.at(symbol.getName());
 //    for(auto& d : vec)
 //        ticker.tick(d);
-
-
-
+//
     int lastIdx = _data.at(symbol.getName()).size() - 1;
     _end_Idx = PlotHelper::BinarySearch<double>(_time.data(), 0, lastIdx, symbol.getRange().end);
     _start_Idx = PlotHelper::BinarySearch<double>(_time.data(), 0, lastIdx, symbol.getRange().start);
@@ -190,7 +192,7 @@ void BackTestingContext::update(float dt) {
         ticker.reset();
         auto& vec = _data.at(ticker.getSymbol()->getName());
         if(_start_Idx != -1 && _end_Idx != -1){
-            for(int i = _start_Idx; i < _end_Idx; i++){
+            for(int i = _start_Idx; i <= _end_Idx; i++){
                 auto& d = vec.at(i);
                 ticker.tick(d);
             }

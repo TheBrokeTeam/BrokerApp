@@ -8,10 +8,11 @@
 class Context;
 class Contextualizable {
 public:
-    Contextualizable(Context* context);
-    virtual Context* getContext();
-
+    Context* getContext();
 protected:
+    void setContext(Context*);
+
+private:
     Context* _context{nullptr};
 };
 

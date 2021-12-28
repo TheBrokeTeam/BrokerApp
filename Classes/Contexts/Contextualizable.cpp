@@ -5,8 +5,11 @@
 #include "Contextualizable.h"
 #include "Context.h"
 
-Contextualizable::Contextualizable(Context *context): _context(context){}
-
 Context* Contextualizable::getContext(){
+    assert(_context != nullptr && "Set context  probably not called from its subclass");
     return _context;
+}
+
+void Contextualizable::setContext(Context * context) {
+    _context =  context;
 }

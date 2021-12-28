@@ -6,7 +6,7 @@
 #include <implot.h>
 #include <implot_internal.h>
 
-SMA::SMA(Ticker *ticker): Indicator(ticker), Contextualizable(ticker->getContext()) {
+SMA::SMA(Ticker *ticker): Indicator(ticker) {
     setName("MA_" + std::to_string(_averageSize));
 }
 

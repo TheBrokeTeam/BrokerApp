@@ -46,7 +46,7 @@ inline static float randomNumber(){
     return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
 
-CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker), Contextualizable(ticker->getContext())
+CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker)
 {
     _title                  = "Candle Chart";
     _is_window              = false;
@@ -65,8 +65,8 @@ void CandleChart::updateVisible(float dt) {
 void CandleChart::render(float dt)
 {
     //tests purpose
-    if(_xMaxLast != _xMax && _xMin != _xMinLast)
-        getContext()->loadTicker(*_ticker->getSymbol());
+//    if(_xMaxLast != _xMax && _xMin != _xMinLast)
+    getContext()->loadTicker(*_ticker->getSymbol());
 
     _xMaxLast = _xMax;
     _xMinLast = _xMin;
@@ -104,6 +104,7 @@ void CandleChart::render(float dt)
 
             if (ImPlot::BeginPlot("##OHLC"))
             {
+
                 ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
                 ImPlot::SetupAxisLimits(ImAxis_X1, barHist[_barHistory->size()-1].time, barHist[0].time);
                 ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
@@ -136,29 +137,38 @@ void CandleChart::render(float dt)
                     //plot caindicators
                     plotIndicators();
 
-//                        _strategy->render();
+//                  _strategy->render();
 
 
+                    //Clamping zoomout tests
                     //plot tag at the last candle on screen
                     ImPlotRect bnds = ImPlot::GetPlotLimits();
 //                        double x = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_Hr).ToDouble();
-                   _xMax= PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
-
+                     _xMin = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Min), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
                     //Tets render fast
-                    _xMin = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Min), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
-                    _ticker->getSymbol()->setRange(_xMin,_xMax);
-                    //
+                    _xMax = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
 
+                    if(_xMax > barHist[0].time)
+                        _xMax = barHist[0].time;
+
+                    _ticker->getSymbol()->setRange(_xMin,_xMax);
+
+                    double rangeDelta = _xMax - _xMin;
+                    double symbolMaxRange = _ticker->getSymbol()->getMaxRangeSize();
+                    if(rangeDelta > symbolMaxRange){
+
+                        ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_xMax - symbolMaxRange,_xMax);
+                    }
 
 
 
                     int lastIdx = _barHistory->size() - 1;
-                    int close_idx = PlotHelper::BinarySearch<double>(_barHistory->getTimeData().data(), 0, lastIdx, _xMax);
-                    if (close_idx == -1)
-                        close_idx = lastIdx;
+                    int lastRenderedBarIdx = PlotHelper::BinarySearch<double>(_barHistory->getTimeData().data(), 0, lastIdx, _xMax);
+                    if (lastRenderedBarIdx == -1)
+                        lastRenderedBarIdx = lastIdx;
 
-                    double close_val = _barHistory->getData()[close_idx].close;
-                    double open_val =  _barHistory->getData()[close_idx].open;
+                    double close_val = _barHistory->getData()[lastRenderedBarIdx].close;
+                    double open_val =  _barHistory->getData()[lastRenderedBarIdx].open;
 
                     ImPlot::TagY(close_val, open_val < close_val ? bull_color : bear_color);
 
@@ -335,8 +345,6 @@ void CandleChart::loadIndicator(Indicators::CandleIndicatorsTypes type) {
             break;
     }
 }
-
-
 // oid CandleChart::addIndicator(const ui_event::AddIndicatorCLicked &event) {
 //    std::cout << "Indicator SMA Study: " << event.info.mma << std::endl;
 //

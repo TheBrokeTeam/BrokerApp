@@ -21,7 +21,7 @@ namespace _DataLoader
     static bool implot_demo            = false;
 }
 
-DataLoader::DataLoader(Editor *editor) : Contextualizable(editor->getContext()),Widget(editor)
+DataLoader::DataLoader(Editor *editor) : Widget(editor)
 {
     _title                  = "Data Loader";
     _is_window              = true;
@@ -125,7 +125,7 @@ void DataLoader::updateVisible(float dt)
         symbol.setTimeInterval(Symbol::Interval(interval));
 
         //TODO:: the ticker should  be created by charts widget
-        auto ticker = _context->loadSymbol(symbol);
+        auto ticker = getContext()->loadSymbol(symbol);
         _editor->addChartWidget(ticker);
     }
 }
