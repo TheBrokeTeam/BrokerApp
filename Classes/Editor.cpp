@@ -47,9 +47,13 @@ void Editor::update() {
     //calculate deltime
     auto dt = getDeltaTime();
 
+    //first update the context to handle the data properly
+    _context->update(dt);
+
+    //second update the ui
     showDockSpace();
 
-    // Editor - update widgets
+    //update widgets
     for (std::shared_ptr<Widget>& widget : _widgets)
     {
         widget->update(dt);

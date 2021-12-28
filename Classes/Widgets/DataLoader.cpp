@@ -21,7 +21,7 @@ namespace _DataLoader
     static bool implot_demo            = false;
 }
 
-DataLoader::DataLoader(Editor *editor) : Widget(editor)
+DataLoader::DataLoader(Editor *editor) : Contextualizable(editor->getContext()),Widget(editor)
 {
     _title                  = "Data Loader";
     _is_window              = true;

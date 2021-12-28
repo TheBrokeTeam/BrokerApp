@@ -82,7 +82,12 @@ void Ticker::close(const TickData& tickData) {
     }
 }
 
-void Ticker::reset() {}
+void Ticker::reset() {
+    _barHistory.clear();
+    for(auto& t : _tickables){
+        t->reset();
+    }
+}
 
 Symbol *Ticker::getSymbol() {
     return _symbol.get();

@@ -16,6 +16,7 @@ class Context {
 public:
         virtual Ticker* loadSymbol(const Symbol& symbol) = 0;
         virtual void loadTicker(const Symbol &symbol) = 0;
+        virtual void update(float dt);
 
 private:
     std::vector<TickData> _data;

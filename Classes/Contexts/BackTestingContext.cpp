@@ -3,6 +3,7 @@
 //
 
 #include "BackTestingContext.h"
+#include "../Helpers/PlotHelper.h"
 
 #include <curl/curl.h>
 #include <ctime>
@@ -137,6 +138,12 @@ std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
         output.push_back(data_high);
         output.push_back(data_low);
         output.push_back(data_close);
+
+        _time.push_back(data_open.time );
+        _time.push_back(data_high.time );
+        _time.push_back(data_low.time  );
+        _time.push_back(data_close.time);
+
     }
 
     return output;
@@ -154,10 +161,48 @@ std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
 }
 
 void BackTestingContext::loadTicker(const Symbol &symbol) {
-    auto& ticker = _tickers.at(symbol);
-    auto& vec = _data.at(symbol.getName());
-    for(auto& d : vec)
-        ticker.tick(d);
+//    auto& ticker = _tickers.at(symbol);
+//    auto& vec = _data.at(symbol.getName());
+//    for(auto& d : vec)
+//        ticker.tick(d);
+
+
+
+    int lastIdx = _data.at(symbol.getName()).size() - 1;
+    _end_Idx = PlotHelper::BinarySearch<double>(_time.data(), 0, lastIdx, symbol.getRange().end);
+    _start_Idx = PlotHelper::BinarySearch<double>(_time.data(), 0, lastIdx, symbol.getRange().start);
+
+//    std::cout << "Start: " << start_Idx << std::endl;
+//    std::cout << "End: " << end_Idx<< std::endl;
+
+
+
+    shouldUpdateTicker = true;
+}
+
+void BackTestingContext::update(float dt) {
+    Context::update(dt);
+
+    if(!shouldUpdateTicker) return;
+
+    for(auto& p : _tickers){
+        auto& ticker = p.second;
+        ticker.reset();
+        auto& vec = _data.at(ticker.getSymbol()->getName());
+        if(_start_Idx != -1 && _end_Idx != -1){
+            for(int i = _start_Idx; i < _end_Idx; i++){
+                auto& d = vec.at(i);
+                ticker.tick(d);
+            }
+        }
+        else{
+            for(auto& d : vec)
+                ticker.tick(d);
+        }
+
+    }
+
+    shouldUpdateTicker = false;
 }
 
 

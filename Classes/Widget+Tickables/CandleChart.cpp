@@ -4,6 +4,7 @@
 
 #include "CandleChart.h"
 #include "../Editor.h"
+#include "../Contexts/Context.h"
 #include <fmt/format.h>
 #include "iostream"
 #include "../Tickables/SMA.h"
@@ -45,7 +46,7 @@ inline static float randomNumber(){
     return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
 
-CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker)
+CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker), Contextualizable(ticker->getContext())
 {
     _title                  = "Candle Chart";
     _is_window              = false;
@@ -63,6 +64,13 @@ void CandleChart::updateVisible(float dt) {
 
 void CandleChart::render(float dt)
 {
+    //tests purpose
+    if(_xMaxLast != _xMax && _xMin != _xMinLast)
+        getContext()->loadTicker(*_ticker->getSymbol());
+
+    _xMaxLast = _xMax;
+    _xMinLast = _xMin;
+
     //TODO:: this is ugly - find a better way to initialize once the UIItem subclasses
     if(!_initTime)
     {
@@ -130,12 +138,22 @@ void CandleChart::render(float dt)
 
 //                        _strategy->render();
 
+
                     //plot tag at the last candle on screen
                     ImPlotRect bnds = ImPlot::GetPlotLimits();
 //                        double x = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_Hr).ToDouble();
-                    double x = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+                   _xMax= PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+
+                    //Tets render fast
+                    _xMin = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Min), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+                    _ticker->getSymbol()->setRange(_xMin,_xMax);
+                    //
+
+
+
+
                     int lastIdx = _barHistory->size() - 1;
-                    int close_idx = PlotHelper::BinarySearch<double>(_barHistory->getTimeData().data(), 0, lastIdx, x);
+                    int close_idx = PlotHelper::BinarySearch<double>(_barHistory->getTimeData().data(), 0, lastIdx, _xMax);
                     if (close_idx == -1)
                         close_idx = lastIdx;
 

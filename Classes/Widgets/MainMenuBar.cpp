@@ -8,7 +8,7 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 
-MainMenuBar::MainMenuBar(Editor *editor) : Widget(editor)
+MainMenuBar::MainMenuBar(Editor *editor) : Contextualizable(editor->getContext()), Widget(editor)
 {
     _title                  = "MainMenuBar";
     _is_window              = false;

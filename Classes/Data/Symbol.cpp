@@ -3,3 +3,12 @@
 //
 
 #include "Symbol.h"
+
+void Symbol::setRange(double start, double end) {
+    _range.start = start;
+    _range.end = end;
+}
+
+Symbol::TimeRange Symbol::getRange() const{
+    return _range;
+}

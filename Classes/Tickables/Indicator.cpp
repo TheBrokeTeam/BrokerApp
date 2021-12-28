@@ -6,7 +6,7 @@
 #include <implot.h>
 #include <implot_internal.h>
 
-Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {
+Indicator::Indicator(Ticker *ticker) : Tickable(ticker), Contextualizable(ticker->getContext()) {
 
 }
 
@@ -49,6 +49,7 @@ void Indicator::onClose(BarHistory* barHistory) {
 
 void Indicator::reset()
 {
+    Tickable::reset();
     _ys.clear();
     _time.clear();
 }

@@ -39,7 +39,14 @@ private:
 
     bool _shouldShowLuizPopup = false;
 
+    double _xMax = 0;
+    double _xMin = 0;
+
+    double _xMaxLast = 0;
+    double _xMinLast = 0;
+
     std::vector<std::unique_ptr<Indicator>> _indicators;
+
 
 };
 

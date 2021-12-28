@@ -30,6 +30,7 @@ public:
         Interval_1Week,
         Interval_1Month
     };
+
     struct TimeRange{
         double start;
         double end;
@@ -58,12 +59,16 @@ public:
         _interval = timeInterval;
     }
 
-    static int getMinutesFromTimeInterval(Interval interval) {
+    void setRange(double start, double end);
+
+    TimeRange getRange() const;
+
+        static int getMinutesFromTimeInterval(Interval interval) {
         std::vector<int> intArr = {1,3,5,15,39,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
         return intArr[int(interval)];
     }
 
-    bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
+    bool operator < (const Symbol& rhs) const {return _name < rhs._name;}
 
 
 private:

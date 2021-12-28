@@ -6,7 +6,7 @@
 #include <implot.h>
 #include <implot_internal.h>
 
-SMA::SMA(Ticker *ticker): Indicator(ticker) {
+SMA::SMA(Ticker *ticker): Indicator(ticker), Contextualizable(ticker->getContext()) {
     setName("MA_" + std::to_string(_averageSize));
 }
 
@@ -22,7 +22,7 @@ void SMA::calculate()
             value += barHist[i].close;
 
         _ys[0].push_back(value/_averageSize);
-        _time.push_back(time(0));
+        _time.push_back(barHist[0].time);
     }
 }
 

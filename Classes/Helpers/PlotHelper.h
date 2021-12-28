@@ -4,7 +4,7 @@
 
 #ifndef BROKERAPP_PLOTHELPER_H
 #define BROKERAPP_PLOTHELPER_H
-
+#include <implot.h>
 #include <implot_internal.h>
 
 class PlotHelper {

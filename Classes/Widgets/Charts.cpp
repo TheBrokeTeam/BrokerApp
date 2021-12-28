@@ -5,7 +5,7 @@
 #include "Charts.h"
 #include "../Editor.h"
 
-Charts::Charts(Editor *editor) : Widget(editor) {
+Charts::Charts(Editor *editor) : Widget(editor), Contextualizable(editor->getContext()) {
     _title                  = "Charts";
     _is_window              = true;
 }

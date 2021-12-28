@@ -14,7 +14,7 @@
 
 #define barHist (*_barHistory)
 
-class Tickable : public Contextualizable {
+class Tickable : virtual public Contextualizable {
 public:
     Tickable(Ticker* ticker);
     virtual void onOpen(BarHistory* barHistory);
@@ -22,6 +22,9 @@ public:
     virtual void onTick(BarHistory* barHistory);
 
     virtual void onLoad(BarHistory* barHistory);
+
+    virtual void reset();
+
 
 protected:
     Ticker* _ticker{nullptr};

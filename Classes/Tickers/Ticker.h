@@ -27,10 +27,9 @@ public:
 
     void tick(const TickData &tickData);
     Symbol* getSymbol();
-
+    void reset();
 
 private:
-    void reset();
     void open(const TickData &tickData);
     void close(const TickData &tickData);
 

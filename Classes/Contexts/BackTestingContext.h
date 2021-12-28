@@ -12,6 +12,7 @@
 
 class BackTestingContext : public Context {
 public:
+
     struct DownloadResponse {
         bool success{false};
         std::string extractedFileName{""};
@@ -21,6 +22,8 @@ public:
 
     Ticker* loadSymbol(const Symbol &symbol) override;
     void loadTicker(const Symbol& symbol) override;
+    void update(float dt) override;
+
 
 private:
 
@@ -34,6 +37,11 @@ private:
 
     std::map<Symbol,Ticker> _tickers;
     std::map<std::string,std::vector<TickData>> _data;
+    std::vector<double> _time;
+    int _end_Idx;
+    int _start_Idx;
+
+    bool shouldUpdateTicker = false;
 
 };
 

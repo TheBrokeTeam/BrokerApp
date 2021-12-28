@@ -7,7 +7,7 @@
 #include "../Tickables/SMA.h"
 
 
-Indicators::Indicators(Editor *editor) : Widget(editor) {
+Indicators::Indicators(Editor *editor) : Widget(editor), Contextualizable(editor->getContext()) {
 
     for(int i = 0; i< _numberOfItems; i++)
         _dragAndDropItems.push_back(DragAndDropIndicatorItem(static_cast<CandleIndicatorsTypes>(i)));

@@ -16,6 +16,7 @@ public:
     int size();
     const  std::vector<double>& getTimeData();
     const  std::vector<double>& getVolumeData();
+    void clear();
 
 private:
     std::vector<BarData> _barData;

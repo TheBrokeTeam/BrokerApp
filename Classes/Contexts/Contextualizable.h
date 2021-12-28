@@ -9,8 +9,7 @@ class Context;
 class Contextualizable {
 public:
     Contextualizable(Context* context);
-
-    Context* getContext();
+    virtual Context* getContext();
 
 protected:
     Context* _context{nullptr};

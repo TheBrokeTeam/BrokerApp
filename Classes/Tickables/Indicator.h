@@ -16,7 +16,7 @@ public:
 
     /** For Now calculate will be called at onClose bar */
     virtual void calculate();
-    virtual void reset();
+    virtual void reset() override;
 
     void setName(const std::string& name);
     std::string getName();
