@@ -50,6 +50,9 @@ void Editor::update() {
     //calculate deltime
     auto dt = getDeltaTime();
 
+    //update context first
+    _context->update(dt);
+
     showDockSpace();
 
     // Editor - update widgets

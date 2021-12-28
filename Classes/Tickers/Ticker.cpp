@@ -36,6 +36,7 @@ void Ticker::open(const TickData& tickData) {
     for(auto& t : _tickables){
         t->onOpen(&_barHistory);
     }
+
 }
 
 void Ticker::tick(const TickData& tickData) {
@@ -44,6 +45,8 @@ void Ticker::tick(const TickData& tickData) {
     if(_barHistory.size() <= 0 || lastWasClosed){
         lastWasClosed = false;
         open(tickData);
+        puts("OPEN");
+
         return;
     }
 
@@ -52,6 +55,8 @@ void Ticker::tick(const TickData& tickData) {
     if(lastSecondOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
+        puts("CLOSE");
+
         return;
     }
 
@@ -67,6 +72,7 @@ void Ticker::tick(const TickData& tickData) {
     for(auto& t : _tickables){
         t->onTick(&_barHistory);
     }
+    puts("TICK");
 }
 
 void Ticker::close(const TickData& tickData) {
@@ -84,7 +90,13 @@ void Ticker::close(const TickData& tickData) {
     }
 }
 
-void Ticker::reset() {}
+void Ticker::reset() {
+    _barHistory.clear();
+    lastWasClosed = false;
+    for(auto& t : _tickables){
+        t->reset();
+    }
+}
 
 Symbol *Ticker::getSymbol() {
     return _symbol.get();

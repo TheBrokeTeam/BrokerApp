@@ -160,5 +160,37 @@ void BackTestingContext::loadTicker(const Symbol &symbol) {
         ticker.tick(d);
 }
 
+void BackTestingContext::update(float dt) {
+
+    if(!_simulating) return;
+
+    auto& data = _data.at(_tickerToSimulate->getSymbol()->getName());
+    _currentTime += dt*_speed;
+    if(_currentTime >= _timeToTick){
+        int numberOfTicks = floor(_currentTime/_timeToTick);
+        _currentTime = 0;
+        for(int i = 0; i < numberOfTicks; i++)
+        {
+            auto& tickData = data[_currentIndex++];
+            _tickerToSimulate->tick(tickData);
+            if(_currentIndex >= data.size())
+                _simulating = false;
+        }
+    }
+}
+
+void BackTestingContext::startSimulation(Ticker* ticker) {
+    //just for test
+    //TODO:: use the ticker parameter
+    _tickerToSimulate =  &_tickers.begin()->second;
+    _tickerToSimulate->reset();
+    _currentIndex = 0;
+    _simulating = true;
+}
+
+void BackTestingContext::setSimulationSpeed(float speed) {
+    _speed = speed*_speedLimit;
+}
+
 
 

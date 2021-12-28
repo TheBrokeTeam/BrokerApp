@@ -20,3 +20,7 @@ void Tickable::onClose(BarHistory* barHistory) {
 
 void Tickable::onLoad(BarHistory *barHistory) {
 }
+
+void Tickable::reset() {
+
+}

@@ -23,15 +23,15 @@ class Ticker : public Contextualizable{
 public:
     Ticker(Context* context, std::shared_ptr<Symbol> symbol);
     virtual ~Ticker() = default;
+
+    void reset();
     void addTickable(Tickable* tickable);
-
     void tick(const TickData &tickData);
-    Symbol* getSymbol();
 
+    Symbol* getSymbol();
     BarHistory* getBarHistory();
 
 private:
-    void reset();
     void open(const TickData &tickData);
     void close(const TickData &tickData);
 

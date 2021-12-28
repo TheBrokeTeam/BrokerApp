@@ -37,5 +37,10 @@ const std::vector<double> &BarHistory::getTimeData() {
 
 const std::vector<double> &BarHistory::getVolumeData() {
     return _volume;
+}
 
+void BarHistory::clear() {
+    _data.clear();
+    _time.clear();
+    _volume.clear();
 }

@@ -48,8 +48,7 @@ void SimulationController::updateVisible(float dt) {
 
     static float _speedSimulation = 0.1f;
     if(ImGui::SliderFloat("##Speed",&_speedSimulation,0.00f,1.00f,"%.2f")){
-//        if(_speedCallback)
-//            _speedCallback(_speedSimulation*_limitSpeed);
+        _editor->getContext()->setSimulationSpeed(_speedSimulation);
 
     }
 
@@ -65,6 +64,7 @@ void SimulationController::updateVisible(float dt) {
 
     if (ImGui::Button("Play",ImVec2(200,50))) {
         puts("Clicou no botão play!!!");
+        _editor->getContext()->startSimulation(nullptr);
     }
 
 }
