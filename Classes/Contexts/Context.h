@@ -11,7 +11,6 @@
 #include "../Data/Symbol.h"
 #include "../Tickers/Ticker.h"
 
-
 class Context {
 public:
         virtual Ticker* loadSymbol(const Symbol& symbol) = 0;

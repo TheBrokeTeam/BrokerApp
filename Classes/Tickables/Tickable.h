@@ -11,8 +11,6 @@
 #include "../Data/BarHistory.h"
 #include "../Tickers/Ticker.h"
 
-#define barHist (*_barHistory)
-
 class Tickable {
 public:
     Tickable(Ticker* ticker);

@@ -53,7 +53,7 @@ add_executable(BrokerApp
         Classes/Tickables/SMA.cpp
         Classes/Tickables/SMA.h
         Classes/Helpers/ImageLoader.cpp
-        Classes/Helpers/ImageLoader.h)
+        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

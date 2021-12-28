@@ -3,27 +3,23 @@
 //
 
 #include "SMA.h"
-#include "../Helpers/Utils.h"
 #include <implot.h>
 #include <implot_internal.h>
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
-    setName("MA##" + uuid::generate_uuid_v4());
+    setName("MA");
 }
 
 void SMA::calculate()
 {
-    if(_ys.empty())
-        _ys.emplace_back(std::vector<double>());
-
     if(_barHistory->size() >= _averageSize)
     {
         double value = 0;
         for(int i = 0; i < _averageSize; i++)
             value += barHist[i].close;
 
-        _ys[0].push_back(value/_averageSize);
-        _time.push_back(time(0));
+        _data.push_back(value/_averageSize);
+        _time.push_back(barHist[0].time);
     }
 }
 
@@ -33,9 +29,6 @@ SMA::~SMA() {}
 void SMA::onLoad(BarHistory *barHistory) {
     Indicator::onLoad(barHistory);
 
-    if(_ys.empty())
-        _ys.emplace_back(std::vector<double>());
-
     auto& data = _barHistory->getData();
 
     if(data.size() >= _averageSize){
@@ -44,7 +37,7 @@ void SMA::onLoad(BarHistory *barHistory) {
             for (int i = 0; i < _averageSize; i++)
                 value += data[idx - i].close;
 
-            _ys[0].push_back(value / _averageSize);
+            _data.push_back(value / _averageSize);
             _time.push_back(data[idx].time);
         }
     }

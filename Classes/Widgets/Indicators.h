@@ -12,7 +12,7 @@
 #include "../Helpers/PlotHelper.h"
 #include "../Tickables/Indicator.h"
 
-class Indicators : public Widget {
+class Indicators : public Widget{
 public:
     typedef std::function<void(void)> TrashClickCallback;
 

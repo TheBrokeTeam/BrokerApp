@@ -7,10 +7,13 @@
 
 #include <vector>
 #include "BarData.h"
+#include "ReversedData.h"
 
-class BarHistory {
+#define barHist (*_barHistory)
+
+class BarHistory : public ReversedData<BarData>{
 public:
-    BarData &operator[](int reversedIndex);
+//    BarData &operator[](int reversedIndex);
     void append(const BarData& data);
     const std::vector<BarData>& getData();
     int size();
@@ -18,8 +21,8 @@ public:
     const  std::vector<double>& getVolumeData();
 
 private:
-    std::vector<BarData> _barData;
-    int fixedIndex(int reversedIndex);
+//    std::vector<BarData> _barData;
+//    int fixedIndex(int reversedIndex);
     std::vector<double> _time;
     std::vector<double> _volume;
 

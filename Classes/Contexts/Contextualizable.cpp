@@ -6,6 +6,7 @@
 #include "Context.h"
 
 Context* Contextualizable::getContext(){
+    assert(_context != nullptr && "Set context  probably not called from its subclass");
     return _context;
 }
 
