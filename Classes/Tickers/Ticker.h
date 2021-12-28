@@ -28,6 +28,7 @@ public:
     void tick(const TickData &tickData);
     Symbol* getSymbol();
 
+    BarHistory* getBarHistory();
 
 private:
     void reset();

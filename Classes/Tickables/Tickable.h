@@ -11,6 +11,8 @@
 #include "../Data/BarHistory.h"
 #include "../Tickers/Ticker.h"
 
+#define barHist (*barHistory)
+
 class Tickable {
 public:
     Tickable(Ticker* ticker);
@@ -22,7 +24,6 @@ public:
 
 protected:
     Ticker* _ticker{nullptr};
-    BarHistory* _barHistory{nullptr};
 };
 
 

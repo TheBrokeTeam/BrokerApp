@@ -10,9 +10,9 @@ SMA::SMA(Ticker *ticker): Indicator(ticker) {
     setName("MA");
 }
 
-void SMA::calculate()
+void SMA::calculate(BarHistory* barHistory)
 {
-    if(_barHistory->size() >= _averageSize)
+    if(barHist.size() >= _averageSize)
     {
         double value = 0;
         for(int i = 0; i < _averageSize; i++)
@@ -26,22 +26,19 @@ void SMA::calculate()
 
 SMA::~SMA() {}
 
-void SMA::onLoad(BarHistory *barHistory) {
-    Indicator::onLoad(barHistory);
-
-    auto& data = _barHistory->getData();
-
-    if(data.size() >= _averageSize){
-        for(int idx = _averageSize; idx < data.size(); idx++) {
-            double value = 0;
-            for (int i = 0; i < _averageSize; i++)
-                value += data[idx - i].close;
-
-            _data.push_back(value / _averageSize);
-            _time.push_back(data[idx].time);
-        }
-    }
-}
+//void SMA::onLoad(BarHistory *barHistory) {
+//    Indicator::onLoad(barHistory);
+////    if(data.size() >= _averageSize){
+////        for(int idx = _averageSize; idx < data.size(); idx++) {
+////            double value = 0;
+////            for (int i = 0; i < _averageSize; i++)
+////                value += data[idx - i].close;
+////
+////            _data.push_back(value / _averageSize);
+////            _time.push_back(data[idx].time);
+////        }
+////    }
+//}
 
 void SMA::render() {
     Indicator::render();
@@ -51,7 +48,7 @@ void SMA::render() {
         ImGui::Separator();
         if(ImGui::SliderInt("Average size", &_averageSize, 0, 200)){
             reset();
-            onLoad(_barHistory);
+            onLoad(_ticker->getBarHistory());
         }
         ImGui::ColorEdit4("Color",{&_color.x});
         ImGui::Separator();

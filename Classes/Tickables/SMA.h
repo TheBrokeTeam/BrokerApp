@@ -11,8 +11,7 @@ class SMA : public Indicator{
 public:
     SMA(Ticker* ticker);
     ~SMA();
-    void calculate() override;
-    void onLoad(BarHistory* barHistory) override;
+    void calculate(BarHistory* barHistory) override;
     void render() override;
 
 private:

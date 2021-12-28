@@ -15,7 +15,7 @@ public:
     virtual ~Indicator();
 
     /** For Now calculate will be called at onClose bar */
-    virtual void calculate();
+    virtual void calculate(BarHistory* barHistory);
     virtual void reset();
 
     void setName(const std::string& name);

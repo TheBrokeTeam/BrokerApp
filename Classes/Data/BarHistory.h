@@ -9,8 +9,6 @@
 #include "BarData.h"
 #include "ReversedData.h"
 
-#define barHist (*_barHistory)
-
 class BarHistory : public ReversedData<BarData>{
 public:
 //    BarData &operator[](int reversedIndex);

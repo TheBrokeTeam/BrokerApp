@@ -10,17 +10,13 @@ Tickable::Tickable(Ticker* ticker): _ticker(ticker){
 }
 
 void Tickable::onOpen(BarHistory* barHistory) {
-    _barHistory = barHistory;
 }
 
 void Tickable::onTick(BarHistory* barHistory) {
-    _barHistory = barHistory;
 }
 
 void Tickable::onClose(BarHistory* barHistory) {
-    _barHistory = barHistory;
 }
 
 void Tickable::onLoad(BarHistory *barHistory) {
-    _barHistory = barHistory;
 }

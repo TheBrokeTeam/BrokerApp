@@ -89,3 +89,7 @@ void Ticker::reset() {}
 Symbol *Ticker::getSymbol() {
     return _symbol.get();
 }
+
+BarHistory *Ticker::getBarHistory() {
+    return &_barHistory;
+}
