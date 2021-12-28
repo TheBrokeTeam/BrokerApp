@@ -3,11 +3,12 @@
 //
 
 #include "SMA.h"
+#include "../Helpers/Utils.h"
 #include <implot.h>
 #include <implot_internal.h>
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
-    setName("MA_" + std::to_string(_averageSize));
+    setName("MA##" + uuid::generate_uuid_v4());
 }
 
 void SMA::calculate()
@@ -58,7 +59,6 @@ void SMA::render() {
         if(ImGui::SliderInt("Average size", &_averageSize, 0, 200)){
             reset();
             onLoad(_barHistory);
-            setName("MA_" + std::to_string(_averageSize));
         }
         ImGui::ColorEdit4("Color",{&_color.x});
         ImGui::Separator();

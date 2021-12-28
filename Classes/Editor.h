@@ -9,6 +9,7 @@
 #include <vector>
 #include "Widgets/Widget.h"
 #include "Contexts/Context.h"
+#include "Helpers/Utils.h"
 
 class Ticker;
 class Editor : public App {
