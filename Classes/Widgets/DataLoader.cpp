@@ -7,20 +7,6 @@
 #include "../Contexts/Context.h"
 #include "../Editor.h"
 
-namespace _DataLoader
-{
-    static bool show_downloader = false;
-    static bool show_candle_graph = false;
-    static bool show_study_chart = false;
-    static bool show_indicator_controller = false;
-    static bool showShortcutsWindow = false;
-    static bool showAboutWindow     = false;
-    static bool imgui_metrics         = false;
-    static bool imgui_style           = false;
-    static bool imgui_demo            = false;
-    static bool implot_demo            = false;
-}
-
 DataLoader::DataLoader(Editor *editor) : Widget(editor)
 {
     _title                  = "Data Loader";
@@ -116,8 +102,8 @@ void DataLoader::updateVisible(float dt)
     ImGui::Dummy(ImVec2(200,30));
 
     PushStyleColor(ImGuiCol_Button,Editor::broker_yellow);
-    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow);
-    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow);
+    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
+    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
     if (ImGui::Button("Download",ImVec2(200,50))) {
         puts("Clicou no botão fetch!!!");

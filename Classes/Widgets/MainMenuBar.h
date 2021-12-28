@@ -18,6 +18,7 @@ public:
     MainMenuBar(Editor* editor);
 
     inline static bool _show_downloader = true;
+    inline static bool _show_simulator = true;
     inline static bool _show_charts = true;
     inline static bool _show_indicators = true;
     inline static bool _show_tabbars = false;

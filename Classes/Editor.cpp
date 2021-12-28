@@ -8,6 +8,8 @@
 #include <imgui_internal.h>
 #include "Widgets/MainMenuBar.h"
 #include "Widgets/DataLoader.h"
+#include "Widgets/SimulationController.h"
+
 #include "Widgets/Chart.h"
 
 #include "Contexts/BackTestingContext.h"
@@ -27,6 +29,7 @@ void Editor::start() {
 
     _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
+    _widgets.emplace_back(std::make_shared<SimulationController>(this));
     _widgets.emplace_back(std::make_shared<Chart>(this));
 
     //enable the docking on this application
@@ -132,6 +135,14 @@ void Editor::showTabBars(bool show) {
 void Editor::showDockSpace()
 {
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+}
+
+void Editor::showSimulationController(bool show) {
+    auto simulator = getWidget<SimulationController>();
+    if(simulator)
+        simulator->SetVisible(show);
+
+    MainMenuBar::_show_simulator = show;
 }
 
 int main(int argc, char const* argv[]){

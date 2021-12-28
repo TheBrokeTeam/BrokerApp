@@ -36,6 +36,7 @@ void MainMenuBar::updateAlways(float dt)
         if (ImGui::BeginMenu("View"))
         {
             if (ImGui::MenuItem("Data downloader", "CTRL+D",&_show_downloader)){}
+            if (ImGui::MenuItem("Simulator", "CTRL+S",&_show_simulator)){}
             if (ImGui::MenuItem("Chart", "CTRL+G",&_show_charts)){}
             if (ImGui::MenuItem("Indicators", "",&_show_indicators)){}
 
@@ -73,6 +74,7 @@ void MainMenuBar::updateAlways(float dt)
 
     //update editor
     _editor->showDataLoader(_show_downloader);
+    _editor->showSimulationController(_show_simulator);
     _editor->showCharts(_show_charts);
     _editor->showIndicators(_show_indicators);
     _editor->showTabBars(_show_tabbars);
