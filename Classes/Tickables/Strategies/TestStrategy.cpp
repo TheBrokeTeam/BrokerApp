@@ -11,8 +11,6 @@ TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
 void TestStrategy::rule() {
     Strategy::rule();
 
-//    if(_isPositioned) return;
-
     if(barHist.size() < 5) return;
 
     double fifthPrice   = barHist[4].close;
@@ -47,9 +45,9 @@ void TestStrategy::checkTarget(Strategy::Position &pos) {
     double deltaProfit = _targetPercent*pos.inPrice - pos.inPrice;
     double deltaLastPrice = pos.isShorting ? pos.inPrice - lastPrice : lastPrice - pos.inPrice;
 
-    if( deltaLastPrice >= deltaProfit  || deltaLastPrice <= (-1)*deltaProfit) {
-//        closePosition(pos.id);
-//        _isPositioned = false;
+    if( deltaLastPrice >= deltaProfit) {
+        closePosition(pos.id);
     }
+
 }
 
