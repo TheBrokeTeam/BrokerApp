@@ -18,7 +18,13 @@ CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickab
     _indicatorsView = std::make_unique<Indicators>(editor);
 
     _indicatorsView->setTrashCallback([this](){
+        for(auto& i : _indicators){
+            if(_ticker->removeTickable(i.get()))
+                puts("remove indicator successfully");
+        }
+
         _indicators.clear();
+
     });
 }
 
@@ -52,7 +58,6 @@ void CandleChart::render(float dt)
 //    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
 
         if(_showIndicators){
-            // showDemoDragAndDrop();
             _indicatorsView->updateVisible(dt);
             ImGui::SameLine();
         }

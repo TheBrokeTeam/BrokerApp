@@ -26,6 +26,8 @@ public:
 
     void reset();
     void addTickable(Tickable* tickable);
+    bool removeTickable(Tickable *tickable);
+
     void tick(const TickData &tickData);
 
     Symbol* getSymbol();

@@ -5,9 +5,7 @@
 #include "Tickable.h"
 #include <imgui_internal.h>
 
-Tickable::Tickable(Ticker* ticker): _ticker(ticker){
-    _ticker->addTickable(this);
-}
+Tickable::Tickable(Ticker* ticker): _ticker(ticker){}
 
 void Tickable::onOpen(BarHistory* barHistory) {
 }

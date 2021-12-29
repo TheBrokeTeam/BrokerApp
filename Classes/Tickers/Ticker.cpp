@@ -16,8 +16,18 @@ Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol): _symbol(std::mo
 void Ticker::addTickable(Tickable *tickable)
 {
     _tickables.push_back(tickable);
-    //TODO:: passar aqui o bar history para nao precisar do methodo load tickable
     tickable->onLoad(&_barHistory);
+}
+
+bool Ticker::removeTickable(Tickable *tickable)
+{
+    for(auto it  = _tickables.begin(); it != _tickables.end(); it++) {
+        if (tickable == (*it)) {
+            _tickables.erase(it);
+            return true;
+        }
+    }
+    return false;
 }
 
 void Ticker::open(const TickData& tickData) {
