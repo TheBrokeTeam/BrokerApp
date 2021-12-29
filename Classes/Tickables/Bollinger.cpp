@@ -39,6 +39,12 @@ void Bollinger::calculate(BarHistory* barHistory)
     }
 }
 
+void Bollinger::reset() {
+    Indicator::reset();
+    _bollinger_bot.clear();
+    _bollinger_top.clear();
+}
+
 void Bollinger::render() {
 
     //safe check

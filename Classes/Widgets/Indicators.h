@@ -20,7 +20,7 @@ public:
     static inline const char* VOLUME_INDICATORS_DRAG_ID = "VOLUME_INDICATOR";
 
     enum class CandleIndicatorsTypes{
-        MA,
+        SMA,
         EMA,
         WMA,
         BOLL,
@@ -34,7 +34,7 @@ public:
             CandleIndicatorsTypes type;
             std::string      label{""};
             DragAndDropIndicatorItem(CandleIndicatorsTypes type): type(type){
-                static std::string names[8]{"MA","EMA","WMA","BOLL","VWAP","AVL","TRIX","SAR"};
+                static std::string names[8]{"SMA","EMA","WMA","BOLL","VWAP","AVL","TRIX","SAR"};
                 label = names[int(type)];
         }
     };

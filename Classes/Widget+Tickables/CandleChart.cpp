@@ -11,10 +11,6 @@
 
 #define dataHist (*_ticker->getBarHistory())
 
-inline static float randomNumber(){
-    return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-}
-
 CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker)
 {
     _title                  = "Candle Chart";
@@ -267,7 +263,7 @@ void CandleChart::plotIndicators() {
 void CandleChart::loadIndicator(Indicators::CandleIndicatorsTypes type) {
 
     switch (type) {
-        case Indicators::CandleIndicatorsTypes::MA:
+        case Indicators::CandleIndicatorsTypes::SMA:
             {
                 std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker);
                 _indicators.push_back(std::move(sma));

@@ -13,6 +13,8 @@ public:
     Bollinger(Ticker* ticker);
     ~Bollinger();
     void calculate(BarHistory* barHistory) override;
+    void reset() override;
+
     void render() override;
 private:
     int _avarageSize = 20;

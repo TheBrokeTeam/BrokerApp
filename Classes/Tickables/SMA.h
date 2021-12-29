@@ -15,7 +15,7 @@ public:
     void render() override;
 
 private:
-    int _averageSize = 2; // minimum size is 2
+    int _averageSize = 12; // minimum size is 1
 };
 
 
