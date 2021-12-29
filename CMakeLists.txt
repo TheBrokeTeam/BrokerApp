@@ -34,10 +34,10 @@ add_executable(BrokerApp
         Classes/Data/DataManager.h
         Classes/Tickables/Tickable.cpp
         Classes/Tickables/Tickable.h
-        Classes/Tickables/Indicator.cpp
-        Classes/Tickables/Indicator.h
-        Classes/Tickables/Strategy.cpp
-        Classes/Tickables/Strategy.h
+        Classes/Tickables/Indicators/Indicator.cpp
+        Classes/Tickables/Indicators/Indicator.h
+        Classes/Tickables/Strategies/Strategy.cpp
+        Classes/Tickables/Strategies/Strategy.h
         Classes/Data/Position.cpp
         Classes/Data/Position.h
         Classes/Data/Order.cpp
@@ -50,10 +50,10 @@ add_executable(BrokerApp
         Classes/Data/BarHistory.h
         Classes/Helpers/PlotHelper.h
         Classes/Helpers/Utils.h
-        Classes/Tickables/SMA.cpp
-        Classes/Tickables/SMA.h
+        Classes/Tickables/Indicators/SMA.cpp
+        Classes/Tickables/Indicators/SMA.h
         Classes/Helpers/ImageLoader.cpp
-        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h Classes/Tickables/Bollinger.cpp Classes/Tickables/Bollinger.h Classes/Widgets/SimulationController.cpp Classes/Widgets/SimulationController.h)
+        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h Classes/Tickables/Indicators/Bollinger.cpp Classes/Tickables/Indicators/Bollinger.h Classes/Widgets/SimulationController.cpp Classes/Widgets/SimulationController.h Classes/Tickables/Strategies/TestStrategy.cpp Classes/Tickables/Strategies/TestStrategy.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

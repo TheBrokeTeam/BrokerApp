@@ -12,7 +12,8 @@
 #include "../Helpers/PlotHelper.h"
 
 #include "../Widgets/Indicators.h"
-#include "../Tickables/Indicator.h"
+#include "../Tickables/Indicators/Indicator.h"
+#include "../Tickables/Strategies/TestStrategy.h"
 
 class ImPlotTime;
 
@@ -40,6 +41,8 @@ private:
     bool _shouldShowLuizPopup = false;
 
     std::vector<std::unique_ptr<Indicator>> _indicators;
+    std::unique_ptr<TestStrategy> _strategy{nullptr};
+
 
 };
 

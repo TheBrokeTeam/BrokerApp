@@ -6,8 +6,8 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 #include "iostream"
-#include "../Tickables/SMA.h"
-#include "../Tickables/Bollinger.h"
+#include "../Tickables/Indicators/SMA.h"
+#include "../Tickables/Indicators/Bollinger.h"
 
 #define dataHist (*_ticker->getBarHistory())
 
@@ -42,8 +42,8 @@ void CandleChart::render(float dt)
         ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
         _initTime = true;
 
-//        _strategy = std::make_unique<TestStrategy>();
-//        _ticker->addTickable(_strategy.get());
+        _strategy = std::make_unique<TestStrategy>(_ticker);
+        _ticker->addTickable(_strategy.get());
     }
 
     if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;
@@ -99,7 +99,7 @@ void CandleChart::render(float dt)
                     //plot caindicators
                     plotIndicators();
 
-//                        _strategy->render();
+                    _strategy->render();
 
                     //plot tag at the last candle on screen
                     ImPlotRect bnds = ImPlot::GetPlotLimits();

@@ -2,11 +2,8 @@
 // Created by Arthur Abel Motelevicz on 19/12/21.
 //
 
-#include "iostream"
 #include "Ticker.h"
 #include "../Contexts/Context.h"
-#include "../Data/TickData.h"
-#include "../Data/Symbol.h"
 #include "../Tickables/Tickable.h"
 
 Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol): _symbol(std::move(symbol)) {
@@ -46,7 +43,6 @@ void Ticker::open(const TickData& tickData) {
     for(auto& t : _tickables){
         t->onOpen(&_barHistory);
     }
-
 }
 
 void Ticker::tick(const TickData& tickData) {
@@ -55,18 +51,14 @@ void Ticker::tick(const TickData& tickData) {
     if(_barHistory.size() <= 0 || lastWasClosed){
         lastWasClosed = false;
         open(tickData);
-        puts("OPEN");
-
         return;
     }
 
-    //check if it is the close moment based on symbol
+    //check if it is the close moment based on symbol interval
     long lastSecondOfCurrentBar = _barHistory[0].time + _symbol->getTimeIntervalInMinutes()*60 - 1;
     if(lastSecondOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
-        puts("CLOSE");
-
         return;
     }
 
@@ -82,7 +74,6 @@ void Ticker::tick(const TickData& tickData) {
     for(auto& t : _tickables){
         t->onTick(&_barHistory);
     }
-    puts("TICK");
 }
 
 void Ticker::close(const TickData& tickData) {

@@ -12,14 +12,14 @@ SMA::SMA(Ticker *ticker): Indicator(ticker) {
 
 void SMA::calculate(BarHistory* barHistory)
 {
-    if(barHist.size() >= _averageSize)
+    if((*barHistory).size() >= _averageSize)
     {
         double value = 0;
         for(int i = 0; i < _averageSize; i++)
-            value += barHist[i].close;
+            value += (*barHistory)[i].close;
 
         _data.push_back(value/_averageSize);
-        _time.push_back(barHist[0].time);
+        _time.push_back((*barHistory)[0].time);
     }
 }
 

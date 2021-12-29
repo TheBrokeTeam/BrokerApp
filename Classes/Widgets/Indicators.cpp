@@ -4,7 +4,7 @@
 
 #include "Indicators.h"
 #include "../Editor.h"
-#include "../Tickables/SMA.h"
+#include "../Tickables/Indicators/SMA.h"
 
 
 Indicators::Indicators(Editor *editor) : Widget(editor) {

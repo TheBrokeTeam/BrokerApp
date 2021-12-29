@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <string>
-#include "Tickable.h"
+#include "../Tickable.h"
 
 class Indicator : public Tickable , public ReversedData<double> {
 public:

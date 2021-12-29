@@ -10,7 +10,7 @@
 #include <implot_internal.h>
 #include <vector>
 #include "../Helpers/PlotHelper.h"
-#include "../Tickables/Indicator.h"
+#include "../Tickables/Indicators/Indicator.h"
 
 class Indicators : public Widget{
 public:

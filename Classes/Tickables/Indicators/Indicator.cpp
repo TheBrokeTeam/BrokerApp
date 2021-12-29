@@ -4,7 +4,7 @@
 
 #include "Indicator.h"
 #include <implot.h>
-#include "../Helpers/Utils.h"
+#include "../../Helpers/Utils.h"
 
 Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {}
 
