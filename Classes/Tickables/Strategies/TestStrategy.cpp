@@ -11,8 +11,10 @@ TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
 void TestStrategy::rule() {
     Strategy::rule();
 
+//    if(_isPositioned) return;
+
     if(barHist.size() < 5) return;
-    
+
     double fifthPrice   = barHist[4].close;
     double fourthPrice  = barHist[3].close;
     double thirdPrice   = barHist[2].close;
@@ -25,6 +27,7 @@ void TestStrategy::rule() {
         secondPrice < lastPrice){
 
         auto id = openPosition(false);
+        _isPositioned = true;
     }
 
     if( fifthPrice > fourthPrice &&
@@ -33,18 +36,20 @@ void TestStrategy::rule() {
         secondPrice > lastPrice){
 
         auto id = openPosition(true);
+        _isPositioned = true;
     }
 }
 
 void TestStrategy::checkTarget(Strategy::Position &pos) {
     Strategy::checkTarget(pos);
 
-    double lastPrice = barHist[0].close;
+    double lastPrice = pos.outPrice;
     double deltaProfit = _targetPercent*pos.inPrice - pos.inPrice;
     double deltaLastPrice = pos.isShorting ? pos.inPrice - lastPrice : lastPrice - pos.inPrice;
 
     if( deltaLastPrice >= deltaProfit  || deltaLastPrice <= (-1)*deltaProfit) {
-        closePosition(pos.id);
+//        closePosition(pos.id);
+//        _isPositioned = false;
     }
 }
 

@@ -15,6 +15,7 @@ public:
 
 private:
     double _targetPercent = 1.01;
+    bool _isPositioned = false;
 
 };
 #endif //BROKERAPP_TESTSTRATEGY_H

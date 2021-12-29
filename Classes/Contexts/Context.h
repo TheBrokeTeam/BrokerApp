@@ -18,6 +18,7 @@ public:
         virtual void update(float dt);
         virtual void startSimulation(Ticker* ticker) = 0;
         virtual void setSimulationSpeed(float speed) = 0;
+        virtual bool isSimulating()  = 0;
 };
 
 #endif //BROKERAPP_CONTEXT_H

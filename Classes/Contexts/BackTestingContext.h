@@ -24,6 +24,7 @@ public:
 
     void startSimulation(Ticker* ticker) override;
     void setSimulationSpeed(float speed) override;
+    bool isSimulating() override;
 
 private:
 

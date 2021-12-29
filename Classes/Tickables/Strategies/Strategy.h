@@ -25,6 +25,9 @@ public:
     void reset() override;
     virtual void render();
 
+    //calls this when simulation ends
+    void onFinish();
+
     virtual std::string openPosition(bool shorting);
     virtual bool closePosition(const std::string &posId);
 

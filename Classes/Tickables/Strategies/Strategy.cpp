@@ -5,6 +5,7 @@
 #include "Strategy.h"
 #include "../../Helpers/Utils.h"
 #include <implot.h>
+#include "../../Contexts/Context.h"
 
 Strategy::Strategy(Ticker *ticker) : Tickable(ticker) {
 
@@ -19,6 +20,10 @@ void Strategy::onClose(BarHistory* barHistory) {
 void Strategy::render() {
     std::vector<double> time;
     std::vector<double> y;
+
+    if(!_ticker->getContext()->isSimulating() &&  !_openedPositions.empty()){
+        onFinish();
+    }
 
     for(auto &c : _closedPositions) {
         time.push_back(c.inTime);
@@ -101,5 +106,10 @@ void Strategy::checkTarget(Strategy::Position &pos) {}
 
 Strategy::~Strategy() {
 
+}
+
+void Strategy::onFinish() {
+    for(auto& p : _openedPositions)
+        closePosition(p);
 }
 

@@ -145,6 +145,10 @@ std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
     return output;
 }
 
+bool BackTestingContext::isSimulating() {
+    return _simulating;
+}
+
 std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
 
     std::string out = fmt::format("./{}-{}-{}-{}.csv",
