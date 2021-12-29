@@ -107,7 +107,11 @@ void DataLoader::updateVisible(float dt)
 
     if (ImGui::Button("Download",ImVec2(200,50))) {
         puts("Clicou no botão fetch!!!");
+
         Symbol symbol(_info.fetchSymbol);
+        symbol.year = _info.fetchYear;
+        symbol.month = _info.fetchMonth;
+
         symbol.setTimeInterval(Symbol::Interval(interval));
 
         //TODO:: the ticker should  be created by charts widget

@@ -23,7 +23,7 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
 
     std::string filename = "data.zip";
 
-    auto url = build_url(symbol.getName(),"2021","01",interval_str[int(symbol.getTimeInterval())]);
+    auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
 
     if(!dataAlreadyExists(symbol))
         auto resp = download_file(url,filename);
@@ -154,8 +154,8 @@ std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
     std::string out = fmt::format("./{}-{}-{}-{}.csv",
             symbol.getName(),
             interval_str[int(symbol.getTimeInterval())],
-            "2021",
-            "01");
+            symbol.year,
+            symbol.month);
 
     return out;
 }

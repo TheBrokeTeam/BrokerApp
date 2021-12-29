@@ -12,6 +12,12 @@
 
 class Symbol {
 public:
+
+    //temp vars for download purposes
+    std::string month{"01"};
+    std::string year{"2021"};
+
+
     enum class Interval
     {
         Interval_1Minute,
@@ -70,6 +76,7 @@ private:
     std::string _name{""};
     Interval _interval;
     TimeRange _range{0,0};
+
 };
 
 
