@@ -18,10 +18,6 @@ public:
         virtual void update(float dt);
         virtual void startSimulation(Ticker* ticker) = 0;
         virtual void setSimulationSpeed(float speed) = 0;
-
-
-private:
-    std::vector<TickData> _data;
 };
 
 #endif //BROKERAPP_CONTEXT_H
