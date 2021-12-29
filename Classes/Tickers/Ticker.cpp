@@ -67,7 +67,7 @@ void Ticker::tick(const TickData& tickData) {
     data.high = tickData.price > data.high ? tickData.price : data.high;
     data.low = tickData.price < data.low ? tickData.price : data.low;;
 
-    _barHistory[0] = data;
+    _barHistory.updateLasBar(data);
 
     for(auto& t : _tickables){
         t->onTick(&_barHistory);
@@ -83,7 +83,7 @@ void Ticker::close(const TickData& tickData) {
     data.low = tickData.price < data.low ? tickData.price : data.low;;
     data.close = tickData.price;
 
-    _barHistory[0] = data;
+    _barHistory.updateLasBar(data);
 
     for(auto& t : _tickables){
         t->onClose(&_barHistory);

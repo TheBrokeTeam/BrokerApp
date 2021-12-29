@@ -10,6 +10,8 @@
 template<typename T>
 class ReversedData {
 public:
+    //Warning:: this cannot be populate using = operator.
+    //It wont change the value inside array. Ex: T[i] = value; will not work.
     T& operator[](int reversedIndex){
         auto it = _data.begin();
         std::advance(it, fixedIndex(reversedIndex));
