@@ -5,18 +5,6 @@
 #include <iostream>
 #include "BarHistory.h"
 
-//BarData& BarHistory::operator[](int reversedIndex) {
-//    auto it = _barData.begin();
-//    std::advance(it, fixedIndex(reversedIndex));
-//    return const_cast<BarData&>(*it);
-//}
-//
-//int BarHistory::fixedIndex(int reversedIndex) {
-//    int fixedIndex = std::max<int>(0,_barData.size() - 1 - reversedIndex);
-//    fixedIndex = std::min<int>(fixedIndex,_barData.size() - 1);
-//    return fixedIndex;
-//}
-
 void BarHistory::append(const BarData &data) {
     _data.push_back(data);
     _time.push_back(data.time);
@@ -43,4 +31,9 @@ void BarHistory::clear() {
     _data.clear();
     _time.clear();
     _volume.clear();
+}
+
+void BarHistory::updateLasBar(const BarData &barData) {
+    _data[_data.size() - 1]= barData;
+    _volume[_volume.size() - 1] = barData.volume;
 }

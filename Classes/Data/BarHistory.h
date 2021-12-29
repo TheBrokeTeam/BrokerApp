@@ -11,17 +11,15 @@
 
 class BarHistory : public ReversedData<BarData>{
 public:
-//    BarData &operator[](int reversedIndex);
     void append(const BarData& data);
     const std::vector<BarData>& getData();
     int size();
     const  std::vector<double>& getTimeData();
     const  std::vector<double>& getVolumeData();
+    void updateLasBar(const BarData& barData);
     void clear();
 
 private:
-//    std::vector<BarData> _barData;
-//    int fixedIndex(int reversedIndex);
     std::vector<double> _time;
     std::vector<double> _volume;
 
