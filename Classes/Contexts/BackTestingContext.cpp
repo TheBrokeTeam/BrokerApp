@@ -118,20 +118,23 @@ std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
         TickData data_close;
 
         //converting ms to sec and add simulated time for the sub tick on the bars
-        data_open.time  = doc.GetCell<long>(0,i)/1000.0;
-        data_high.time  = doc.GetCell<long>(0,i)/1000.0 + symbol.getTimeIntervalInMinutes()*0.25 * 60;
-        data_low.time  = doc.GetCell<long>(0,i)/1000.0 + symbol.getTimeIntervalInMinutes()*0.5* 60;
-        data_close.time  = doc.GetCell<long>(0,i)/1000.0 + symbol.getTimeIntervalInMinutes()*60 - 1;
+        double timeInSec = doc.GetCell<long>(0,i)/1000.0;
+        data_open.time  = timeInSec;
+        data_high.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.25 * 60;
+        data_low.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.5* 60;
+        data_close.time  = timeInSec + symbol.getTimeIntervalInMinutes()*60 - 1;
 
         data_open.price = doc.GetCell<double>(1,i);
         data_high.price = doc.GetCell<double>(2,i);
         data_low.price = doc.GetCell<double>(3,i);
         data_close.price = doc.GetCell<double>(4,i);
 
-        data_open.volume = doc.GetCell<double>(5,i)*0.25;
-        data_high.volume = doc.GetCell<double>(5,i)*0.5;
-        data_low.volume = doc.GetCell<double>(5,i)*0.75;
-        data_close.volume = doc.GetCell<double>(5,i);
+        //0.25 volume for each tick
+        double volume = doc.GetCell<double>(5,i)*0.25;
+        data_open.volume = volume;
+        data_high.volume = volume;
+        data_low.volume = volume;
+        data_close.volume = volume;
 
         output.push_back(data_open);
         output.push_back(data_high);
