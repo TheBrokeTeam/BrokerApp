@@ -20,3 +20,7 @@ void Context::updateUI(float dt) {
 const std::vector<std::shared_ptr<Widget>> &Context::getWidgets() {
     return _widgets;
 }
+
+Editor *Context::getEditor() {
+    return _editor;
+}

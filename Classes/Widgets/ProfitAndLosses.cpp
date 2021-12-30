@@ -8,7 +8,7 @@
 #include <implot_internal.h>
 
 
-ProfitAndLosses::ProfitAndLosses(Editor *editor, Strategy* strategy) : Widget(editor) {
+ProfitAndLosses::ProfitAndLosses(Context* context, Strategy* strategy) : Widget(context) {
     _title                  = "ProfitAndLosses";
     _is_window              = true;
     _strategy = strategy;
@@ -25,7 +25,7 @@ void ProfitAndLosses::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
 
     //adding the close button
-    auto info = _editor->getTexture(Editor::Icons::close_window);
+    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
     ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
 
     if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
@@ -42,7 +42,7 @@ void ProfitAndLosses::updateVisible(float dt) {
     static float ratios[] = {1};
 
     bool shouldLinkPlots;
-    if(_editor->getContext()->isSimulating())
+    if(getContext()->isSimulating())
         shouldLinkPlots = false;
     else
         shouldLinkPlots = true;
@@ -53,7 +53,7 @@ void ProfitAndLosses::updateVisible(float dt) {
     int xFlags;
     int yFlags;
     bool shouldFitRange;
-    if(_editor->getContext()->isSimulating()) {
+    if(getContext()->isSimulating()) {
         xFlags = ImPlotAxisFlags_Time | ImPlotAxisFlags_AutoFit;
         yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
         shouldFitRange = true;

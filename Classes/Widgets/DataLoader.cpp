@@ -7,7 +7,7 @@
 #include "../Contexts/Context.h"
 #include "../Editor.h"
 
-DataLoader::DataLoader(Editor *editor) : Widget(editor)
+DataLoader::DataLoader(Context* context) : Widget(context)
 {
     _title                  = "Data Loader";
     _is_window              = true;
@@ -39,10 +39,10 @@ void DataLoader::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
 
     //adding the close button
-    auto info = _editor->getTexture(Editor::Icons::close_window);
+    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
     ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
     if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
-        _editor->showDataLoader(false);
+        getContext()->getEditor()->showDataLoader(false);
     }
 
     ImGui::Separator();
@@ -116,7 +116,7 @@ void DataLoader::updateVisible(float dt)
 
         //TODO:: the ticker should  be created by charts widget
         auto ticker = getContext()->loadSymbol(symbol);
-        _editor->addChartWidget(ticker);
+        getContext()->getEditor()->addChartWidget(ticker);
     }
 }
 

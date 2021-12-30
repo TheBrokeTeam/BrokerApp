@@ -19,7 +19,7 @@ class ImPlotTime;
 
 class CandleChart : public Widget, public Tickable{
 public:
-    CandleChart(Editor* editor, Ticker* ticker);
+    CandleChart(Context* context, Ticker* ticker);
     void updateVisible(float dt) override;
     void showIndicators(bool show);
 

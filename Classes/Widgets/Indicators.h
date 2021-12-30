@@ -39,7 +39,7 @@ public:
         }
     };
 
-    Indicators(Editor* editor);
+    Indicators(Context* context);
     void updateVisible(float dt) override;
     std::vector<DragAndDropIndicatorItem>& getIndicators();
 

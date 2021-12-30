@@ -24,7 +24,7 @@ const float k_widget_position_screen_center = -2.0f;
 class Widget : public Contextualizable
 {
 public:
-    Widget(Editor* editor);
+    Widget(Context* context);
     virtual ~Widget() = default;
 
     void update(float dt);
@@ -72,7 +72,7 @@ protected:
     ImVec2 _size_min   =   _default_value;
     ImVec2 _size_max   =   _default_value;
     ImVec2 _padding    =   _default_value;
-    Editor* _editor                 = nullptr;
+    Context* context                = nullptr;
     ImGuiWindow* _window            = nullptr;
     std::string _title              = "Title";
 

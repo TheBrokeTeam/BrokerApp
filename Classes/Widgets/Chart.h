@@ -11,7 +11,7 @@
 
 class Chart : public Widget {
 public:
-    Chart(Editor* editor);
+    Chart(Context* context);
     void updateVisible(float dt) override;
     void addChart(std::shared_ptr<CandleChart> candleChart);
     void enableIndicatorsOnCharts(bool show);

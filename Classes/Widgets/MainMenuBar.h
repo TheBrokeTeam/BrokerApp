@@ -15,7 +15,7 @@
 class MainMenuBar : public Widget
 {
 public:
-    MainMenuBar(Editor* editor);
+    MainMenuBar(Context* context);
 
     inline static bool _show_downloader = true;
     inline static bool _show_simulator = true;

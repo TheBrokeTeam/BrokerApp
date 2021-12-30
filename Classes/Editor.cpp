@@ -67,7 +67,7 @@ Editor::~Editor() {}
 
 void Editor::addChartWidget(Ticker *ticker) {
     auto charts = _context->getWidget<Chart>();
-    charts->addChart(std::make_shared<CandleChart>(this,ticker));
+    charts->addChart(std::make_shared<CandleChart>(_context.get(),ticker));
     _context->loadTicker(*ticker->getSymbol());
 }
 

@@ -11,11 +11,11 @@
 
 #define dataHist (*_ticker->getBarHistory())
 
-CandleChart::CandleChart(Editor *editor,Ticker* ticker) : Widget(editor), Tickable(ticker)
+CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context), Tickable(ticker)
 {
     _title                  = "Candle Chart";
     _is_window              = false;
-    _indicatorsView = std::make_unique<Indicators>(editor);
+    _indicatorsView = std::make_unique<Indicators>(context);
 
     _indicatorsView->setTrashCallback([this](){
         for(auto& i : _indicators){
@@ -44,7 +44,7 @@ void CandleChart::render(float dt)
 
         _strategy = std::make_unique<TestStrategy>(_ticker);
         _ticker->addTickable(_strategy.get());
-        _editor->setStrategyTest(_strategy.get());
+        getContext()->getEditor()->setStrategyTest(_strategy.get());
     }
 
     if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;

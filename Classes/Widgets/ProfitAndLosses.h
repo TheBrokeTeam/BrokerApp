@@ -11,7 +11,7 @@
 
 class ProfitAndLosses : public Widget {
 public:
-    ProfitAndLosses(Editor* editor, Strategy* strategy);
+    ProfitAndLosses(Context* context, Strategy* strategy);
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 

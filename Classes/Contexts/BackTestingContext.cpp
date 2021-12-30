@@ -24,11 +24,11 @@ BackTestingContext::BackTestingContext(Editor *editor) : Context(editor) {
 
 void BackTestingContext::initialize() {
     // Initialize the context
-    _widgets.emplace_back(std::make_shared<MainMenuBar>(_editor));
-    _widgets.emplace_back(std::make_shared<DataLoader>(_editor));
-    _widgets.emplace_back(std::make_shared<SimulationController>(_editor));
-    _widgets.emplace_back(std::make_shared<Chart>(_editor));
-    _widgets.emplace_back(std::make_shared<ProfitAndLosses>(_editor, nullptr));
+    _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
+    _widgets.emplace_back(std::make_shared<DataLoader>(this));
+    _widgets.emplace_back(std::make_shared<SimulationController>(this));
+    _widgets.emplace_back(std::make_shared<Chart>(this));
+    _widgets.emplace_back(std::make_shared<ProfitAndLosses>(this, nullptr));
 }
 
 Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {

@@ -5,7 +5,7 @@
 #include "SimulationController.h"
 #include "../Editor.h"
 
-SimulationController::SimulationController(Editor * editor) : Widget(editor){
+SimulationController::SimulationController(Context* context) : Widget(context){
     _title                  = "Simulation";
     _is_window              = true;
 }
@@ -32,10 +32,10 @@ void SimulationController::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
 
     //adding the close button
-    auto info = _editor->getTexture(Editor::Icons::close_window);
+    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
     ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
     if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
-        _editor->showSimulationController(false);
+        getContext()->getEditor()->showSimulationController(false);
     }
 
     ImGui::Separator();
@@ -48,7 +48,7 @@ void SimulationController::updateVisible(float dt) {
 
     static float _speedSimulation = 0.1f;
     if(ImGui::SliderFloat("##Speed",&_speedSimulation,0.00f,1.00f,"%.2f")){
-        _editor->getContext()->setSimulationSpeed(_speedSimulation);
+        getContext()->setSimulationSpeed(_speedSimulation);
 
     }
 
@@ -64,7 +64,7 @@ void SimulationController::updateVisible(float dt) {
 
     if (ImGui::Button("Play",ImVec2(200,50))) {
         puts("Clicou no botão play!!!");
-        _editor->getContext()->startSimulation(nullptr);
+        getContext()->startSimulation(nullptr);
     }
 
 }

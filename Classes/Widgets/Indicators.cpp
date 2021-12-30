@@ -7,7 +7,7 @@
 #include "../Tickables/Indicators/SMA.h"
 
 
-Indicators::Indicators(Editor *editor) : Widget(editor) {
+Indicators::Indicators(Context* context) : Widget(context) {
 
     for(int i = 0; i< _numberOfItems; i++)
         _dragAndDropItems.push_back(DragAndDropIndicatorItem(static_cast<CandleIndicatorsTypes>(i)));
@@ -36,7 +36,7 @@ void Indicators::drawView() {
 
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
                     ImGui::SetDragDropPayload(Indicators::CANDLE_INDICATORS_DRAG_ID, &k, sizeof(int));
-                    auto info = _editor->getTexture(Editor::Icons::indicator_ma);
+                    auto info = getContext()->getEditor()->getTexture(Editor::Icons::indicator_ma);
                     ImGui::Image((void *) (intptr_t) info.my_image_texture,
                                  ImVec2(info.my_image_width * 0.5, info.my_image_height * 0.5));
                     ImGui::EndDragDropSource();
@@ -54,7 +54,7 @@ void Indicators::drawView() {
                     //change the background of trash button
                     ImGui::PushStyleColor(ImGuiCol_Button, Editor::broker_clear);
 
-                    auto info = _editor->getTexture(Editor::Icons::trash);
+                    auto info = getContext()->getEditor()->getTexture(Editor::Icons::trash);
 
                     //TODO::this 4 at the end is half padding I think improve it
                     ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - info.my_image_width / 2 - 4);

@@ -11,7 +11,7 @@
 class DataLoader : public Widget
 {
 public:
-    DataLoader(Editor* editor);
+    DataLoader(Context* context);
 
     struct FetchInfo{
         std::string fetchInterVal{"15m"};

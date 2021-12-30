@@ -7,10 +7,9 @@
 #include "../Editor.h"
 
 
-Widget::Widget(Editor* editor)
+Widget::Widget(Context* context)
 {
-    setContext(editor->getContext());
-    _editor    = editor;
+    setContext(context);
     _window    = nullptr;
     _widgetId = uuid::generate_uuid_v4();
 }
@@ -91,8 +90,8 @@ void Widget::update(float dt)
         {
             if (_position.x == k_widget_position_screen_center)
             {
-                _position.x = _editor->getWindowSize().x * 0.5f;
-                _position.y = _editor->getWindowSize().y * 0.5f;
+                _position.x = getContext()->getEditor()->getWindowSize().x * 0.5f;
+                _position.y = getContext()->getEditor()->getWindowSize().y * 0.5f;
             }
 
             ImVec2 pivot_center = ImVec2(0.5f, 0.5f);

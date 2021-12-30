@@ -8,7 +8,7 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 
-MainMenuBar::MainMenuBar(Editor *editor) : Widget(editor)
+MainMenuBar::MainMenuBar(Context* context) : Widget(context)
 {
     _title                  = "MainMenuBar";
     _is_window              = false;
@@ -73,11 +73,11 @@ void MainMenuBar::updateAlways(float dt)
     }
 
     //update editor
-    _editor->showDataLoader(_show_downloader);
-    _editor->showSimulationController(_show_simulator);
-    _editor->showCharts(_show_charts);
-    _editor->showIndicators(_show_indicators);
-    _editor->showTabBars(_show_tabbars);
+    getContext()->getEditor()->showDataLoader(_show_downloader);
+    getContext()->getEditor()->showSimulationController(_show_simulator);
+    getContext()->getEditor()->showCharts(_show_charts);
+    getContext()->getEditor()->showIndicators(_show_indicators);
+    getContext()->getEditor()->showTabBars(_show_tabbars);
 
     if (_imgui_metrics)
     {

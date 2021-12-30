@@ -5,7 +5,7 @@
 #include "Chart.h"
 #include "../Editor.h"
 
-Chart::Chart(Editor *editor) : Widget(editor) {
+Chart::Chart(Context* context) : Widget(context) {
     _title                  = "Chart";
     _is_window              = true;
 }
@@ -21,10 +21,10 @@ void Chart::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
 
     //adding the close button
-    auto info = _editor->getTexture(Editor::Icons::close_window);
+    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
     ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
     if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
-        _editor->showCharts(false);
+        getContext()->getEditor()->showCharts(false);
     }
 
     ImGui::Separator();

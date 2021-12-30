@@ -42,6 +42,7 @@ public:
     }
 
     const std::vector<std::shared_ptr<Widget>>& getWidgets();
+    Editor* getEditor();
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
