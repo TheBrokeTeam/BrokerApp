@@ -36,6 +36,7 @@ public:
 
     double getProfit();
 
+    const std::vector<Position>& getClosedPositions();
 
     //testing profit and losses
     std::vector<double> profitHistory;

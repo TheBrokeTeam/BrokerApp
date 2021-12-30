@@ -147,3 +147,7 @@ Ticker *Strategy::getTicker() {
     return _ticker;
 }
 
+const std::vector<Strategy::Position> &Strategy::getClosedPositions() {
+    return _closedPositions;
+}
+

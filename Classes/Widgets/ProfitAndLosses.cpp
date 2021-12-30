@@ -37,35 +37,88 @@ void ProfitAndLosses::updateVisible(float dt) {
     //now draw the pnl chart
 
     if(_strategy == nullptr) return;
-    if(_strategy->time.empty()) return;
+    if(_strategy->getClosedPositions().empty()) return;
 
     static float ratios[] = {1};
-    if(ImPlot::BeginSubplots("##NoLinkSubPlot",1,1,ImVec2(-1,-1),ImPlotSubplotFlags_None,ratios))
-    {
-        if (ImPlot::BeginPlot("##PnL")) {
-            ImPlot::SetupAxes(0, 0, ImPlotAxisFlags_Time,
-                              ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite);
-            ImPlot::SetupAxisLimits(ImAxis_X1, _strategy->time.front(), _strategy->time.back());
-            ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
 
-            //Fit the data manually with some offset
-            double tenBars = 10*60*_strategy->getTicker()->getSymbol()->getTimeIntervalInMinutes();
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy->time.front() - tenBars,_strategy->time.back() + tenBars);
+    bool shouldLinkPlots;
+    if(_editor->getContext()->isSimulating())
+        shouldLinkPlots = true;
+    else
+        shouldLinkPlots = true;
 
-            if (ImPlot::BeginItem("##PnL")) {
+    if(!shouldLinkPlots)
+        ImPlot::BeginSubplots("##NoLinkSubPlot",1,1,ImVec2(-1,-1),ImPlotSubplotFlags_None,ratios);
 
-                ImPlot::SetNextFillStyle(Editor::broker_pnl_profit);
-                ImPlot::PlotShaded("##pnl_fill", _strategy->time.data(), _strategy->profitHistory.data(), _strategy->time.size(), 0.0f);
-
-                ImPlot::SetNextFillStyle(Editor::broker_pnl_loss);
-                ImPlot::PlotShaded("##pnl_fill", _strategy->time.data(), _strategy->lossesHistory.data(), _strategy->time.size(), 0.0f);
-
-                ImPlot::EndItem();
-            }
-            ImPlot::EndPlot();
-        }
-        ImPlot::EndSubplots();
+    int xFlags;
+    int yFlags;
+    bool shouldFitRange;
+    if(_editor->getContext()->isSimulating()) {
+        xFlags = ImPlotAxisFlags_Time | ImPlotAxisFlags_AutoFit;
+        yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
+        shouldFitRange = true;
     }
+    else{
+        xFlags = ImPlotAxisFlags_Time;
+        yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
+        shouldFitRange = false;
+    }
+
+    if (ImPlot::BeginPlot("##PnL")) {
+        ImPlot::SetupAxes(0, 0, xFlags, yFlags);
+        ImPlot::SetupAxisLimits(ImAxis_X1, _strategy->time.front(), _strategy->time.back());
+        ImPlot::SetupAxisLimits(ImAxis_Y1, _strategy->drawDownMax, _strategy->profitMax);
+
+        ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
+
+        //Fit the data manually with some offset
+        if(shouldFitRange) {
+            double tenBars = 10 * 60 * _strategy->getTicker()->getSymbol()->getTimeIntervalInMinutes();
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy->time.front() - tenBars,
+                                                               _strategy->time.back() + tenBars);
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy->drawDownMax, _strategy->profitMax);
+        }
+
+
+        ImDrawList *drawList = ImPlot::GetPlotDrawList();
+
+
+        //TODO:: use a baseline value as start from context
+        double baseLine = 0;
+        double cumulatedProfit = baseLine;
+        double lastTime = _strategy->getClosedPositions().front().inTime;
+
+        if(!shouldLinkPlots)
+            ImPlot::BeginItem("##PnL");
+
+            for(auto& p : _strategy->getClosedPositions()){
+                cumulatedProfit += p.profit;
+                auto color = cumulatedProfit >= 0 ? Editor::broker_pnl_profit : Editor::broker_pnl_loss;
+
+                double startX = lastTime;
+                double startY = baseLine;
+
+                double endX = p.outTime;
+                double endY = cumulatedProfit;
+
+                lastTime = endX;
+
+                ImU32 color32 = ImGui::GetColorU32(color);
+                ImVec2 startPos = ImPlot::PlotToPixels(startX, startY);
+                ImVec2 endPos = ImPlot::PlotToPixels(endX, endY);
+
+                drawList->AddRectFilled(startPos, endPos, color32);
+
+            }
+
+        if(!shouldLinkPlots)
+            ImPlot::EndItem();
+
+        ImPlot::EndPlot();
+    }
+
+    if(!shouldLinkPlots)
+        ImPlot::EndSubplots();
 
 }
 

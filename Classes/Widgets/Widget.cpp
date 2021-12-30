@@ -147,7 +147,6 @@ void Widget::update(float dt)
             // End
             popStyles();
             ImGui::End();
-
         }
     }
 }
