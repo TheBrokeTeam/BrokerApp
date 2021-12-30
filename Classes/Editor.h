@@ -7,7 +7,6 @@
 
 #include "App.h"
 #include <vector>
-#include "Widgets/Widget.h"
 #include "Contexts/Context.h"
 #include "Helpers/Utils.h"
 #include "Tickables/Strategies/TestStrategy.h"
@@ -46,32 +45,13 @@ public:
         trash
     };
 
-
     ImageInfo getTexture(Icons icon);
-
-
     std::map<Icons,ImageInfo> _imagesRef;
 
     using App::App;
     virtual ~Editor();
     void start() override;
     void update() override;
-
-    template<typename T>
-    T* getWidget()
-    {
-        for (const auto& widget : _widgets)
-        {
-            if (T* widget_t = dynamic_cast<T*>(widget.get()))
-            {
-                return widget_t;
-            }
-        }
-
-        return nullptr;
-    }
-
-    Context* getContext();
 
     void addChartWidget(Ticker* ticker);
     void showDataLoader(bool show);
@@ -84,18 +64,15 @@ public:
     void showDockSpace();
 
     void setStrategyTest(TestStrategy* strategy);
-
-
+    Context* getContext();
 private:
-    std::vector<std::shared_ptr<Widget>> _widgets;
-    std::shared_ptr<Context> _context{nullptr};
-
     //delta time helpers
     float _lastTime = 0;
     float getDeltaTime();
 
     void loadImage(Icons icon,const std::string& filepath);
     TestStrategy* _strategy{nullptr};
+    std::shared_ptr<Context> _context{nullptr};
 
 };
 

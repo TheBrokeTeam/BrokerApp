@@ -6,11 +6,6 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_internal.h>
-#include "Widgets/MainMenuBar.h"
-#include "Widgets/DataLoader.h"
-#include "Widgets/SimulationController.h"
-#include "Widgets/ProfitAndLosses.h"
-
 
 #include "Widgets/Chart.h"
 
@@ -26,15 +21,9 @@ void Editor::start() {
     loadImage(Icons::close_window,"../Resources/Icons/close.png");
     loadImage(Icons::trash,"../Resources/Icons/trash.png");
 
-    // Initialize the context
-    _context = std::make_shared<BackTestingContext>();
+    _context = std::make_shared<BackTestingContext>(this);
 
-    _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
-    _widgets.emplace_back(std::make_shared<DataLoader>(this));
-    _widgets.emplace_back(std::make_shared<SimulationController>(this));
-    _widgets.emplace_back(std::make_shared<Chart>(this));
-    _widgets.emplace_back(std::make_shared<ProfitAndLosses>(this, nullptr));
-
+    _context->initialize();
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -54,16 +43,13 @@ void Editor::update() {
     //calculate deltime
     auto dt = getDeltaTime();
 
-    //update context first
-    _context->update(dt);
+    //update data context first
+    _context->updateData(dt);
 
     showDockSpace();
 
     // Editor - update widgets
-    for (std::shared_ptr<Widget>& widget : _widgets)
-    {
-        widget->update(dt);
-    }
+    _context->updateUI(dt);
 }
 
 float Editor::getDeltaTime(){
@@ -80,13 +66,13 @@ Context* Editor::getContext(){
 Editor::~Editor() {}
 
 void Editor::addChartWidget(Ticker *ticker) {
-    auto charts = getWidget<Chart>();
+    auto charts = _context->getWidget<Chart>();
     charts->addChart(std::make_shared<CandleChart>(this,ticker));
     _context->loadTicker(*ticker->getSymbol());
 }
 
 void Editor::showDataLoader(bool show) {
-    auto donwloader = getWidget<DataLoader>();
+    auto donwloader =  _context->getWidget<DataLoader>();
     if(donwloader)
         donwloader->SetVisible(show);
 
@@ -94,16 +80,16 @@ void Editor::showDataLoader(bool show) {
 }
 
 void Editor::showCharts(bool show) {
-    auto charts = getWidget<Chart>();
+    auto charts = _context->getWidget<Chart>();
     if(charts)
-        getWidget<Chart>()->SetVisible(show);
+        _context->getWidget<Chart>()->SetVisible(show);
 
     MainMenuBar::_show_charts = show;
 
 }
 
 void Editor::showIndicators(bool show) {
-    auto charts = getWidget<Chart>();
+    auto charts =  _context->getWidget<Chart>();
     if(charts)
         charts->enableIndicatorsOnCharts(show);
 
@@ -133,7 +119,7 @@ Editor::ImageInfo Editor::getTexture(Editor::Icons icon) {
 }
 
 void Editor::showTabBars(bool show) {
-    for(auto& w :_widgets){
+    for(auto& w : _context->getWidgets()){
         w->showTabBar(show);
     }
     MainMenuBar::_show_tabbars = show;
@@ -145,7 +131,7 @@ void Editor::showDockSpace()
 }
 
 void Editor::showSimulationController(bool show) {
-    auto simulator = getWidget<SimulationController>();
+    auto simulator = _context->getWidget<SimulationController>();
     if(simulator)
         simulator->SetVisible(show);
 
@@ -154,7 +140,7 @@ void Editor::showSimulationController(bool show) {
 
 void Editor::setStrategyTest(TestStrategy* strategy) {
     _strategy = strategy;
-    getWidget<ProfitAndLosses>()->setStrategyTest(_strategy);
+    _context->getWidget<ProfitAndLosses>()->setStrategyTest(_strategy);
 }
 
 int main(int argc, char const* argv[]){

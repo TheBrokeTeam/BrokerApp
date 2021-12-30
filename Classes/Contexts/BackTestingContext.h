@@ -9,6 +9,13 @@
 #include <map>
 #include <set>
 
+#include "../Widgets/MainMenuBar.h"
+#include "../Widgets/DataLoader.h"
+#include "../Widgets/SimulationController.h"
+#include "../Widgets/ProfitAndLosses.h"
+#include "../Widgets/Chart.h"
+
+
 class BackTestingContext : public Context {
 public:
     struct DownloadResponse {
@@ -16,11 +23,12 @@ public:
         std::string extractedFileName{""};
     };
 
-    BackTestingContext() = default;
+    BackTestingContext(Editor* editor);
+    void initialize() override;
 
     Ticker* loadSymbol(const Symbol &symbol) override;
     void loadTicker(const Symbol& symbol) override;
-    void update(float dt) override;
+    void updateData(float dt) override;
 
     void startSimulation(Ticker* ticker) override;
     void setSimulationSpeed(float speed) override;

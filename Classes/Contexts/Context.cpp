@@ -4,6 +4,19 @@
 
 #include "Context.h"
 
-void Context::update(float dt) {
+Context::Context(Editor* editor): _editor(editor) {
 
+}
+
+void Context::updateData(float dt) {
+
+}
+
+void Context::updateUI(float dt) {
+    for(auto& w : _widgets)
+        w->update(dt);
+}
+
+const std::vector<std::shared_ptr<Widget>> &Context::getWidgets() {
+    return _widgets;
 }

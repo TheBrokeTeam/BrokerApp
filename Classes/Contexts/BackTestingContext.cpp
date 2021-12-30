@@ -18,6 +18,19 @@ static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
                                         "3d", "1w", "1mo"};
 
+BackTestingContext::BackTestingContext(Editor *editor) : Context(editor) {
+
+}
+
+void BackTestingContext::initialize() {
+    // Initialize the context
+    _widgets.emplace_back(std::make_shared<MainMenuBar>(_editor));
+    _widgets.emplace_back(std::make_shared<DataLoader>(_editor));
+    _widgets.emplace_back(std::make_shared<SimulationController>(_editor));
+    _widgets.emplace_back(std::make_shared<Chart>(_editor));
+    _widgets.emplace_back(std::make_shared<ProfitAndLosses>(_editor, nullptr));
+}
+
 Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     puts("TODO load symbol!");
 
@@ -165,7 +178,7 @@ void BackTestingContext::loadTicker(const Symbol &symbol) {
         _ticker->tick(d);
 }
 
-void BackTestingContext::update(float dt) {
+void BackTestingContext::updateData(float dt) {
 
     if(!_simulating) return;
 
@@ -194,6 +207,10 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
+
+
+
+
 
 
 
