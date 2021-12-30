@@ -43,7 +43,7 @@ void ProfitAndLosses::updateVisible(float dt) {
 
     bool shouldLinkPlots;
     if(_editor->getContext()->isSimulating())
-        shouldLinkPlots = true;
+        shouldLinkPlots = false;
     else
         shouldLinkPlots = true;
 
@@ -91,8 +91,9 @@ void ProfitAndLosses::updateVisible(float dt) {
         if(!shouldLinkPlots)
             ImPlot::BeginItem("##PnL");
 
-            for(auto& p : _strategy->getClosedPositions()){
-                cumulatedProfit += p.profit;
+//        const double candleWidthOffset = (_strategy->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60)/2.0;
+
+        for(auto& p : _strategy->getClosedPositions()){
                 auto color = cumulatedProfit >= 0 ? Editor::broker_pnl_profit : Editor::broker_pnl_loss;
 
                 double startX = lastTime;
@@ -108,6 +109,15 @@ void ProfitAndLosses::updateVisible(float dt) {
                 ImVec2 endPos = ImPlot::PlotToPixels(endX, endY);
 
                 drawList->AddRectFilled(startPos, endPos, color32);
+
+                auto colorLine = cumulatedProfit >= 0 ? Editor::broker_pnl_profit_line : Editor::broker_pnl_loss_line;
+                ImU32 colorLine32 = ImGui::GetColorU32(colorLine);
+
+                ImVec2 lineLeft = ImPlot::PlotToPixels(startX, endY);
+                ImVec2 lineRight = ImPlot::PlotToPixels(endX, endY);
+                drawList->AddLine(lineLeft, lineRight, colorLine32, 2.0f);
+
+                cumulatedProfit += p.profit;
 
             }
 

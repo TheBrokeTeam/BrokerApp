@@ -24,8 +24,8 @@ public:
     inline static const ImVec4 broker_light_grey = ImVec4(62.0f/255, 62.0f/255,62.0f/255, 1.00f);
     inline static const ImVec4 broker_clear = ImVec4(0, 0,0, 0.00f);
 
-    inline static const ImVec4 broker_pnl_profit = ImVec4(0.3f, 0.3f,1.0f, 0.25f);
-    inline static const ImVec4 broker_pnl_loss = ImVec4(1.0f, 0.3f,0.3f, 0.25f);
+    inline static const ImVec4 broker_pnl_profit = ImVec4(0.3f, 0.3f,1.0f, 0.3f);
+    inline static const ImVec4 broker_pnl_loss = ImVec4(1.0f, 0.3f,0.3f, 0.3f);
     inline static const ImVec4 broker_pnl_profit_line = ImVec4(0.3f, 0.3f,1.0f, 1.0f);
     inline static const ImVec4 broker_pnl_loss_line = ImVec4(1.0f, 0.3f,0.3f, 1.0f);
 
