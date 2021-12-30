@@ -19,7 +19,7 @@ public:
 private:
     double _targetPercent = 1.01;
     bool _isPositioned = false;
-    std::shared_ptr<SMA> _smaSlow{nullptr};
-    std::shared_ptr<SMA> _smaFast{nullptr};
+    SMA _smaSlow{nullptr};
+    SMA _smaFast{nullptr};
 };
 #endif //BROKERAPP_TESTSTRATEGY_H

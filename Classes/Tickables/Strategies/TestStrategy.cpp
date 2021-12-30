@@ -5,25 +5,25 @@
 #include "TestStrategy.h"
 
 TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
-    _smaSlow = std::make_shared<SMA>(ticker);
-    _smaFast = std::make_shared<SMA>(ticker);
+    _smaSlow = SMA(ticker);
+    _smaFast = SMA(ticker);
 
-    _smaSlow->setAverageSize(24);
-    _smaFast->setAverageSize(9);
+    _smaSlow.setAverageSize(24);
+    _smaFast.setAverageSize(9);
 
-    ticker->addTickable(_smaFast.get());
-    ticker->addTickable(_smaSlow.get());
+    ticker->addTickable(&_smaFast);
+    ticker->addTickable(&_smaSlow);
 }
 
 void TestStrategy::rule() {
     Strategy::rule();
 
-    if(_smaSlow->size() > 1){
+    if(_smaSlow.size() > 1){
         //when the slow cross up the fast -> should short
-        bool crossUp = (*_smaSlow)[0] > (*_smaFast)[0] && (*_smaSlow)[1] < (*_smaFast)[1];
+        bool crossUp = _smaSlow[0] > _smaFast[0] && _smaSlow[1] < _smaFast[1];
 
         //when the slow cross up the fast -> should long
-        bool crossDown = (*_smaSlow)[0] < (*_smaFast)[0] && (*_smaSlow)[1] > (*_smaFast)[1];
+        bool crossDown =_smaSlow[0] < _smaFast[0] && _smaSlow[1] > _smaFast[1];
 
         if(crossUp)
             auto id = openPosition(false);
@@ -75,7 +75,7 @@ void TestStrategy::checkTarget(Strategy::Position &pos) {
 
 void TestStrategy::render() {
     Strategy::render();
-    _smaSlow->render();
-    _smaFast->render();
+    _smaSlow.render();
+    _smaFast.render();
 }
 
