@@ -29,8 +29,10 @@ void Chart::updateVisible(float dt) {
 
     ImGui::Separator();
 
-    for(auto c : _charts)
-        c->updateVisible(dt);
+    if(_chart != nullptr)
+        _chart->updateVisible(dt);
+//    for(auto c : _charts)
+//        c->updateVisible(dt);
 
 //    if (ImGui::BeginTabBar("Symbols")) {
 //        for(auto c : _charts)
@@ -40,12 +42,13 @@ void Chart::updateVisible(float dt) {
 }
 
 void Chart::addChart(std::shared_ptr<CandleChart> candleChart){
-    _charts.push_back(candleChart);
+    _chart.reset();
+    _chart = std::move(candleChart);
 }
 
 void Chart::enableIndicatorsOnCharts(bool show) {
-    for(auto c : _charts)
-        c->showIndicators(show);
+    if(_chart != nullptr)
+        _chart->showIndicators(show);
 }
 
 

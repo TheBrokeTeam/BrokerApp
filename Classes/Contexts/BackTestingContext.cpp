@@ -21,6 +21,7 @@ static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
 Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     puts("TODO load symbol!");
 
+
     std::string filename = "data.zip";
 
     auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
@@ -28,14 +29,13 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     if(!dataAlreadyExists(symbol))
         auto resp = download_file(url,filename);
 
-    //create a ticker for the symbol loaded
-    auto ticker = Ticker(this,std::make_shared<Symbol>(symbol));
-    _tickers.emplace(symbol,ticker);
+    _ticker.reset();
+    _ticker = std::make_shared<Ticker>(this,symbol);
 
-    //load tickdata from symbol file already donwloaded
-    _data.emplace(symbol.getName(),loadCsv(symbol));
+   _data.clear();
+    _data = loadCsv(symbol);
 
-    return &_tickers.at(symbol);
+    return _ticker.get();
 
 }
 
@@ -161,26 +161,23 @@ std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
 }
 
 void BackTestingContext::loadTicker(const Symbol &symbol) {
-    auto& ticker = _tickers.at(symbol);
-    auto& vec = _data.at(symbol.getName());
-    for(auto& d : vec)
-        ticker.tick(d);
+    for(auto& d : _data)
+        _ticker->tick(d);
 }
 
 void BackTestingContext::update(float dt) {
 
     if(!_simulating) return;
 
-    auto& data = _data.at(_tickerToSimulate->getSymbol()->getName());
     _currentTime += dt*_speed;
     if(_currentTime >= _timeToTick){
         int numberOfTicks = floor(_currentTime/_timeToTick);
         _currentTime = 0;
         for(int i = 0; i < numberOfTicks; i++)
         {
-            auto& tickData = data[_currentIndex++];
-            _tickerToSimulate->tick(tickData);
-            if(_currentIndex >= data.size())
+            auto& tickData = _data[_currentIndex++];
+            _ticker->tick(tickData);
+            if(_currentIndex >= _data.size())
                 _simulating = false;
         }
     }
@@ -189,8 +186,7 @@ void BackTestingContext::update(float dt) {
 void BackTestingContext::startSimulation(Ticker* ticker) {
     //just for test
     //TODO:: use the ticker parameter
-    _tickerToSimulate =  &_tickers.begin()->second;
-    _tickerToSimulate->reset();
+    _ticker->reset();
     _currentIndex = 0;
     _simulating = true;
 }

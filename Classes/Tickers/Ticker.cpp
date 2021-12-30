@@ -6,7 +6,7 @@
 #include "../Contexts/Context.h"
 #include "../Tickables/Tickable.h"
 
-Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol): _symbol(std::move(symbol)) {
+Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
     setContext(context);
 }
 
@@ -55,7 +55,7 @@ void Ticker::tick(const TickData& tickData) {
     }
 
     //check if it is the close moment based on symbol interval
-    long lastSecondOfCurrentBar = _barHistory[0].time + _symbol->getTimeIntervalInMinutes()*60 - 1;
+    long lastSecondOfCurrentBar = _barHistory[0].time + _symbol.getTimeIntervalInMinutes()*60 - 1;
     if(lastSecondOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
@@ -100,7 +100,7 @@ void Ticker::reset() {
 }
 
 Symbol *Ticker::getSymbol() {
-    return _symbol.get();
+    return &_symbol;
 }
 
 BarHistory *Ticker::getBarHistory() {

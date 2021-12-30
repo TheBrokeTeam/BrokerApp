@@ -36,11 +36,11 @@ private:
 
     DownloadResponse download_file(std::string url, std::string filename);
 
-    std::map<Symbol,Ticker> _tickers;
-    std::map<std::string,std::vector<TickData>> _data;
+    //TODO:: single symbol for now until backtesting is good
+    std::shared_ptr<Ticker> _ticker{nullptr};
+    std::vector<TickData> _data;
 
     //simulating
-    Ticker* _tickerToSimulate{nullptr};
     int _countTicks = 0;
     bool _simulating = false;
     int _currentIndex = 0;
