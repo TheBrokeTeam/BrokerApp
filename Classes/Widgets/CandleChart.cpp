@@ -11,11 +11,12 @@
 
 #define dataHist (*_ticker->getBarHistory())
 
-CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context), Tickable(ticker)
+CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
 {
     _title                  = "Candle Chart";
     _is_window              = false;
     _indicatorsView = std::make_unique<Indicators>(context);
+    _ticker = ticker;
 
     _indicatorsView->setTrashCallback([this](){
         for(auto& i : _indicators){

@@ -5,19 +5,19 @@
 #ifndef BROKERAPP_CANDLECHART_H
 #define BROKERAPP_CANDLECHART_H
 
-#include "../Widgets/Widget.h"
+#include "Widget.h"
 #include "../Tickables/Tickable.h"
 #include <implot.h>
 #include <implot_internal.h>
 #include "../Helpers/PlotHelper.h"
 
-#include "../Widgets/Indicators.h"
+#include "Indicators.h"
 #include "../Tickables/Indicators/Indicator.h"
 #include "../Tickables/Strategies/TestStrategy.h"
 
 class ImPlotTime;
 
-class CandleChart : public Widget, public Tickable{
+class CandleChart : public Widget{
 public:
     CandleChart(Context* context, Ticker* ticker);
     void updateVisible(float dt) override;
@@ -43,6 +43,7 @@ private:
     std::vector<std::unique_ptr<Indicator>> _indicators;
     std::unique_ptr<TestStrategy> _strategy{nullptr};
 
+    Ticker* _ticker;
 
 };
 

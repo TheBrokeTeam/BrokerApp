@@ -16,8 +16,8 @@ add_executable(BrokerApp
         Classes/Contexts/BackTestingContext.h
         Classes/Widgets/DataLoader.cpp
         Classes/Widgets/DataLoader.h
-        Classes/Widget+Tickables/CandleChart.cpp
-        Classes/Widget+Tickables/CandleChart.h
+        Classes/Widgets/CandleChart.cpp
+        Classes/Widgets/CandleChart.h
         Classes/Contexts/Contextualizable.cpp
         Classes/Contexts/Contextualizable.h
         Classes/Widgets/Chart.cpp

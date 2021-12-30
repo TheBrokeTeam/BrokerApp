@@ -6,7 +6,7 @@
 #define BROKERAPP_CHART_H
 
 #include "Widget.h"
-#include "../Widget+Tickables/CandleChart.h"
+#include "CandleChart.h"
 #include <memory>
 
 class Chart : public Widget {

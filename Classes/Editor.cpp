@@ -10,7 +10,7 @@
 #include "Widgets/Chart.h"
 
 #include "Contexts/BackTestingContext.h"
-#include "Widget+Tickables/CandleChart.h"
+#include "Widgets/CandleChart.h"
 #include "Tickers/Ticker.h"
 #include "Helpers/ImageLoader.h"
 
