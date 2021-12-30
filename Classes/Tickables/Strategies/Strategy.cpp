@@ -50,6 +50,9 @@ void Strategy::reset() {
 
     time.clear();
     profitHistory.clear();
+    lossesHistory.clear();
+    profitMax = 0;
+    drawDownMax = 0;
 }
 
 void Strategy::rule() {}
@@ -63,7 +66,20 @@ void Strategy::closePosition(Position &pos) {
     _closedPositions.push_back(pos);
     _profit += pos.profit;
 
-    profitHistory.push_back(_profit);
+    if(_profit > profitMax)
+        profitMax = _profit;
+
+    if(_profit < drawDownMax)
+        drawDownMax = _profit;
+
+    if(_profit >= 0) {
+        profitHistory.push_back(_profit);
+        lossesHistory.push_back(0);
+    }
+    else{
+        lossesHistory.push_back(_profit);
+        profitHistory.push_back(0);
+    }
     time.push_back(pos.outTime);
 
     std::cout << "Profit: " << pos.profit << std::endl;
@@ -125,5 +141,9 @@ void Strategy::onFinish() {
 
 double Strategy::getProfit() {
     return _profit;
+}
+
+Ticker *Strategy::getTicker() {
+    return _ticker;
 }
 

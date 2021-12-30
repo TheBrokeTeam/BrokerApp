@@ -39,30 +39,34 @@ void ProfitAndLosses::updateVisible(float dt) {
     if(_strategy == nullptr) return;
     if(_strategy->time.empty()) return;
 
-    if (ImPlot::BeginPlot("##PnL")) {
-        ImPlot::SetupAxes(0, 0, ImPlotAxisFlags_Time | ImPlotAxisFlags_NoTickLabels,
-                          ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite);
-        ImPlot::SetupAxisLimits(ImAxis_X1, _strategy->time.front(), _strategy->time.back());
-        ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
+    static float ratios[] = {1};
+    if(ImPlot::BeginSubplots("##NoLinkSubPlot",1,1,ImVec2(-1,-1),ImPlotSubplotFlags_None,ratios))
+    {
+        if (ImPlot::BeginPlot("##PnL")) {
+            ImPlot::SetupAxes(0, 0, ImPlotAxisFlags_Time,
+                              ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite);
+            ImPlot::SetupAxisLimits(ImAxis_X1, _strategy->time.front(), _strategy->time.back());
+            ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
 
-        ImDrawList *drawList = ImPlot::GetPlotDrawList();
+            //Fit the data manually with some offset
+            double tenBars = 10*60*_strategy->getTicker()->getSymbol()->getTimeIntervalInMinutes();
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy->time.front() - tenBars,_strategy->time.back() + tenBars);
 
-        if (ImPlot::BeginItem("PnL")) {
-            // fit data on screen even when zooming
-            if (ImPlot::FitThisFrame()) {
-                for (int i = 0; i < _strategy->profitHistory.size(); ++i) {
-                    ImPlot::FitPoint(ImPlotPoint(_strategy->time[i], _strategy->profitHistory[i]));
-                }
+            if (ImPlot::BeginItem("##PnL")) {
+
+                ImPlot::SetNextFillStyle(Editor::broker_pnl_profit);
+                ImPlot::PlotShaded("##pnl_fill", _strategy->time.data(), _strategy->profitHistory.data(), _strategy->time.size(), 0.0f);
+
+                ImPlot::SetNextFillStyle(Editor::broker_pnl_loss);
+                ImPlot::PlotShaded("##pnl_fill", _strategy->time.data(), _strategy->lossesHistory.data(), _strategy->time.size(), 0.0f);
+
+                ImPlot::EndItem();
             }
-
-
-            ImPlot::SetNextLineStyle(_color,2.0f);
-            ImPlot::PlotLine("##pnl", _strategy->time.data(), _strategy->profitHistory.data(), _strategy->time.size());
-
-            ImPlot::EndItem();
+            ImPlot::EndPlot();
         }
-        ImPlot::EndPlot();
+        ImPlot::EndSubplots();
     }
+
 }
 
 void ProfitAndLosses::onPushStyleVar() {

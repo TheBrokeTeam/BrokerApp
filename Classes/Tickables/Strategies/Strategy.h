@@ -39,7 +39,11 @@ public:
 
     //testing profit and losses
     std::vector<double> profitHistory;
+    std::vector<double> lossesHistory;
     std::vector<double> time;
+    double drawDownMax = 0;
+    double profitMax = 0;
+    Ticker* getTicker();
 
 protected:
     std::vector<Position> _openedPositions;

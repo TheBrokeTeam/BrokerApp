@@ -5,33 +5,34 @@
 #include "TestStrategy.h"
 
 TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
-//    _smaSlow = SMA(ticker);
-//    _smaFast = SMA(ticker);
-//
-//    _smaSlow.setAverageSize(24);
-//    _smaFast.setAverageSize(9);
-//
-//    ticker->addTickable(&_smaFast);
-//    ticker->addTickable(&_smaSlow);
+    _smaSlow = SMA(ticker);
+    _smaFast = SMA(ticker);
+
+    _smaSlow.setAverageSize(24);
+    _smaFast.setAverageSize(9);
+
+    ticker->addTickable(&_smaFast);
+    ticker->addTickable(&_smaSlow);
 }
 
 void TestStrategy::rule() {
     Strategy::rule();
 
-//    if(_smaSlow.size() > 1){
-//        //when the slow cross up the fast -> should short
-//        bool crossUp = _smaSlow[0] > _smaFast[0] && _smaSlow[1] < _smaFast[1];
-//
-//        //when the slow cross up the fast -> should long
-//        bool crossDown =_smaSlow[0] < _smaFast[0] && _smaSlow[1] > _smaFast[1];
-//
-//        if(crossUp)
-//            auto id = openPosition(false);
-//        else if(crossDown)
-//            auto id = openPosition(true);
-//
-//    }
+    if(_smaSlow.size() > 1){
+        //when the slow cross up the fast -> should short
+        bool crossUp = _smaSlow[0] > _smaFast[0] && _smaSlow[1] < _smaFast[1];
 
+        //when the slow cross up the fast -> should long
+        bool crossDown =_smaSlow[0] < _smaFast[0] && _smaSlow[1] > _smaFast[1];
+
+        if(crossUp)
+            auto id = openPosition(false);
+        else if(crossDown)
+            auto id = openPosition(true);
+
+    }
+
+    return;
 
     if(barHist.size() < 5) return;
 
@@ -67,7 +68,7 @@ void TestStrategy::checkTarget(Strategy::Position &pos) {
     double deltaProfit = _targetPercent*pos.inPrice - pos.inPrice;
     double deltaLastPrice = pos.isShorting ? pos.inPrice - lastPrice : lastPrice - pos.inPrice;
 
-    if( deltaLastPrice >= deltaProfit) {
+    if( deltaLastPrice >= deltaProfit || deltaLastPrice <= -deltaProfit) {
         closePosition(pos.id);
     }
 
@@ -75,7 +76,7 @@ void TestStrategy::checkTarget(Strategy::Position &pos) {
 
 void TestStrategy::render() {
     Strategy::render();
-//    _smaSlow.render();
-//    _smaFast.render();
+    _smaSlow.render();
+    _smaFast.render();
 }
 

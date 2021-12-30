@@ -20,7 +20,6 @@ public:
 
 private:
     Strategy* _strategy{nullptr};
-    ImVec4 _color{1, 1, 1, 1};
 
 };
 
