@@ -6,16 +6,20 @@
 #define BROKERAPP_TESTSTRATEGY_H
 
 #include "Strategy.h"
+#include "../Indicators/SMA.h"
+
 
 class TestStrategy : public Strategy {
 public:
     TestStrategy(Ticker* ticker);
     void rule() override;
     void checkTarget(Strategy::Position &pos) override;
+    void render() override;
 
 private:
     double _targetPercent = 1.01;
     bool _isPositioned = false;
-
+    std::shared_ptr<SMA> _smaSlow{nullptr};
+    std::shared_ptr<SMA> _smaFast{nullptr};
 };
 #endif //BROKERAPP_TESTSTRATEGY_H

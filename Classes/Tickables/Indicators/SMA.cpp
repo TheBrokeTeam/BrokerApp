@@ -42,4 +42,8 @@ void SMA::render() {
 
 SMA::~SMA() {}
 
+void SMA::setAverageSize(int size) {
+    _averageSize = size;
+}
+
 

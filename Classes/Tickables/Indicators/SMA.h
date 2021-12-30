@@ -12,6 +12,7 @@ public:
     SMA(Ticker* ticker);
     ~SMA();
     void calculate(BarHistory* barHistory) override;
+    void setAverageSize(int size);
     void render() override;
 
 private:

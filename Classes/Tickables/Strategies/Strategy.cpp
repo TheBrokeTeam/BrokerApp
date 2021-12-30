@@ -21,10 +21,12 @@ void Strategy::render() {
     std::vector<double> time;
     std::vector<double> y;
 
+    //call finish once if there is opened positions yet
     if(!_ticker->getContext()->isSimulating() &&  !_openedPositions.empty()){
         onFinish();
     }
 
+    //draw the closed trades
     for(auto &c : _closedPositions) {
         time.push_back(c.inTime);
         time.push_back(c.outTime);

@@ -41,7 +41,7 @@ void Indicator::reset()
 void Indicator::onLoad(BarHistory *barHistory) {
     reset();
     auto tempBarHist = std::make_unique<BarHistory>();
-    for(auto&d : barHist.getData()){
+    for(auto&d : (*barHistory).getData()){
         tempBarHist->append(d);
         calculate(tempBarHist.get());
     }

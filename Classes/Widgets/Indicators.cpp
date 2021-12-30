@@ -44,9 +44,9 @@ void Indicators::drawView() {
 
             const bool hovered = ImGui::IsItemHovered();
 
-            if (hovered) {
-                puts((std::string("Mouse no indicador: ") + _dragAndDropItems[k].label).c_str());
-            }
+//            if (hovered) {
+//                puts((std::string("Mouse no indicador: ") + _dragAndDropItems[k].label).c_str());
+//            }
 
             //AddC lose button at the end of indicators list
             if (k == (_dragAndDropItems.size() - 1)) {
