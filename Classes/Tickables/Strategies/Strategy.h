@@ -34,9 +34,19 @@ public:
     virtual void rule();
     virtual void checkTarget(Strategy::Position &pos);
 
+    double getProfit();
+
+
+    //testing profit and losses
+    std::vector<double> profitHistory;
+    std::vector<double> time;
+
 protected:
     std::vector<Position> _openedPositions;
     std::vector<Position> _closedPositions;
+
+
+
 
     double _profit = 0;
 

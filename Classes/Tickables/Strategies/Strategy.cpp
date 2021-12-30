@@ -47,6 +47,9 @@ void Strategy::reset() {
     _openedPositions.clear();
     _closedPositions.clear();
     _profit = 0;
+
+    time.clear();
+    profitHistory.clear();
 }
 
 void Strategy::rule() {}
@@ -59,6 +62,10 @@ void Strategy::closePosition(Position &pos) {
     pos.profit = pos.isShorting ? pos.inPrice - pos.outPrice : pos.outPrice - pos.inPrice;
     _closedPositions.push_back(pos);
     _profit += pos.profit;
+
+    profitHistory.push_back(_profit);
+    time.push_back(pos.outTime);
+
     std::cout << "Profit: " << pos.profit << std::endl;
     std::cout << "Total Profit: " << _profit << std::endl;
     removeOpenedPosition(pos);
@@ -113,5 +120,10 @@ Strategy::~Strategy() {
 void Strategy::onFinish() {
     for(auto& p : _openedPositions)
         closePosition(p);
+}
+
+
+double Strategy::getProfit() {
+    return _profit;
 }
 

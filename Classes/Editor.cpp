@@ -9,6 +9,8 @@
 #include "Widgets/MainMenuBar.h"
 #include "Widgets/DataLoader.h"
 #include "Widgets/SimulationController.h"
+#include "Widgets/ProfitAndLosses.h"
+
 
 #include "Widgets/Chart.h"
 
@@ -31,6 +33,8 @@ void Editor::start() {
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
     _widgets.emplace_back(std::make_shared<SimulationController>(this));
     _widgets.emplace_back(std::make_shared<Chart>(this));
+    _widgets.emplace_back(std::make_shared<ProfitAndLosses>(this, nullptr));
+
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -146,6 +150,11 @@ void Editor::showSimulationController(bool show) {
         simulator->SetVisible(show);
 
     MainMenuBar::_show_simulator = show;
+}
+
+void Editor::setStrategyTest(TestStrategy* strategy) {
+    _strategy = strategy;
+    getWidget<ProfitAndLosses>()->setStrategyTest(_strategy);
 }
 
 int main(int argc, char const* argv[]){

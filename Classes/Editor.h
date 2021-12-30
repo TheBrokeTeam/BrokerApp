@@ -10,6 +10,7 @@
 #include "Widgets/Widget.h"
 #include "Contexts/Context.h"
 #include "Helpers/Utils.h"
+#include "Tickables/Strategies/TestStrategy.h"
 
 class Ticker;
 class Editor : public App {
@@ -75,6 +76,9 @@ public:
 
     void showDockSpace();
 
+    void setStrategyTest(TestStrategy* strategy);
+
+
 private:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::shared_ptr<Context> _context{nullptr};
@@ -84,6 +88,8 @@ private:
     float getDeltaTime();
 
     void loadImage(Icons icon,const std::string& filepath);
+    TestStrategy* _strategy{nullptr};
+
 };
 
 

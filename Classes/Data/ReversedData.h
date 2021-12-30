@@ -12,10 +12,10 @@ class ReversedData {
 public:
     //Warning:: this cannot be populate using = operator.
     //It wont change the value inside array. Ex: T[i] = value; will not work.
-    T operator[](int reversedIndex){
+    T& operator[](int reversedIndex){
         auto it = _data.begin();
         std::advance(it, fixedIndex(reversedIndex));
-        return _data[it - _data.begin()];
+        return const_cast<T&>(*it);
     }
 
     int fixedIndex(int reversedIndex)

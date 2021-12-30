@@ -44,6 +44,7 @@ void CandleChart::render(float dt)
 
         _strategy = std::make_unique<TestStrategy>(_ticker);
         _ticker->addTickable(_strategy.get());
+        _editor->setStrategyTest(_strategy.get());
     }
 
     if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;
