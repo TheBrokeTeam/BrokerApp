@@ -54,14 +54,12 @@ public:
     void update() override;
 
     void showDockSpace();
-    Context* getContext();
 private:
     //delta time helpers
     float _lastTime = 0;
     float getDeltaTime();
 
     void loadImage(Icons icon,const std::string& filepath);
-    TestStrategy* _strategy{nullptr};
     std::shared_ptr<Context> _context{nullptr};
 
 };

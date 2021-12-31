@@ -29,7 +29,7 @@ public:
     void setSimulationSpeed(float speed) override;
     bool isSimulating() override;
 
-    void loadIndicator(Indicators::CandleIndicatorsTypes type) override;
+    void loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
     void plotIndicators() override;
     void plotStrategy() override;
 

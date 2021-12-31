@@ -2,19 +2,19 @@
 // Created by Arthur Abel Motelevicz on 30/12/21.
 //
 
-#include "ProfitAndLosses.h"
+#include "ProfitAndLossesView.h"
 #include "../Editor.h"
 #include <implot.h>
 #include <implot_internal.h>
 
 
-ProfitAndLosses::ProfitAndLosses(Context* context, Strategy* strategy) : Widget(context) {
+ProfitAndLossesView::ProfitAndLossesView(Context* context, Strategy* strategy) : Widget(context) {
     _title                  = "Profit & Losses";
     _is_window              = true;
     _strategy = strategy;
 }
 
-void ProfitAndLosses::updateVisible(float dt) {
+void ProfitAndLossesView::updateVisible(float dt) {
     Widget::updateVisible(dt);
 
     //now draw the pnl chart
@@ -114,10 +114,10 @@ void ProfitAndLosses::updateVisible(float dt) {
 
 }
 
-void ProfitAndLosses::onPushStyleVar() {
+void ProfitAndLossesView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 
-void ProfitAndLosses::setStrategyTest(TestStrategy *strategy) {
+void ProfitAndLossesView::setStrategyTest(TestStrategy *strategy) {
     _strategy = strategy;
 }

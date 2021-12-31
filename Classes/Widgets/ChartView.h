@@ -2,16 +2,16 @@
 // Created by Arthur Abel Motelevicz on 23/12/21.
 //
 
-#ifndef BROKERAPP_CHART_H
-#define BROKERAPP_CHART_H
+#ifndef BROKERAPP_CHARTVIEW_H
+#define BROKERAPP_CHARTVIEW_H
 
 #include "Widget.h"
 #include "CandleChart.h"
 #include <memory>
 
-class Chart : public Widget {
+class ChartView : public Widget {
 public:
-    Chart(Context* context);
+    ChartView(Context* context);
     void updateVisible(float dt) override;
     void addChart(std::shared_ptr<CandleChart> candleChart);
     void enableIndicatorsOnCharts(bool show);
@@ -22,4 +22,4 @@ private:
 
 };
 
-#endif //BROKERAPP_CHART_H
+#endif //BROKERAPP_CHARTVIEW_H

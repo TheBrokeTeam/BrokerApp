@@ -2,8 +2,8 @@
 // Created by Arthur Abel Motelevicz on 24/12/21.
 //
 
-#ifndef BROKERAPP_INDICATORS_H
-#define BROKERAPP_INDICATORS_H
+#ifndef BROKERAPP_INDICATORSVIEW_H
+#define BROKERAPP_INDICATORSVIEW_H
 
 #include "Widget.h"
 #include <implot.h>
@@ -12,7 +12,7 @@
 #include "../Helpers/PlotHelper.h"
 #include "../Tickables/Indicators/Indicator.h"
 
-class Indicators : public Widget{
+class IndicatorsView : public Widget{
 public:
     typedef std::function<void(void)> TrashClickCallback;
 
@@ -39,7 +39,7 @@ public:
         }
     };
 
-    Indicators(Context* context);
+    IndicatorsView(Context* context);
     void updateVisible(float dt) override;
     std::vector<DragAndDropIndicatorItem>& getIndicators();
     void onPushStyleVar() override;
@@ -53,4 +53,4 @@ private:
 };
 
 
-#endif //BROKERAPP_INDICATORS_H
+#endif //BROKERAPP_INDICATORSVIEW_H

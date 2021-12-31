@@ -14,16 +14,16 @@ add_executable(BrokerApp
         Classes/Widgets/MainMenuBar.h
         Classes/Contexts/BackTestingContext.cpp
         Classes/Contexts/BackTestingContext.h
-        Classes/Widgets/DataLoader.cpp
-        Classes/Widgets/DataLoader.h
+        Classes/Widgets/DownloaderView.cpp
+        Classes/Widgets/DownloaderView.h
         Classes/Widgets/CandleChart.cpp
         Classes/Widgets/CandleChart.h
         Classes/Contexts/Contextualizable.cpp
         Classes/Contexts/Contextualizable.h
-        Classes/Widgets/Chart.cpp
-        Classes/Widgets/Chart.h
-        Classes/Widgets/Indicators.cpp
-        Classes/Widgets/Indicators.h
+        Classes/Widgets/ChartView.cpp
+        Classes/Widgets/ChartView.h
+        Classes/Widgets/IndicatorsView.cpp
+        Classes/Widgets/IndicatorsView.h
         Classes/Data/Symbol.cpp
         Classes/Data/Symbol.h
         Classes/Data/DataSource.cpp
@@ -53,7 +53,7 @@ add_executable(BrokerApp
         Classes/Tickables/Indicators/SMA.cpp
         Classes/Tickables/Indicators/SMA.h
         Classes/Helpers/ImageLoader.cpp
-        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h Classes/Tickables/Indicators/Bollinger.cpp Classes/Tickables/Indicators/Bollinger.h Classes/Widgets/SimulationController.cpp Classes/Widgets/SimulationController.h Classes/Tickables/Strategies/TestStrategy.cpp Classes/Tickables/Strategies/TestStrategy.h Classes/Widgets/ProfitAndLosses.cpp Classes/Widgets/ProfitAndLosses.h)
+        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h Classes/Tickables/Indicators/Bollinger.cpp Classes/Tickables/Indicators/Bollinger.h Classes/Widgets/SimulationController.cpp Classes/Widgets/SimulationController.h Classes/Tickables/Strategies/TestStrategy.cpp Classes/Tickables/Strategies/TestStrategy.h Classes/Widgets/ProfitAndLossesView.cpp Classes/Widgets/ProfitAndLossesView.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

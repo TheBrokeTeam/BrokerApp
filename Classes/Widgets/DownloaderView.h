@@ -2,16 +2,16 @@
 // Created by Arthur Abel Motelevicz on 22/12/21.
 //
 
-#ifndef BROKERAPP_DATALOADER_H
-#define BROKERAPP_DATALOADER_H
+#ifndef BROKERAPP_DOWNLOADERVIEW_H
+#define BROKERAPP_DOWNLOADERVIEW_H
 
 
 #include "Widget.h"
 
-class DataLoader : public Widget
+class DownloaderView : public Widget
 {
 public:
-    DataLoader(Context* context);
+    DownloaderView(Context* context);
 
     struct FetchInfo{
         std::string fetchInterVal{"15m"};
@@ -28,4 +28,4 @@ private:
     FetchInfo _info;
 };
 
-#endif //BROKERAPP_DATALOADER_H
+#endif //BROKERAPP_DOWNLOADERVIEW_H

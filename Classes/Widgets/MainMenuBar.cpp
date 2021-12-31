@@ -6,10 +6,10 @@
 #include <imgui_internal.h>
 #include "MainMenuBar.h"
 #include "../Editor.h"
-#include "DataLoader.h"
+#include "DownloaderView.h"
 #include "SimulationController.h"
-#include "Chart.h"
-#include "ProfitAndLosses.h"
+#include "ChartView.h"
+#include "ProfitAndLossesView.h"
 #include <fmt/format.h>
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
@@ -39,11 +39,11 @@ void MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Data downloader", "CTRL+D",&(getContext()->getWidget<DataLoader>()->GetVisible()))){}
+            if (ImGui::MenuItem("Data downloader", "CTRL+D",&(getContext()->getWidget<DownloaderView>()->GetVisible()))){}
             if (ImGui::MenuItem("Simulator", "CTRL+S",&(getContext()->getWidget<SimulationController>()->GetVisible()))){}
-            if (ImGui::MenuItem("Chart", "CTRL+G",&(getContext()->getWidget<Chart>()->GetVisible()))){}
-            if (ImGui::MenuItem("Indicators", "",&(getContext()->getWidget<Indicators>()->GetVisible()))){}
-            if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLosses>()->GetVisible()))){}
+            if (ImGui::MenuItem("ChartView", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
+            if (ImGui::MenuItem("IndicatorsView", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
+            if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
 
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);

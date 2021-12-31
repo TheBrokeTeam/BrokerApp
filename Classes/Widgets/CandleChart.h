@@ -11,7 +11,7 @@
 #include <implot_internal.h>
 #include "../Helpers/PlotHelper.h"
 
-#include "Indicators.h"
+#include "IndicatorsView.h"
 #include "../Tickables/Indicators/Indicator.h"
 #include "../Tickables/Strategies/TestStrategy.h"
 

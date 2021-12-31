@@ -18,10 +18,10 @@
 
 
 #include "../Widgets/MainMenuBar.h"
-#include "../Widgets/DataLoader.h"
+#include "../Widgets/DownloaderView.h"
 #include "../Widgets/SimulationController.h"
-#include "../Widgets/ProfitAndLosses.h"
-#include "../Widgets/Chart.h"
+#include "../Widgets/ProfitAndLossesView.h"
+#include "../Widgets/ChartView.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -36,13 +36,13 @@ void BackTestingContext::initialize() {
 
     // Initialize the context
     _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
-    _widgets.emplace_back(std::make_shared<DataLoader>(this));
+    _widgets.emplace_back(std::make_shared<DownloaderView>(this));
     _widgets.emplace_back(std::make_shared<SimulationController>(this));
-    _widgets.emplace_back(std::make_shared<Chart>(this));
-    _widgets.emplace_back(std::make_shared<ProfitAndLosses>(this, nullptr));
-    _widgets.emplace_back(std::make_shared<Indicators>(this));
+    _widgets.emplace_back(std::make_shared<ChartView>(this));
+    _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this, nullptr));
+    _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
 
-    getWidget<Indicators>()->setTrashCallback([this](){
+    getWidget<IndicatorsView>()->setTrashCallback([this](){
         for(auto& i : _indicators){
             if(_ticker->removeTickable(i.get()))
                 puts("remove indicator successfully");
@@ -71,12 +71,12 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     _strategy = std::make_unique<TestStrategy>(_ticker.get());
     _ticker->addTickable(_strategy.get());
 
-    getWidget<ProfitAndLosses>()->setStrategyTest(_strategy.get());
+    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy.get());
 
    _data.clear();
     _data = loadCsv(symbol);
 
-    auto chart = getWidget<Chart>();
+    auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
     loadTicker();
 
@@ -240,29 +240,29 @@ void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
 
-void BackTestingContext::loadIndicator(Indicators::CandleIndicatorsTypes type) {
+void BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type) {
 
     switch (type) {
-        case Indicators::CandleIndicatorsTypes::SMA:
+        case IndicatorsView::CandleIndicatorsTypes::SMA:
         {
             std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
             _ticker->addTickable(_indicators.back().get());
         }
             break;
-        case Indicators::CandleIndicatorsTypes::BOLL:
+        case IndicatorsView::CandleIndicatorsTypes::BOLL:
         {
             std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
             _ticker->addTickable(_indicators.back().get());
         }
             break;
-        case Indicators::CandleIndicatorsTypes::EMA:
-        case Indicators::CandleIndicatorsTypes::WMA:
-        case Indicators::CandleIndicatorsTypes::AVL:
-        case Indicators::CandleIndicatorsTypes::VWAP:
-        case Indicators::CandleIndicatorsTypes::TRIX:
-        case Indicators::CandleIndicatorsTypes::SAR :
+        case IndicatorsView::CandleIndicatorsTypes::EMA:
+        case IndicatorsView::CandleIndicatorsTypes::WMA:
+        case IndicatorsView::CandleIndicatorsTypes::AVL:
+        case IndicatorsView::CandleIndicatorsTypes::VWAP:
+        case IndicatorsView::CandleIndicatorsTypes::TRIX:
+        case IndicatorsView::CandleIndicatorsTypes::SAR :
             _shouldShowLuizPopup = true;
             break;
         default:

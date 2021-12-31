@@ -2,16 +2,16 @@
 // Created by Arthur Abel Motelevicz on 30/12/21.
 //
 
-#ifndef BROKERAPP_PROFITANDLOSSES_H
-#define BROKERAPP_PROFITANDLOSSES_H
+#ifndef BROKERAPP_PROFITANDLOSSESVIEW_H
+#define BROKERAPP_PROFITANDLOSSESVIEW_H
 
 #include "Widget.h"
 #include "../Tickables/Strategies/Strategy.h"
 #include "../Tickables/Strategies/TestStrategy.h"
 
-class ProfitAndLosses : public Widget {
+class ProfitAndLossesView : public Widget {
 public:
-    ProfitAndLosses(Context* context, Strategy* strategy);
+    ProfitAndLossesView(Context* context, Strategy* strategy);
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
@@ -24,4 +24,4 @@ private:
 };
 
 
-#endif //BROKERAPP_PROFITANDLOSSES_H
+#endif //BROKERAPP_PROFITANDLOSSESVIEW_H

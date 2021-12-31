@@ -12,7 +12,7 @@
 #include "../Tickers/Ticker.h"
 #include "../Widgets/Widget.h"
 #include "../Editor.h"
-#include "../Widgets/Indicators.h"
+#include "../Widgets/IndicatorsView.h"
 
 class Context {
 public:
@@ -28,7 +28,7 @@ public:
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 
-    virtual void loadIndicator(Indicators::CandleIndicatorsTypes type) = 0;
+    virtual void loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual void plotIndicators() = 0;
     virtual void plotStrategy() = 0;
 

@@ -54,11 +54,6 @@ float Editor::getDeltaTime(){
     return dt;
 }
 
-Context* Editor::getContext(){
-    return _context.get();
-}
-
-
 void Editor::loadImage(Icons icon,const std::string& filepath)
 {
     int my_image_width = 0;

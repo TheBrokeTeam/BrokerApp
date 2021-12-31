@@ -2,12 +2,12 @@
 // Created by Arthur Abel Motelevicz on 24/12/21.
 //
 
-#include "Indicators.h"
+#include "IndicatorsView.h"
 #include "../Editor.h"
 #include "../Tickables/Indicators/SMA.h"
 
 
-Indicators::Indicators(Context* context) : Widget(context) {
+IndicatorsView::IndicatorsView(Context* context) : Widget(context) {
 
     _title                  = "Indicators";
     _is_window = true;
@@ -16,12 +16,12 @@ Indicators::Indicators(Context* context) : Widget(context) {
         _dragAndDropItems.push_back(DragAndDropIndicatorItem(static_cast<CandleIndicatorsTypes>(i)));
 }
 
-void Indicators::updateVisible(float dt) {
+void IndicatorsView::updateVisible(float dt) {
     Widget::updateVisible(dt);
     drawView();
 }
 
-void Indicators::drawView() {
+void IndicatorsView::drawView() {
     PushStyleColor(ImGuiCol_Button, Editor::broker_black);
     PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_light_grey);
     PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_yellow);
@@ -38,7 +38,7 @@ void Indicators::drawView() {
                 ImGui::Button(_dragAndDropItems[k].label.c_str(), ImVec2(50, 30));
 
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
-                    ImGui::SetDragDropPayload(Indicators::CANDLE_INDICATORS_DRAG_ID, &k, sizeof(int));
+                    ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID, &k, sizeof(int));
                     auto info = getContext()->getEditor()->getTexture(Editor::Icons::indicator_ma);
                     ImGui::Image((void *) (intptr_t) info.my_image_texture,
                                  ImVec2(info.my_image_width * 0.5, info.my_image_height * 0.5));
@@ -81,14 +81,14 @@ void Indicators::drawView() {
 }
 
 
-std::vector<Indicators::DragAndDropIndicatorItem> &Indicators::getIndicators() {
+std::vector<IndicatorsView::DragAndDropIndicatorItem> &IndicatorsView::getIndicators() {
     return _dragAndDropItems;
 }
 
-void Indicators::setTrashCallback(TrashClickCallback callback) {
+void IndicatorsView::setTrashCallback(TrashClickCallback callback) {
     _trashCallback = callback;
 }
-void Indicators::onPushStyleVar() {
+void IndicatorsView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 

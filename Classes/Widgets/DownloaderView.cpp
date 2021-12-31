@@ -2,18 +2,18 @@
 // Created by Arthur Abel Motelevicz on 22/12/21.
 //
 
-#include "DataLoader.h"
+#include "DownloaderView.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
 #include "../Editor.h"
 
-DataLoader::DataLoader(Context* context) : Widget(context)
+DownloaderView::DownloaderView(Context* context) : Widget(context)
 {
-    _title                  = "Data Loader";
+    _title                  = "Downloader";
     _is_window              = true;
 }
 
-void DataLoader::updateVisible(float dt)
+void DownloaderView::updateVisible(float dt)
 {
     Widget::updateVisible(dt);
 
@@ -97,11 +97,11 @@ void DataLoader::updateVisible(float dt)
     }
 }
 
-int DataLoader::getWindowFlags() {
+int DownloaderView::getWindowFlags() {
     return  ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoCollapse;
 }
 
-void DataLoader::onPushStyleVar() {
+void DownloaderView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }

@@ -11,7 +11,7 @@
 
 CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
 {
-    _title                  = "Candle Chart";
+    _title                  = "Candle ChartView";
     _is_window              = false;
     _ticker = ticker;
 }
@@ -139,12 +139,12 @@ void CandleChart::render(float dt)
 
                 //allow candles plot area to be a DRAG AND DROP target ##
                 if (ImPlot::BeginDragDropTargetPlot()) {
-                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Indicators::CANDLE_INDICATORS_DRAG_ID)) {
+                    if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID)) {
                         //indice of dragged item
                         int i = *(int*)payload->Data;
 
                         puts("AGORA é a hora de plotar!!!");
-                        getContext()->loadIndicator(Indicators::CandleIndicatorsTypes(i));
+                        getContext()->loadIndicator(IndicatorsView::CandleIndicatorsTypes(i));
                     }
                     ImPlot::EndDragDropTarget();
                 }
