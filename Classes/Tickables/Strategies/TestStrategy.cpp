@@ -26,8 +26,13 @@ void TestStrategy::rule() {
     auto arrSMA = _ticker->getContext()->getIndicator<SMA>();
     if(arrSMA.empty() || arrSMA.size() <= 1) return;
 
-    SMA _smaSlow = *arrSMA[0];
-    SMA _smaFast = *arrSMA[1];
+    auto slowSMA = dynamic_cast<SMA*>(_ticker->getContext()->getIndicatorByName("SMA_SLOW"));
+    auto fastSMA = dynamic_cast<SMA*>(_ticker->getContext()->getIndicatorByName("SMA_FAST"));
+
+    if(slowSMA == nullptr || fastSMA == nullptr) return;
+
+    SMA _smaSlow = *slowSMA;
+    SMA _smaFast = *fastSMA;
 
     std::cout << "Slow: " << _smaSlow.getAverageSize() << std::endl;
     std::cout << "Fast: " << _smaFast.getAverageSize() << std::endl;
@@ -47,7 +52,6 @@ void TestStrategy::rule() {
             auto id = openPosition(false);
             _isPositioned = true;
         }
-
     }
 
     return;

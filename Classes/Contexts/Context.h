@@ -69,6 +69,12 @@ public:
         return out;
     }
 
+    Indicator* getIndicatorById(const std::string& id);
+    Strategy* getStrategyById(const std::string& id);
+
+    Indicator* getIndicatorByName(const std::string& name);
+    Strategy* getStrategyByName(const std::string& id);
+
 
     const std::vector<std::shared_ptr<Widget>>& getWidgets();
     Editor* getEditor();
@@ -78,7 +84,7 @@ public:
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
-
+    std::vector<std::shared_ptr<Strategy>> _strategies;
 
 
     Editor *_editor{nullptr};
