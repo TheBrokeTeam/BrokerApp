@@ -7,7 +7,7 @@
 
 PlotItem::PlotItem() {
     _id = uuid::generate_uuid_v4();
-    _name = "##" + _id;
+    _plotName = "##" + _id;
 }
 
 const std::string& PlotItem::getName() {
@@ -19,7 +19,7 @@ const std::string &PlotItem::getId() {
 }
 
 void PlotItem::render() {
-    if (ImPlot::BeginItem(_name.c_str())) {
+    if (ImPlot::BeginItem(_plotName.c_str())) {
         onRender();
         popupRender();
         ImPlot::EndItem();
@@ -27,31 +27,36 @@ void PlotItem::render() {
 }
 
 void PlotItem::setName(const std::string& name) {
-    _name = name + "##" + _id;
+    _plotName = name + "##" + _id;
+    _name = name;
 }
 
 void PlotItem::popupRender() {
-    if (ImPlot::BeginLegendPopup(_name.c_str())) {
+    if (ImPlot::BeginLegendPopup(_plotName.c_str())) {
 
         const int buffMaxSize = 50;
-        static char buff[buffMaxSize] = "DUMMY_NAME";
+        static char buff[buffMaxSize] = "";
 
-        for(int i = 0; i < _name.length(); i++ )
+        for(int i = 0; i < _id.length(); i++ )
         {
             if(i >= buffMaxSize-1)
                 break;
-            buff[i] = _name.at(i);
+            buff[i] = _id.at(i);
         }
 
+        int flagsID = ImGuiInputTextFlags_CharsUppercase;
+//        flagsID |= ImGuiInputTextFlags_ReadOnly;
+        flagsID |= ImGuiInputTextFlags_EnterReturnsTrue;
+
         ImGui::SetNextItemWidth(350);
-        if (ImGui::InputText("##ID",buff,buffMaxSize,ImGuiInputTextFlags_CharsUppercase | ImGuiInputTextFlags_ReadOnly)) {
-            _name = buff;
+        if (ImGui::InputText("##ID",buff,buffMaxSize,flagsID)) {
+            setName(buff);
         }
 
         ImGui::SameLine();
 
         if(ImGui::Button("Copy ID",ImVec2(100,30))){
-            ImGui::SetClipboardText(_name.c_str());
+            ImGui::SetClipboardText(_id.c_str());
         }
 
         ImGui::Separator();

@@ -27,6 +27,7 @@ public:
 
 protected:
     std::string _name{""};
+    std::string _plotName{""};
     std::string _id{""};
     std::vector<double> _time;
 

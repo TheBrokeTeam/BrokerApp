@@ -23,7 +23,7 @@ void SMA::calculate(BarHistory* barHistory)
 
 void SMA::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_name.c_str(), _time.data(), _data.data(), _time.size());
+    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
 }
 
 void SMA::onPopupRender() {
