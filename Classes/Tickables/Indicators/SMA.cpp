@@ -46,4 +46,8 @@ void SMA::setAverageSize(int size) {
     _averageSize = size;
 }
 
+int SMA::getAverageSize() {
+    return _averageSize;
+}
+
 

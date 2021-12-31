@@ -13,6 +13,8 @@ public:
     ~SMA();
     void calculate(BarHistory* barHistory) override;
     void setAverageSize(int size);
+    int getAverageSize();
+
     void render() override;
 
 private:

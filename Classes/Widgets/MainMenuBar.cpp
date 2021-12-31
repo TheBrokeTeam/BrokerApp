@@ -71,7 +71,7 @@ void MainMenuBar::updateAlways(float dt)
 
     //TODO:: remove this on release
     //update editor develop function
-    getContext()->getEditor()->showTabBars(_show_tabbars);
+    getContext()->showTabBars(_show_tabbars);
 
     if (_imgui_metrics)
     {

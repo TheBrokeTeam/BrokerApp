@@ -9,11 +9,6 @@
 #include <map>
 #include <set>
 
-#include "../Widgets/MainMenuBar.h"
-#include "../Widgets/DataLoader.h"
-#include "../Widgets/SimulationController.h"
-#include "../Widgets/ProfitAndLosses.h"
-#include "../Widgets/Chart.h"
 
 
 class BackTestingContext : public Context {
@@ -39,6 +34,8 @@ public:
     void plotStrategy() override;
 
 
+    void showTabBars(bool show);
+
 private:
 
     bool dataAlreadyExists(const Symbol& symbol);
@@ -51,7 +48,6 @@ private:
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
-    std::vector<std::unique_ptr<Indicator>> _indicators;
     std::unique_ptr<TestStrategy> _strategy{nullptr};
 
     std::vector<TickData> _data;

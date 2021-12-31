@@ -53,8 +53,6 @@ public:
     void start() override;
     void update() override;
 
-    void showTabBars(bool show);
-
     void showDockSpace();
     Context* getContext();
 private:

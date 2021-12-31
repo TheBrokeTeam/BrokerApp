@@ -81,12 +81,6 @@ Editor::ImageInfo Editor::getTexture(Editor::Icons icon) {
     return _imagesRef.at(icon);
 }
 
-void Editor::showTabBars(bool show) {
-    for(auto& w : _context->getWidgets()){
-        w->showTabBar(show);
-    }
-    MainMenuBar::_show_tabbars = show;
-}
 
 void Editor::showDockSpace()
 {

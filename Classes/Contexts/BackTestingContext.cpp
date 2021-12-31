@@ -16,6 +16,14 @@
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 
+
+#include "../Widgets/MainMenuBar.h"
+#include "../Widgets/DataLoader.h"
+#include "../Widgets/SimulationController.h"
+#include "../Widgets/ProfitAndLosses.h"
+#include "../Widgets/Chart.h"
+
+
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
                                         "3d", "1w", "1mo"};
@@ -298,6 +306,15 @@ void BackTestingContext::plotStrategy() {
     _strategy->render();
 }
 
+
+//develop phase
+
+void BackTestingContext::showTabBars(bool show) {
+    for(auto& w : getWidgets()){
+        w->showTabBar(show);
+    }
+    MainMenuBar::_show_tabbars = show;
+}
 
 
 

@@ -19,7 +19,5 @@ public:
 private:
     double _targetPercent = 1.01;
     bool _isPositioned = false;
-    SMA _smaSlow{nullptr};
-    SMA _smaFast{nullptr};
 };
 #endif //BROKERAPP_TESTSTRATEGY_H

@@ -3,32 +3,49 @@
 //
 
 #include "TestStrategy.h"
+#include "../../Contexts/Context.h"
+
 
 TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
-    _smaSlow = SMA(ticker);
-    _smaFast = SMA(ticker);
+//    _smaSlow = SMA(ticker);
+//    _smaFast = SMA(ticker);
+//
+//    _smaSlow.setAverageSize(24);
+//    _smaFast.setAverageSize(9);
 
-    _smaSlow.setAverageSize(24);
-    _smaFast.setAverageSize(9);
-
-    ticker->addTickable(&_smaFast);
-    ticker->addTickable(&_smaSlow);
+//    ticker->addTickable(&_smaFast);
+//    ticker->addTickable(&_smaSlow);
 }
 
 void TestStrategy::rule() {
     Strategy::rule();
 
+    if(_isPositioned) return;
+
+    auto arrSMA = _ticker->getContext()->getIndicator<SMA>();
+    if(arrSMA.empty()) return;
+
+    SMA _smaSlow = *arrSMA[0];
+    SMA _smaFast = *arrSMA[1];
+
+    std::cout << "Slow: " << _smaSlow.getAverageSize() << std::endl;
+    std::cout << "Fast: " << _smaFast.getAverageSize() << std::endl;
+
     if(_smaSlow.size() > 1){
         //when the slow cross up the fast -> should short
         bool crossUp = _smaSlow[0] > _smaFast[0] && _smaSlow[1] < _smaFast[1];
 
-        //when the slow cross up the fast -> should long
+        //when the slow cross down the fast -> should long
         bool crossDown =_smaSlow[0] < _smaFast[0] && _smaSlow[1] > _smaFast[1];
 
-        if(crossUp)
+        if(crossUp) {
             auto id = openPosition(true);
-        else if(crossDown)
+            _isPositioned = true;
+        }
+        else if(crossDown) {
             auto id = openPosition(false);
+            _isPositioned = true;
+        }
 
     }
 
@@ -70,13 +87,12 @@ void TestStrategy::checkTarget(Strategy::Position &pos) {
 
     if( deltaLastPrice >= deltaProfit || deltaLastPrice <= -deltaProfit) {
         closePosition(pos.id);
+        _isPositioned = false;
     }
 
 }
 
 void TestStrategy::render() {
     Strategy::render();
-    _smaSlow.render();
-    _smaFast.render();
 }
 

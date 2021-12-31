@@ -14,8 +14,6 @@
 #include "../Editor.h"
 #include "../Widgets/Indicators.h"
 
-
-
 class Context {
 public:
     Context(Editor* editor);
@@ -56,12 +54,33 @@ public:
             widget->SetVisible(show);
     }
 
+    template<typename T>
+    std::vector<T*> getIndicator()
+    {
+        std::vector<T*> out;
+        for (const auto& indicator : _indicators)
+        {
+            if (T* widget_t = dynamic_cast<T*>(indicator.get()))
+            {
+                out.push_back(widget_t);
+            }
+        }
+
+        return out;
+    }
+
 
     const std::vector<std::shared_ptr<Widget>>& getWidgets();
     Editor* getEditor();
 
+    //developer phase
+    virtual void showTabBars(bool show) = 0;
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
+    std::vector<std::shared_ptr<Indicator>> _indicators;
+
+
+
     Editor *_editor{nullptr};
 };
 
