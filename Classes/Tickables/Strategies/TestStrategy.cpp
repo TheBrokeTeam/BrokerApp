@@ -26,9 +26,9 @@ void TestStrategy::rule() {
         bool crossDown =_smaSlow[0] < _smaFast[0] && _smaSlow[1] > _smaFast[1];
 
         if(crossUp)
-            auto id = openPosition(false);
-        else if(crossDown)
             auto id = openPosition(true);
+        else if(crossDown)
+            auto id = openPosition(false);
 
     }
 

@@ -58,6 +58,13 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     _ticker.reset();
     _ticker = std::make_shared<Ticker>(this,symbol);
 
+    //create test strategy for tests
+    _strategy.reset(nullptr);
+    _strategy = std::make_unique<TestStrategy>(_ticker.get());
+    _ticker->addTickable(_strategy.get());
+
+    getWidget<ProfitAndLosses>()->setStrategyTest(_strategy.get());
+
    _data.clear();
     _data = loadCsv(symbol);
 
@@ -285,6 +292,10 @@ void BackTestingContext::plotIndicators() {
             }
         }
     }
+}
+
+void BackTestingContext::plotStrategy() {
+    _strategy->render();
 }
 
 

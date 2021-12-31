@@ -36,7 +36,7 @@ public:
 
     void loadIndicator(Indicators::CandleIndicatorsTypes type) override;
     void plotIndicators() override;
-
+    void plotStrategy() override;
 
 
 private:
@@ -52,7 +52,7 @@ private:
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
     std::vector<std::unique_ptr<Indicator>> _indicators;
-//    std::vector<std::unique_ptr<Strategy>> _strategy{nullptr};
+    std::unique_ptr<TestStrategy> _strategy{nullptr};
 
     std::vector<TickData> _data;
 
@@ -65,12 +65,8 @@ private:
     float _speed = 1.0f;
     float _speedLimit = 1000.0f;
 
-
     //joke time
     bool _shouldShowLuizPopup = false;
-
-
-
 };
 
 #endif //BROKERAPP_BACKTESTINGCONTEXT_H

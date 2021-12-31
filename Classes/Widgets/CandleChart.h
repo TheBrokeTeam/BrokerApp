@@ -32,9 +32,6 @@ private:
     ImPlotTime _t2;
 
     bool _initTime = false;
-
-    std::unique_ptr<TestStrategy> _strategy{nullptr};
-
     Ticker* _ticker;
 
 };

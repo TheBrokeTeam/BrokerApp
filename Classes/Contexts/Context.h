@@ -32,8 +32,10 @@ public:
 
     virtual void loadIndicator(Indicators::CandleIndicatorsTypes type) = 0;
     virtual void plotIndicators() = 0;
+    virtual void plotStrategy() = 0;
 
-        template<typename T>
+
+    template<typename T>
     T* getWidget()
     {
         for (const auto& widget : _widgets)

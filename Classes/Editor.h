@@ -53,16 +53,9 @@ public:
     void start() override;
     void update() override;
 
-    void showDataLoader(bool show);
-    void showSimulationController(bool show);
-
-    void showCharts(bool show);
-    void showIndicators(bool show);
     void showTabBars(bool show);
 
     void showDockSpace();
-
-    void setStrategyTest(TestStrategy* strategy);
     Context* getContext();
 private:
     //delta time helpers

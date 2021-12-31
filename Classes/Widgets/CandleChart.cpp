@@ -29,10 +29,6 @@ void CandleChart::render(float dt)
         ImPlot::FormatDate(_t1,_t1_str,32,ImPlotDateFmt_DayMoYr,true);
         ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
         _initTime = true;
-
-        _strategy = std::make_unique<TestStrategy>(_ticker);
-        _ticker->addTickable(_strategy.get());
-        getContext()->getEditor()->setStrategyTest(_strategy.get());
     }
 
     if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;
@@ -83,7 +79,7 @@ void CandleChart::render(float dt)
                     //plot caindicators
                     getContext()->plotIndicators();
 
-                    _strategy->render();
+                    getContext()->plotStrategy();
 
                     //plot tag at the last candle on screen
                     ImPlotRect bnds = ImPlot::GetPlotLimits();

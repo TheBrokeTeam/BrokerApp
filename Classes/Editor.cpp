@@ -93,11 +93,6 @@ void Editor::showDockSpace()
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 }
 
-void Editor::setStrategyTest(TestStrategy* strategy) {
-    _strategy = strategy;
-    _context->getWidget<ProfitAndLosses>()->setStrategyTest(_strategy);
-}
-
 Editor::~Editor() {}
 
 //APPLICATION ENTRY POINT
