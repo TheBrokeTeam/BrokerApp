@@ -15,9 +15,7 @@ DataLoader::DataLoader(Context* context) : Widget(context)
 
 void DataLoader::updateVisible(float dt)
 {
-    //change background of window
-    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    Widget::updateVisible(dt);
 
     //change color text
     PushStyleColor(ImGuiCol_Text,Editor::broker_black);
@@ -29,26 +27,6 @@ void DataLoader::updateVisible(float dt)
 
     //change background of items on combos
     PushStyleColor(ImGuiCol_PopupBg,Editor::broker_white);
-
-    ImGui::TextColored(Editor::broker_white,"Data downloader");
-    ImGui::SameLine();
-
-    //change the background of close button
-    PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
-
-    //adding the close button
-    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
-    ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
-    if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
-        getContext()->getEditor()->showDataLoader(false);
-    }
-
-    ImGui::Separator();
-
-    ImGui::Spacing();
-//    ImGui::Dummy(ImVec2(200,20));
 
     //change background from other buttons
     PushStyleColor(ImGuiCol_Button,Editor::broker_white);
@@ -115,8 +93,7 @@ void DataLoader::updateVisible(float dt)
         symbol.setTimeInterval(Symbol::Interval(interval));
 
         //TODO:: the ticker should  be created by charts widget
-        auto ticker = getContext()->loadSymbol(symbol);
-        getContext()->getEditor()->addChartWidget(ticker);
+        getContext()->loadSymbol(symbol);
     }
 }
 

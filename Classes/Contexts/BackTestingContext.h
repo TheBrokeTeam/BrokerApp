@@ -27,12 +27,17 @@ public:
     void initialize() override;
 
     Ticker* loadSymbol(const Symbol &symbol) override;
-    void loadTicker(const Symbol& symbol) override;
+    void loadTicker() override;
     void updateData(float dt) override;
 
     void startSimulation(Ticker* ticker) override;
     void setSimulationSpeed(float speed) override;
     bool isSimulating() override;
+
+    void loadIndicator(Indicators::CandleIndicatorsTypes type) override;
+    void plotIndicators() override;
+
+
 
 private:
 
@@ -46,6 +51,9 @@ private:
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
+    std::vector<std::unique_ptr<Indicator>> _indicators;
+//    std::vector<std::unique_ptr<Strategy>> _strategy{nullptr};
+
     std::vector<TickData> _data;
 
     //simulating
@@ -56,6 +64,11 @@ private:
     float _currentTime = 0;
     float _speed = 1.0f;
     float _speedLimit = 1000.0f;
+
+
+    //joke time
+    bool _shouldShowLuizPopup = false;
+
 
 
 };

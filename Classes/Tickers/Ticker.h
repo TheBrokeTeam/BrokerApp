@@ -19,6 +19,8 @@ class Tickable;
 class BarData;
 struct TickData;
 
+typedef const std::string& TickerId;
+
 class Ticker : public Contextualizable{
 public:
     Ticker(Context* context,const Symbol& symbol);
@@ -32,6 +34,7 @@ public:
 
     Symbol* getSymbol();
     BarHistory* getBarHistory();
+    TickerId getTickerId();
 
 private:
     void open(const TickData &tickData);
@@ -47,6 +50,7 @@ private:
 
     Symbol _symbol{""};
 
+    std::string _id;
 };
 
 

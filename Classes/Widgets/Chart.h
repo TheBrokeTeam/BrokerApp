@@ -18,8 +18,6 @@ public:
     void onPushStyleVar() override;
 
 private:
-//    std::vector<std::shared_ptr<CandleChart>> _charts;
-
     std::shared_ptr<CandleChart> _chart{nullptr};
 
 };

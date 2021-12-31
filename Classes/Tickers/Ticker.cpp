@@ -8,6 +8,7 @@
 
 Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
     setContext(context);
+    _id = uuid::generate_uuid_v4();
 }
 
 void Ticker::addTickable(Tickable *tickable)
@@ -105,4 +106,8 @@ Symbol *Ticker::getSymbol() {
 
 BarHistory *Ticker::getBarHistory() {
     return &_barHistory;
+}
+
+TickerId Ticker::getTickerId() {
+    return _id;
 }

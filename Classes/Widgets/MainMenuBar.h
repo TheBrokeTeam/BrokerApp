@@ -17,12 +17,8 @@ class MainMenuBar : public Widget
 public:
     MainMenuBar(Context* context);
 
-    inline static bool _show_downloader = true;
-    inline static bool _show_simulator = true;
-    inline static bool _show_charts = true;
-    inline static bool _show_indicators = true;
-    inline static bool _show_tabbars = false;
-    inline static bool _showAboutWindow     = false;
+    inline static bool _showAboutWindow         = false;
+    inline static bool _show_tabbars         = false;
     inline static bool _imgui_metrics         = false;
     inline static bool _imgui_style           = false;
     inline static bool _imgui_demo            = false;

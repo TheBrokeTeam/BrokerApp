@@ -13,6 +13,8 @@
 #include <fmt/format.h>
 #include <zip_file.hpp>
 #include <rapidcsv.h>
+#include "../Tickables/Indicators/SMA.h"
+#include "../Tickables/Indicators/Bollinger.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -23,17 +25,28 @@ BackTestingContext::BackTestingContext(Editor *editor) : Context(editor) {
 }
 
 void BackTestingContext::initialize() {
+
     // Initialize the context
     _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
     _widgets.emplace_back(std::make_shared<SimulationController>(this));
     _widgets.emplace_back(std::make_shared<Chart>(this));
     _widgets.emplace_back(std::make_shared<ProfitAndLosses>(this, nullptr));
+    _widgets.emplace_back(std::make_shared<Indicators>(this));
+
+    getWidget<Indicators>()->setTrashCallback([this](){
+        for(auto& i : _indicators){
+            if(_ticker->removeTickable(i.get()))
+                puts("remove indicator successfully");
+        }
+
+        _indicators.clear();
+    });
+
 }
 
 Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     puts("TODO load symbol!");
-
 
     std::string filename = "data.zip";
 
@@ -47,6 +60,10 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
 
    _data.clear();
     _data = loadCsv(symbol);
+
+    auto chart = getWidget<Chart>();
+    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
+    loadTicker();
 
     return _ticker.get();
 
@@ -173,7 +190,7 @@ std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
     return out;
 }
 
-void BackTestingContext::loadTicker(const Symbol &symbol) {
+void BackTestingContext::loadTicker() {
     for(auto& d : _data)
         _ticker->tick(d);
 }
@@ -206,6 +223,68 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 
 void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
+}
+
+void BackTestingContext::loadIndicator(Indicators::CandleIndicatorsTypes type) {
+
+    switch (type) {
+        case Indicators::CandleIndicatorsTypes::SMA:
+        {
+            std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
+            _indicators.push_back(std::move(sma));
+            _ticker->addTickable(_indicators.back().get());
+        }
+            break;
+        case Indicators::CandleIndicatorsTypes::BOLL:
+        {
+            std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
+            _indicators.push_back(std::move(boll));
+            _ticker->addTickable(_indicators.back().get());
+        }
+            break;
+        case Indicators::CandleIndicatorsTypes::EMA:
+        case Indicators::CandleIndicatorsTypes::WMA:
+        case Indicators::CandleIndicatorsTypes::AVL:
+        case Indicators::CandleIndicatorsTypes::VWAP:
+        case Indicators::CandleIndicatorsTypes::TRIX:
+        case Indicators::CandleIndicatorsTypes::SAR :
+            _shouldShowLuizPopup = true;
+            break;
+        default:
+            break;
+    }
+}
+
+void BackTestingContext::plotIndicators() {
+    for(auto& i : _indicators) {
+        i->render();
+    }
+
+    if(_shouldShowLuizPopup){
+        {
+            ImGui::OpenPopup("Indicator missing!");
+            // Always center this window when appearing
+            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+            if (ImGui::BeginPopupModal("Indicator missing!", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::Text("Hey Luiz, it seems like you are not working too hard.. \nWhat about work on this right now?\n\n");
+                ImGui::Separator();
+
+                ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_light_grey);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_dark_grey);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow);
+
+                if (ImGui::Button("OK", ImVec2(120, 0))) {
+                    _shouldShowLuizPopup = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::PopStyleColor(3);
+                ImGui::SetItemDefaultFocus();
+                ImGui::EndPopup();
+            }
+        }
+    }
 }
 
 

@@ -5,13 +5,7 @@
 #include "Editor.h"
 #include <GLFW/glfw3.h>
 #include <imgui.h>
-#include <imgui_internal.h>
-
-#include "Widgets/Chart.h"
-
 #include "Contexts/BackTestingContext.h"
-#include "Widgets/CandleChart.h"
-#include "Tickers/Ticker.h"
 #include "Helpers/ImageLoader.h"
 
 void Editor::start() {
@@ -46,9 +40,10 @@ void Editor::update() {
     //update data context first
     _context->updateData(dt);
 
+    //call docking behavior
     showDockSpace();
 
-    // Editor - update widgets
+    //update widgets
     _context->updateUI(dt);
 }
 
@@ -63,38 +58,6 @@ Context* Editor::getContext(){
     return _context.get();
 }
 
-Editor::~Editor() {}
-
-void Editor::addChartWidget(Ticker *ticker) {
-    auto charts = _context->getWidget<Chart>();
-    charts->addChart(std::make_shared<CandleChart>(_context.get(),ticker));
-    _context->loadTicker(*ticker->getSymbol());
-}
-
-void Editor::showDataLoader(bool show) {
-    auto donwloader =  _context->getWidget<DataLoader>();
-    if(donwloader)
-        donwloader->SetVisible(show);
-
-    MainMenuBar::_show_downloader = show;
-}
-
-void Editor::showCharts(bool show) {
-    auto charts = _context->getWidget<Chart>();
-    if(charts)
-        _context->getWidget<Chart>()->SetVisible(show);
-
-    MainMenuBar::_show_charts = show;
-
-}
-
-void Editor::showIndicators(bool show) {
-    auto charts =  _context->getWidget<Chart>();
-    if(charts)
-        charts->enableIndicatorsOnCharts(show);
-
-    MainMenuBar::_show_indicators = show;
-}
 
 void Editor::loadImage(Icons icon,const std::string& filepath)
 {
@@ -130,19 +93,14 @@ void Editor::showDockSpace()
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 }
 
-void Editor::showSimulationController(bool show) {
-    auto simulator = _context->getWidget<SimulationController>();
-    if(simulator)
-        simulator->SetVisible(show);
-
-    MainMenuBar::_show_simulator = show;
-}
-
 void Editor::setStrategyTest(TestStrategy* strategy) {
     _strategy = strategy;
     _context->getWidget<ProfitAndLosses>()->setStrategyTest(_strategy);
 }
 
+Editor::~Editor() {}
+
+//APPLICATION ENTRY POINT
 int main(int argc, char const* argv[]){
     Editor app("",1400,750,argc,argv);
     app.run();

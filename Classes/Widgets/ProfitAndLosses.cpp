@@ -9,33 +9,15 @@
 
 
 ProfitAndLosses::ProfitAndLosses(Context* context, Strategy* strategy) : Widget(context) {
-    _title                  = "ProfitAndLosses";
+    _title                  = "Profit & Losses";
     _is_window              = true;
     _strategy = strategy;
 }
 
 void ProfitAndLosses::updateVisible(float dt) {
-
-    ImGui::TextColored(Editor::broker_white,"Profit & Losses");
-    ImGui::SameLine();
-
-    //change the background of close button
-    PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
-
-    //adding the close button
-    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
-    ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
-
-    if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
-        //TODO:: close this view from editor call
-    }
-
-    ImGui::Separator();
+    Widget::updateVisible(dt);
 
     //now draw the pnl chart
-
     if(_strategy == nullptr) return;
     if(_strategy->getClosedPositions().empty()) return;
 
@@ -45,7 +27,7 @@ void ProfitAndLosses::updateVisible(float dt) {
     if(getContext()->isSimulating())
         shouldLinkPlots = false;
     else
-        shouldLinkPlots = true;
+        shouldLinkPlots = false;
 
     if(!shouldLinkPlots)
         ImPlot::BeginSubplots("##NoLinkSubPlot",1,1,ImVec2(-1,-1),ImPlotSubplotFlags_None,ratios);

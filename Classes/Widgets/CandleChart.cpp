@@ -6,8 +6,6 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 #include "iostream"
-#include "../Tickables/Indicators/SMA.h"
-#include "../Tickables/Indicators/Bollinger.h"
 
 #define dataHist (*_ticker->getBarHistory())
 
@@ -15,18 +13,7 @@ CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
 {
     _title                  = "Candle Chart";
     _is_window              = false;
-    _indicatorsView = std::make_unique<Indicators>(context);
     _ticker = ticker;
-
-    _indicatorsView->setTrashCallback([this](){
-        for(auto& i : _indicators){
-            if(_ticker->removeTickable(i.get()))
-                puts("remove indicator successfully");
-        }
-
-        _indicators.clear();
-
-    });
 }
 
 void CandleChart::updateVisible(float dt) {
@@ -59,13 +46,8 @@ void CandleChart::render(float dt)
 
 //    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
 
-        if(_showIndicators){
-            _indicatorsView->updateVisible(dt);
-            ImGui::SameLine();
-        }
-
         static float ratios[] = {2,1};
-        if(ImPlot::BeginSubplots("##Subplots",3,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios)){
+        if(ImPlot::BeginSubplots("##Subplots",2,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios)){
 
             if (ImPlot::BeginPlot("##OHLC"))
             {
@@ -99,7 +81,7 @@ void CandleChart::render(float dt)
                     }
 
                     //plot caindicators
-                    plotIndicators();
+                    getContext()->plotIndicators();
 
                     _strategy->render();
 
@@ -166,13 +148,11 @@ void CandleChart::render(float dt)
                         int i = *(int*)payload->Data;
 
                         puts("AGORA é a hora de plotar!!!");
-                        loadIndicator(_indicatorsView->getIndicators()[i].type);
+                        getContext()->loadIndicator(Indicators::CandleIndicatorsTypes(i));
                     }
                     ImPlot::EndDragDropTarget();
                 }
                 //######################################################
-
-
                 ImPlot::EndPlot();
             }
 
@@ -230,73 +210,6 @@ void CandleChart::render(float dt)
 //        ImGui::EndTabItem();
 //    }
 }
-
-void CandleChart::showIndicators(bool show) {
-    _showIndicators = show;
-}
-
-void CandleChart::plotIndicators() {
-    for(auto& i : _indicators) {
-        i->render();
-    }
-
-    if(_shouldShowLuizPopup){
-        {
-            ImGui::OpenPopup("Indicator missing!");
-            // Always center this window when appearing
-            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-            if (ImGui::BeginPopupModal("Indicator missing!", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("Hey Luiz, it seems like you are not working too hard.. \nWhat about work on this right now?\n\n");
-                ImGui::Separator();
-
-                ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_light_grey);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_dark_grey);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow);
-
-                if (ImGui::Button("OK", ImVec2(120, 0))) {
-                    _shouldShowLuizPopup = false;
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::PopStyleColor(3);
-                ImGui::SetItemDefaultFocus();
-                ImGui::EndPopup();
-            }
-        }
-    }
-}
-
-void CandleChart::loadIndicator(Indicators::CandleIndicatorsTypes type) {
-
-    switch (type) {
-        case Indicators::CandleIndicatorsTypes::SMA:
-            {
-                std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker);
-                _indicators.push_back(std::move(sma));
-                _ticker->addTickable(_indicators.back().get());
-            }
-            break;
-        case Indicators::CandleIndicatorsTypes::BOLL:
-            {
-                std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker);
-                _indicators.push_back(std::move(boll));
-                _ticker->addTickable(_indicators.back().get());
-            }
-            break;
-        case Indicators::CandleIndicatorsTypes::EMA:
-        case Indicators::CandleIndicatorsTypes::WMA:
-        case Indicators::CandleIndicatorsTypes::AVL:
-        case Indicators::CandleIndicatorsTypes::VWAP:
-        case Indicators::CandleIndicatorsTypes::TRIX:
-        case Indicators::CandleIndicatorsTypes::SAR :
-            _shouldShowLuizPopup = true;
-        break;
-        default:
-            break;
-    }
-}
-
 
 // oid CandleChart::addIndicator(const ui_event::AddIndicatorCLicked &event) {
 //    std::cout << "Indicator SMA Study: " << event.info.mma << std::endl;

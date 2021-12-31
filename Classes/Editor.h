@@ -53,7 +53,6 @@ public:
     void start() override;
     void update() override;
 
-    void addChartWidget(Ticker* ticker);
     void showDataLoader(bool show);
     void showSimulationController(bool show);
 

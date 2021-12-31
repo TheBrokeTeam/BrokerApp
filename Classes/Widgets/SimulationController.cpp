@@ -6,14 +6,12 @@
 #include "../Editor.h"
 
 SimulationController::SimulationController(Context* context) : Widget(context){
-    _title                  = "Simulation";
+    _title                  = "Simulator";
     _is_window              = true;
 }
 
 void SimulationController::updateVisible(float dt) {
-    //change background of window
-    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    Widget::updateVisible(dt);
 
     //change color text
     PushStyleColor(ImGuiCol_Text,Editor::broker_black);
@@ -23,24 +21,6 @@ void SimulationController::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_FrameBgActive,Editor::broker_white);
     PushStyleColor(ImGuiCol_FrameBgHovered,Editor::broker_white);
 
-    ImGui::TextColored(Editor::broker_white,"Simulator");
-    ImGui::SameLine();
-
-    //change the background of close button
-    PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
-
-    //adding the close button
-    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
-    ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
-    if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
-        getContext()->getEditor()->showSimulationController(false);
-    }
-
-    ImGui::Separator();
-
-    ImGui::Spacing();
 
     //CONTROLLERS BELOW
     PushStyleColor(ImGuiCol_SliderGrab,Editor::broker_yellow_active);
