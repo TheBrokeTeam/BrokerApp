@@ -7,18 +7,22 @@
 
 #include "Indicator.h"
 
-class SMA : public Indicator{
+class SMA : public Indicator,  public ReversedData<double>{
 public:
-    SMA(Ticker* ticker);
-    ~SMA();
+    explicit SMA(Ticker* ticker);
     void calculate(BarHistory* barHistory) override;
     void setAverageSize(int size);
     int getAverageSize();
 
-    void render() override;
+    void onRender() override;
+    void onPopupRender() override;
+    void reset() override;
+
 
 private:
     int _averageSize = 12; // minimum size is 1
+    ImVec4 _color{1, 1, 1, 1};
+    float _lineWidth = 2.0f;
 };
 
 

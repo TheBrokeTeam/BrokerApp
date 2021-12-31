@@ -14,6 +14,9 @@ CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
     _title                  = "Candle ChartView";
     _is_window              = false;
     _ticker = ticker;
+
+    ImPlot::FormatDate(_t1,_t1_str,32,ImPlotDateFmt_DayMoYr,true);
+    ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
 }
 
 void CandleChart::updateVisible(float dt) {
@@ -23,14 +26,6 @@ void CandleChart::updateVisible(float dt) {
 
 void CandleChart::render(float dt)
 {
-    //TODO:: this is ugly - find a better way to initialize once the UIItem subclasses
-    if(!_initTime)
-    {
-        ImPlot::FormatDate(_t1,_t1_str,32,ImPlotDateFmt_DayMoYr,true);
-        ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
-        _initTime = true;
-    }
-
     if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;
 
     static ImVec4 bull_color(0.5,1,0,1);
@@ -206,47 +201,3 @@ void CandleChart::render(float dt)
 //        ImGui::EndTabItem();
 //    }
 }
-
-// oid CandleChart::addIndicator(const ui_event::AddIndicatorCLicked &event) {
-//    std::cout << "Indicator SMA Study: " << event.info.mma << std::endl;
-//
-//    std::unique_ptr<SMA> sma = std::make_unique<SMA>(event.info.mma);
-//    sma->setup("SMA " + std::to_string(event.info.mma));
-//
-//    sma->setColor(randomNumber(),randomNumber(),randomNumber(),1.0f);
-//    sma->setLineWidth(2.0f);
-//
-//    _indicators.push_back(std::move(sma));
-//    _ticker.addTickable(_indicators.back().get());
-//}
-
-
-//void StudyChart::plotIndicators() {
-//    for(auto& i : _indicators) {
-//        i->render();
-//    }
-//}
-
-//void StudyChart::onOpen(const Tick &tickData) {
-//    Tickable::onOpen(tickData);
-//    auto data = _data.getData()[_currentIndex];
-//    data.close *= 1.001f;
-//    _data.updataDataAt(data,_currentIndex);
-//}
-
-//void StudyChart::reset() {
-//    Tickable::reset();
-//}
-
-//void StudyChart::setSpeed(const ui_event::SliderChanged &event) {
-//    _ticker.setSpeed(event);
-//}
-
-//void StudyChart::setData(const data_event::DataLoaded &event) {
-//    _ticker.setData(event);
-//}
-//
-//void StudyChart::playSimulation(const ui_event::PlaySimulationClicked &event) {
-//    _ticker.playSimulation(event);
-//}
-//

@@ -43,7 +43,6 @@ void Strategy::render() {
 }
 
 void Strategy::reset() {
-    Tickable::reset();
     _openedPositions.clear();
     _closedPositions.clear();
     _profit = 0;

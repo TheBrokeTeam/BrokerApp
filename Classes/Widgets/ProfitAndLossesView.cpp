@@ -76,32 +76,32 @@ void ProfitAndLossesView::updateVisible(float dt) {
 //        const double candleWidthOffset = (_strategy->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60)/2.0;
 
         for(auto& p : _strategy->getClosedPositions()){
-                auto color = cumulatedProfit >= 0 ? Editor::broker_pnl_profit : Editor::broker_pnl_loss;
+            auto color = cumulatedProfit >= 0 ? Editor::broker_pnl_profit : Editor::broker_pnl_loss;
 
-                double startX = lastTime;
-                double startY = baseLine;
+            double startX = lastTime;
+            double startY = baseLine;
 
-                double endX = p.outTime;
-                double endY = cumulatedProfit;
+            double endX = p.outTime;
+            double endY = cumulatedProfit;
 
-                lastTime = endX;
+            lastTime = endX;
 
-                ImU32 color32 = ImGui::GetColorU32(color);
-                ImVec2 startPos = ImPlot::PlotToPixels(startX, startY);
-                ImVec2 endPos = ImPlot::PlotToPixels(endX, endY);
+            ImU32 color32 = ImGui::GetColorU32(color);
+            ImVec2 startPos = ImPlot::PlotToPixels(startX, startY);
+            ImVec2 endPos = ImPlot::PlotToPixels(endX, endY);
 
-                drawList->AddRectFilled(startPos, endPos, color32);
+            drawList->AddRectFilled(startPos, endPos, color32);
 
-                auto colorLine = cumulatedProfit >= 0 ? Editor::broker_pnl_profit_line : Editor::broker_pnl_loss_line;
-                ImU32 colorLine32 = ImGui::GetColorU32(colorLine);
+            auto colorLine = cumulatedProfit >= 0 ? Editor::broker_pnl_profit_line : Editor::broker_pnl_loss_line;
+            ImU32 colorLine32 = ImGui::GetColorU32(colorLine);
 
-                ImVec2 lineLeft = ImPlot::PlotToPixels(startX, endY);
-                ImVec2 lineRight = ImPlot::PlotToPixels(endX, endY);
-                drawList->AddLine(lineLeft, lineRight, colorLine32, 2.0f);
+            ImVec2 lineLeft = ImPlot::PlotToPixels(startX, endY);
+            ImVec2 lineRight = ImPlot::PlotToPixels(endX, endY);
+            drawList->AddLine(lineLeft, lineRight, colorLine32, 2.0f);
 
-                cumulatedProfit += p.profit;
+            cumulatedProfit += p.profit;
 
-            }
+        }
 
         if(!shouldLinkPlots)
             ImPlot::EndItem();

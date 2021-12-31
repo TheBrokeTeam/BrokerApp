@@ -3,8 +3,6 @@
 //
 
 #include "SMA.h"
-#include <implot.h>
-#include <implot_internal.h>
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
     setName("SMA");
@@ -23,24 +21,26 @@ void SMA::calculate(BarHistory* barHistory)
     }
 }
 
-void SMA::render() {
-    Indicator::render();
-
-    // custom legend context menu
-    if (ImPlot::BeginLegendPopup(_name.c_str())) {
-        ImGui::Separator();
-        if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
-            reset();
-            onLoad(_ticker->getBarHistory());
-        }
-        ImGui::ColorEdit4("Color",{&_color.x});
-        ImGui::Separator();
-        ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
-        ImPlot::EndLegendPopup();
-    }
+void SMA::onRender() {
+    ImPlot::SetNextLineStyle(_color,_lineWidth);
+    ImPlot::PlotLine(_name.c_str(), _time.data(), _data.data(), _time.size());
 }
 
-SMA::~SMA() {}
+void SMA::onPopupRender() {
+    if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
+        reset();
+        onLoad(_ticker->getBarHistory());
+    }
+    ImGui::ColorEdit4("Color",{&_color.x});
+    ImGui::Separator();
+    ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
+}
+
+void SMA::reset() {
+    Indicator::reset();
+    _data.clear();
+}
+
 
 void SMA::setAverageSize(int size) {
     _averageSize = size;
@@ -49,5 +49,7 @@ void SMA::setAverageSize(int size) {
 int SMA::getAverageSize() {
     return _averageSize;
 }
+
+
 
 

@@ -45,19 +45,16 @@ void BackTestingContext::initialize() {
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         for(auto& i : _indicators){
             if(_ticker->removeTickable(i.get()))
-                puts("remove indicator successfully");
+                puts("indicator removed successfully");
         }
-
         _indicators.clear();
     });
 
 }
 
 Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
-    puts("TODO load symbol!");
 
     std::string filename = "data.zip";
-
     auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
 
     if(!dataAlreadyExists(symbol))
@@ -229,7 +226,7 @@ void BackTestingContext::updateData(float dt) {
 }
 
 void BackTestingContext::startSimulation(Ticker* ticker) {
-    //just for test
+    //just for tests
     //TODO:: use the ticker parameter
     _ticker->reset();
     _currentIndex = 0;
@@ -308,7 +305,6 @@ void BackTestingContext::plotStrategy() {
 
 
 //develop phase
-
 void BackTestingContext::showTabBars(bool show) {
     for(auto& w : getWidgets()){
         w->showTabBar(show);

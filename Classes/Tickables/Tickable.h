@@ -21,7 +21,7 @@ public:
     virtual void onTick(BarHistory* barHistory);
 
     virtual void onLoad(BarHistory* barHistory);
-    virtual void reset();
+    virtual void reset() = 0;
 
 protected:
     Ticker* _ticker{nullptr};

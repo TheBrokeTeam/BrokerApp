@@ -34,7 +34,7 @@ public:
     void plotStrategy() override;
 
 
-    void showTabBars(bool show);
+    void showTabBars(bool show) override;
 
 private:
 
