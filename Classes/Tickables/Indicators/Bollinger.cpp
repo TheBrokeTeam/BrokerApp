@@ -59,7 +59,7 @@ void Bollinger::onRender() {
 
     auto drawList = ImPlot::GetPlotDrawList();
 
-    for(int i = 0; i < _time.size() - 1; i++){
+    for(int i = 0; i < _time.size() - 2; i++){
 
         double p1_x = _time[i];
         double p1_y = _data[i].bottom;

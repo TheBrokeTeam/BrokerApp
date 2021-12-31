@@ -17,6 +17,8 @@
 
 class Tickable;
 class BarData;
+class Indicator;
+class Strategy;
 struct TickData;
 
 typedef const std::string& TickerId;
@@ -45,8 +47,8 @@ private:
     bool lastWasClosed = false;
 
     //hold all the tickables
-    std::vector<Tickable*> _indicators;
-    std::vector<Tickable*> _strategies;
+    std::vector<Indicator*> _indicators;
+    std::vector<Strategy*> _strategies;
 
 
     //to save loaded data

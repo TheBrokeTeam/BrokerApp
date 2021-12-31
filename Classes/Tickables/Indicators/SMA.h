@@ -12,7 +12,7 @@ public:
     explicit SMA(Ticker* ticker);
     void calculate(BarHistory* barHistory) override;
     void setAverageSize(int size);
-    int getAverageSize();
+    int getAverageSize() const;
 
     void onRender() override;
     void onPopupRender() override;

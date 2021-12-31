@@ -14,14 +14,14 @@ Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
 bool Ticker::removeTickable(Tickable *tickable)
 {
     for(auto it  = _indicators.begin(); it != _indicators.end(); it++) {
-        if (tickable == (*it)) {
+        if (tickable == dynamic_cast<Tickable*>(*it)) {
             _indicators.erase(it);
             return true;
         }
     }
 
     for(auto it  = _strategies.begin(); it != _strategies.end(); it++) {
-        if (tickable == (*it)) {
+        if (tickable == dynamic_cast<Tickable*>(*it)) {
             _strategies.erase(it);
             return true;
         }
@@ -132,11 +132,11 @@ TickerId Ticker::getTickerId() {
 }
 
 void Ticker::addIndicator(Tickable *tickable) {
-    _indicators.push_back(tickable);
+    _indicators.push_back(dynamic_cast<Indicator*>(tickable));
     tickable->onLoad(&_barHistory);
 }
 
 void Ticker::addStrategy(Tickable *tickable) {
-    _strategies.push_back(tickable);
+    _strategies.push_back(dynamic_cast<Strategy*>(tickable));
     tickable->onLoad(&_barHistory);
 }

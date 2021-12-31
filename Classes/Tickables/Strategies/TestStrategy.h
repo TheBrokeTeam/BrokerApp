@@ -14,7 +14,6 @@ public:
     TestStrategy(Ticker* ticker);
     void rule() override;
     void checkTarget(Strategy::Position &pos) override;
-    void render() override;
 
 private:
     double _targetPercent = 1.01;

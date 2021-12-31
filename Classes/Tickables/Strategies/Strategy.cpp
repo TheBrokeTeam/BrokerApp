@@ -8,7 +8,6 @@
 #include "../../Contexts/Context.h"
 
 Strategy::Strategy(Ticker *ticker) : Tickable(ticker) {
-
 }
 
 void Strategy::onClose(BarHistory* barHistory) {
@@ -17,7 +16,7 @@ void Strategy::onClose(BarHistory* barHistory) {
     checkTarget();
 }
 
-void Strategy::render() {
+void Strategy::onRender() {
     std::vector<double> time;
     std::vector<double> y;
 
@@ -128,15 +127,11 @@ void Strategy::checkTarget() {
 
 void Strategy::checkTarget(Strategy::Position &pos) {}
 
-Strategy::~Strategy() {
-
-}
 
 void Strategy::onFinish() {
     for(auto& p : _openedPositions)
         closePosition(p);
 }
-
 
 double Strategy::getProfit() {
     return _profit;
@@ -149,4 +144,6 @@ Ticker *Strategy::getTicker() {
 const std::vector<Strategy::Position> &Strategy::getClosedPositions() {
     return _closedPositions;
 }
+
+Strategy::~Strategy() {}
 

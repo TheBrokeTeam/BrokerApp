@@ -7,6 +7,7 @@
 
 
 TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
+    setName("Test Strategy");
 //    _smaSlow = SMA(ticker);
 //    _smaFast = SMA(ticker);
 //
@@ -89,10 +90,4 @@ void TestStrategy::checkTarget(Strategy::Position &pos) {
         closePosition(pos.id);
         _isPositioned = false;
     }
-
 }
-
-void TestStrategy::render() {
-    Strategy::render();
-}
-

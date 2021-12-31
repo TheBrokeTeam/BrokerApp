@@ -41,12 +41,11 @@ void SMA::reset() {
     _data.clear();
 }
 
-
 void SMA::setAverageSize(int size) {
     _averageSize = size;
 }
 
-int SMA::getAverageSize() {
+int SMA::getAverageSize() const {
     return _averageSize;
 }
 

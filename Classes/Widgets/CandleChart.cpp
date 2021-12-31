@@ -71,11 +71,6 @@ void CandleChart::render(float dt)
                         drawList->AddLine(lowPos, highPos, color, ImMax(1.0f, (closePos.x - openPos.x) / 10.0f));
                     }
 
-                    //plot caindicators
-                    getContext()->plotIndicators();
-
-                    getContext()->plotStrategy();
-
                     //plot tag at the last candle on screen
                     ImPlotRect bnds = ImPlot::GetPlotLimits();
 //                        double x = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_Hr).ToDouble();
@@ -131,6 +126,11 @@ void CandleChart::render(float dt)
 
                     ImPlot::EndItem();
                 }
+
+                //plot caindicators
+                getContext()->plotIndicators();
+
+                getContext()->plotStrategy();
 
                 //allow candles plot area to be a DRAG AND DROP target ##
                 if (ImPlot::BeginDragDropTargetPlot()) {

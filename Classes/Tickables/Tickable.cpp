@@ -21,3 +21,8 @@ void Tickable::onClose(BarHistory* barHistory) {
 void Tickable::onLoad(BarHistory *barHistory) {
     _barHistory = barHistory;
 }
+
+Tickable::~Tickable() {
+    _ticker = nullptr;
+    _barHistory = nullptr;
+}
