@@ -23,7 +23,7 @@ void TestStrategy::rule() {
     if(_isPositioned) return;
 
     auto arrSMA = _ticker->getContext()->getIndicator<SMA>();
-    if(arrSMA.empty()) return;
+    if(arrSMA.empty() || arrSMA.size() <= 1) return;
 
     SMA _smaSlow = *arrSMA[0];
     SMA _smaFast = *arrSMA[1];
@@ -31,7 +31,7 @@ void TestStrategy::rule() {
     std::cout << "Slow: " << _smaSlow.getAverageSize() << std::endl;
     std::cout << "Fast: " << _smaFast.getAverageSize() << std::endl;
 
-    if(_smaSlow.size() > 1){
+    if(_smaSlow.size() > 1 && _smaFast.size() > 1){
         //when the slow cross up the fast -> should short
         bool crossUp = _smaSlow[0] > _smaFast[0] && _smaSlow[1] < _smaFast[1];
 

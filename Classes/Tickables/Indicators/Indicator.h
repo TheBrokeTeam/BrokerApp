@@ -14,10 +14,13 @@ public:
     Indicator(Ticker* ticker);
     virtual ~Indicator();
 
+    //TODO:: this is a main behavior and need atention
     /** For Now calculate will be called at onClose bar */
     virtual void calculate(BarHistory* barHistory);
-    virtual void reset() override;
+    void onClose(BarHistory* barHistory) override;
+    void onLoad(BarHistory* barHistory) override;
 
+    virtual void reset() override;
     void setName(const std::string& name);
     std::string getName();
 
@@ -25,8 +28,6 @@ public:
 
     virtual void render();
 
-    void onClose(BarHistory* barHistory) override;
-    virtual void onLoad(BarHistory* barHistory) override;
 
 protected:
     std::string _name{""};
