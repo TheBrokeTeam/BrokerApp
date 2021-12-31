@@ -27,7 +27,9 @@ public:
     virtual ~Ticker() = default;
 
     void reset();
-    void addTickable(Tickable* tickable);
+    void addIndicator(Tickable* tickable);
+    void addStrategy(Tickable* tickable);
+
     bool removeTickable(Tickable *tickable);
 
     void tick(const TickData &tickData);
@@ -43,7 +45,9 @@ private:
     bool lastWasClosed = false;
 
     //hold all the tickables
-    std::vector<Tickable*> _tickables;
+    std::vector<Tickable*> _indicators;
+    std::vector<Tickable*> _strategies;
+
 
     //to save loaded data
     BarHistory _barHistory;

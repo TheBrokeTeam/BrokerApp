@@ -69,7 +69,7 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     //create test strategy for tests
     _strategy.reset(nullptr);
     _strategy = std::make_unique<TestStrategy>(_ticker.get());
-    _ticker->addTickable(_strategy.get());
+    _ticker->addStrategy(_strategy.get());
 
     getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy.get());
 
@@ -247,14 +247,14 @@ void BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes typ
         {
             std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
-            _ticker->addTickable(_indicators.back().get());
+            _ticker->addIndicator(_indicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL:
         {
             std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
-            _ticker->addTickable(_indicators.back().get());
+            _ticker->addIndicator(_indicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::EMA:

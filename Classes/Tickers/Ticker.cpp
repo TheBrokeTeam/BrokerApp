@@ -11,20 +11,22 @@ Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
     _id = uuid::generate_uuid_v4();
 }
 
-void Ticker::addTickable(Tickable *tickable)
-{
-    _tickables.push_back(tickable);
-    tickable->onLoad(&_barHistory);
-}
-
 bool Ticker::removeTickable(Tickable *tickable)
 {
-    for(auto it  = _tickables.begin(); it != _tickables.end(); it++) {
+    for(auto it  = _indicators.begin(); it != _indicators.end(); it++) {
         if (tickable == (*it)) {
-            _tickables.erase(it);
+            _indicators.erase(it);
             return true;
         }
     }
+
+    for(auto it  = _strategies.begin(); it != _strategies.end(); it++) {
+        if (tickable == (*it)) {
+            _strategies.erase(it);
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -41,7 +43,11 @@ void Ticker::open(const TickData& tickData) {
 
     _barHistory.append(data);
 
-    for(auto& t : _tickables){
+    for(auto& t : _indicators){
+        t->onOpen(&_barHistory);
+    }
+
+    for(auto& t : _strategies){
         t->onOpen(&_barHistory);
     }
 }
@@ -72,7 +78,11 @@ void Ticker::tick(const TickData& tickData) {
 
     _barHistory.updateLasBar(data);
 
-    for(auto& t : _tickables){
+    for(auto& t : _indicators){
+        t->onTick(&_barHistory);
+    }
+
+    for(auto& t : _strategies){
         t->onTick(&_barHistory);
     }
 }
@@ -87,7 +97,11 @@ void Ticker::close(const TickData& tickData) {
 
     _barHistory.updateLasBar(data);
 
-    for(auto& t : _tickables){
+    for(auto& t : _indicators){
+        t->onClose(&_barHistory);
+    }
+
+    for(auto& t : _strategies){
         t->onClose(&_barHistory);
     }
 }
@@ -95,7 +109,12 @@ void Ticker::close(const TickData& tickData) {
 void Ticker::reset() {
     _barHistory.clear();
     lastWasClosed = false;
-    for(auto& t : _tickables){
+
+    for(auto& t : _indicators){
+        t->reset();
+    }
+
+    for(auto& t : _strategies){
         t->reset();
     }
 }
@@ -110,4 +129,14 @@ BarHistory *Ticker::getBarHistory() {
 
 TickerId Ticker::getTickerId() {
     return _id;
+}
+
+void Ticker::addIndicator(Tickable *tickable) {
+    _indicators.push_back(tickable);
+    tickable->onLoad(&_barHistory);
+}
+
+void Ticker::addStrategy(Tickable *tickable) {
+    _strategies.push_back(tickable);
+    tickable->onLoad(&_barHistory);
 }
