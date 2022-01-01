@@ -66,7 +66,7 @@ add_executable(BrokerApp
         Classes/Widgets/PlotItem/PlotItem.cpp
         Classes/Widgets/PlotItem/PlotItem.h
         Classes/Tickables/Strategies/IndicatorToChartExample.cpp
-        Classes/Tickables/Strategies/IndicatorToChartExample.h Classes/Widgets/StrategyEditor.cpp Classes/Widgets/StrategyEditor.h)
+        Classes/Tickables/Strategies/IndicatorToChartExample.h Classes/Widgets/StrategyEditor/StrategyEditor.cpp Classes/Widgets/StrategyEditor/StrategyEditor.h Classes/Widgets/StrategyEditor/TestNode.cpp Classes/Widgets/StrategyEditor/TestNode.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

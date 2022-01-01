@@ -21,7 +21,7 @@
 #include "../Widgets/SimulationController.h"
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
-#include "../Widgets/StrategyEditor.h"
+#include "../Widgets/StrategyEditor/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 
 
