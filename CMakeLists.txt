@@ -53,7 +53,7 @@ add_executable(BrokerApp
         Classes/Tickables/Indicators/SMA.cpp
         Classes/Tickables/Indicators/SMA.h
         Classes/Helpers/ImageLoader.cpp
-        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h Classes/Tickables/Indicators/Bollinger.cpp Classes/Tickables/Indicators/Bollinger.h Classes/Widgets/SimulationController.cpp Classes/Widgets/SimulationController.h Classes/Tickables/Strategies/TestStrategy.cpp Classes/Tickables/Strategies/TestStrategy.h Classes/Widgets/ProfitAndLossesView.cpp Classes/Widgets/ProfitAndLossesView.h Classes/Widgets/PlotItem/PlotItem.cpp Classes/Widgets/PlotItem/PlotItem.h)
+        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h Classes/Tickables/Indicators/Bollinger.cpp Classes/Tickables/Indicators/Bollinger.h Classes/Widgets/SimulationController.cpp Classes/Widgets/SimulationController.h Classes/Tickables/Strategies/IndicatorFromChartExample.cpp Classes/Tickables/Strategies/IndicatorFromChartExample.h Classes/Widgets/ProfitAndLossesView.cpp Classes/Widgets/ProfitAndLossesView.h Classes/Widgets/PlotItem/PlotItem.cpp Classes/Widgets/PlotItem/PlotItem.h Classes/Tickables/Strategies/IndicatorToChartExample.cpp Classes/Tickables/Strategies/IndicatorToChartExample.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

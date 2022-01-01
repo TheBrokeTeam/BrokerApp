@@ -118,6 +118,6 @@ void ProfitAndLossesView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 
-void ProfitAndLossesView::setStrategyTest(TestStrategy *strategy) {
+void ProfitAndLossesView::setStrategyTest(IndicatorFromChartExample *strategy) {
     _strategy = strategy;
 }

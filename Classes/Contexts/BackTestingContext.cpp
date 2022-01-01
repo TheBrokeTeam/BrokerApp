@@ -65,7 +65,7 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
 
     //create test strategy for tests
     _strategy.reset(nullptr);
-    _strategy = std::make_unique<TestStrategy>(_ticker.get());
+    _strategy = std::make_unique<IndicatorFromChartExample>(_ticker.get());
     _ticker->addStrategy(_strategy.get());
 
     getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy.get());

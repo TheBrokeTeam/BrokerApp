@@ -2,12 +2,12 @@
 // Created by Arthur Abel Motelevicz on 29/12/21.
 //
 
-#include "TestStrategy.h"
+#include "IndicatorFromChartExample.h"
 #include "../../Contexts/Context.h"
 
 
-TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
-    setName("Test Strategy");
+IndicatorFromChartExample::IndicatorFromChartExample(Ticker *ticker) : Strategy(ticker) {
+    setName("Strategy: Indicator From Chart");
 //    _smaSlow = SMA(ticker);
 //    _smaFast = SMA(ticker);
 //
@@ -18,7 +18,7 @@ TestStrategy::TestStrategy(Ticker *ticker) : Strategy(ticker) {
 //    ticker->addTickable(&_smaSlow);
 }
 
-void TestStrategy::rule() {
+void IndicatorFromChartExample::rule() {
     Strategy::rule();
 
     if(_isPositioned) return;
@@ -33,9 +33,6 @@ void TestStrategy::rule() {
 
     SMA _smaSlow = *slowSMA;
     SMA _smaFast = *fastSMA;
-
-    std::cout << "Slow: " << _smaSlow.getAverageSize() << std::endl;
-    std::cout << "Fast: " << _smaFast.getAverageSize() << std::endl;
 
     if(_smaSlow.size() > 1 && _smaFast.size() > 1){
         //when the slow cross up the fast -> should short
@@ -83,7 +80,7 @@ void TestStrategy::rule() {
     }
 }
 
-void TestStrategy::checkTarget(Strategy::Position &pos) {
+void IndicatorFromChartExample::checkTarget(Strategy::Position &pos) {
     Strategy::checkTarget(pos);
 
     double lastPrice = pos.outPrice;

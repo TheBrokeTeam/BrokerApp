@@ -48,7 +48,7 @@ private:
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
-    std::unique_ptr<TestStrategy> _strategy{nullptr};
+    std::unique_ptr<IndicatorFromChartExample> _strategy{nullptr};
 
     std::vector<TickData> _data;
 

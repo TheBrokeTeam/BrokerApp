@@ -13,7 +13,7 @@
 
 #include "IndicatorsView.h"
 #include "../Tickables/Indicators/Indicator.h"
-#include "../Tickables/Strategies/TestStrategy.h"
+#include "../Tickables/Strategies/IndicatorFromChartExample.h"
 
 class ImPlotTime;
 

@@ -7,7 +7,7 @@
 
 #include "Widget.h"
 #include "../Tickables/Strategies/Strategy.h"
-#include "../Tickables/Strategies/TestStrategy.h"
+#include "../Tickables/Strategies/IndicatorFromChartExample.h"
 
 class ProfitAndLossesView : public Widget {
 public:
@@ -15,7 +15,7 @@ public:
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
-    void setStrategyTest(TestStrategy* strategy);
+    void setStrategyTest(IndicatorFromChartExample* strategy);
 
 
 private:
