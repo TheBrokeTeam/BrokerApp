@@ -48,6 +48,14 @@ void BackTestingContext::initialize() {
                 puts("indicator removed successfully");
         }
         _indicators.clear();
+        //create test strategy for tests
+        _ticker->removeTickable(_strategy.get());
+
+        _strategy.reset();
+        _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
+        _ticker->addStrategy(_strategy.get());
+        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
+
     });
 
 }
