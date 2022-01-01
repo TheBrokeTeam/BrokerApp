@@ -7,19 +7,17 @@
 
 #include "Widget.h"
 #include "../Tickables/Strategies/Strategy.h"
-#include "../Tickables/Strategies/IndicatorFromChartExample.h"
 
 class ProfitAndLossesView : public Widget {
 public:
-    ProfitAndLossesView(Context* context, Strategy* strategy);
+    ProfitAndLossesView(Context* context);
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
-    void setStrategyTest(IndicatorFromChartExample* strategy);
-
+    void setStrategyTest(std::weak_ptr<Strategy> strategy);
 
 private:
-    Strategy* _strategy{nullptr};
+    std::weak_ptr<Strategy> _strategy;
 
 };
 

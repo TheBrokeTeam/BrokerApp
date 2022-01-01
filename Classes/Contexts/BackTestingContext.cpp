@@ -16,12 +16,12 @@
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 
-
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
 #include "../Widgets/SimulationController.h"
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
+#include "../Tickables/Strategies/IndicatorToChartExample.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -39,7 +39,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<DownloaderView>(this));
     _widgets.emplace_back(std::make_shared<SimulationController>(this));
     _widgets.emplace_back(std::make_shared<ChartView>(this));
-    _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this, nullptr));
+    _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
@@ -64,11 +64,11 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     _ticker = std::make_shared<Ticker>(this,symbol);
 
     //create test strategy for tests
-    _strategy.reset(nullptr);
-    _strategy = std::make_unique<IndicatorFromChartExample>(_ticker.get());
+    _strategy.reset();
+    _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
     _ticker->addStrategy(_strategy.get());
 
-    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy.get());
+    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
 
    _data.clear();
     _data = loadCsv(symbol);
@@ -237,13 +237,16 @@ void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
 
-void BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type) {
+Indicator* BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type) {
+
+    Indicator* indicator{nullptr};
 
     switch (type) {
         case IndicatorsView::CandleIndicatorsTypes::SMA:
         {
             std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
+            indicator = _indicators.back().get();
             _ticker->addIndicator(_indicators.back().get());
         }
             break;
@@ -251,6 +254,7 @@ void BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes typ
         {
             std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
+            indicator = _indicators.back().get();
             _ticker->addIndicator(_indicators.back().get());
         }
             break;
@@ -265,6 +269,8 @@ void BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes typ
         default:
             break;
     }
+
+    return indicator;
 }
 
 void BackTestingContext::plotIndicators() {

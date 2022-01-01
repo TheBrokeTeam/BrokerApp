@@ -21,8 +21,9 @@ public:
     void calculate(BarHistory* barHistory) override;
     void reset() override;
     void onRender() override;
+    int getAverageSize();
 private:
-    int _avarageSize = 20;
+    int _averageSize = 20;
 };
 
 

@@ -46,7 +46,7 @@ public:
     double profitMax = 0;
     Ticker* getTicker();
 
-    void onRender() override;
+    virtual void onRender() override;
 
 protected:
     std::vector<Position> _openedPositions;

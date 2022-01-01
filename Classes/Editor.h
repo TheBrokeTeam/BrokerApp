@@ -9,7 +9,6 @@
 #include <vector>
 #include "Contexts/Context.h"
 #include "Helpers/Utils.h"
-#include "Tickables/Strategies/IndicatorFromChartExample.h"
 
 class Ticker;
 class Editor : public App {

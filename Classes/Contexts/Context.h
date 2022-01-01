@@ -13,6 +13,7 @@
 #include "../Widgets/Widget.h"
 #include "../Editor.h"
 #include "../Widgets/IndicatorsView.h"
+#include "../Tickables/Strategies/Strategy.h"
 
 class Context {
 public:
@@ -28,7 +29,8 @@ public:
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 
-    virtual void loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
+    virtual Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
+
     virtual void plotIndicators() = 0;
     virtual void plotStrategy() = 0;
 

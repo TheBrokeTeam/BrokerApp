@@ -7,19 +7,17 @@
 #include <implot.h>
 #include <implot_internal.h>
 
-
-ProfitAndLossesView::ProfitAndLossesView(Context* context, Strategy* strategy) : Widget(context) {
+ProfitAndLossesView::ProfitAndLossesView(Context* context) : Widget(context) {
     _title                  = "Profit & Losses";
     _is_window              = true;
-    _strategy = strategy;
 }
 
 void ProfitAndLossesView::updateVisible(float dt) {
     Widget::updateVisible(dt);
 
     //now draw the pnl chart
-    if(_strategy == nullptr) return;
-    if(_strategy->getClosedPositions().empty()) return;
+    if(!_strategy.lock()) return;
+    if(_strategy.lock()->getClosedPositions().empty()) return;
 
     static float ratios[] = {1};
 
@@ -48,17 +46,17 @@ void ProfitAndLossesView::updateVisible(float dt) {
 
     if (ImPlot::BeginPlot("##PnL")) {
         ImPlot::SetupAxes(0, 0, xFlags, yFlags);
-        ImPlot::SetupAxisLimits(ImAxis_X1, _strategy->time.front(), _strategy->time.back());
-        ImPlot::SetupAxisLimits(ImAxis_Y1, _strategy->drawDownMax, _strategy->profitMax);
+        ImPlot::SetupAxisLimits(ImAxis_X1, _strategy.lock()->time.front(), _strategy.lock()->time.back());
+        ImPlot::SetupAxisLimits(ImAxis_Y1, _strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
 
         ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
 
         //Fit the data manually with some offset
         if(shouldFitRange) {
-            double tenBars = 10 * 60 * _strategy->getTicker()->getSymbol()->getTimeIntervalInMinutes();
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy->time.front() - tenBars,
-                                                               _strategy->time.back() + tenBars);
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy->drawDownMax, _strategy->profitMax);
+            double tenBars = 10 * 60 * _strategy.lock()->getTicker()->getSymbol()->getTimeIntervalInMinutes();
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy.lock()->time.front() - tenBars,
+                                                               _strategy.lock()->time.back() + tenBars);
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
         }
 
 
@@ -68,14 +66,14 @@ void ProfitAndLossesView::updateVisible(float dt) {
         //TODO:: use a baseline value as start from context
         double baseLine = 0;
         double cumulatedProfit = baseLine;
-        double lastTime = _strategy->getClosedPositions().front().inTime;
+        double lastTime = _strategy.lock()->getClosedPositions().front().inTime;
 
         if(!shouldLinkPlots)
             ImPlot::BeginItem("##PnL");
 
-//        const double candleWidthOffset = (_strategy->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60)/2.0;
+//        const double candleWidthOffset = (_strategy.lock()->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60)/2.0;
 
-        for(auto& p : _strategy->getClosedPositions()){
+        for(auto& p : _strategy.lock()->getClosedPositions()){
             auto color = cumulatedProfit >= 0 ? Editor::broker_pnl_profit : Editor::broker_pnl_loss;
 
             double startX = lastTime;
@@ -118,6 +116,6 @@ void ProfitAndLossesView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 
-void ProfitAndLossesView::setStrategyTest(IndicatorFromChartExample *strategy) {
+void ProfitAndLossesView::setStrategyTest(std::weak_ptr<Strategy> strategy) {
     _strategy = strategy;
 }

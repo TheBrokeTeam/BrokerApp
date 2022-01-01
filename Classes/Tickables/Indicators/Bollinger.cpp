@@ -10,18 +10,18 @@ Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
 
 void Bollinger::calculate(BarHistory* barHistory)
 {
-    if((*barHistory).size() >= _avarageSize) {
+    if((*barHistory).size() >= _averageSize) {
 
         //calculate the mean of the last <averagesize>
         double mean = 0;
-        double den = 1.0 / _avarageSize;
-        for (int i = 0; i < _avarageSize; ++i)
+        double den = 1.0 / _averageSize;
+        for (int i = 0; i < _averageSize; ++i)
             mean += (*barHistory)[i].close * den;
 
         //calulate the standard deviation of this
-        double den2 = 1.0 / (_avarageSize - 1.0);
+        double den2 = 1.0 / (_averageSize - 1.0);
         double x   = 0;
-        for (int i = 0; i < _avarageSize; ++i)
+        for (int i = 0; i < _averageSize; ++i)
             x += ((*barHistory)[i].close - mean) * ((*barHistory)[i].close - mean) * den2;
 
         double stdv = sqrt(x);
@@ -45,7 +45,7 @@ void Bollinger::reset() {
 
 void Bollinger::onRender() {
     //safe check
-    if(_data.empty() || _data.size() < 1) return;
+    if(_data.empty() || _data.size() < 2) return;
 
     //TODO:: this shaded render commented there is no artifact on it. Get it back.
 //    ImPlot::SetNextFillStyle(ImVec4(0.5,0.5,1,1),0.25f);
@@ -83,5 +83,9 @@ void Bollinger::onRender() {
         drawList->AddTriangleFilled(p1,p2,p3,color32);
         drawList->AddTriangleFilled(p1,p3,p4,color32);
     }
+}
+
+int Bollinger::getAverageSize() {
+    return _averageSize;
 }
 
