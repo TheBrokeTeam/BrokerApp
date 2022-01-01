@@ -21,6 +21,7 @@
 #include "../Widgets/SimulationController.h"
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
+#include "../Widgets/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 
 
@@ -41,6 +42,8 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<ChartView>(this));
     _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
+    _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
+
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         for(auto& i : _indicators){
@@ -55,7 +58,6 @@ void BackTestingContext::initialize() {
         _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
         _ticker->addStrategy(_strategy.get());
         getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
-
     });
 
 }
@@ -316,7 +318,6 @@ void BackTestingContext::plotIndicators() {
 void BackTestingContext::plotStrategy() {
     _strategy->render();
 }
-
 
 //develop phase
 void BackTestingContext::showTabBars(bool show) {

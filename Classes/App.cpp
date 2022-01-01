@@ -197,6 +197,8 @@ App::App(std::string title, int w, int h, int argc, char const *argv[])
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImPlot::CreateContext();
+    ImNodes::CreateContext();
+
     ImGui_ImplGlfw_InitForOpenGL(_window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
@@ -271,6 +273,7 @@ App::~App()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    ImNodes::DestroyContext();
     ImPlot::DestroyContext();
     ImGui::DestroyContext();
     glfwDestroyWindow(_window);

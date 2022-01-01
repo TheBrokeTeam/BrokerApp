@@ -66,7 +66,7 @@ add_executable(BrokerApp
         Classes/Widgets/PlotItem/PlotItem.cpp
         Classes/Widgets/PlotItem/PlotItem.h
         Classes/Tickables/Strategies/IndicatorToChartExample.cpp
-        Classes/Tickables/Strategies/IndicatorToChartExample.h)
+        Classes/Tickables/Strategies/IndicatorToChartExample.h Classes/Widgets/StrategyEditor.cpp Classes/Widgets/StrategyEditor.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -153,6 +153,26 @@ target_include_directories(implot
         )
 
 target_link_libraries(implot PUBLIC imgui)
+
+
+set(IMNODES_SOURCE
+        external/node_editor/imnodes.cpp
+        )
+
+set(IMNODES_HEADER
+        external/node_editor/imnodes.h
+        external/node_editor/imnodes_internal.h
+        )
+
+add_library(imnodes STATIC ${IMNODES_SOURCE} ${IMNODES_HEADER})
+
+target_include_directories(imnodes
+        PUBLIC external/node_editor
+        )
+
+target_link_libraries(imnodes PUBLIC glfw imgui)
+
+
 #-EXTERNAL--END---------------
 
 #-APP----------------------------
@@ -180,6 +200,7 @@ target_include_directories(app PUBLIC
 target_link_libraries(app PUBLIC
         imgui
         implot
+        imnodes
         )
 
 #-APP-END--------------------------
@@ -194,6 +215,7 @@ set(INCLUDES
         external/imgui/misc/cpp
         external/imgui/backends
         external/implot
+        external/node_editor
         external/stb
         ${CMAKE_CURRENT_BINARY_DIR}/external/glad/include
         external/rapidcsv/src
@@ -213,6 +235,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         glad
         imgui
         implot
+        imnodes
         rapidcsv
         curl
         )
