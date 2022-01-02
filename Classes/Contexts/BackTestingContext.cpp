@@ -27,8 +27,6 @@
 #include "../Nodes/TestAddNode.h"
 #include "../Nodes/TestResultNode.h"
 
-
-
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
                                         "3d", "1w", "1mo"};
@@ -347,7 +345,7 @@ std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::CandleI
             */
 //            loadIndicator(type);
 
-            _nodes.push_back(node);
+//            _nodes.push_back(node);
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL:
@@ -366,20 +364,20 @@ std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::CandleI
     return node;
 }
 
-std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::Nodes type) {
+std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type) {
 
-    std::shared_ptr<BaseNode> node{nullptr};
+    std::shared_ptr<INode> node{nullptr};
 
     switch (type) {
         case IndicatorsView::Nodes::ADD:
             {
-                node = std::make_shared<TestAddNode>();
-                _nodes.push_back(node);
+//                node = std::make_shared<TestAddNode>();
+//                _nodes.push_back(node);
             }
             break;
         case IndicatorsView::Nodes::RESULT:
             {
-                node = std::make_shared<TestResultNode>();
+//                node = std::make_shared<TestResultNode>();
                 _nodes.push_back(node);
             }
             break;

@@ -7,7 +7,7 @@
 
 #include "../Widget.h"
 #include "../../Tickables/Strategies/Strategy.h"
-#include "../../Nodes/BaseNode.h"
+#include "../../Nodes/INode.h"
 
 class StrategyEditor : public Widget {
 public:
@@ -15,11 +15,11 @@ public:
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
-    std::vector<std::weak_ptr<BaseNode>> _nodes;
+    std::vector<std::weak_ptr<INode>> _nodes;
     std::vector<std::pair<int, int>> links;
 
 private:
-    BaseNode* getNodeFromLinkId(int id);
+    INode* getNodeFromLinkId(int id);
 
 };
 

@@ -29,7 +29,7 @@ public:
 
     Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
     std::shared_ptr<BaseNode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
-    std::shared_ptr<BaseNode> createNode(IndicatorsView::Nodes type) override;
+    std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) override;
 
 
     void plotIndicators() override;
@@ -65,6 +65,7 @@ private:
 
     //joke time
     bool _shouldShowLuizPopup = false;
+    std::vector<std::shared_ptr<INode>> _nodes;
 };
 
 #endif //BROKERAPP_BACKTESTINGCONTEXT_H

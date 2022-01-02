@@ -14,8 +14,8 @@
 #include "../Editor.h"
 #include "../Widgets/IndicatorsView.h"
 #include "../Tickables/Strategies/Strategy.h"
+#include "../Nodes/INode.h"
 #include "../Nodes/BaseNode.h"
-
 
 class Context {
 public:
@@ -33,7 +33,7 @@ public:
 
     virtual Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual std::shared_ptr<BaseNode> createNode(IndicatorsView::CandleIndicatorsTypes type) = 0;
-    virtual std::shared_ptr<BaseNode> createNode(IndicatorsView::Nodes type) = 0;
+    virtual std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) = 0;
 
 
 
@@ -93,7 +93,7 @@ protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
     std::vector<std::shared_ptr<Strategy>> _strategies;
-    std::vector<std::shared_ptr<BaseNode>> _nodes;
+//    std::vector<std::shared_ptr<BaseNode>> _nodes;
 
 
     Editor *_editor{nullptr};
