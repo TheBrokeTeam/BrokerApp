@@ -30,6 +30,11 @@ public:
         SAR
     };
 
+    enum class Nodes{
+        ADD,
+        RESULT
+    };
+
     struct DragAndDropIndicatorItem {
             CandleIndicatorsTypes type;
             std::string      label{""};

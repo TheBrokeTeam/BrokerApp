@@ -6,7 +6,7 @@
 #define BROKERAPP_SMANODE_H
 
 #include "BaseNode.h"
-#include "../IndicatorsView.h"
+#include "../Widgets/IndicatorsView.h"
 
 
 class SMANode: public BaseNode {

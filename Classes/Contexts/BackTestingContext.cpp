@@ -23,7 +23,10 @@
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
-#include "../Widgets/StrategyEditor/SMANode.h"
+#include "../Nodes/SMANode.h"
+#include "../Nodes/TestAddNode.h"
+#include "../Nodes/TestResultNode.h"
+
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -337,8 +340,12 @@ std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::CandleI
         {
             node = std::make_shared<SMANode>();
 
-            //call temporary here to edit on node and see on chart
-            loadIndicator(type);
+            /*TODO:: define behavior: there are 2 options
+             1) let the strategy and chart independents
+             2) make both work as one : if put indicator on the chart the node will appear
+                on the editor and the other way around.
+            */
+//            loadIndicator(type);
 
             _nodes.push_back(node);
         }
@@ -351,6 +358,30 @@ std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::CandleI
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
         case IndicatorsView::CandleIndicatorsTypes::SAR :
             _shouldShowLuizPopup = true;
+            break;
+        default:
+            break;
+    }
+
+    return node;
+}
+
+std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::Nodes type) {
+
+    std::shared_ptr<BaseNode> node{nullptr};
+
+    switch (type) {
+        case IndicatorsView::Nodes::ADD:
+            {
+                node = std::make_shared<TestAddNode>();
+                _nodes.push_back(node);
+            }
+            break;
+        case IndicatorsView::Nodes::RESULT:
+            {
+                node = std::make_shared<TestResultNode>();
+                _nodes.push_back(node);
+            }
             break;
         default:
             break;

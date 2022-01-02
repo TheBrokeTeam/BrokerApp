@@ -5,12 +5,12 @@
 #include "SMANode.h"
 #include <imgui.h>
 #include <imnodes.h>
-#include "../../Editor.h"
+#include "../Editor.h"
 
 SMANode::SMANode() {
     setName("SMA Indicator");
-    _idInput = ++current_id;
-    _idOutput = ++current_id;
+    _idInput = addInput();
+    _idOutput = addOutput();
 }
 
 void SMANode::onRender() {

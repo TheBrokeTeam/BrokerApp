@@ -6,10 +6,10 @@
 #include <imgui.h>
 #include <imnodes.h>
 
-#include "../../Editor.h"
+#include "../Editor.h"
 
 BaseNode::BaseNode() {
-    _id = ++current_id;
+    _id =  generateId();
     ImVec2 mousePos = ImGui::GetMousePos();
     ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
     // TODO::understand why is that
@@ -40,7 +40,10 @@ void BaseNode::render() {
     ImGui::PopStyleColor();
     ImNodes::EndNodeTitleBar();
 
+    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_white);
     onRender();
+    ImGui::PopStyleColor();
+
 
     ImNodes::EndNode();
 
@@ -61,6 +64,48 @@ BaseNode::~BaseNode() {
 }
 
 void BaseNode::onRender() {
+
+}
+
+bool BaseNode::hasOutput(int id) {
+    for(auto outputId : _outputIds){
+        if(outputId == id)
+            return true;
+    }
+    return false;
+}
+
+bool BaseNode::hasInput(int id) {
+    for(auto inputId : _inputIds){
+        if(inputId == id)
+            return true;
+    }
+    return false;
+}
+
+int BaseNode::addInput() {
+    _inputIds.push_back(++current_id);
+    return _inputIds.back();
+}
+
+int BaseNode::addOutput() {
+    _outputIds.push_back(++current_id);
+    return _outputIds.back();
+}
+
+int BaseNode::generateId() {
+    return ++current_id;
+}
+
+int BaseNode::getOutput(int id) {
+    return 0;
+}
+
+int BaseNode::getInput(int id) {
+    return 0;
+}
+
+void BaseNode::setInput(int id, int value) {
 
 }
 

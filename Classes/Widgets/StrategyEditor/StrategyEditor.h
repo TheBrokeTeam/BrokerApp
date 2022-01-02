@@ -7,7 +7,7 @@
 
 #include "../Widget.h"
 #include "../../Tickables/Strategies/Strategy.h"
-#include "BaseNode.h"
+#include "../../Nodes/BaseNode.h"
 
 class StrategyEditor : public Widget {
 public:
@@ -17,7 +17,9 @@ public:
 
     std::vector<std::weak_ptr<BaseNode>> _nodes;
     std::vector<std::pair<int, int>> links;
+
 private:
+    BaseNode* getNodeFromLinkId(int id);
 
 };
 

@@ -14,7 +14,7 @@
 #include "../Editor.h"
 #include "../Widgets/IndicatorsView.h"
 #include "../Tickables/Strategies/Strategy.h"
-#include "../Widgets/StrategyEditor/BaseNode.h"
+#include "../Nodes/BaseNode.h"
 
 
 class Context {
@@ -33,6 +33,8 @@ public:
 
     virtual Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual std::shared_ptr<BaseNode> createNode(IndicatorsView::CandleIndicatorsTypes type) = 0;
+    virtual std::shared_ptr<BaseNode> createNode(IndicatorsView::Nodes type) = 0;
+
 
 
     virtual void plotIndicators() = 0;

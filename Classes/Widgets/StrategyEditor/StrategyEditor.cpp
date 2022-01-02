@@ -4,7 +4,7 @@
 
 #include "StrategyEditor.h"
 #include "../../Editor.h"
-#include "SMANode.h"
+#include "../../Nodes/SMANode.h"
 #include <imnodes.h>
 
 // User callback
@@ -51,7 +51,7 @@ void StrategyEditor::updateVisible(float dt) {
             int i = *(int *) payload->Data;
 
             puts("AGORA é a hora de plotar!!!");
-            std::weak_ptr<BaseNode> node = getContext()->createNode(IndicatorsView::CandleIndicatorsTypes(i));
+            std::weak_ptr<BaseNode> node = getContext()->createNode(IndicatorsView::Nodes(i));
             if(node.lock())
                 _nodes.push_back(node);
         }
@@ -69,8 +69,32 @@ void StrategyEditor::updateVisible(float dt) {
     {
         links.push_back(std::make_pair(start_attr, end_attr));
     }
+
+    if(!links.empty()){
+        for(auto& l: links){
+            auto leftNode = getNodeFromLinkId(l.first);
+            auto rightNode = getNodeFromLinkId(l.second);
+            if(leftNode && rightNode){
+                auto result = leftNode->getOutput(l.first);
+                rightNode->setInput(l.second,result);
+            }
+        }
+    }
 }
 
+BaseNode* StrategyEditor::getNodeFromLinkId(int id){
+    for(auto& n : _nodes){
+        if(auto node = n.lock()){
+            if(node->hasInput(id)){
+                return node.get();
+            }
+            if(node->hasOutput(id)){
+                return node.get();
+            }
+        }
+    }
+    return nullptr;
+}
 
 void StrategyEditor::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);

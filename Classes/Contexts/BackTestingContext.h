@@ -29,6 +29,8 @@ public:
 
     Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
     std::shared_ptr<BaseNode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
+    std::shared_ptr<BaseNode> createNode(IndicatorsView::Nodes type) override;
+
 
     void plotIndicators() override;
     void plotStrategy() override;
