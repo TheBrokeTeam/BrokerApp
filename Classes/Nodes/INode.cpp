@@ -7,6 +7,16 @@
 #include <imnodes.h>
 #include "../Editor.h"
 
+INode::INode() {
+    _id =  generateId();
+    ImVec2 mousePos = ImGui::GetMousePos();
+    ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
+    // TODO::understand why is that
+    //it was attempting: ImVec2(8,35)
+    pos = mousePos - winPos - ImVec2(8,35);
+}
+
+
 void INode::render() {
 
     ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
@@ -86,3 +96,4 @@ int INode::addOutput() {
 int INode::generateId() {
     return ++current_id;
 }
+

@@ -78,7 +78,7 @@ add_executable(BrokerApp
         Classes/Nodes/TestResultNode.cpp
         Classes/Nodes/TestResultNode.h
         Classes/Nodes/INode.h
-        Classes/Nodes/INode.cpp)
+        Classes/Nodes/INode.cpp Classes/Nodes/Node.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

@@ -14,15 +14,11 @@ public:
     inline static int current_id = 0;
     INode();
     virtual ~INode();
+
     virtual void onRender();
     void render();
     bool hasInput(int id);
     bool hasOutput(int id);
-
-    virtual void setInput(int id, void* value) = 0;
-    virtual void* getOutput(int id) = 0;
-    virtual void* getInput(int id) = 0;
-
 protected:
     void setName(const std::string& name);
     int generateId();

@@ -371,13 +371,13 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type
     switch (type) {
         case IndicatorsView::Nodes::ADD:
             {
-//                node = std::make_shared<TestAddNode>();
-//                _nodes.push_back(node);
+                node = std::make_shared<TestAddNode>();
+                _nodes.push_back(node);
             }
             break;
         case IndicatorsView::Nodes::RESULT:
             {
-//                node = std::make_shared<TestResultNode>();
+                node = std::make_shared<TestResultNode>();
                 _nodes.push_back(node);
             }
             break;

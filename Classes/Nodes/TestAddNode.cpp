@@ -15,7 +15,7 @@ TestAddNode::TestAddNode() {
 }
 
 void TestAddNode::onRender() {
-    BaseNode::onRender();
+    Node::onRender();
 
     //do the node's job
     _result = _input_1 + _input_2;
@@ -74,6 +74,10 @@ int TestAddNode::getInput(int id)
     if(id == _idInput_b){
         return _input_2;
     }
+}
+
+TestAddNode::~TestAddNode() {
+
 }
 
 

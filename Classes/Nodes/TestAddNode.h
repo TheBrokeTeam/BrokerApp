@@ -6,13 +6,14 @@
 #define BROKERAPP_TESTADDNODE_H
 
 
-#include "BaseNode.h"
+#include "Node.h"
 #include "../Widgets/IndicatorsView.h"
 
 
-class TestAddNode: public BaseNode {
+class TestAddNode: public Node<int,int> {
 public:
     TestAddNode();
+    ~TestAddNode();
     void onRender() override;
     int getResult() const;
 

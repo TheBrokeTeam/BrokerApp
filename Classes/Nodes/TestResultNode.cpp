@@ -13,7 +13,7 @@ TestResultNode::TestResultNode() {
 }
 
 void TestResultNode::onRender() {
-    BaseNode::onRender();
+    Node::onRender();
 
     ImNodes::BeginInputAttribute(_idInput);
     ImGui::Text("input");
@@ -42,5 +42,9 @@ void TestResultNode::onRender() {
 void TestResultNode::setInput(int id,int value) {
     if(id == _idInput)
         _input = value;
+}
+
+TestResultNode::~TestResultNode() {
+
 }
 
