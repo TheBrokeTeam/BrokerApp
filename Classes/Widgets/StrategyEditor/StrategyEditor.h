@@ -16,9 +16,8 @@ public:
     void onPushStyleVar() override;
 
     std::vector<TestNode> _nodes;
-
     std::vector<std::pair<int, int>> links;
-
+private:
 
 };
 
