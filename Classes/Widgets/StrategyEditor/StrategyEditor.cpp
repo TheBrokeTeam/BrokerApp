@@ -21,7 +21,6 @@ StrategyEditor::StrategyEditor(Context* context) : Widget(context) {
 void StrategyEditor::updateVisible(float dt) {
     Widget::updateVisible(dt);
 
-
     ImNodes::PushColorStyle(ImNodesCol_Link, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
     ImNodes::PushColorStyle(ImNodesCol_LinkHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
     ImNodes::PushColorStyle(ImNodesCol_LinkSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
@@ -32,7 +31,8 @@ void StrategyEditor::updateVisible(float dt) {
     ImNodes::BeginNodeEditor();
 
     for (auto &n : _nodes)
-            n->render();
+        if(auto node = n.lock())
+            node->render();
 
     for (int i = 0; i < links.size(); ++i) {
         const std::pair<int, int> p = links[i];
@@ -51,12 +51,12 @@ void StrategyEditor::updateVisible(float dt) {
             int i = *(int *) payload->Data;
 
             puts("AGORA é a hora de plotar!!!");
-            _nodes.push_back(std::make_shared<SMANode>());
+            std::weak_ptr<BaseNode> node = getContext()->createNode(IndicatorsView::CandleIndicatorsTypes(i));
+            if(node.lock())
+                _nodes.push_back(node);
         }
         ImGui::EndDragDropTarget();
     }
-
-
 
     ImNodes::PopColorStyle();
     ImNodes::PopColorStyle();

@@ -23,6 +23,7 @@
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
+#include "../Widgets/StrategyEditor/SMANode.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -51,13 +52,13 @@ void BackTestingContext::initialize() {
                 puts("indicator removed successfully");
         }
         _indicators.clear();
-        //create test strategy for tests
-        _ticker->removeTickable(_strategy.get());
-
-        _strategy.reset();
-        _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
-        _ticker->addStrategy(_strategy.get());
-        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
+//        //create test strategy for tests
+//        _ticker->removeTickable(_strategy.get());
+//
+//        _strategy.reset();
+//        _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
+//        _ticker->addStrategy(_strategy.get());
+//        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
     });
 
 }
@@ -73,12 +74,12 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     _ticker.reset();
     _ticker = std::make_shared<Ticker>(this,symbol);
 
-    //create test strategy for tests
-    _strategy.reset();
-    _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
-    _ticker->addStrategy(_strategy.get());
-
-    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
+//    //create test strategy for tests
+//    _strategy.reset();
+//    _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
+//    _ticker->addStrategy(_strategy.get());
+//
+//    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
 
    _data.clear();
     _data = loadCsv(symbol);
@@ -316,7 +317,7 @@ void BackTestingContext::plotIndicators() {
 }
 
 void BackTestingContext::plotStrategy() {
-    _strategy->render();
+//    _strategy->render();
 }
 
 //develop phase
@@ -325,6 +326,37 @@ void BackTestingContext::showTabBars(bool show) {
         w->showTabBar(show);
     }
     MainMenuBar::_show_tabbars = show;
+}
+
+std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::CandleIndicatorsTypes type) {
+
+    std::shared_ptr<BaseNode> node{nullptr};
+
+    switch (type) {
+        case IndicatorsView::CandleIndicatorsTypes::SMA:
+        {
+            node = std::make_shared<SMANode>();
+
+            //call temporary here to edit on node and see on chart
+            loadIndicator(type);
+
+            _nodes.push_back(node);
+        }
+            break;
+        case IndicatorsView::CandleIndicatorsTypes::BOLL:
+        case IndicatorsView::CandleIndicatorsTypes::EMA:
+        case IndicatorsView::CandleIndicatorsTypes::WMA:
+        case IndicatorsView::CandleIndicatorsTypes::AVL:
+        case IndicatorsView::CandleIndicatorsTypes::VWAP:
+        case IndicatorsView::CandleIndicatorsTypes::TRIX:
+        case IndicatorsView::CandleIndicatorsTypes::SAR :
+            _shouldShowLuizPopup = true;
+            break;
+        default:
+            break;
+    }
+
+    return node;
 }
 
 

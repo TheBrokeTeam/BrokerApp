@@ -14,6 +14,8 @@
 #include "../Editor.h"
 #include "../Widgets/IndicatorsView.h"
 #include "../Tickables/Strategies/Strategy.h"
+#include "../Widgets/StrategyEditor/BaseNode.h"
+
 
 class Context {
 public:
@@ -30,6 +32,8 @@ public:
     virtual void updateUI(float dt);
 
     virtual Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
+    virtual std::shared_ptr<BaseNode> createNode(IndicatorsView::CandleIndicatorsTypes type) = 0;
+
 
     virtual void plotIndicators() = 0;
     virtual void plotStrategy() = 0;
@@ -87,6 +91,7 @@ protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
     std::vector<std::shared_ptr<Strategy>> _strategies;
+    std::vector<std::shared_ptr<BaseNode>> _nodes;
 
 
     Editor *_editor{nullptr};

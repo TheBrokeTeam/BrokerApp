@@ -28,6 +28,8 @@ public:
     bool isSimulating() override;
 
     Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
+    std::shared_ptr<BaseNode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
+
     void plotIndicators() override;
     void plotStrategy() override;
 
@@ -46,7 +48,7 @@ private:
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
-    std::shared_ptr<Strategy> _strategy{nullptr};
+//    std::shared_ptr<Strategy> _strategy{nullptr};
 
     std::vector<TickData> _data;
 

@@ -6,6 +6,8 @@
 #define BROKERAPP_SMANODE_H
 
 #include "BaseNode.h"
+#include "../IndicatorsView.h"
+
 
 class SMANode: public BaseNode {
 public:
@@ -14,6 +16,9 @@ public:
 
     int _idInput;
     int _idOutput;
+    int _averageSize;
+
+    IndicatorsView::CandleIndicatorsTypes _type = IndicatorsView::CandleIndicatorsTypes::SMA;
 };
 
 

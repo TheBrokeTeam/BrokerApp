@@ -15,7 +15,7 @@ public:
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
-    std::vector<std::shared_ptr<BaseNode>> _nodes;
+    std::vector<std::weak_ptr<BaseNode>> _nodes;
     std::vector<std::pair<int, int>> links;
 private:
 

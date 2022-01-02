@@ -16,8 +16,8 @@ SMANode::SMANode() {
 void SMANode::onRender() {
     BaseNode::onRender();
 
-    ImNodes::BeginInputAttribute(_idInput);
-    ImGui::Text("input");
+    ImNodes::BeginInputAttribute(_idInput,ImNodesPinShape_Circle);
+    ImGui::SliderInt("Average size", &_averageSize, 1, 200);
     ImNodes::EndInputAttribute();
 
     ImGui::SameLine();
