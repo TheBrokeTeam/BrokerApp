@@ -7,7 +7,7 @@
 
 #include "../Widget.h"
 #include "../../Tickables/Strategies/Strategy.h"
-#include "TestNode.h"
+#include "BaseNode.h"
 
 class StrategyEditor : public Widget {
 public:
@@ -15,7 +15,7 @@ public:
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
-    std::vector<TestNode> _nodes;
+    std::vector<std::shared_ptr<BaseNode>> _nodes;
     std::vector<std::pair<int, int>> links;
 private:
 

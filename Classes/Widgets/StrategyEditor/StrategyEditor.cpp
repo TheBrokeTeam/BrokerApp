@@ -4,6 +4,7 @@
 
 #include "StrategyEditor.h"
 #include "../../Editor.h"
+#include "SMANode.h"
 #include <imnodes.h>
 
 // User callback
@@ -31,7 +32,7 @@ void StrategyEditor::updateVisible(float dt) {
     ImNodes::BeginNodeEditor();
 
     for (auto &n : _nodes)
-            n.render();
+            n->render();
 
     for (int i = 0; i < links.size(); ++i) {
         const std::pair<int, int> p = links[i];
@@ -50,7 +51,7 @@ void StrategyEditor::updateVisible(float dt) {
             int i = *(int *) payload->Data;
 
             puts("AGORA é a hora de plotar!!!");
-            _nodes.push_back(TestNode());
+            _nodes.push_back(std::make_shared<SMANode>());
         }
         ImGui::EndDragDropTarget();
     }
