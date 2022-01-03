@@ -18,7 +18,7 @@ struct ImGuiWindow;
 class Editor;
 //==================================================
 
-const float k_widget_default_propery        = -1.0f;
+const float k_widget_default_propery        = -1.0f; //todo: fix typo
 const float k_widget_position_screen_center = -2.0f;
 
 class Widget : public Contextualizable

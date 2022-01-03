@@ -8,6 +8,7 @@
 #include <imgui_internal.h>
 #include "Widgets/MainMenuBar.h"
 #include "Widgets/DataLoader.h"
+#include "Widgets/StockList.h"
 #include "Widgets/SimulationController.h"
 
 #include "Widgets/Chart.h"
@@ -31,6 +32,7 @@ void Editor::start() {
     _widgets.emplace_back(std::make_shared<DataLoader>(this));
     _widgets.emplace_back(std::make_shared<SimulationController>(this));
     _widgets.emplace_back(std::make_shared<Chart>(this));
+    _widgets.emplace_back(std::make_shared<StockList>(this));
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -43,7 +45,7 @@ void Editor::start() {
     style.Colors[ImGuiCol_SeparatorActive] = Editor::broker_yellow;
 
     //TODO:: make a way to change the layout configuration at run time
-    ImGui::LoadIniSettingsFromDisk("ui_num_1");
+    ImGui::LoadIniSettingsFromDisk("ui_num_1"); //LV: ?
 }
 
 void Editor::update() {
@@ -87,6 +89,14 @@ void Editor::showDataLoader(bool show) {
         donwloader->SetVisible(show);
 
     MainMenuBar::_show_downloader = show;
+}
+
+void Editor::showStockList(bool show) {
+    auto donwloader = getWidget<StockList>();
+    if(donwloader)
+        donwloader->SetVisible(show);
+
+    MainMenuBar::_show_stocklist = show;
 }
 
 void Editor::showCharts(bool show) {
@@ -149,6 +159,6 @@ void Editor::showSimulationController(bool show) {
 }
 
 int main(int argc, char const* argv[]){
-    Editor app("",1400,750,argc,argv);
+    Editor app("AIBroker",1400,750,argc,argv);
     app.run();
 }

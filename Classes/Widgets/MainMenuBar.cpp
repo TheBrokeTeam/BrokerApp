@@ -39,6 +39,7 @@ void MainMenuBar::updateAlways(float dt)
             if (ImGui::MenuItem("Simulator", "CTRL+S",&_show_simulator)){}
             if (ImGui::MenuItem("Chart", "CTRL+G",&_show_charts)){}
             if (ImGui::MenuItem("Indicators", "",&_show_indicators)){}
+            if (ImGui::MenuItem("Stock List", "",&_show_stocklist)){}
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);
             ImGui::MenuItem("ImGui Style",   nullptr, &_imgui_style);
@@ -78,6 +79,7 @@ void MainMenuBar::updateAlways(float dt)
     _editor->showCharts(_show_charts);
     _editor->showIndicators(_show_indicators);
     _editor->showTabBars(_show_tabbars);
+    _editor->showStockList(_show_stocklist);
 
     if (_imgui_metrics)
     {

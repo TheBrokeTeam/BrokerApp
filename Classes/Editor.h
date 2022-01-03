@@ -14,7 +14,7 @@
 class Ticker;
 class Editor : public App {
 public:
-
+//cores
     inline static const ImVec4 broker_yellow = ImVec4(255.0f/255, 191.0f/255,64.0f/255, 1.00f);
     inline static const ImVec4 broker_yellow_active = ImVec4(153.0f/255, 102.0f/255,0.0f/255, 1.00f);
     inline static const ImVec4 broker_yellow_hover = ImVec4(255.0f/255, 238.0f/255,204.0f/255, 1.00f);
@@ -70,6 +70,7 @@ public:
     void showSimulationController(bool show);
 
     void showCharts(bool show);
+    void showStockList(bool show);
     void showIndicators(bool show);
     void showTabBars(bool show);
 
