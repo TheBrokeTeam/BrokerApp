@@ -21,6 +21,9 @@ public:
     void render(float dt);
     bool hasInput(int id);
     bool hasOutput(int id);
+    int getId() const{
+        return _id;
+    }
 
     double getValueFromId(int id)
     {

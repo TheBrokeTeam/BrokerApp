@@ -14,6 +14,9 @@ public:
     explicit StrategyEditor(Context* context);
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
+    void addNode(std::shared_ptr<INode> node);
+    void removeNode(std::shared_ptr<INode> newNode);
+    void clear();
 
     std::vector<std::weak_ptr<INode>> _nodes;
     std::vector<std::pair<int, int>> links;

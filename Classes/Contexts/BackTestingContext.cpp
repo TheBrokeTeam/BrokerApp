@@ -56,6 +56,10 @@ void BackTestingContext::initialize() {
                 puts("indicator removed successfully");
         }
         _indicators.clear();
+
+        getWidget<StrategyEditor>()->clear();
+        _nodes.clear();
+
 //        //create test strategy for tests
 //        _ticker->removeTickable(_strategy.get());
 //
@@ -263,6 +267,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             _indicators.push_back(std::move(sma));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
+
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL:
@@ -349,6 +354,8 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::CandleIndi
 //            loadIndicator(type);
 
 //            _nodes.push_back(node);
+            auto node = createNode(IndicatorsView::Nodes::SMA);
+            getWidget<StrategyEditor>()->addNode(node);
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL:

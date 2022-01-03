@@ -98,3 +98,24 @@ INode* StrategyEditor::getNodeFromLinkId(int id){
 void StrategyEditor::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
+
+void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
+    std::weak_ptr<INode> node = newNode;
+    if(node.lock())
+        _nodes.push_back(node);
+}
+
+void StrategyEditor::removeNode(std::shared_ptr<INode> node) {
+    auto it = _nodes.begin();
+    for(int i = 0; i < _nodes.size(); i++) {
+        if(it->lock()->getId() == node->getId()) {
+            _nodes.erase(it);
+            break;
+        }
+    }
+}
+
+void StrategyEditor::clear() {
+    _nodes.clear();
+    links.clear();
+}
