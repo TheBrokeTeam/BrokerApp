@@ -78,7 +78,9 @@ add_executable(BrokerApp
         Classes/Nodes/TestMultiplyNode.h
         Classes/Nodes/TestMultiplyNode.cpp
         Classes/Nodes/INode.h
-        Classes/Nodes/INode.cpp)
+        Classes/Nodes/INode.cpp
+        Classes/Nodes/CrossNode.cpp
+        Classes/Nodes/CrossNode.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

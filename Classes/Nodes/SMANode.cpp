@@ -3,10 +3,11 @@
 //
 
 #include "SMANode.h"
+#include "../Tickables/Indicators/SMA.h"
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
-#include "../Tickables/Indicators/SMA.h"
+
 
 SMANode::SMANode(std::shared_ptr<Indicator> sma):_indicator(std::move(sma)){
     setName("SMA Indicator");

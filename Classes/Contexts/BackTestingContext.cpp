@@ -27,7 +27,7 @@
 #include "../Nodes/TestAddNode.h"
 #include "../Nodes/TestMultiplyNode.h"
 #include "../Nodes/TestResultNode.h"
-#include "../Nodes/SMANode.h"
+#include "../Nodes/CrossNode.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -395,6 +395,12 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type
         {
             auto smaInd = loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA);
             node = std::make_shared<SMANode>(smaInd);
+            _nodes.push_back(node);
+        }
+            break;
+        case IndicatorsView::Nodes::CROSS:
+        {
+            node = std::make_shared<CrossNode>();
             _nodes.push_back(node);
         }
             break;

@@ -7,6 +7,7 @@
 #include <imnodes.h>
 #include "../Editor.h"
 
+
 TestAddNode::TestAddNode() {
     setName("Add");
     _idInput_a =  addInput();

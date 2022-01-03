@@ -18,6 +18,8 @@ public:
 //    void setInput(int id,int value) override;
     int _idInput;
     double _input{0};
+    int _count= 0;
+
 };
 
 #endif //BROKERAPP_TESTRESULTNODE_H

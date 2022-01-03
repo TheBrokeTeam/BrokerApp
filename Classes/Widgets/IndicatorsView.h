@@ -34,6 +34,7 @@ public:
         ADD,
         MULTIPLY,
         SMA,
+        CROSS,
         RESULT
     };
 

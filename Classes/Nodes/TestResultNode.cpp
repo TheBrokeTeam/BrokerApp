@@ -7,6 +7,7 @@
 #include <imnodes.h>
 #include "../Editor.h"
 
+
 TestResultNode::TestResultNode() {
     setName("Result");
     _idInput =  addInput();
@@ -16,11 +17,14 @@ void TestResultNode::onRender(float dt) {
     //do the node's job
     _input = getValueFromId(_idInput);
 
+    if(_input > 0)
+        std::cout << "Cross count: " << ++_count<< std::endl;
+
     ImNodes::BeginInputAttribute(_idInput);
     ImGui::Text("input");
     ImGui::SameLine();
-    ImGui::SetNextItemWidth(60);
-    ImGui::InputDouble("##value",&_input,0,0,"%.3f",ImGuiInputTextFlags_ReadOnly);
+    ImGui::SetNextItemWidth(100);
+    ImGui::InputInt("##value",&_count);
     ImNodes::EndInputAttribute();
 }
 

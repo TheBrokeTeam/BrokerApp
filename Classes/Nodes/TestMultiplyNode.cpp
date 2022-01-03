@@ -5,6 +5,8 @@
 #include "TestMultiplyNode.h"
 #include <imgui.h>
 #include <imnodes.h>
+#include "../Editor.h"
+
 
 TestMultiplyNode::TestMultiplyNode() {
     setName("Multiply");
