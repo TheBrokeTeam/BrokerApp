@@ -12,9 +12,7 @@ TestResultNode::TestResultNode() {
     _idInput =  addInput();
 }
 
-void TestResultNode::onRender() {
-    INode::onRender();
-
+void TestResultNode::onRender(float dt) {
     //do the node's job
     _input = getValueFromId(_idInput);
 
@@ -26,7 +24,5 @@ void TestResultNode::onRender() {
     ImNodes::EndInputAttribute();
 }
 
-TestResultNode::~TestResultNode() {
-
-}
+TestResultNode::~TestResultNode() {}
 

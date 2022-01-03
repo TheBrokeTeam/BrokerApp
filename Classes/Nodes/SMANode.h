@@ -7,16 +7,16 @@
 
 #include "../Widgets/IndicatorsView.h"
 #include "../Nodes/INode.h"
+#include "../Tickables/Indicators/Indicator.h"
 
 class SMANode: public INode {
 public:
-    SMANode();
-    void onRender() override;
+    SMANode(std::shared_ptr<Indicator> sma);
+    void onRender(float dt) override;
 
-    int _idInput;
     int _idOutput;
-    int _averageSize;
-
+private:
+    std::weak_ptr<Indicator> _indicator;
     IndicatorsView::CandleIndicatorsTypes _type = IndicatorsView::CandleIndicatorsTypes::SMA;
 };
 

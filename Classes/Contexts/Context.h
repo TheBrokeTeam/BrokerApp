@@ -30,7 +30,7 @@ public:
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 
-    virtual Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
+    virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) = 0;
 

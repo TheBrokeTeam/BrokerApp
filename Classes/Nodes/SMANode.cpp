@@ -6,24 +6,25 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "../Tickables/Indicators/SMA.h"
 
-SMANode::SMANode() {
+SMANode::SMANode(std::shared_ptr<Indicator> sma):_indicator(std::move(sma)){
     setName("SMA Indicator");
-    _idInput = addInput();
     _idOutput = addOutput();
 }
 
-void SMANode::onRender() {
-    INode::onRender();
+void SMANode::onRender(float dt) {
 
-    ImNodes::BeginInputAttribute(_idInput,ImNodesPinShape_Circle);
-    ImGui::SliderInt("Average size", &_averageSize, 1, 200);
-    ImNodes::EndInputAttribute();
+    if(auto indicator = _indicator.lock()) {
+        auto sma = dynamic_cast<SMA*>(indicator.get());
+        //set node's values from indicator
+        if(sma->size() > 0)
+            setValueForId(_idOutput, (*sma)[0]);
 
-    ImGui::SameLine();
-    ImNodes::BeginOutputAttribute(_idOutput);
+        ImNodes::BeginOutputAttribute(_idOutput);
 
-    ImGui::Indent(40);
-    ImGui::Text("output");
-    ImNodes::EndOutputAttribute();
+        ImGui::Indent(40);
+        ImGui::Text("output");
+        ImNodes::EndOutputAttribute();
+    }
 }

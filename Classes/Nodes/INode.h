@@ -17,8 +17,8 @@ public:
     INode();
     virtual ~INode();
 
-    virtual void onRender();
-    void render();
+    virtual void onRender(float dt) = 0;
+    void render(float dt);
     bool hasInput(int id);
     bool hasOutput(int id);
 

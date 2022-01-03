@@ -8,7 +8,7 @@
 IndicatorToChartExample::IndicatorToChartExample(Ticker *ticker) : Strategy(ticker) {
     setName("Strategy: Indicator to chart");
 
-    _bollinger = dynamic_cast<Bollinger*>(ticker->getContext()->loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL));
+    _bollinger = dynamic_cast<Bollinger*>(ticker->getContext()->loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL).get());
 
     if(_bollinger == nullptr)
         puts("ERROR creating bollinger indicator");

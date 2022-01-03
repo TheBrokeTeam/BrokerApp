@@ -13,14 +13,12 @@ TestMultiplyNode::TestMultiplyNode() {
     _idOutput = addOutput();
 }
 
-void TestMultiplyNode::onRender() {
-    INode::onRender();
-
+void TestMultiplyNode::onRender(float dt) {
     //do the node's job
-    _input_1 = getValueFromId(_idInput_a);
-    _input_2 = getValueFromId(_idInput_b);
+    int input1 = getValueFromId(_idInput_a);
+    int input2 = getValueFromId(_idInput_b);
 
-    _result = _input_1 * _input_2;
+    _result = input1 * input2;
 
     setValueForId(_idOutput,_result);
 
@@ -29,14 +27,14 @@ void TestMultiplyNode::onRender() {
     ImGui::Text("input 1");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100);
-    ImGui::InputInt("##value",&_input_1);
+    ImGui::InputInt("##value",&input1);
     ImNodes::EndInputAttribute();
 
     ImNodes::BeginInputAttribute(_idInput_b);
     ImGui::Text("input 2");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100);
-    ImGui::InputInt("##value",&_input_2);
+    ImGui::InputInt("##value",&input2);
     ImNodes::EndInputAttribute();
 
     ImNodes::BeginOutputAttribute(_idOutput);
@@ -46,8 +44,8 @@ void TestMultiplyNode::onRender() {
     ImNodes::EndOutputAttribute();
 
     //do the node's job
-    setValueForId(_idInput_a,_input_1);
-    setValueForId(_idInput_b,_input_2);
+    setValueForId(_idInput_a,input1);
+    setValueForId(_idInput_b,input2);
 }
 
 TestMultiplyNode::~TestMultiplyNode() {

@@ -27,6 +27,8 @@
 #include "../Nodes/TestAddNode.h"
 #include "../Nodes/TestMultiplyNode.h"
 #include "../Nodes/TestResultNode.h"
+#include "../Nodes/SMANode.h"
+
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -250,16 +252,16 @@ void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
 
-Indicator* BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type) {
+std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type) {
 
-    Indicator* indicator{nullptr};
+    std::shared_ptr<Indicator> indicator{nullptr};
 
     switch (type) {
         case IndicatorsView::CandleIndicatorsTypes::SMA:
         {
             std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
-            indicator = _indicators.back().get();
+            indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
         }
             break;
@@ -267,7 +269,7 @@ Indicator* BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTyp
         {
             std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
-            indicator = _indicators.back().get();
+            indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
         }
             break;
@@ -337,7 +339,7 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::CandleIndi
     switch (type) {
         case IndicatorsView::CandleIndicatorsTypes::SMA:
         {
-            node = std::make_shared<SMANode>();
+//            node = std::make_shared<SMANode>();
 
             /*TODO:: define behavior: there are 2 options
              1) let the strategy and chart independents
@@ -379,6 +381,13 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type
         case IndicatorsView::Nodes::MULTIPLY:
         {
             node = std::make_shared<TestMultiplyNode>();
+            _nodes.push_back(node);
+        }
+            break;
+        case IndicatorsView::Nodes::SMA:
+        {
+            auto smaInd = loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA);
+            node = std::make_shared<SMANode>(smaInd);
             _nodes.push_back(node);
         }
             break;

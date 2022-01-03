@@ -14,7 +14,7 @@ class TestResultNode: public INode{
 public:
     TestResultNode();
     ~TestResultNode();
-    void onRender() override;
+    void onRender(float dt) override;
 //    void setInput(int id,int value) override;
     int _idInput;
     double _input{0};

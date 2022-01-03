@@ -14,9 +14,7 @@ TestAddNode::TestAddNode() {
     _idOutput = addOutput();
 }
 
-void TestAddNode::onRender() {
-    INode::onRender();
-
+void TestAddNode::onRender(float dt) {
     //do the node's job
     _input_1 = getValueFromId(_idInput_a);
     _input_2 = getValueFromId(_idInput_b);

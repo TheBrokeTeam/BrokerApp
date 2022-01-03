@@ -27,7 +27,7 @@ public:
     void setSimulationSpeed(float speed) override;
     bool isSimulating() override;
 
-    Indicator* loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
+    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
     std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
     std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) override;
 

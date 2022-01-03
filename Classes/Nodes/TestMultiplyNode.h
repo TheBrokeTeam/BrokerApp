@@ -11,15 +11,13 @@ class TestMultiplyNode : public INode {
 public:
     TestMultiplyNode();
     ~TestMultiplyNode();
-    void onRender() override;
+    void onRender(float dt) override;
 
     int _idInput_a;
     int _idInput_b;
     int _idOutput;
 
     int _result = 0;
-    int _input_1 = 0;
-    int _input_2 = 0;
 
 };
 

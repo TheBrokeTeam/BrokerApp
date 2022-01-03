@@ -14,7 +14,7 @@ class TestAddNode: public INode {
 public:
     TestAddNode();
     ~TestAddNode();
-    void onRender() override;
+    void onRender(float dt) override;
 
     int _idInput_a;
     int _idInput_b;
