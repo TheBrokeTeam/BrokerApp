@@ -6,16 +6,16 @@
 #define BROKERAPP_TESTRESULTNODE_H
 
 
-#include "Node.h"
+#include "INode.h"
 #include "../Widgets/IndicatorsView.h"
 
 
-class TestResultNode: public Node<int> {
+class TestResultNode: public INode{
 public:
     TestResultNode();
     ~TestResultNode();
     void onRender() override;
-    void setInput(int id,int value) override;
+//    void setInput(int id,int value) override;
     int _idInput;
     int _input{0};
 };

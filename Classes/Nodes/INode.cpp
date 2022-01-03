@@ -83,15 +83,18 @@ bool INode::hasInput(int id) {
     return false;
 }
 
-int INode::addInput() {
+int INode::addInput(const Type& type) {
     _inputIds.push_back(++current_id);
+    _map.emplace(_inputIds.back(),TypeValue{type,node_values(0)});
     return _inputIds.back();
 }
 
-int INode::addOutput() {
+int INode::addOutput(const Type& type) {
     _outputIds.push_back(++current_id);
+    _map.emplace(_outputIds.back(),TypeValue{type,node_values(0)});
     return _outputIds.back();
 }
+
 
 int INode::generateId() {
     return ++current_id;

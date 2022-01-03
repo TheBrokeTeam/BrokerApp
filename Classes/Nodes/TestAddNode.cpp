@@ -9,30 +9,35 @@
 
 TestAddNode::TestAddNode() {
     setName("Add");
-    _idInput_a =  addInput();
-    _idInput_b =  addInput();
-    _idOutput = addOutput();
+    _idInput_a =  addInput(Type::Float);
+    _idInput_b =  addInput(Type::Float);
+    _idOutput = addOutput(Type::Float);
 }
 
 void TestAddNode::onRender() {
-    Node::onRender();
+    INode::onRender();
 
     //do the node's job
+    _input_1 = 10;//getValueFromId<int>(_idInput_a);
+    _input_2 = 15;// getValueFromId<int>(_idInput_b);
+
     _result = _input_1 + _input_2;
+
+    setValueForId<int>(_idOutput,_result);
 
     //render node
     ImNodes::BeginInputAttribute(_idInput_a);
     ImGui::Text("input 1");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100);
-    ImGui::InputInt("##value",&_input_1);
+    ImGui::InputFloat("##value",&_input_1);
     ImNodes::EndInputAttribute();
 
     ImNodes::BeginInputAttribute(_idInput_b);
     ImGui::Text("input 2");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100);
-    ImGui::InputInt("##value",&_input_2);
+    ImGui::InputFloat("##value",&_input_2);
     ImNodes::EndInputAttribute();
 
     ImNodes::BeginOutputAttribute(_idOutput);
@@ -46,35 +51,35 @@ int TestAddNode::getResult() const{
     return _result;
 }
 
-void TestAddNode::setInput(int id, int value) {
-    if(id == _idInput_a){
-        _input_1 = value;
-        return;
-    }
+//void TestAddNode::setInput(int id, int value) {
+//    if(id == _idInput_a){
+//        _input_1 = value;
+//        return;
+//    }
+//
+//    if(id == _idInput_b){
+//        _input_2 = value;
+//        return;
+//    }
+//}
 
-    if(id == _idInput_b){
-        _input_2 = value;
-        return;
-    }
-}
+//int TestAddNode::getOutput(int id) {
+//    if(id == _idOutput){
+//        return _result;
+//    }
+//    return 0;
+//}
 
-int TestAddNode::getOutput(int id) {
-    if(id == _idOutput){
-        return _result;
-    }
-    return 0;
-}
-
-int TestAddNode::getInput(int id)
-{
-    if(id == _idInput_a){
-        return _input_1;
-    }
-
-    if(id == _idInput_b){
-        return _input_2;
-    }
-}
+//int TestAddNode::getInput(int id)
+//{
+//    if(id == _idInput_a){
+//        return _input_1;
+//    }
+//
+//    if(id == _idInput_b){
+//        return _input_2;
+//    }
+//}
 
 TestAddNode::~TestAddNode() {
 

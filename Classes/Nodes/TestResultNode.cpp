@@ -9,11 +9,14 @@
 
 TestResultNode::TestResultNode() {
     setName("Result");
-    _idInput =  addInput();
+    _idInput =  addInput(Type::Int);
 }
 
 void TestResultNode::onRender() {
-    Node::onRender();
+   INode::onRender();
+
+    //do the node's job
+    _input = getValueFromId<int>(_idInput);
 
     ImNodes::BeginInputAttribute(_idInput);
     ImGui::Text("input");
@@ -39,10 +42,10 @@ void TestResultNode::onRender() {
     ImNodes::EndInputAttribute();
 }
 
-void TestResultNode::setInput(int id,int value) {
-    if(id == _idInput)
-        _input = value;
-}
+//void TestResultNode::setInput(int id,int value) {
+//    if(id == _idInput)
+//        _input = value;
+//}
 
 TestResultNode::~TestResultNode() {
 
