@@ -32,6 +32,7 @@ public:
 
     enum class Nodes{
         ADD,
+        MULTIPLY,
         RESULT
     };
 

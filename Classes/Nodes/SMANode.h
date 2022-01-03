@@ -5,11 +5,10 @@
 #ifndef BROKERAPP_SMANODE_H
 #define BROKERAPP_SMANODE_H
 
-#include "BaseNode.h"
 #include "../Widgets/IndicatorsView.h"
+#include "../Nodes/INode.h"
 
-
-class SMANode: public BaseNode {
+class SMANode: public INode {
 public:
     SMANode();
     void onRender() override;

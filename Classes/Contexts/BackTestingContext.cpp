@@ -25,6 +25,7 @@
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/TestAddNode.h"
+#include "../Nodes/TestMultiplyNode.h"
 #include "../Nodes/TestResultNode.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -329,9 +330,9 @@ void BackTestingContext::showTabBars(bool show) {
     MainMenuBar::_show_tabbars = show;
 }
 
-std::shared_ptr<BaseNode> BackTestingContext::createNode(IndicatorsView::CandleIndicatorsTypes type) {
+std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::CandleIndicatorsTypes type) {
 
-    std::shared_ptr<BaseNode> node{nullptr};
+    std::shared_ptr<INode> node{nullptr};
 
     switch (type) {
         case IndicatorsView::CandleIndicatorsTypes::SMA:
@@ -374,6 +375,12 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type
                 node = std::make_shared<TestAddNode>();
                 _nodes.push_back(node);
             }
+            break;
+        case IndicatorsView::Nodes::MULTIPLY:
+        {
+            node = std::make_shared<TestMultiplyNode>();
+            _nodes.push_back(node);
+        }
             break;
         case IndicatorsView::Nodes::RESULT:
             {

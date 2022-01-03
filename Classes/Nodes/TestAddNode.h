@@ -15,11 +15,6 @@ public:
     TestAddNode();
     ~TestAddNode();
     void onRender() override;
-    int getResult() const;
-
-//    void setInput(int id, int value) override;
-//    int getOutput(int id) override;
-//    int getInput(int id) override;
 
     int _idInput_a;
     int _idInput_b;

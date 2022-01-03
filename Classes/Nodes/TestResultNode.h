@@ -17,7 +17,7 @@ public:
     void onRender() override;
 //    void setInput(int id,int value) override;
     int _idInput;
-    int _input{0};
+    double _input{0};
 };
 
 #endif //BROKERAPP_TESTRESULTNODE_H

@@ -4,7 +4,6 @@
 
 #include "StrategyEditor.h"
 #include "../../Editor.h"
-#include "../../Nodes/Node.h"
 #include <imnodes.h>
 
 // User callback
@@ -75,11 +74,8 @@ void StrategyEditor::updateVisible(float dt) {
             auto leftNode = getNodeFromLinkId(l.first);
             auto rightNode = getNodeFromLinkId(l.second);
             if(leftNode && rightNode){
-//                auto result = dynamic_cast<Node<>*>(leftNode)->getOutput(l.first);
-//                dynamic_cast<Node<>*>(rightNode)->setInput(l.second,result);
-                auto result = leftNode->getValueFromId<int>(l.first);
-                rightNode->setValueForId<int>(l.second,result);
-
+                auto result = leftNode->getValueFromId(l.first);
+                rightNode->setValueForId(l.second,result);
             }
         }
     }

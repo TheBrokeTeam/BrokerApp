@@ -2,26 +2,25 @@
 // Created by Arthur Abel Motelevicz on 02/01/22.
 //
 
-#include "TestAddNode.h"
+#include "TestMultiplyNode.h"
 #include <imgui.h>
 #include <imnodes.h>
-#include "../Editor.h"
 
-TestAddNode::TestAddNode() {
-    setName("Add");
+TestMultiplyNode::TestMultiplyNode() {
+    setName("Multiply");
     _idInput_a =  addInput();
     _idInput_b =  addInput();
     _idOutput = addOutput();
 }
 
-void TestAddNode::onRender() {
+void TestMultiplyNode::onRender() {
     INode::onRender();
 
     //do the node's job
     _input_1 = getValueFromId(_idInput_a);
     _input_2 = getValueFromId(_idInput_b);
 
-    _result = _input_1 + _input_2;
+    _result = _input_1 * _input_2;
 
     setValueForId(_idOutput,_result);
 
@@ -30,14 +29,14 @@ void TestAddNode::onRender() {
     ImGui::Text("input 1");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100);
-    ImGui::InputFloat("##value",&_input_1);
+    ImGui::InputInt("##value",&_input_1);
     ImNodes::EndInputAttribute();
 
     ImNodes::BeginInputAttribute(_idInput_b);
     ImGui::Text("input 2");
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100);
-    ImGui::InputFloat("##value",&_input_2);
+    ImGui::InputInt("##value",&_input_2);
     ImNodes::EndInputAttribute();
 
     ImNodes::BeginOutputAttribute(_idOutput);
@@ -51,10 +50,6 @@ void TestAddNode::onRender() {
     setValueForId(_idInput_b,_input_2);
 }
 
-
-TestAddNode::~TestAddNode() {
+TestMultiplyNode::~TestMultiplyNode() {
 
 }
-
-
-
