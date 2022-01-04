@@ -36,6 +36,7 @@ public:
 
     virtual void plotIndicators() = 0;
     virtual void plotStrategy() = 0;
+    virtual void plotNodes(float dt) = 0;
 
 
     template<typename T>

@@ -29,9 +29,11 @@ void StrategyEditor::updateVisible(float dt) {
 
     ImNodes::BeginNodeEditor();
 
-    for (auto &n : _nodes)
-        if(auto node = n.lock())
-            node->render(dt);
+//    for (auto &n : _nodes)
+//        if(auto node = n.lock())
+//            node->render(dt);
+
+    getContext()->plotNodes(dt);
 
     for (int i = 0; i < links.size(); ++i) {
         const std::pair<int, int> p = links[i];

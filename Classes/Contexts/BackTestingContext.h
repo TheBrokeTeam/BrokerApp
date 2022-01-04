@@ -34,7 +34,7 @@ public:
 
     void plotIndicators() override;
     void plotStrategy() override;
-
+    void plotNodes(float dt) override;
 
     void showTabBars(bool show) override;
 

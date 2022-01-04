@@ -49,6 +49,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
 
+    getWidget<ProfitAndLossesView>()->SetVisible(false);
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         for(auto& i : _indicators){
@@ -326,8 +327,14 @@ void BackTestingContext::plotIndicators() {
 }
 
 void BackTestingContext::plotStrategy() {
-//    _strategy->render();
+    _strategy->render();
 }
+
+void BackTestingContext::plotNodes(float dt){
+    for (auto &n : _nodes)
+        n->render(dt);
+}
+
 
 //develop phase
 void BackTestingContext::showTabBars(bool show) {
