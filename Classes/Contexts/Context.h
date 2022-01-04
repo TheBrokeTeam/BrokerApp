@@ -15,6 +15,8 @@
 #include "../Widgets/IndicatorsView.h"
 #include "../Tickables/Strategies/Strategy.h"
 #include "../Nodes/INode.h"
+#include "../Nodes/GraphNode.h"
+#include "../Helpers/graph.h"
 
 class Context {
 public:
@@ -33,6 +35,8 @@ public:
     virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) = 0;
+    virtual std::shared_ptr<UiNode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, NodeType type) = 0;
+
 
     virtual void plotIndicators() = 0;
     virtual void plotStrategy() = 0;

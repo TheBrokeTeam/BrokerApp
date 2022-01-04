@@ -29,6 +29,8 @@
 #include "../Nodes/TestResultNode.h"
 #include "../Nodes/CrossNode.h"
 
+#include "../Nodes/Add.h"
+
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -327,7 +329,7 @@ void BackTestingContext::plotIndicators() {
 }
 
 void BackTestingContext::plotStrategy() {
-    _strategy->render();
+//    _strategy->render();
 }
 
 void BackTestingContext::plotNodes(float dt){
@@ -423,6 +425,23 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type
 
     return node;
 }
+
+std::shared_ptr<UiNode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, NodeType type)
+{
+    std::shared_ptr<UiNode> node{nullptr};
+    switch (type) {
+        case NodeType::ADD:
+            node = std::make_shared<Add>(_graph);
+        break;
+        case NodeType::RESULT:
+        case NodeType::VALUE:
+        default:
+            break;
+    }
+
+    return node;
+}
+
 
 
 

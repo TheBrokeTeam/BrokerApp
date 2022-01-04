@@ -8,6 +8,8 @@
 #include "../Widget.h"
 #include "../../Tickables/Strategies/Strategy.h"
 #include "../../Nodes/INode.h"
+#include "../../Nodes/GraphNode.h"
+#include "../../Helpers/graph.h"
 
 class StrategyEditor : public Widget {
 public:
@@ -20,6 +22,9 @@ public:
 
     std::vector<std::weak_ptr<INode>> _nodes;
     std::vector<std::pair<int, int>> links;
+
+    std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
+    std::vector<std::weak_ptr<UiNode>> _uiNodes;
 
 private:
     INode* getNodeFromLinkId(int id);

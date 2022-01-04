@@ -15,6 +15,7 @@ void mini_map_node_hovering_callback(int node_id, void* user_data)
 StrategyEditor::StrategyEditor(Context* context) : Widget(context) {
     _title                  = "Strategy editor";
     _is_window              = true;
+    _graph = std::make_shared<graph::Graph<GraphNode>>();
 }
 
 void StrategyEditor::updateVisible(float dt) {
@@ -29,11 +30,11 @@ void StrategyEditor::updateVisible(float dt) {
 
     ImNodes::BeginNodeEditor();
 
-//    for (auto &n : _nodes)
-//        if(auto node = n.lock())
-//            node->render(dt);
+    for (auto &n : _uiNodes)
+        if(auto node = n.lock())
+            node->render(dt);
 
-    getContext()->plotNodes(dt);
+//    getContext()->plotNodes(dt);
 
     for (int i = 0; i < links.size(); ++i) {
         const std::pair<int, int> p = links[i];
@@ -52,9 +53,9 @@ void StrategyEditor::updateVisible(float dt) {
             int i = *(int *) payload->Data;
 
             puts("AGORA é a hora de plotar!!!");
-            std::weak_ptr<INode> node = getContext()->createNode(IndicatorsView::Nodes(i));
+            std::weak_ptr<UiNode> node = getContext()->createNode(_graph,NodeType(i));
             if(node.lock())
-                _nodes.push_back(node);
+                _uiNodes.push_back(node);
         }
         ImGui::EndDragDropTarget();
     }
