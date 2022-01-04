@@ -24,7 +24,7 @@ public:
     std::vector<std::pair<int, int>> links;
 
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
-    std::vector<std::weak_ptr<UiNode>> _uiNodes;
+    std::vector<std::shared_ptr<UiNode>> _uiNodes;
 
 private:
     INode* getNodeFromLinkId(int id);

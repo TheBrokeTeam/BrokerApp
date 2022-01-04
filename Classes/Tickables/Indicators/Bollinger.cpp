@@ -52,7 +52,7 @@ void Bollinger::onRender() {
 //    ImPlot::PlotShaded(_name.c_str(),_time.data(),_bollinger_top.data(),_bollinger_bot.data(),_bollinger_mid.size());
 //    ImPlot::SetNextLineStyle(ImVec4(0.5,0.5,1,1));
 
-    //TODO:: the custom render was needed to usar custom Reversed dato type. Maybe it is possible in some way.
+    //TODO:: the custom render was needed to use custom Reversed data type. Maybe it is possible in some way.
     auto color = ImVec4(0.5,0.5,1,0.25);
 
     ImPlot::GetCurrentItem()->Color = ImGui::GetColorU32(color);

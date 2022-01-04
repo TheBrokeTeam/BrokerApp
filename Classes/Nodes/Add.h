@@ -11,7 +11,7 @@
 #include "INode.h"
 
 
-class Add : public UiNode, public INode {
+class Add : public UiNode{
 public:
     Add(std::shared_ptr<graph::Graph<GraphNode>> _graph);
     ~Add();

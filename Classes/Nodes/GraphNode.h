@@ -6,6 +6,8 @@
 #define BROKERAPP_GRAPHNODE_H
 
 
+#include "INode.h"
+
 enum class NodeType
 {
     ADD,
@@ -19,11 +21,19 @@ enum class UiNodeType
     RESULT
 };
 
-class UiNode
+class UiNode : public INode
 {
 public:
+    UiNode(){}
+
+    virtual ~UiNode(){
+
+    };
+
     UiNodeType type;
-    int id;
+    virtual void onRender(float dt) override{
+
+    };
 };
 
 struct GraphNode {

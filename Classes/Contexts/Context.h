@@ -97,7 +97,6 @@ protected:
     std::vector<std::shared_ptr<Strategy>> _strategies;
     std::vector<std::shared_ptr<INode>> _nodes;
 
-
     Editor *_editor{nullptr};
 };
 

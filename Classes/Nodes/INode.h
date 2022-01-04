@@ -51,9 +51,9 @@ protected:
     int addInput();
     int addOutput();
     std::map<int,double> _map;
+    int _id;
 
 private:
-    int _id;
     std::string _name = "Node name";
     ImVec2 pos;
     bool _init = false;

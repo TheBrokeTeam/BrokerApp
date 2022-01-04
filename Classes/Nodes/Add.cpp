@@ -16,10 +16,10 @@ Add::Add(std::shared_ptr<graph::Graph<GraphNode>> graph): _graph(graph)
     type = UiNodeType::ADD;
     idInput1 = graph->insert_node(value);
     idInput2 = graph->insert_node(value);
-    id = graph->insert_node(op);
+    _id = graph->insert_node(op);
 
-    graph->insert_edge(id, idInput1);
-    graph->insert_edge(id, idInput2);
+    graph->insert_edge(_id, idInput1);
+    graph->insert_edge(_id, idInput2);
 }
 
 Add::~Add() {}
@@ -57,7 +57,7 @@ void Add::onRender(float dt) {
 
     ImGui::Spacing();
     {
-        ImNodes::BeginOutputAttribute(id);
+        ImNodes::BeginOutputAttribute(_id);
         const float label_width = ImGui::CalcTextSize("result").x;
         ImGui::Indent(node_width - label_width);
         ImGui::TextUnformatted("result");

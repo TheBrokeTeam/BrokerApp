@@ -23,6 +23,8 @@ void Editor::start() {
     ImGuiIO &io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+    io.AddInputCharacter(GLFW_KEY_DELETE);
+
     auto& style = ImGui::GetStyle();
 
     style.Colors[ImGuiCol_Separator] = Editor::broker_black;

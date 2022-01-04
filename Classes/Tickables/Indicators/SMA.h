@@ -18,7 +18,6 @@ public:
     void onPopupRender() override;
     void reset() override;
 
-
 private:
     int _averageSize = 12; // minimum size is 1
     ImVec4 _color{1, 1, 1, 1};
