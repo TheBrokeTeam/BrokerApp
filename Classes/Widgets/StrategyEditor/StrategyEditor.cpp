@@ -6,6 +6,8 @@
 #include "../../Editor.h"
 #include <imnodes.h>
 #include "../../Nodes/Add.h"
+#include "../../Nodes/ShowOutput.h"
+
 
 // User callback
 void mini_map_node_hovering_callback(int node_id, void* user_data)
@@ -147,17 +149,18 @@ void StrategyEditor::updateVisible(float dt) {
                     case UiNodeType::ADD:
                         {
                         auto addNode = dynamic_cast<Add *>(iter->get());
-                        _graph->erase_node(addNode->idInput1);
-                        _graph->erase_node(addNode->idInput2);
+                        _graph->erase_node(addNode->getIdInput1());
+                        _graph->erase_node(addNode->getIdInput2());
                         }
                         found = true;
                         break;
                     case UiNodeType::RESULT:
-//                        _graph->erase_node(iter->output.r);
-//                        _graph->erase_node(iter->output.g);
-//                        _graph->erase_node(iter->output.b);
-//                        root_node_id_ = -1;
-//                        break;
+                        {
+                        auto addNode = dynamic_cast<ShowOutput*>(iter->get());
+                        _graph->erase_node(addNode->getIdInput());
+                        }
+                        found = true;
+                        break;
                     default:
                         break;
                 }

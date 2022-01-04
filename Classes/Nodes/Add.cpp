@@ -14,12 +14,12 @@ Add::Add(std::shared_ptr<graph::Graph<GraphNode>> graph): _graph(graph)
     const GraphNode op(NodeType::ADD);
 
     type = UiNodeType::ADD;
-    idInput1 = graph->insert_node(value);
-    idInput2 = graph->insert_node(value);
+    _idInput1 = graph->insert_node(value);
+    _idInput2 = graph->insert_node(value);
     _id = graph->insert_node(op);
 
-    graph->insert_edge(_id, idInput1);
-    graph->insert_edge(_id, idInput2);
+    graph->insert_edge(_id, _idInput1);
+    graph->insert_edge(_id, _idInput2);
 }
 
 Add::~Add() {}
@@ -28,28 +28,28 @@ void Add::onRender(float dt) {
     const float node_width = 100.f;
 
     {
-        ImNodes::BeginInputAttribute(idInput1);
+        ImNodes::BeginInputAttribute(_idInput1);
         const float label_width = ImGui::CalcTextSize("left").x;
         ImGui::TextUnformatted("left");
-        if (_graph->num_edges_from_node(idInput1) == 0ull)
+        if (_graph->num_edges_from_node(_idInput1) == 0ull)
         {
             ImGui::SameLine();
             ImGui::PushItemWidth(node_width - label_width);
-            ImGui::DragFloat("##hidelabel", &_graph->node(idInput1).value, 0.01f);
+            ImGui::DragFloat("##hidelabel", &_graph->node(_idInput1).value, 0.01f);
             ImGui::PopItemWidth();
         }
         ImNodes::EndInputAttribute();
     }
 
     {
-        ImNodes::BeginInputAttribute(idInput2);
+        ImNodes::BeginInputAttribute(_idInput2);
         const float label_width = ImGui::CalcTextSize("right").x;
         ImGui::TextUnformatted("right");
-        if (_graph->num_edges_from_node(idInput2) == 0ull)
+        if (_graph->num_edges_from_node(_idInput2) == 0ull)
         {
             ImGui::SameLine();
             ImGui::PushItemWidth(node_width - label_width);
-            ImGui::DragFloat("##hidelabel", &_graph->node(idInput2).value, 0.01f);
+            ImGui::DragFloat("##hidelabel", &_graph->node(_idInput2).value, 0.01f);
             ImGui::PopItemWidth();
         }
         ImNodes::EndInputAttribute();
@@ -63,4 +63,12 @@ void Add::onRender(float dt) {
         ImGui::TextUnformatted("result");
         ImNodes::EndOutputAttribute();
     }
+}
+
+int Add::getIdInput1() {
+    return _idInput1;
+}
+
+int Add::getIdInput2() {
+    return _idInput2;
 }

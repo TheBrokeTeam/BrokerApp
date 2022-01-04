@@ -30,6 +30,8 @@
 #include "../Nodes/CrossNode.h"
 
 #include "../Nodes/Add.h"
+#include "../Nodes/ShowOutput.h"
+
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -432,8 +434,10 @@ std::shared_ptr<UiNode> BackTestingContext::createNode(std::shared_ptr<graph::Gr
     switch (type) {
         case NodeType::ADD:
             node = std::make_shared<Add>(_graph);
-        break;
+            break;
         case NodeType::RESULT:
+            node = std::make_shared<ShowOutput>(_graph);
+            break;
         case NodeType::VALUE:
         default:
             break;

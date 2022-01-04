@@ -2,8 +2,8 @@
 // Created by Arthur Abel Motelevicz on 04/01/22.
 //
 
-#ifndef BROKERAPP_ADD_H
-#define BROKERAPP_ADD_H
+#ifndef BROKERAPP_SHOWOUTPUT_H
+#define BROKERAPP_SHOWOUTPUT_H
 
 #include <memory>
 #include "GraphNode.h"
@@ -11,21 +11,17 @@
 #include "INode.h"
 
 
-class Add : public UiNode{
+class ShowOutput : public UiNode{
 public:
-    Add(std::shared_ptr<graph::Graph<GraphNode>> _graph);
-    ~Add();
+    ShowOutput(std::shared_ptr<graph::Graph<GraphNode>> _graph);
+    ~ShowOutput();
     void onRender(float dt) override;
-
-    int getIdInput1();
-    int getIdInput2();
-
-
+    int getIdInput();
 private:
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
-    int _idInput1;
-    int _idInput2;
+    int _idInput;
 };
 
 
-#endif //BROKERAPP_ADD_H
+
+#endif //BROKERAPP_SHOWOUTPUT_H
