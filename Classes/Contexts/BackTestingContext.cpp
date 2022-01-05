@@ -21,6 +21,7 @@
 #include "../Widgets/SimulationController.h"
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
+#include "../Widgets/StockList.h"
 #include "../Widgets/StrategyEditor/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
@@ -50,6 +51,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
+    _widgets.emplace_back(std::make_shared<StockList>(this));
 
     getWidget<ProfitAndLossesView>()->SetVisible(false);
 

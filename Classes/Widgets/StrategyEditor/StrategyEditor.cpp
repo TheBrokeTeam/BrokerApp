@@ -30,9 +30,9 @@ void StrategyEditor::updateVisible(float dt) {
 
     ImNodes::BeginNodeEditor();
 
-    for (auto &n : _uiNodes)
-        if(auto node = n.lock())
-            node->render(dt);
+//    for (auto &n : _uiNodes)
+//        if(auto node = n.lock())
+//            node->render(dt);
 
 //    getContext()->plotNodes(dt);
 

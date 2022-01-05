@@ -10,6 +10,7 @@
 #include "SimulationController.h"
 #include "ChartView.h"
 #include "ProfitAndLossesView.h"
+#include "StockList.h"
 #include <fmt/format.h>
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
@@ -44,6 +45,7 @@ void MainMenuBar::updateAlways(float dt)
             if (ImGui::MenuItem("ChartView", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
             if (ImGui::MenuItem("IndicatorsView", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
             if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
+            if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
 
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);
