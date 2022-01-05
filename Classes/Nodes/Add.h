@@ -16,6 +16,7 @@ public:
     Add(std::shared_ptr<graph::Graph<GraphNode>> _graph);
     ~Add();
     void onRender(float dt) override;
+    void handleStack(std::stack<float>& stack) override;
 
     int getIdInput1();
     int getIdInput2();

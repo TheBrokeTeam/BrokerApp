@@ -11,7 +11,7 @@ Add::Add(std::shared_ptr<graph::Graph<GraphNode>> graph): _graph(graph)
 {
     setName("ADD");
     const GraphNode value(NodeType::VALUE, 0.f);
-    const GraphNode op(NodeType::ADD);
+    const GraphNode op(NodeType::ADD, this);
 
     type = UiNodeType::ADD;
     _idInput1 = graph->insert_node(value);
@@ -71,4 +71,12 @@ int Add::getIdInput1() {
 
 int Add::getIdInput2() {
     return _idInput2;
+}
+
+void Add::handleStack(std::stack<float> &stack) {
+    const float input1Val = stack.top();
+    stack.pop();
+    const float input2Val = stack.top();
+    stack.pop();
+    stack.push(input1Val + input2Val);
 }

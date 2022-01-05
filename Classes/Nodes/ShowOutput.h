@@ -16,10 +16,13 @@ public:
     ShowOutput(std::shared_ptr<graph::Graph<GraphNode>> _graph);
     ~ShowOutput();
     void onRender(float dt) override;
+    void handleStack(std::stack<float>& stack) override;
+
     int getIdInput();
 private:
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     int _idInput;
+    float _value;
 };
 
 

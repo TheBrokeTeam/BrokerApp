@@ -437,7 +437,7 @@ std::shared_ptr<UiNode> BackTestingContext::createNode(std::shared_ptr<graph::Gr
             break;
         case NodeType::RESULT:
             node = std::make_shared<ShowOutput>(_graph);
-            getWidget<StrategyEditor>()->setRootId(node->getId());
+            getWidget<StrategyEditor>()->addRootId(node->getId());
             break;
         case NodeType::VALUE:
         default:

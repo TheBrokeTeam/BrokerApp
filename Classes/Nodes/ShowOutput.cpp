@@ -11,7 +11,7 @@ ShowOutput::ShowOutput(std::shared_ptr<graph::Graph<GraphNode>> graph): _graph(g
 {
     setName("Show Value");
     const GraphNode value(NodeType::VALUE, 0.f);
-    const GraphNode op(NodeType::RESULT);
+    const GraphNode op(NodeType::RESULT, this);
 
     type = UiNodeType::RESULT;
     _idInput = graph->insert_node(value);
@@ -40,4 +40,10 @@ ShowOutput::~ShowOutput() {}
 
 int ShowOutput::getIdInput() {
     return _idInput;
+}
+
+void ShowOutput::handleStack(std::stack<float> &stack) {
+    _value = stack.top();
+    stack.pop();
+    std::cout << "ShowOutput Graph: " << _value << std::endl;
 }

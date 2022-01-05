@@ -7,6 +7,7 @@
 
 
 #include "INode.h"
+#include <stack>
 
 enum class NodeType
 {
@@ -32,12 +33,14 @@ public:
 
     UiNodeType type;
     virtual void onRender(float dt) override{};
+    virtual void handleStack(std::stack<float>& stack) = 0;
 };
 
 struct GraphNode {
+    UiNode* onwer{nullptr};
     NodeType type;
     float value;
-    explicit GraphNode(const NodeType t) : type(t), value(0.f) {}
+    explicit GraphNode(const NodeType t,UiNode* o = nullptr) : type(t), value(0.f), onwer(o) {}
     GraphNode(const NodeType t, const float v) : type(t), value(v) {}
 };
 

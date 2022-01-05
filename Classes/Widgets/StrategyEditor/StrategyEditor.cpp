@@ -141,7 +141,7 @@ void StrategyEditor::updateVisible(float dt) {
                             auto addNode = dynamic_cast<ShowOutput*>(iter->get());
                             _graph->erase_node(addNode->getIdInput());
                             found = true;
-                            _root_node_id = -1;
+                            removeRootId(node_id);
                         }
                         break;
                     default:
@@ -153,8 +153,9 @@ void StrategyEditor::updateVisible(float dt) {
             }
         }
     }
-    const float value = _root_node_id != -1 ? evaluateGraph() : 0.0f;
-    std::cout << "SAIDA Graph: " << value << std::endl;
+
+    for(auto id : _rootNodes)
+        evaluateGraph(id);
 }
 
 INode* StrategyEditor::getNodeFromLinkId(int id){
@@ -196,63 +197,44 @@ void StrategyEditor::clear() {
     links.clear();
 }
 
-float StrategyEditor::evaluateGraph() {
+void StrategyEditor::evaluateGraph(int id) {
     std::stack<int> postorder;
     dfs_traverse(
-            *_graph, _root_node_id, [&postorder](const int node_id) -> void {
+            *_graph, id, [&postorder](const int node_id) -> void {
                 postorder.push(node_id);
             });
 
     std::stack<float> value_stack;
-    while (!postorder.empty())
-    {
+    while (!postorder.empty()) {
         const int id = postorder.top();
         postorder.pop();
         const GraphNode node = _graph->node(id);
 
-        switch (node.type)
-        {
-            case NodeType::ADD:
-            {
-                const float rhs = value_stack.top();
-                value_stack.pop();
-                const float lhs = value_stack.top();
-                value_stack.pop();
-                value_stack.push(lhs + rhs);
-            }
-            break;
-            case NodeType::VALUE:
-            {
-                // If the edge does not have an edge connecting to another node, then just use the value
-                // at this node. It means the node's input pin has not been connected to anything and
-                // the value comes from the node's UI.
-                if (_graph->num_edges_from_node(id) == 0ull)
-                {
-                    value_stack.push(node.value);
-                }
-            }
-                break;
-            default:
-                break;
+        if (node.onwer) {
+            node.onwer->handleStack(value_stack);
+        } else {
+            // If the edge does not have an edge connecting to another node, then just use the value
+            // at this node. It means the node's input pin has not been connected to anything and
+            // the value comes from the node's UI.
+            if (_graph->num_edges_from_node(id) == 0ull)
+                value_stack.push(node.value);
         }
     }
-
-//    // The final output node isn't evaluated in the loop -- instead we just pop
-//    // the three values which should be in the stack.
-//    assert(value_stack.size() == 3ull);
-    assert(value_stack.size() == 1ull);
-    const float out = value_stack.top();
-//    const int b = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
-//    value_stack.pop();
-//    const int g = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
-//    value_stack.pop();
-//    const int r = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
-//    value_stack.pop();
-
-    return out;
-
 }
 
-void StrategyEditor::setRootId(int id) {
-    _root_node_id =  id;
+void StrategyEditor::removeRootId(int id) {
+    auto it = std::find_if(_rootNodes.begin(),_rootNodes.begin(),[id](int nodeId){
+        return id == nodeId;
+    });
+
+    if(it != std::end(_rootNodes)){
+        _rootNodes.erase(it);
+        return;
+    }
+
+    std::cout << "Root node not found to remove!" << std::endl;
+}
+
+void StrategyEditor::addRootId(int id) {
+    _rootNodes.push_back(id);
 }

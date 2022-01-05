@@ -18,7 +18,7 @@ public:
     void onPushStyleVar() override;
     void addNode(std::shared_ptr<INode> node);
     void removeNode(std::shared_ptr<INode> newNode);
-    float evaluateGraph();
+    void evaluateGraph(int id);
     void clear();
 
     std::vector<std::weak_ptr<INode>> _nodes;
@@ -26,12 +26,13 @@ public:
 
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     std::vector<std::shared_ptr<UiNode>> _uiNodes;
-    void setRootId(int id);
+    void addRootId(int id);
+    void removeRootId(int id);
+
 
 private:
     INode* getNodeFromLinkId(int id);
-    int _root_node_id = -1;
-
+    std::vector<int> _rootNodes;
 };
 
 #endif //BROKERAPP_STRATEGYEDITOR_H
