@@ -23,7 +23,7 @@ public:
 
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
-    void cell(StockInfo info);
+    void cell();
 
 private:
    // std::vector<std::shared_ptr<StockInfo>> _stocks;
