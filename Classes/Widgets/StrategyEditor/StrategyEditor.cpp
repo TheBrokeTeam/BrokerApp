@@ -36,15 +36,6 @@ void StrategyEditor::updateVisible(float dt) {
     for (auto &n : _uiNodes)
         n->render(dt);
 
-//    getContext()->plotNodes(dt);
-
-//    for (int i = 0; i < links.size(); ++i) {
-//        const std::pair<int, int> p = links[i];
-//        // in this case, we just use the array index of the link
-//        // as the unique identifier
-//        ImNodes::Link(i, p.first, p.second);
-//    }
-
     for (const auto& edge : _graph->edges())
     {
         // If edge doesn't start at value, then it's an internal edge, i.e.
@@ -79,12 +70,6 @@ void StrategyEditor::updateVisible(float dt) {
     ImNodes::PopColorStyle();
     ImNodes::PopColorStyle();
 
-//    int start_attr, end_attr;
-//    if (ImNodes::IsLinkCreated(&start_attr, &end_attr))
-//    {
-//        links.push_back(std::make_pair(start_attr, end_attr));
-//    }
-
     int start_attr, end_attr;
     if (ImNodes::IsLinkCreated(&start_attr, &end_attr))
     {
@@ -105,8 +90,6 @@ void StrategyEditor::updateVisible(float dt) {
     }
 
     // Handle deleted links
-
-
     int link_id;
     if (ImNodes::IsLinkDestroyed(&link_id))
     {
@@ -148,18 +131,19 @@ void StrategyEditor::updateVisible(float dt) {
                 {
                     case UiNodeType::ADD:
                         {
-                        auto addNode = dynamic_cast<Add *>(iter->get());
-                        _graph->erase_node(addNode->getIdInput1());
-                        _graph->erase_node(addNode->getIdInput2());
+                            auto addNode = dynamic_cast<Add *>(iter->get());
+                            _graph->erase_node(addNode->getIdInput1());
+                            _graph->erase_node(addNode->getIdInput2());
+                            found = true;
                         }
-                        found = true;
                         break;
                     case UiNodeType::RESULT:
                         {
-                        auto addNode = dynamic_cast<ShowOutput*>(iter->get());
-                        _graph->erase_node(addNode->getIdInput());
+                            auto addNode = dynamic_cast<ShowOutput*>(iter->get());
+                            _graph->erase_node(addNode->getIdInput());
+                            found = true;
+                            _root_node_id = -1;
                         }
-                        found = true;
                         break;
                     default:
                         break;
@@ -170,18 +154,8 @@ void StrategyEditor::updateVisible(float dt) {
             }
         }
     }
-
-
-//    if(!links.empty()){
-//        for(auto& l: links){
-//            auto leftNode = getNodeFromLinkId(l.first);
-//            auto rightNode = getNodeFromLinkId(l.second);
-//            if(leftNode && rightNode){
-//                auto result = leftNode->getValueFromId(l.first);
-//                rightNode->setValueForId(l.second,result);
-//            }
-//        }
-//    }
+    const float value = _root_node_id != -1 ? evaluateGraph() : 0.0f;
+    std::cout << "SAIDA Graph: " << value << std::endl;
 }
 
 INode* StrategyEditor::getNodeFromLinkId(int id){
@@ -221,4 +195,65 @@ void StrategyEditor::removeNode(std::shared_ptr<INode> node) {
 void StrategyEditor::clear() {
     _nodes.clear();
     links.clear();
+}
+
+float StrategyEditor::evaluateGraph() {
+    std::stack<int> postorder;
+    dfs_traverse(
+            *_graph, _root_node_id, [&postorder](const int node_id) -> void {
+                postorder.push(node_id);
+            });
+
+    std::stack<float> value_stack;
+    while (!postorder.empty())
+    {
+        const int id = postorder.top();
+        postorder.pop();
+        const GraphNode node = _graph->node(id);
+
+        switch (node.type)
+        {
+            case NodeType::ADD:
+            {
+                const float rhs = value_stack.top();
+                value_stack.pop();
+                const float lhs = value_stack.top();
+                value_stack.pop();
+                value_stack.push(lhs + rhs);
+            }
+            break;
+            case NodeType::VALUE:
+            {
+                // If the edge does not have an edge connecting to another node, then just use the value
+                // at this node. It means the node's input pin has not been connected to anything and
+                // the value comes from the node's UI.
+                if (_graph->num_edges_from_node(id) == 0ull)
+                {
+                    value_stack.push(node.value);
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
+
+//    // The final output node isn't evaluated in the loop -- instead we just pop
+//    // the three values which should be in the stack.
+//    assert(value_stack.size() == 3ull);
+    assert(value_stack.size() == 1ull);
+    const float out = value_stack.top();
+//    const int b = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
+//    value_stack.pop();
+//    const int g = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
+//    value_stack.pop();
+//    const int r = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
+//    value_stack.pop();
+
+    return out;
+
+}
+
+void StrategyEditor::setRootId(int id) {
+    _root_node_id =  id;
 }
