@@ -76,7 +76,7 @@ void StrategyEditor::updateVisible(float dt) {
         const NodeType start_type = _graph->node(start_attr).type;
         const NodeType end_type = _graph->node(end_attr).type;
 
-        const bool valid_link = start_type != end_type;
+        const bool valid_link = start_type != end_type && _graph->num_edges_from_node(end_attr) == 0;
         if (valid_link)
         {
             // Ensure the edge is always directed from the value to
@@ -114,7 +114,6 @@ void StrategyEditor::updateVisible(float dt) {
         const int num_selected = ImNodes::NumSelectedNodes();
         if (num_selected > 0 && ImGui::IsKeyReleased(GLFW_KEY_X))
         {
-            std::cout << "FUCKKKK" << std::endl;
             static std::vector<int> selected_nodes;
             selected_nodes.resize(static_cast<size_t>(num_selected));
             ImNodes::GetSelectedNodes(selected_nodes.data());

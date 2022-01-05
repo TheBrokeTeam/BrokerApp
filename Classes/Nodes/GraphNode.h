@@ -31,9 +31,7 @@ public:
     };
 
     UiNodeType type;
-    virtual void onRender(float dt) override{
-
-    };
+    virtual void onRender(float dt) override{};
 };
 
 struct GraphNode {
