@@ -23,14 +23,13 @@ public:
 
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
-    void cell();
 
 private:
    // std::vector<std::shared_ptr<StockInfo>> _stocks;
+   void buildHeader();
+    static void cell();
+    static void buildStockList();
 
-    void buildStockList();
-
-    void buildHeader();
 };
 
 
