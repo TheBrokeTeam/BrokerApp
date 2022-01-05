@@ -54,28 +54,32 @@ void StockList::cell()
 
 void StockList::updateVisible(float dt)
 {
-    //change background of window
+    buildHeader();
+    buildStockList();
+}
+
+void StockList::buildHeader() {//change background of window
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
     //change color text
-    PushStyleColor(ImGuiCol_Text,Editor::broker_black);
+    PushStyleColor(ImGuiCol_Text, Editor::broker_black);
 
     //change background of frames
-    PushStyleColor(ImGuiCol_FrameBg,Editor::broker_white);
-    PushStyleColor(ImGuiCol_FrameBgActive,Editor::broker_white);
-    PushStyleColor(ImGuiCol_FrameBgHovered,Editor::broker_white);
+    PushStyleColor(ImGuiCol_FrameBg, Editor::broker_white);
+    PushStyleColor(ImGuiCol_FrameBgActive, Editor::broker_white);
+    PushStyleColor(ImGuiCol_FrameBgHovered, Editor::broker_white);
 
     //change background of items on combos
-    PushStyleColor(ImGuiCol_PopupBg,Editor::broker_white);
+    PushStyleColor(ImGuiCol_PopupBg, Editor::broker_white);
 
     ImGui::TextColored(Editor::broker_white,"Stock List");
     ImGui::SameLine();
 
     //change the background of close button
-    PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
+    PushStyleColor(ImGuiCol_Button, Editor::broker_clear);
+    PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_clear);
+    PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_clear);
 
     //adding the close button
     auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
@@ -87,8 +91,9 @@ void StockList::updateVisible(float dt)
     ImGui::Separator();
 
     ImGui::Spacing();
+}
 
-
+void StockList::buildStockList() {
     ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(5, 5));
     //ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));
 
@@ -103,13 +108,11 @@ void StockList::updateVisible(float dt)
         {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            StockList::cell();
+            cell();
         }
         ImGui::EndTable();
     }
     ImGui::PopStyleVar();
-
-
 }
 
 

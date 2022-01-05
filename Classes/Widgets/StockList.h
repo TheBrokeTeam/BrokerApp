@@ -28,6 +28,9 @@ public:
 private:
    // std::vector<std::shared_ptr<StockInfo>> _stocks;
 
+    void buildStockList();
+
+    void buildHeader();
 };
 
 
