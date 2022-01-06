@@ -22,7 +22,7 @@ public:
 
 
 private:
-    int _smothingSize = 2; // must be >= 1
+    int _smothingSize = 2; // must be <= 1 + _averageSize... it's almost always 2.
     int _averageSize = 5; // must be >= 1
     ImVec4 _color{1, 1, 1, 1};
     float _lineWidth = 2.0f;
