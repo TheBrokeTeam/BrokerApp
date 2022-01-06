@@ -295,11 +295,10 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
 }
 
 void BackTestingContext::plotIndicators() {
-    int count = -1;
     for(auto& i : _indicators) {
         i->render();
         if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
-            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, i.get(), sizeof(Indicator));
+            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
             ImPlot::EndDragDropSource();
         }
     }
