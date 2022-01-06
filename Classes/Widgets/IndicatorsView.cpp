@@ -81,16 +81,12 @@ void IndicatorsView::drawView() {
     ImGui::EndChild();
 
     if (ImGui::BeginDragDropTarget()) {
-
-        //######################################################
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING)) {
-            //indice of dragged item
             std::shared_ptr<Indicator> i = *(std::shared_ptr<Indicator>*) payload->Data;
-            getContext()->removeIndicator(i);
+            getContext()->removeIndicator(i,true);
         }
         ImGui::EndDragDropTarget();
     }
-    //######################################################‘
 }
 
 

@@ -197,21 +197,33 @@ const std::shared_ptr<graph::Graph<GraphNode>> &StrategyEditor::getGraph() {
     return _graph;
 }
 
-void StrategyEditor::deleteUiNodeFromFromList(int id) {
+void StrategyEditor::deleteUiNodeFromFromList(int id,bool shouldRemoveIndicator) {
 
     std::shared_ptr<INode> node{nullptr};
     for(auto it = _uiNodes.begin(); it != _uiNodes.end(); it++){
         if((*it)->getId() == id) {
 
             //remove indicator if it's an indicator node
-            if((*it)->getIsIndicatorNode())
-                getContext()->removeIndicator((*it)->getIndicator());
+            if((*it)->getIsIndicatorNode() && shouldRemoveIndicator)
+                getContext()->removeIndicator((*it)->getIndicator(),false);
 
             //delete from root ids if needed
             removeRootId(id);
 
             _uiNodes.erase(it);
             break;
+        }
+    }
+}
+
+void StrategyEditor::removeNodeIndicator(std::shared_ptr<Indicator> indicator) {
+    for(auto it = _uiNodes.begin(); it != _uiNodes.end(); it++) {
+        //remove indicator if it's an indicator node
+        if ((*it)->getIsIndicatorNode()) {
+            if ((*it)->getIndicator()->getId() == indicator->getId()) {
+                deleteUiNodeFromFromList((*it)->getId(), false);
+                break;
+            }
         }
     }
 }

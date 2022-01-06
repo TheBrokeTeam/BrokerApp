@@ -24,10 +24,13 @@ public:
     void addRootId(int id);
     void removeRootId(int id);
 
+    void removeNodeIndicator(std::shared_ptr<Indicator> indicator);
+
+
 
 private:
     std::shared_ptr<INode> getNodeFromId(int id);
-    void deleteUiNodeFromFromList(int id);
+    void deleteUiNodeFromFromList(int id, bool shouldRemoveIndicator = true);
     std::vector<int> _rootNodes;
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     std::vector<std::shared_ptr<INode>> _uiNodes;

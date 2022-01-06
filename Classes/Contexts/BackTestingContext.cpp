@@ -386,7 +386,7 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
     return node;
 }
 
-void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator) {
+void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) {
     //first delete from ticker
 
     if(_ticker->removeTickable(indicator.get()))
@@ -395,6 +395,10 @@ void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator) {
     //now delete from indicators list
     for(auto it = _indicators.begin(); it != _indicators.end(); it++){
         if((*it)->getId() == indicator->getId())
+
+            if(shouldDeleteNode)
+                getWidget<StrategyEditor>()->removeNodeIndicator(indicator);
+
             _indicators.erase(it);
             break;
     }
