@@ -268,15 +268,16 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
     switch (type) {
         case IndicatorsView::CandleIndicatorsTypes::SMA:
         {
-            std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
+            std::shared_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
+            createIndicatorNode(UiNodeType::SMA,_indicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL:
         {
-            std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
+            std::shared_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
@@ -347,26 +348,17 @@ void BackTestingContext::showTabBars(bool show) {
     MainMenuBar::_show_tabbars = show;
 }
 
-std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::CandleIndicatorsTypes type) {
-
+std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator)
+{
     std::shared_ptr<INode> node{nullptr};
 
     switch (type) {
-        case IndicatorsView::CandleIndicatorsTypes::SMA:
+        case UiNodeType::SMA:
             {
                 auto se = getWidget<StrategyEditor>();
-                auto node = createNode(se->getGraph(),UiNodeType::SMA);
+                node = std::make_shared<SMANode>(indicator,se->getGraph());
                 se->addNode(node);
             }
-            break;
-        case IndicatorsView::CandleIndicatorsTypes::BOLL:
-        case IndicatorsView::CandleIndicatorsTypes::EMA:
-        case IndicatorsView::CandleIndicatorsTypes::WMA:
-        case IndicatorsView::CandleIndicatorsTypes::AVL:
-        case IndicatorsView::CandleIndicatorsTypes::VWAP:
-        case IndicatorsView::CandleIndicatorsTypes::TRIX:
-        case IndicatorsView::CandleIndicatorsTypes::SAR :
-            _shouldShowLuizPopup = true;
             break;
         default:
             break;
@@ -398,6 +390,10 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
     }
 
     return node;
+}
+
+void BackTestingContext::removedFromEditor(std::shared_ptr<INode> node) {
+    getWidget<StrategyEditor>()->removeNode(node);
 }
 
 

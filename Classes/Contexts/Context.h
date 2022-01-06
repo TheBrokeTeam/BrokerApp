@@ -32,8 +32,10 @@ public:
     virtual void updateUI(float dt);
 
     virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
-    virtual std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) = 0;
+    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) = 0;
     virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) = 0;
+
+    virtual void removedFromEditor(std::shared_ptr<INode> node) = 0;
 
 
     virtual void plotIndicators() = 0;

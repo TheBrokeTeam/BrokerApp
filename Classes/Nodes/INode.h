@@ -13,7 +13,7 @@
 
 #include <stack>
 #include "../Helpers/graph.h"
-
+#include "../Tickables/Indicators/Indicator.h"
 
 enum class NodeType
 {
@@ -54,6 +54,19 @@ public:
         return 0;
     };
 
+    std::shared_ptr<Indicator> getIndicator(){
+        return _indicator.lock();
+    }
+
+    void  setIndicator(std::shared_ptr<Indicator> indicator){
+        _indicator = indicator;
+        _isIndicatorNode = true;
+    }
+
+    bool getIsIndicatorNode(){
+        return _isIndicatorNode;
+    };
+
     void render(float dt);
 
     //For customize the title bar.. should be used in pair
@@ -67,7 +80,6 @@ public:
     const UiNodeType& getType();
     void setType(const UiNodeType& type);
 protected:
-
     void setName(const std::string& name);
     int _id;
     UiNodeType _type;
@@ -78,6 +90,9 @@ private:
     bool _init = false;
     std::vector<int> _internalNodes;
     std::shared_ptr<graph::Graph<GraphNode>> _graph;
+    bool _isIndicatorNode = false;
+    std::weak_ptr<Indicator> _indicator;
+
 };
 
 class GraphNode {

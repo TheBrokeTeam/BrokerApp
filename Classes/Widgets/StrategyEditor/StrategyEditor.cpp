@@ -129,8 +129,6 @@ void StrategyEditor::updateVisible(float dt) {
     }
 }
 
-
-
 void StrategyEditor::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
@@ -143,6 +141,11 @@ void StrategyEditor::removeNode(std::shared_ptr<INode> node) {
     auto it = _uiNodes.begin();
     for(int i = 0; i < _uiNodes.size(); i++) {
         if((*it)->getId() == node->getId()) {
+
+            //TODO::remove indicator
+            if((*it)->getIsIndicatorNode())
+
+
             _uiNodes.erase(it);
             break;
         }
@@ -180,25 +183,15 @@ void StrategyEditor::evaluateGraph(int id) {
 }
 
 void StrategyEditor::removeRootId(int id) {
-
     for(auto it = _rootNodes.begin(); it != _rootNodes.end(); it++){
         if((*it) == id) {
             _rootNodes.erase(it);
             return;
         }
     }
-
-    std::cout << "Root node not found to remove!" << std::endl;
 }
 
  std::shared_ptr<INode> StrategyEditor::getNodeFromId(int id){
-//    auto iter = std::find_if(
-//            _uiNodes.begin(), _uiNodes.end(), [node_id](std::shared_ptr<INode> node) -> bool {
-//                return node->getId() == node_id;
-//            });
-//
-//    if(iter == std::end(_uiNodes))
-//        return;
 
     std::shared_ptr<INode> node{nullptr};
     for(auto it = _uiNodes.begin(); it != _uiNodes.end(); it++){

@@ -9,9 +9,11 @@
 #include "../Editor.h"
 
 
-SMANode::SMANode(std::shared_ptr<Indicator> sma, std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph),_sma(sma){
+SMANode::SMANode(std::shared_ptr<Indicator> sma, std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph){
     setName("SMA Indicator");
     setType(UiNodeType::SMA);
+    setIndicator(sma);
+
     const GraphNode op(NodeType::SMA, this);
     _id = addNode(op);
 }
@@ -29,7 +31,7 @@ void SMANode::handleStack(std::stack<float> &stack) {
 
     //Safe check ---------
     /**Todo:: call context to remove this node if the indicator is not valid anymore */
-    auto smaShared = _sma.lock();
+    auto smaShared = getIndicator();
     if(!smaShared){
         stack.push(0.0f);
         return;
@@ -46,7 +48,7 @@ void SMANode::handleStack(std::stack<float> &stack) {
 }
 
 void SMANode::initStyle() {
-    auto smaShared = _sma.lock();
+    auto smaShared = getIndicator();
     if(!smaShared) {
         INode::initStyle();
         return;

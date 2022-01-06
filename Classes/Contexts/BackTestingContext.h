@@ -28,10 +28,10 @@ public:
     bool isSimulating() override;
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
-    std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
+    std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) override;
     std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) override;
 
-
+    void removedFromEditor(std::shared_ptr<INode> node) override;
 
     void plotIndicators() override;
     void plotStrategy() override;

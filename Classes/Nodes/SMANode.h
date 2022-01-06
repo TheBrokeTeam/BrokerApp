@@ -17,9 +17,7 @@ public:
     void handleStack(std::stack<float>& stack) override;
     void initStyle() override;
     void finishStyle()override ;
-
 private:
-    std::weak_ptr<Indicator> _sma;
 };
 
 
