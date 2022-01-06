@@ -17,6 +17,8 @@ enum class NodeType
 {
     ADD,
     SMA,
+    CROSS,
+    CROSS_COUNTER,
     RESULT,
     VALUE
 };
@@ -25,6 +27,8 @@ enum class UiNodeType
 {
     ADD,
     SMA,
+    CROSS,
+    CROSS_COUNTER,
     RESULT
 };
 

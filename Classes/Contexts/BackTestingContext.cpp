@@ -25,7 +25,7 @@
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/CrossNode.h"
-
+#include "../Nodes/CrossCounter.h"
 #include "../Nodes/Add.h"
 #include "../Nodes/ShowOutput.h"
 
@@ -434,6 +434,13 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             break;
         case UiNodeType::SMA:
             node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA),_graph);
+            break;
+        case UiNodeType::CROSS:
+            node = std::make_shared<CrossNode>(_graph);
+            break;
+        case UiNodeType::CROSS_COUNTER:
+            node = std::make_shared<CrossCounter>(_graph);
+            getWidget<StrategyEditor>()->addRootId(node->getId());
             break;
         case UiNodeType::RESULT:
             node = std::make_shared<ShowOutput>(_graph);

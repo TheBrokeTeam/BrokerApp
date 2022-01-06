@@ -27,13 +27,14 @@ void ShowOutput::onRender(float dt) {
     ImNodes::BeginInputAttribute(_idInput);
     const float label_width = ImGui::CalcTextSize("r").x;
     ImGui::TextUnformatted("r");
-    if (_graph->num_edges_from_node(_idInput) == 0ull)
-    {
+//    if (_graph->num_edges_from_node(_idInput) == 0ull)
+//    {
         ImGui::SameLine();
         ImGui::PushItemWidth(node_width - label_width);
-        ImGui::DragFloat("##hidelabel", &_graph->node(_idInput).value, 0.01f, 0.f, 1.0f);
+//        ImGui::DragFloat("##hidelabel", &_graph->node(_idInput).value, 0.01f, 0.f, 1.0f);
+        ImGui::Text("%.2f",_value);
         ImGui::PopItemWidth();
-    }
+//    }
     ImNodes::EndInputAttribute();
 }
 
@@ -46,5 +47,6 @@ int ShowOutput::getIdInput() {
 void ShowOutput::handleStack(std::stack<float> &stack) {
     _value = stack.top();
     stack.pop();
+    if(_value > 0)
     std::cout << "ShowOutput Graph: " << _value << std::endl;
 }

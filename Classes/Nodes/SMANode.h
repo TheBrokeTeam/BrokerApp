@@ -16,7 +16,6 @@ public:
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
 
-//    int _idOutput;
 private:
     std::weak_ptr<Indicator> _indicator;
     std::shared_ptr<graph::Graph<GraphNode>> _graph;

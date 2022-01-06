@@ -13,13 +13,8 @@ SMANode::SMANode(std::shared_ptr<Indicator> sma, std::shared_ptr<graph::Graph<Gr
     setName("SMA Indicator");
     setType(UiNodeType::SMA);
 
-//    const GraphNode value(NodeType::VALUE, 0.f);
     const GraphNode op(NodeType::SMA, this);
-
-//    _idOutput = graph->insert_node(value);
     _id = graph->insert_node(op);
-
-//    graph->insert_edge(_id,_idOutput);
 }
 
 void SMANode::onRender(float dt) {
