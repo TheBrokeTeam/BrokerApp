@@ -16,7 +16,6 @@ public:
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
     void addNode(std::shared_ptr<INode> newNode);
-    void removeNode(std::shared_ptr<INode> newNode);
     void evaluateGraph(int id);
     void clear();
 

@@ -50,14 +50,9 @@ void BackTestingContext::initialize() {
     getWidget<ProfitAndLossesView>()->SetVisible(false);
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
-        for(auto& i : _indicators){
-            if(_ticker->removeTickable(i.get()))
-                puts("indicator removed successfully");
-        }
-        _indicators.clear();
+        removeAllIndicators();
 
         getWidget<StrategyEditor>()->clear();
-        _nodes.clear();
 
 //        //create test strategy for tests
 //        _ticker->removeTickable(_strategy.get());
@@ -258,7 +253,7 @@ void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
 
-std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type) {
+std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
 
     if(_ticker == nullptr)
         return nullptr;
@@ -272,7 +267,8 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             _indicators.push_back(std::move(sma));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
-            createIndicatorNode(UiNodeType::SMA,_indicators.back());
+            if(shouldCreateNode)
+                createIndicatorNode(UiNodeType::SMA,_indicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL:
@@ -334,12 +330,6 @@ void BackTestingContext::plotStrategy() {
 //    _strategy->render();
 }
 
-void BackTestingContext::plotNodes(float dt){
-    for (auto &n : _nodes)
-        n->render(dt);
-}
-
-
 //develop phase
 void BackTestingContext::showTabBars(bool show) {
     for(auto& w : getWidgets()){
@@ -392,11 +382,28 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
     return node;
 }
 
-void BackTestingContext::removedFromEditor(std::shared_ptr<INode> node) {
-    getWidget<StrategyEditor>()->removeNode(node);
+void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator) {
+    //first delete from ticker
+
+    if(_ticker->removeTickable(indicator.get()))
+        puts("indicator removed successfully");
+
+    //now delete from indicators list
+    for(auto it = _indicators.begin(); it != _indicators.end(); it++){
+        if((*it)->getId() == indicator->getId())
+            _indicators.erase(it);
+            break;
+    }
 }
 
+void BackTestingContext::removeAllIndicators() {
+    for(auto& i : _indicators){
+        if(_ticker->removeTickable(i.get()))
+            puts("indicator removed successfully");
+    }
 
+    _indicators.clear();
+}
 
 
 

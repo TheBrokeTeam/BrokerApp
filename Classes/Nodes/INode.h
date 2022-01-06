@@ -63,7 +63,7 @@ public:
         _isIndicatorNode = true;
     }
 
-    bool getIsIndicatorNode(){
+    bool getIsIndicatorNode() const{
         return _isIndicatorNode;
     };
 

@@ -137,21 +137,6 @@ void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
     _uiNodes.push_back(newNode);
 }
 
-void StrategyEditor::removeNode(std::shared_ptr<INode> node) {
-    auto it = _uiNodes.begin();
-    for(int i = 0; i < _uiNodes.size(); i++) {
-        if((*it)->getId() == node->getId()) {
-
-            //TODO::remove indicator
-            if((*it)->getIsIndicatorNode())
-
-
-            _uiNodes.erase(it);
-            break;
-        }
-    }
-}
-
 void StrategyEditor::clear() {
     _uiNodes.clear();
 //    _links.clear();
@@ -217,6 +202,10 @@ void StrategyEditor::deleteUiNodeFromFromList(int id) {
     std::shared_ptr<INode> node{nullptr};
     for(auto it = _uiNodes.begin(); it != _uiNodes.end(); it++){
         if((*it)->getId() == id) {
+
+            //remove indicator if it's an indicator node
+            if((*it)->getIsIndicatorNode())
+                getContext()->removeIndicator((*it)->getIndicator());
 
             //delete from root ids if needed
             removeRootId(id);

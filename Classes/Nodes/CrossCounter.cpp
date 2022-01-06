@@ -24,7 +24,6 @@ CrossCounter::CrossCounter(std::shared_ptr<graph::Graph<GraphNode>> graph):INode
 void CrossCounter::onRender(float dt) {
     const float node_width = 100.0f;
     bool isInputConnected = numberOfConnections(_idInput) > 0;
-    std::cout << "Connections: " << numberOfConnections(_idInput) << std::endl;
     ImNodes::BeginInputAttribute(_idInput, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
 
     if(!isInputConnected)
@@ -41,12 +40,10 @@ void CrossCounter::onRender(float dt) {
 
 
 void CrossCounter::handleStack(std::stack<float> &stack) {
-    std::cout << "Stack call: " << std::endl;
     const float inputValue = stack.top();
     stack.pop();
     if (inputValue > 0) {
         _counter++;
-        std::cout << "Counter trigger" << std::endl;;
     }
 }
 

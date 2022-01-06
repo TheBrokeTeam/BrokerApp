@@ -31,17 +31,16 @@ public:
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 
-    virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
+    virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false) = 0;
     virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) = 0;
     virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) = 0;
 
-    virtual void removedFromEditor(std::shared_ptr<INode> node) = 0;
+    virtual void removeIndicator(std::shared_ptr<Indicator> indicator) = 0;
+    virtual void removeAllIndicators() = 0;
 
 
     virtual void plotIndicators() = 0;
     virtual void plotStrategy() = 0;
-    virtual void plotNodes(float dt) = 0;
-
 
     template<typename T>
     T* getWidget()
