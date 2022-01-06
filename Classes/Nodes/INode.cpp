@@ -52,13 +52,6 @@ void INode::setType(const UiNodeType &type) {
     _type = type;
 }
 
-INode::~INode() {
-    for(auto id : _internalNodes)
-        _graph->erase_node(id);
-
-    _internalNodes.clear();
-}
-
 void INode::initStyle() {
 
     ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
@@ -81,7 +74,9 @@ void INode::finishStyle() {
 }
 
 int INode::addNode(const GraphNode& node) {
-    return _graph->insert_node(node);
+    int id = _graph->insert_node(node);
+    _internalNodes.push_back(id);
+    return id;
 }
 
 int INode::addEdge(int from, int to) {
@@ -96,3 +91,9 @@ GraphNode *INode::getGraphNode(int id) {
     return &_graph->node(id);
 }
 
+INode::~INode() {
+    for(auto id : _internalNodes)
+        _graph->erase_node(id);
+
+    _internalNodes.clear();
+}

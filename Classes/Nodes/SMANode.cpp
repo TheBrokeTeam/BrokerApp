@@ -26,20 +26,23 @@ void SMANode::onRender(float dt) {
 }
 
 void SMANode::handleStack(std::stack<float> &stack) {
-    auto smaShared = _sma.lock();
 
+    //Safe check ---------
+    /**Todo:: call context to remove this node if the indicator is not valid anymore */
+    auto smaShared = _sma.lock();
     if(!smaShared){
         stack.push(0.0f);
         return;
     }
-
+    //--------------------
 
     auto &sma = *dynamic_cast<SMA *>(smaShared.get());
 
-    if (sma.size() > 0) {
+    if (sma.size() > 0)
         stack.push(sma[0]);
-        return;
-    }
+    else
+        stack.push(0.0f);
+
 }
 
 void SMANode::initStyle() {
