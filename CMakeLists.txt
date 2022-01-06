@@ -82,7 +82,7 @@ add_executable(BrokerApp
         Classes/Nodes/CrossNode.cpp
         Classes/Widgets/StockList.h
         Classes/Widgets/StockList.cpp
-        Classes/Nodes/CrossNode.h Classes/Nodes/GraphNode.cpp Classes/Nodes/GraphNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h)
+        Classes/Nodes/CrossNode.h Classes/Nodes/GraphNode.cpp Classes/Nodes/GraphNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Tickables/Indicators/EMA.cpp Classes/Tickables/Indicators/EMA.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

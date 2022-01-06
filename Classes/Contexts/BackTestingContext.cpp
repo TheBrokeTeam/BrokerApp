@@ -15,6 +15,7 @@
 #include <rapidcsv.h>
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
+#include "../Tickables/Indicators/EMA.h"
 
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
@@ -266,29 +267,33 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
     std::shared_ptr<Indicator> indicator{nullptr};
 
     switch (type) {
-        case IndicatorsView::CandleIndicatorsTypes::SMA:
-        {
+        case IndicatorsView::CandleIndicatorsTypes::SMA: {
             std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back().get());
+        }
+            break;
+        case IndicatorsView::CandleIndicatorsTypes::BOLL: {
+            std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
+            _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
 
         }
             break;
-        case IndicatorsView::CandleIndicatorsTypes::BOLL:
-        {
-            std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
-            _indicators.push_back(std::move(boll));
+        case IndicatorsView::CandleIndicatorsTypes::EMA: {
+            std::unique_ptr<EMA> ema = std::make_unique<EMA>(_ticker.get());
+            _indicators.push_back(std::move(ema));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back().get());
         }
             break;
-        case IndicatorsView::CandleIndicatorsTypes::EMA:
         case IndicatorsView::CandleIndicatorsTypes::WMA:
         case IndicatorsView::CandleIndicatorsTypes::AVL:
         case IndicatorsView::CandleIndicatorsTypes::VWAP:
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
-        case IndicatorsView::CandleIndicatorsTypes::SAR :
+        case IndicatorsView::CandleIndicatorsTypes::SAR:
             _shouldShowLuizPopup = true;
             break;
         default:
