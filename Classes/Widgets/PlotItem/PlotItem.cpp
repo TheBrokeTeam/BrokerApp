@@ -14,6 +14,10 @@ const std::string& PlotItem::getName() {
     return _name;
 }
 
+const std::string& PlotItem::getPlotName() {
+    return _plotName;
+}
+
 const std::string &PlotItem::getId() {
     return _id;
 }

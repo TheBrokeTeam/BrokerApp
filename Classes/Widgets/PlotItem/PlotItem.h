@@ -20,6 +20,7 @@ public:
 
     void setName(const std::string& name);
     const std::string& getName();
+    const std::string& getPlotName();
     const std::string& getId();
     const std::vector<double>& getTime();
 

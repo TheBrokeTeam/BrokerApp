@@ -77,7 +77,22 @@ void IndicatorsView::drawView() {
         }
 
     }
+
     ImGui::EndChild();
+
+    if (ImGui::BeginDragDropTarget()) {
+
+        //######################################################
+        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING)) {
+            //indice of dragged item
+            Indicator& i = *(Indicator *) payload->Data;
+
+            std::cout << "Indicator to remove: " << i.getName().c_str() << std::endl;
+
+        }
+        ImGui::EndDragDropTarget();
+    }
+    //######################################################‘
 }
 
 
