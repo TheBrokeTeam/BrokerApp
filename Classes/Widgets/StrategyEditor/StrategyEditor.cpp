@@ -118,21 +118,7 @@ void StrategyEditor::updateVisible(float dt) {
             for (const int node_id : selected_nodes)
             {
                 _graph->erase_node(node_id);
-                auto iter = std::find_if(
-                        _uiNodes.begin(), _uiNodes.end(), [node_id](std::shared_ptr<INode> node) -> bool {
-                            return node->getId() == node_id;
-                        });
-
-                if(iter == std::end(_uiNodes))
-                    return;
-
-
-                int nodeId = (*iter)->getId();
-                //delete from root ids if needed
-                removeRootId(nodeId);
-
-                //delete from list
-                _uiNodes.erase(iter);
+                deleteUiNodeFromFromList(node_id);
             }
         }
     }
@@ -194,16 +180,35 @@ void StrategyEditor::evaluateGraph(int id) {
 }
 
 void StrategyEditor::removeRootId(int id) {
-    auto it = std::find_if(_rootNodes.begin(),_rootNodes.begin(),[id](int nodeId){
-        return id == nodeId;
-    });
 
-    if(it != std::end(_rootNodes)){
-        _rootNodes.erase(it);
-        return;
+    for(auto it = _rootNodes.begin(); it != _rootNodes.end(); it++){
+        if((*it) == id) {
+            _rootNodes.erase(it);
+            return;
+        }
     }
 
     std::cout << "Root node not found to remove!" << std::endl;
+}
+
+ std::shared_ptr<INode> StrategyEditor::getNodeFromId(int id){
+//    auto iter = std::find_if(
+//            _uiNodes.begin(), _uiNodes.end(), [node_id](std::shared_ptr<INode> node) -> bool {
+//                return node->getId() == node_id;
+//            });
+//
+//    if(iter == std::end(_uiNodes))
+//        return;
+
+    std::shared_ptr<INode> node{nullptr};
+    for(auto it = _uiNodes.begin(); it != _uiNodes.end(); it++){
+        if((*it)->getId() == id) {
+            node = (*it);
+            break;
+        }
+    }
+
+    return node;
 }
 
 void StrategyEditor::addRootId(int id) {
@@ -212,4 +217,19 @@ void StrategyEditor::addRootId(int id) {
 
 const std::shared_ptr<graph::Graph<GraphNode>> &StrategyEditor::getGraph() {
     return _graph;
+}
+
+void StrategyEditor::deleteUiNodeFromFromList(int id) {
+
+    std::shared_ptr<INode> node{nullptr};
+    for(auto it = _uiNodes.begin(); it != _uiNodes.end(); it++){
+        if((*it)->getId() == id) {
+
+            //delete from root ids if needed
+            removeRootId(id);
+
+            _uiNodes.erase(it);
+            break;
+        }
+    }
 }

@@ -27,6 +27,8 @@ public:
 
 
 private:
+    std::shared_ptr<INode> getNodeFromId(int id);
+    void deleteUiNodeFromFromList(int id);
     std::vector<int> _rootNodes;
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     std::vector<std::shared_ptr<INode>> _uiNodes;
