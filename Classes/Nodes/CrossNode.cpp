@@ -8,20 +8,19 @@
 #include "../Editor.h"
 
 
-CrossNode::CrossNode(std::shared_ptr<graph::Graph<GraphNode>> graph):_graph(graph) {
+CrossNode::CrossNode(std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph) {
     setName("Cross");
     setType(UiNodeType::CROSS);
 
     const GraphNode value(NodeType::VALUE);
     const GraphNode op(NodeType::CROSS, this);
 
-    _idInput1 = _graph->insert_node(value);
-    _idInput2 = _graph->insert_node(value);
+    _idInput1 = addNode(value);
+    _idInput2 = addNode(value);
+    _id = addNode(op);
 
-    _id = _graph->insert_node(op);
-
-    _graph->insert_edge(_id,_idInput1);
-    _graph->insert_edge(_id,_idInput2);
+    addEdge(_id,_idInput1);
+    addEdge(_id,_idInput2);
 }
 
 void CrossNode::onRender(float dt) {
@@ -29,14 +28,14 @@ void CrossNode::onRender(float dt) {
 
     //render node
     {
-        bool isInputConnected = _graph->num_edges_from_node(_idInput1) > 0;
+        bool isInputConnected = numberOfConnections(_idInput1) > 0;
         ImNodes::BeginInputAttribute(_idInput1, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
         const float label_width = ImGui::CalcTextSize("input 1").x;
         ImGui::TextUnformatted("input 1");
         if (!isInputConnected) {
             ImGui::SameLine();
             ImGui::PushItemWidth(node_width - label_width);
-            ImGui::DragFloat("##hidelabel", &_graph->node(_idInput1).value, 0.01f);
+            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput1)->value, 0.01f);
             ImGui::PopItemWidth();
         }
 //        else{
@@ -52,14 +51,14 @@ void CrossNode::onRender(float dt) {
     }
 
     {
-        bool isInputConnected = _graph->num_edges_from_node(_idInput2) > 0;
+        bool isInputConnected = numberOfConnections(_idInput2) > 0;
         ImNodes::BeginInputAttribute(_idInput2, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
         const float label_width = ImGui::CalcTextSize("input 2").x;
         ImGui::TextUnformatted("input 2");
         if (!isInputConnected) {
             ImGui::SameLine();
             ImGui::PushItemWidth(node_width - label_width);
-            ImGui::DragFloat("##hidelabel", &_graph->node(_idInput2).value, 0.01f);
+            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput2)->value, 0.01f);
             ImGui::PopItemWidth();
         }
 //        else{
@@ -102,5 +101,6 @@ void CrossNode::handleStack(std::stack<float> &stack) {
     stack.push(_output);
 }
 
+//delete graph relations
 CrossNode::~CrossNode() {}
 

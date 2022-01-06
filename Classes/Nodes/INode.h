@@ -12,6 +12,8 @@
 #include <map>
 
 #include <stack>
+#include "../Helpers/graph.h"
+
 
 enum class NodeType
 {
@@ -19,7 +21,6 @@ enum class NodeType
     SMA,
     CROSS,
     CROSS_COUNTER,
-    RESULT,
     VALUE
 };
 
@@ -29,17 +30,29 @@ enum class UiNodeType
     SMA,
     CROSS,
     CROSS_COUNTER,
-    RESULT
 };
 
 
+class GraphNode;
+
 class INode {
 public:
-    INode();
+    INode(std::shared_ptr<graph::Graph<GraphNode>> graph);
     virtual ~INode();
 
     virtual void handleStack(std::stack<float>& stack) = 0;
     virtual void onRender(float dt) = 0;
+
+    int addNode(const GraphNode& node);
+    int addEdge(int from, int to);
+
+    int numberOfConnections(int nodeId);
+    GraphNode* getGraphNode(int id);
+
+        //just for root nodes
+    virtual int getRootNodeConnectionsNumber(){
+        return 0;
+    };
 
     void render(float dt);
 
@@ -63,9 +76,12 @@ private:
     std::string _name = "Node name";
     ImVec2 pos;
     bool _init = false;
+    std::vector<int> _internalNodes;
+    std::shared_ptr<graph::Graph<GraphNode>> _graph;
 };
 
-struct GraphNode {
+class GraphNode {
+public:
     INode* owner{nullptr};
     NodeType type;
     float value;

@@ -16,8 +16,9 @@ public:
     ~CrossCounter();
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
+    int getRootNodeConnectionsNumber();
+
 private:
-    std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     int _idInput;
     int _counter = 0;
 };

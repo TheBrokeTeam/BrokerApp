@@ -6,7 +6,7 @@
 #include <imnodes.h>
 #include "../Editor.h"
 
-CrossCounter::CrossCounter(std::shared_ptr<graph::Graph<GraphNode>> graph): _graph(graph)
+CrossCounter::CrossCounter(std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph)
 {
     setName("Cross counter");
     setType(UiNodeType::CROSS_COUNTER);
@@ -14,16 +14,16 @@ CrossCounter::CrossCounter(std::shared_ptr<graph::Graph<GraphNode>> graph): _gra
     const GraphNode value(NodeType::VALUE, 0.f);
     const GraphNode op(NodeType::CROSS_COUNTER, this);
 
-    _idInput = graph->insert_node(value);
-    _id = graph->insert_node(op);
+    _idInput = addNode(value);
+    _id = addNode(op);
 
-    graph->insert_edge(_id, _idInput);
+    addEdge(_id, _idInput);
 }
 
 
 void CrossCounter::onRender(float dt) {
     const float node_width = 100.0f;
-    bool isInputConnected = _graph->num_edges_from_node(_idInput) > 0;
+    bool isInputConnected = numberOfConnections(_idInput) > 0;
     ImNodes::BeginInputAttribute(_idInput, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
 
     if(!isInputConnected)
@@ -47,4 +47,8 @@ void CrossCounter::handleStack(std::stack<float> &stack) {
 }
 
 CrossCounter::~CrossCounter() {}
+
+int CrossCounter::getRootNodeConnectionsNumber() {
+    return numberOfConnections(_idInput);
+}
 

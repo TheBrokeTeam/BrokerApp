@@ -9,11 +9,11 @@
 #include "../Editor.h"
 
 
-SMANode::SMANode(SMA* sma, std::shared_ptr<graph::Graph<GraphNode>> graph):_sma(std::move(sma)),_graph(graph){
+SMANode::SMANode(std::shared_ptr<Indicator> sma, std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph),_sma(sma){
     setName("SMA Indicator");
     setType(UiNodeType::SMA);
     const GraphNode op(NodeType::SMA, this);
-    _id = graph->insert_node(op);
+    _id = addNode(op);
 }
 
 void SMANode::onRender(float dt) {
@@ -26,23 +26,37 @@ void SMANode::onRender(float dt) {
 }
 
 void SMANode::handleStack(std::stack<float> &stack) {
-    auto& sma = *dynamic_cast<SMA*>(_sma.get());
+    auto smaShared = _sma.lock();
 
-    if(sma.size() > 0){
-        stack.push(sma[0]);
+    if(!smaShared){
+        stack.push(0.0f);
         return;
     }
 
-    stack.push(0.0f);
+
+    auto &sma = *dynamic_cast<SMA *>(smaShared.get());
+
+    if (sma.size() > 0) {
+        stack.push(sma[0]);
+        return;
+    }
 }
 
 void SMANode::initStyle() {
+    auto smaShared = _sma.lock();
+    if(!smaShared) {
+        INode::initStyle();
+        return;
+    }
 
-    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(_sma->getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
-    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
-    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
+    auto &sma = *dynamic_cast<SMA*>(smaShared.get());
+
+    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+
+    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
     ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
 }
 

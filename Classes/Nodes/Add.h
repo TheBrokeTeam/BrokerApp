@@ -16,12 +16,7 @@ public:
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
 
-    int getIdInput1();
-    int getIdInput2();
-
-
 private:
-    std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     int _idInput1;
     int _idInput2;
 };

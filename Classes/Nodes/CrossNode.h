@@ -6,7 +6,6 @@
 #define BROKERAPP_CROSSNODE_H
 
 #include "INode.h"
-#include "../Helpers/graph.h"
 
 class CrossNode : public INode {
 public:
@@ -27,8 +26,6 @@ private:
     bool _isCrossUp = true;
     bool _output = false;
     int _countCross = 0;
-
-    std::shared_ptr<graph::Graph<GraphNode>> _graph;
 };
 
 

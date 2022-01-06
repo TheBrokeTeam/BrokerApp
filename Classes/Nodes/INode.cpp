@@ -7,7 +7,8 @@
 #include <imnodes.h>
 #include "../Editor.h"
 
-INode::INode() {
+INode::INode(std::shared_ptr<graph::Graph<GraphNode>> graph):_graph(std::move(graph))
+{
     ImVec2 mousePos = ImGui::GetMousePos();
     ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
     // TODO::understand why is that
@@ -51,7 +52,12 @@ void INode::setType(const UiNodeType &type) {
     _type = type;
 }
 
-INode::~INode() {}
+INode::~INode() {
+    for(auto id : _internalNodes)
+        _graph->erase_node(id);
+
+    _internalNodes.clear();
+}
 
 void INode::initStyle() {
 
@@ -72,5 +78,21 @@ void INode::finishStyle() {
     ImNodes::PopColorStyle();
     ImNodes::PopColorStyle();
     ImNodes::PopColorStyle();
+}
+
+int INode::addNode(const GraphNode& node) {
+    return _graph->insert_node(node);
+}
+
+int INode::addEdge(int from, int to) {
+    return _graph->insert_edge(from,to);
+}
+
+int INode::numberOfConnections(int nodeId) {
+    return _graph->num_edges_from_node(nodeId);
+}
+
+GraphNode *INode::getGraphNode(int id) {
+    return &_graph->node(id);
 }
 

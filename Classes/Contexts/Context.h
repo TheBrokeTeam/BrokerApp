@@ -33,7 +33,6 @@ public:
 
     virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) = 0;
     virtual std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) = 0;
-    virtual std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) = 0;
     virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) = 0;
 
 

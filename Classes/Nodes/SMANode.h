@@ -12,15 +12,14 @@
 
 class SMANode: public INode {
 public:
-    SMANode(SMA* sma,std::shared_ptr<graph::Graph<GraphNode>> graph);
+    SMANode(std::shared_ptr<Indicator> sma,std::shared_ptr<graph::Graph<GraphNode>> graph);
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
     void initStyle() override;
     void finishStyle()override ;
 
 private:
-    std::shared_ptr<SMA> _sma;
-    std::shared_ptr<graph::Graph<GraphNode>> _graph;
+    std::weak_ptr<Indicator> _sma;
 };
 
 

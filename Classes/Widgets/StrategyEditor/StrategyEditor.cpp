@@ -6,8 +6,6 @@
 #include "../../Editor.h"
 #include <imnodes.h>
 #include "../../Nodes/Add.h"
-#include "../../Nodes/ShowOutput.h"
-
 
 // User callback
 void mini_map_node_hovering_callback(int node_id, void* user_data)
@@ -124,38 +122,25 @@ void StrategyEditor::updateVisible(float dt) {
                         _uiNodes.begin(), _uiNodes.end(), [node_id](std::shared_ptr<INode> node) -> bool {
                             return node->getId() == node_id;
                         });
-                // Erase any additional internal nodes
-                bool found = false;
-                switch ((*iter)->getType())
-                {
-                    case UiNodeType::ADD:
-                        {
-                            auto addNode = dynamic_cast<Add *>(iter->get());
-                            _graph->erase_node(addNode->getIdInput1());
-                            _graph->erase_node(addNode->getIdInput2());
-                            found = true;
-                        }
-                        break;
-                    case UiNodeType::RESULT:
-                        {
-                            auto addNode = dynamic_cast<ShowOutput*>(iter->get());
-                            _graph->erase_node(addNode->getIdInput());
-                            found = true;
-                            removeRootId(node_id);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                if(found)
-                _uiNodes.erase(iter);
 
+                if(iter == std::end(_uiNodes))
+                    return;
+
+
+                int nodeId = (*iter)->getId();
+                //delete from root ids if needed
+                removeRootId(nodeId);
+
+                //delete from list
+                _uiNodes.erase(iter);
             }
         }
     }
 
-    for(auto id : _rootNodes)
-        evaluateGraph(id);
+    for(auto id : _rootNodes) {
+        if(_graph->node(id).owner->getRootNodeConnectionsNumber() > 0)
+            evaluateGraph(id);
+    }
 }
 
 
@@ -223,4 +208,8 @@ void StrategyEditor::removeRootId(int id) {
 
 void StrategyEditor::addRootId(int id) {
     _rootNodes.push_back(id);
+}
+
+const std::shared_ptr<graph::Graph<GraphNode>> &StrategyEditor::getGraph() {
+    return _graph;
 }

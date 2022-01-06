@@ -20,17 +20,16 @@ public:
     void evaluateGraph(int id);
     void clear();
 
-//    std::vector<std::weak_ptr<INode>> _nodes;
-//    std::vector<std::pair<int, int>> _links;
+    const std::shared_ptr<graph::Graph<GraphNode>>& getGraph();
 
-    std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
-    std::vector<std::shared_ptr<INode>> _uiNodes;
     void addRootId(int id);
     void removeRootId(int id);
 
 
 private:
     std::vector<int> _rootNodes;
+    std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
+    std::vector<std::shared_ptr<INode>> _uiNodes;
 };
 
 #endif //BROKERAPP_STRATEGYEDITOR_H
