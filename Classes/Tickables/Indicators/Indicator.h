@@ -13,7 +13,7 @@
 class Indicator : public Tickable, public PlotItem {
 public:
     explicit Indicator(Ticker* ticker);
-    ~Indicator();
+    virtual ~Indicator();
 
     //TODO:: this is a main behavior and need attention
     /** For Now calculate will be called at onClose bar */

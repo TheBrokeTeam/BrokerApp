@@ -433,7 +433,7 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             node = std::make_shared<Add>(_graph);
             break;
         case UiNodeType::SMA:
-            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA),_graph);
+            node = std::make_shared<SMANode>(dynamic_cast<SMA*>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA).get()),_graph);
             break;
         case UiNodeType::CROSS:
             node = std::make_shared<CrossNode>(_graph);

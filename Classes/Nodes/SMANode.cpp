@@ -9,10 +9,9 @@
 #include "../Editor.h"
 
 
-SMANode::SMANode(std::shared_ptr<Indicator> sma, std::shared_ptr<graph::Graph<GraphNode>> graph):_indicator(std::move(sma)),_graph(graph){
+SMANode::SMANode(SMA* sma, std::shared_ptr<graph::Graph<GraphNode>> graph):_sma(std::move(sma)),_graph(graph){
     setName("SMA Indicator");
     setType(UiNodeType::SMA);
-
     const GraphNode op(NodeType::SMA, this);
     _id = graph->insert_node(op);
 }
@@ -27,15 +26,31 @@ void SMANode::onRender(float dt) {
 }
 
 void SMANode::handleStack(std::stack<float> &stack) {
-    if(auto indicator = _indicator.lock()) {
-        auto sma = dynamic_cast<SMA*>(indicator.get());
+    auto& sma = *dynamic_cast<SMA*>(_sma.get());
 
-        if(sma->size() > 0){
-            stack.push((*sma)[0]);
-            return;
-        }
+    if(sma.size() > 0){
+        stack.push(sma[0]);
+        return;
     }
 
     stack.push(0.0f);
 }
 
+void SMANode::initStyle() {
+
+    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(_sma->getColor()));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
+    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
+    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
+    ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
+}
+
+void SMANode::finishStyle() {
+    ImGui::PopStyleColor();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+}

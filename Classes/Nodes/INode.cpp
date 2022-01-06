@@ -16,15 +16,7 @@ INode::INode() {
 }
 
 void INode::render(float dt) {
-
-    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
-
-    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
-    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
-    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_black);
-
+    initStyle();
     ImNodes::BeginNode(_id);
 
     if(!_init) {
@@ -42,15 +34,9 @@ void INode::render(float dt) {
     onRender(dt);
     ImGui::PopStyleColor();
 
-
     ImNodes::EndNode();
 
-    ImGui::PopStyleColor();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
+    finishStyle();
 }
 
 void INode::setName(const std::string &name) {
@@ -66,4 +52,25 @@ void INode::setType(const UiNodeType &type) {
 }
 
 INode::~INode() {}
+
+void INode::initStyle() {
+
+    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
+
+    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
+    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
+    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_black);
+
+}
+
+void INode::finishStyle() {
+    ImGui::PopStyleColor();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+}
 

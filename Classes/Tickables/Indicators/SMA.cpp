@@ -49,6 +49,14 @@ int SMA::getAverageSize() const {
     return _averageSize;
 }
 
+const ImVec4 &SMA::getColor() {
+    return _color;
+}
+
+SMA::~SMA() {
+
+}
+
 
 
 

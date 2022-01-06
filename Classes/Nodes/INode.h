@@ -42,6 +42,12 @@ public:
     virtual void onRender(float dt) = 0;
 
     void render(float dt);
+
+    //For customize the title bar.. should be used in pair
+    virtual void initStyle();
+    virtual void finishStyle();
+
+
     int getId() const{
         return _id;
     }

@@ -25,7 +25,7 @@ CrossNode::CrossNode(std::shared_ptr<graph::Graph<GraphNode>> graph):_graph(grap
 }
 
 void CrossNode::onRender(float dt) {
-    const float node_width = 100.f;
+    const float node_width = 120.f;
 
     //render node
     {
@@ -39,12 +39,12 @@ void CrossNode::onRender(float dt) {
             ImGui::DragFloat("##hidelabel", &_graph->node(_idInput1).value, 0.01f);
             ImGui::PopItemWidth();
         }
-        else{
-            ImGui::SameLine();
-            ImGui::PushItemWidth(node_width - label_width);
-            ImGui::Text("%.2f", _currentInput1);
-            ImGui::PopItemWidth();
-        }
+//        else{
+//            ImGui::SameLine();
+//            ImGui::PushItemWidth(node_width - label_width);
+//            ImGui::Text("%.2f", _currentInput1);
+//            ImGui::PopItemWidth();
+//        }
         ImGui::SameLine();
 
         ImGui::Checkbox("Cross up", &_isCrossUp);
@@ -62,18 +62,18 @@ void CrossNode::onRender(float dt) {
             ImGui::DragFloat("##hidelabel", &_graph->node(_idInput2).value, 0.01f);
             ImGui::PopItemWidth();
         }
-        else{
-            ImGui::SameLine();
-            ImGui::PushItemWidth(node_width - label_width);
-            ImGui::Text("%.2f", _currentInput2);
-            ImGui::PopItemWidth();
-        }
+//        else{
+//            ImGui::SameLine();
+//            ImGui::PushItemWidth(node_width - label_width);
+//            ImGui::Text("%.2f", _currentInput2);
+//            ImGui::PopItemWidth();
+//        }
 
         ImNodes::EndInputAttribute();
     }
 
     ImNodes::BeginOutputAttribute(_id);
-    ImGui::Indent(node_width - ImGui::CalcTextSize("output").x);
+    ImGui::Indent(ImGui::GetItemRectSize().x + ImGui::CalcTextSize("output").x);
     ImGui::Text("output");
     ImNodes::EndInputAttribute();
 }
@@ -96,11 +96,8 @@ void CrossNode::handleStack(std::stack<float> &stack) {
     _lastInput1 = _currentInput1;
     _lastInput2 = _currentInput2;
 
-    if(_output) {
+    if(_output)
         _countCross++;
-        std::cout << "Cross: " << _countCross << std::endl;
-    }
-
 
     stack.push(_output);
 }
