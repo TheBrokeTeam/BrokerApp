@@ -9,7 +9,7 @@
 
 class StockList : public Widget {
 public:
-    StockList(Editor* editor);
+    StockList(Context* context);
 
     struct StockInfo {
         std::string name{"Name"};
@@ -23,10 +23,12 @@ public:
 
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
-    void cell(StockInfo info);
 
 private:
    // std::vector<std::shared_ptr<StockInfo>> _stocks;
+   void buildHeader();
+    static void cell();
+    static void buildStockList();
 
 };
 

@@ -2,22 +2,20 @@
 // Created by Arthur Abel Motelevicz on 22/12/21.
 //
 
-#include "DataLoader.h"
+#include "DownloaderView.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
 #include "../Editor.h"
 
-DataLoader::DataLoader(Editor *editor) : Widget(editor)
+DownloaderView::DownloaderView(Context* context) : Widget(context)
 {
-    _title                  = "Data Loader";
+    _title                  = "Downloader";
     _is_window              = true;
 }
 
-void DataLoader::updateVisible(float dt)
+void DownloaderView::updateVisible(float dt)
 {
-    //change background of window
-    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    Widget::updateVisible(dt);
 
     //change color text
     PushStyleColor(ImGuiCol_Text,Editor::broker_black);
@@ -29,26 +27,6 @@ void DataLoader::updateVisible(float dt)
 
     //change background of items on combos
     PushStyleColor(ImGuiCol_PopupBg,Editor::broker_white);
-
-    ImGui::TextColored(Editor::broker_white,"Data downloader");
-    ImGui::SameLine();
-
-    //change the background of close button
-    PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
-
-    //adding the close button
-    auto info = _editor->getTexture(Editor::Icons::close_window);
-    ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
-    if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
-        _editor->showDataLoader(false);
-    }
-
-    ImGui::Separator();
-
-    ImGui::Spacing();
-//    ImGui::Dummy(ImVec2(200,20));
 
     //change background from other buttons
     PushStyleColor(ImGuiCol_Button,Editor::broker_white);
@@ -115,16 +93,15 @@ void DataLoader::updateVisible(float dt)
         symbol.setTimeInterval(Symbol::Interval(interval));
 
         //TODO:: the ticker should  be created by charts widget
-        auto ticker = getContext()->loadSymbol(symbol);
-        _editor->addChartWidget(ticker);
+        getContext()->loadSymbol(symbol);
     }
 }
 
-int DataLoader::getWindowFlags() {
+int DownloaderView::getWindowFlags() {
     return  ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoCollapse;
 }
 
-void DataLoader::onPushStyleVar() {
+void DownloaderView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }

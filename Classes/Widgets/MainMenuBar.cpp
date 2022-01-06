@@ -6,9 +6,14 @@
 #include <imgui_internal.h>
 #include "MainMenuBar.h"
 #include "../Editor.h"
+#include "DownloaderView.h"
+#include "SimulationController.h"
+#include "ChartView.h"
+#include "ProfitAndLossesView.h"
+#include "StockList.h"
 #include <fmt/format.h>
 
-MainMenuBar::MainMenuBar(Editor *editor) : Widget(editor)
+MainMenuBar::MainMenuBar(Context* context) : Widget(context)
 {
     _title                  = "MainMenuBar";
     _is_window              = false;
@@ -35,11 +40,13 @@ void MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Data downloader", "CTRL+D",&_show_downloader)){}
-            if (ImGui::MenuItem("Simulator", "CTRL+S",&_show_simulator)){}
-            if (ImGui::MenuItem("Chart", "CTRL+G",&_show_charts)){}
-            if (ImGui::MenuItem("Indicators", "",&_show_indicators)){}
-            if (ImGui::MenuItem("Stock List", "",&_show_stocklist)){}
+            if (ImGui::MenuItem("Data downloader", "CTRL+D",&(getContext()->getWidget<DownloaderView>()->GetVisible()))){}
+            if (ImGui::MenuItem("Simulator", "CTRL+S",&(getContext()->getWidget<SimulationController>()->GetVisible()))){}
+            if (ImGui::MenuItem("ChartView", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
+            if (ImGui::MenuItem("IndicatorsView", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
+            if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
+            if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
+
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);
             ImGui::MenuItem("ImGui Style",   nullptr, &_imgui_style);
@@ -48,19 +55,10 @@ void MainMenuBar::updateAlways(float dt)
             ImGui::MenuItem("Show tabbars on views", "", &_show_tabbars);
 
             static int ui_num = 1;
-
-//            if(ImGui::InputInt("ui number",&ui_num)){}
-
             if(ImGui::Button("Save UI")){
                 std::string _filePath = fmt::format("ui_num_{}",ui_num);
                 ImGui::SaveIniSettingsToDisk(_filePath.c_str());
             }
-
-//            if(ImGui::Button("Load UI")){
-//                std::string _filePath = fmt::format("ui_num_{}",ui_num);
-//                //TODO:: this do not work properly here need to be called before the first newFrame call.
-//                ImGui::LoadIniSettingsFromDisk(_filePath.c_str());
-//            }
 
             ImGui::EndMenu();
         }
@@ -73,13 +71,9 @@ void MainMenuBar::updateAlways(float dt)
         ImGui::EndMainMenuBar();
     }
 
-    //update editor
-    _editor->showDataLoader(_show_downloader);
-    _editor->showSimulationController(_show_simulator);
-    _editor->showCharts(_show_charts);
-    _editor->showIndicators(_show_indicators);
-    _editor->showTabBars(_show_tabbars);
-    _editor->showStockList(_show_stocklist);
+    //TODO:: remove this on release
+    //update editor develop function
+    getContext()->showTabBars(_show_tabbars);
 
     if (_imgui_metrics)
     {

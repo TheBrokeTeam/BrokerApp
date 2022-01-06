@@ -13,29 +13,95 @@
 #include <fmt/format.h>
 #include <zip_file.hpp>
 #include <rapidcsv.h>
+#include "../Tickables/Indicators/SMA.h"
+#include "../Tickables/Indicators/Bollinger.h"
+
+#include "../Widgets/MainMenuBar.h"
+#include "../Widgets/DownloaderView.h"
+#include "../Widgets/SimulationController.h"
+#include "../Widgets/ProfitAndLossesView.h"
+#include "../Widgets/ChartView.h"
+#include "../Widgets/StockList.h"
+#include "../Widgets/StrategyEditor/StrategyEditor.h"
+#include "../Tickables/Strategies/IndicatorToChartExample.h"
+#include "../Nodes/SMANode.h"
+#include "../Nodes/TestAddNode.h"
+#include "../Nodes/TestMultiplyNode.h"
+#include "../Nodes/TestResultNode.h"
+#include "../Nodes/CrossNode.h"
+
+#include "../Nodes/Add.h"
+
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
                                         "3d", "1w", "1mo"};
 
+BackTestingContext::BackTestingContext(Editor *editor) : Context(editor) {
+
+}
+
+void BackTestingContext::initialize() {
+
+    // Initialize the context
+    _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
+    _widgets.emplace_back(std::make_shared<DownloaderView>(this));
+    _widgets.emplace_back(std::make_shared<SimulationController>(this));
+    _widgets.emplace_back(std::make_shared<ChartView>(this));
+    _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
+    _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
+    _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
+    _widgets.emplace_back(std::make_shared<StockList>(this));
+
+    getWidget<ProfitAndLossesView>()->SetVisible(false);
+
+    getWidget<IndicatorsView>()->setTrashCallback([this](){
+        for(auto& i : _indicators){
+            if(_ticker->removeTickable(i.get()))
+                puts("indicator removed successfully");
+        }
+        _indicators.clear();
+
+        getWidget<StrategyEditor>()->clear();
+        _nodes.clear();
+
+//        //create test strategy for tests
+//        _ticker->removeTickable(_strategy.get());
+//
+//        _strategy.reset();
+//        _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
+//        _ticker->addStrategy(_strategy.get());
+//        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
+    });
+
+}
+
 Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
-    puts("TODO load symbol!");
 
     std::string filename = "data.zip";
-
     auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
 
     if(!dataAlreadyExists(symbol))
         auto resp = download_file(url,filename);
 
-    //create a ticker for the symbol loaded
-    auto ticker = Ticker(this,std::make_shared<Symbol>(symbol));
-    _tickers.emplace(symbol,ticker);
+    _ticker.reset();
+    _ticker = std::make_shared<Ticker>(this,symbol);
 
-    //load tickdata from symbol file already donwloaded
-    _data.emplace(symbol.getName(),loadCsv(symbol));
+//    //create test strategy for tests
+//    _strategy.reset();
+//    _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
+//    _ticker->addStrategy(_strategy.get());
+//
+//    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
 
-    return &_tickers.at(symbol);
+   _data.clear();
+    _data = loadCsv(symbol);
+
+    auto chart = getWidget<ChartView>();
+    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
+    loadTicker();
+
+    return _ticker.get();
 
 }
 
@@ -160,37 +226,33 @@ std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
     return out;
 }
 
-void BackTestingContext::loadTicker(const Symbol &symbol) {
-    auto& ticker = _tickers.at(symbol);
-    auto& vec = _data.at(symbol.getName());
-    for(auto& d : vec)
-        ticker.tick(d);
+void BackTestingContext::loadTicker() {
+    for(auto& d : _data)
+        _ticker->tick(d);
 }
 
-void BackTestingContext::update(float dt) {
+void BackTestingContext::updateData(float dt) {
 
     if(!_simulating) return;
 
-    auto& data = _data.at(_tickerToSimulate->getSymbol()->getName());
     _currentTime += dt*_speed;
     if(_currentTime >= _timeToTick){
         int numberOfTicks = floor(_currentTime/_timeToTick);
         _currentTime = 0;
         for(int i = 0; i < numberOfTicks; i++)
         {
-            auto& tickData = data[_currentIndex++];
-            _tickerToSimulate->tick(tickData);
-            if(_currentIndex >= data.size())
+            auto& tickData = _data[_currentIndex++];
+            _ticker->tick(tickData);
+            if(_currentIndex >= _data.size())
                 _simulating = false;
         }
     }
 }
 
 void BackTestingContext::startSimulation(Ticker* ticker) {
-    //just for test
+    //just for tests
     //TODO:: use the ticker parameter
-    _tickerToSimulate =  &_tickers.begin()->second;
-    _tickerToSimulate->reset();
+    _ticker->reset();
     _currentIndex = 0;
     _simulating = true;
 }
@@ -198,6 +260,193 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
+
+std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type) {
+
+    std::shared_ptr<Indicator> indicator{nullptr};
+
+    switch (type) {
+        case IndicatorsView::CandleIndicatorsTypes::SMA:
+        {
+            std::unique_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
+            _indicators.push_back(std::move(sma));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back().get());
+
+        }
+            break;
+        case IndicatorsView::CandleIndicatorsTypes::BOLL:
+        {
+            std::unique_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
+            _indicators.push_back(std::move(boll));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back().get());
+        }
+            break;
+        case IndicatorsView::CandleIndicatorsTypes::EMA:
+        case IndicatorsView::CandleIndicatorsTypes::WMA:
+        case IndicatorsView::CandleIndicatorsTypes::AVL:
+        case IndicatorsView::CandleIndicatorsTypes::VWAP:
+        case IndicatorsView::CandleIndicatorsTypes::TRIX:
+        case IndicatorsView::CandleIndicatorsTypes::SAR :
+            _shouldShowLuizPopup = true;
+            break;
+        default:
+            break;
+    }
+
+    return indicator;
+}
+
+void BackTestingContext::plotIndicators() {
+    for(auto& i : _indicators) {
+        i->render();
+    }
+
+    if(_shouldShowLuizPopup){
+        {
+            ImGui::OpenPopup("Indicator missing!");
+            // Always center this window when appearing
+            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+            if (ImGui::BeginPopupModal("Indicator missing!", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::Text("Hey Luiz, it seems like you are not working too hard.. \nWhat about work on this right now?\n\n");
+                ImGui::Separator();
+
+                ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_light_grey);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_dark_grey);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow);
+
+                if (ImGui::Button("OK", ImVec2(120, 0))) {
+                    _shouldShowLuizPopup = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::PopStyleColor(3);
+                ImGui::SetItemDefaultFocus();
+                ImGui::EndPopup();
+            }
+        }
+    }
+}
+
+void BackTestingContext::plotStrategy() {
+//    _strategy->render();
+}
+
+void BackTestingContext::plotNodes(float dt){
+    for (auto &n : _nodes)
+        n->render(dt);
+}
+
+
+//develop phase
+void BackTestingContext::showTabBars(bool show) {
+    for(auto& w : getWidgets()){
+        w->showTabBar(show);
+    }
+    MainMenuBar::_show_tabbars = show;
+}
+
+std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::CandleIndicatorsTypes type) {
+
+    std::shared_ptr<INode> node{nullptr};
+
+    switch (type) {
+        case IndicatorsView::CandleIndicatorsTypes::SMA:
+        {
+//            node = std::make_shared<SMANode>();
+
+            /*TODO:: define behavior: there are 2 options
+             1) let the strategy and chart independents
+             2) make both work as one : if put indicator on the chart the node will appear
+                on the editor and the other way around.
+            */
+//            loadIndicator(type);
+
+//            _nodes.push_back(node);
+            auto node = createNode(IndicatorsView::Nodes::SMA);
+            getWidget<StrategyEditor>()->addNode(node);
+        }
+            break;
+        case IndicatorsView::CandleIndicatorsTypes::BOLL:
+        case IndicatorsView::CandleIndicatorsTypes::EMA:
+        case IndicatorsView::CandleIndicatorsTypes::WMA:
+        case IndicatorsView::CandleIndicatorsTypes::AVL:
+        case IndicatorsView::CandleIndicatorsTypes::VWAP:
+        case IndicatorsView::CandleIndicatorsTypes::TRIX:
+        case IndicatorsView::CandleIndicatorsTypes::SAR :
+            _shouldShowLuizPopup = true;
+            break;
+        default:
+            break;
+    }
+
+    return node;
+}
+
+std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type) {
+
+    std::shared_ptr<INode> node{nullptr};
+
+    switch (type) {
+        case IndicatorsView::Nodes::ADD:
+            {
+                node = std::make_shared<TestAddNode>();
+                _nodes.push_back(node);
+            }
+            break;
+        case IndicatorsView::Nodes::MULTIPLY:
+        {
+            node = std::make_shared<TestMultiplyNode>();
+            _nodes.push_back(node);
+        }
+            break;
+        case IndicatorsView::Nodes::SMA:
+        {
+            auto smaInd = loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA);
+            node = std::make_shared<SMANode>(smaInd);
+            _nodes.push_back(node);
+        }
+            break;
+        case IndicatorsView::Nodes::CROSS:
+        {
+            node = std::make_shared<CrossNode>();
+            _nodes.push_back(node);
+        }
+            break;
+        case IndicatorsView::Nodes::RESULT:
+            {
+                node = std::make_shared<TestResultNode>();
+                _nodes.push_back(node);
+            }
+            break;
+        default:
+            break;
+    }
+
+    return node;
+}
+
+std::shared_ptr<UiNode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, NodeType type)
+{
+    std::shared_ptr<UiNode> node{nullptr};
+    switch (type) {
+        case NodeType::ADD:
+            node = std::make_shared<Add>(_graph);
+        break;
+        case NodeType::RESULT:
+        case NodeType::VALUE:
+        default:
+            break;
+    }
+
+    return node;
+}
+
+
+
+
 
 
 

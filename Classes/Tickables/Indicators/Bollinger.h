@@ -8,19 +8,22 @@
 
 #include "Indicator.h"
 
-class Bollinger : public Indicator {
+class BollingerData{
 public:
-    Bollinger(Ticker* ticker);
-    ~Bollinger();
+    double top;
+    double mid;
+    double bottom;
+};
+
+class Bollinger : public Indicator, public ReversedData<BollingerData> {
+public:
+    explicit Bollinger(Ticker* ticker);
     void calculate(BarHistory* barHistory) override;
     void reset() override;
-
-    void render() override;
+    void onRender() override;
+    int getAverageSize();
 private:
-    int _avarageSize = 20;
-    std::vector<double> _bollinger_top;
-    std::vector<double> _bollinger_bot;
-
+    int _averageSize = 20;
 };
 
 

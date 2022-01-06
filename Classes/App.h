@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <implot.h>
+#include <imnodes.h>
 #include <string>
 #include <map>
 

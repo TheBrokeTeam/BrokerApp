@@ -10,7 +10,7 @@
 
 class SimulationController :public Widget {
 public:
-   explicit SimulationController(Editor* editor);
+   explicit SimulationController(Context* context);
     void updateVisible(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;

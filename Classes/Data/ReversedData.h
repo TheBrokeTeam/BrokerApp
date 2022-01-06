@@ -26,6 +26,10 @@ public:
         return fixedIndex;
     }
 
+    int size(){
+        return _data.size();
+    }
+
 protected:
     std::vector<T> _data;
 };

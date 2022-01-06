@@ -6,8 +6,9 @@
 #define BROKERAPP_STRATEGY_H
 
 #include "../Tickable.h"
+#include "../../Widgets/PlotItem/PlotItem.h"
 
-class Strategy: public Tickable{
+class Strategy: public Tickable, public PlotItem{
 public:
     struct Position {
         std::string id;
@@ -23,9 +24,8 @@ public:
     virtual ~Strategy();
     void onClose(BarHistory* barHistory) override;
     void reset() override;
-    virtual void render();
 
-    //calls this when simulation ends
+    //called when simulation ends
     void onFinish();
 
     virtual std::string openPosition(bool shorting);
@@ -34,10 +34,23 @@ public:
     virtual void rule();
     virtual void checkTarget(Strategy::Position &pos);
 
+    double getProfit();
+
+    const std::vector<Position>& getClosedPositions();
+
+    //testing profit and losses
+    std::vector<double> profitHistory;
+    std::vector<double> lossesHistory;
+    std::vector<double> time;
+    double drawDownMax = 0;
+    double profitMax = 0;
+    Ticker* getTicker();
+
+    virtual void onRender() override;
+
 protected:
     std::vector<Position> _openedPositions;
     std::vector<Position> _closedPositions;
-
     double _profit = 0;
 
 private:

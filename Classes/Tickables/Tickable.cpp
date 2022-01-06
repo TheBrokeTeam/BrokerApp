@@ -22,4 +22,7 @@ void Tickable::onLoad(BarHistory *barHistory) {
     _barHistory = barHistory;
 }
 
-void Tickable::reset() {}
+Tickable::~Tickable() {
+    _ticker = nullptr;
+    _barHistory = nullptr;
+}

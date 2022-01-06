@@ -14,18 +14,16 @@ add_executable(BrokerApp
         Classes/Widgets/MainMenuBar.h
         Classes/Contexts/BackTestingContext.cpp
         Classes/Contexts/BackTestingContext.h
-        Classes/Widgets/DataLoader.cpp
-        Classes/Widgets/DataLoader.h
-        Classes/Widget+Tickables/CandleChart.cpp
-        Classes/Widget+Tickables/CandleChart.h
+        Classes/Widgets/DownloaderView.cpp
+        Classes/Widgets/DownloaderView.h
+        Classes/Widgets/CandleChart.cpp
+        Classes/Widgets/CandleChart.h
         Classes/Contexts/Contextualizable.cpp
         Classes/Contexts/Contextualizable.h
-        Classes/Widgets/Chart.cpp
-        Classes/Widgets/Chart.h
-        Classes/Widgets/Indicators.cpp
-        Classes/Widgets/Indicators.h
-        Classes/Widgets/StockList.cpp
-        Classes/Widgets/StockList.h
+        Classes/Widgets/ChartView.cpp
+        Classes/Widgets/ChartView.h
+        Classes/Widgets/IndicatorsView.cpp
+        Classes/Widgets/IndicatorsView.h
         Classes/Data/Symbol.cpp
         Classes/Data/Symbol.h
         Classes/Data/DataSource.cpp
@@ -55,7 +53,36 @@ add_executable(BrokerApp
         Classes/Tickables/Indicators/SMA.cpp
         Classes/Tickables/Indicators/SMA.h
         Classes/Helpers/ImageLoader.cpp
-        Classes/Helpers/ImageLoader.h Classes/Data/ReversedData.h Classes/Tickables/Indicators/Bollinger.cpp Classes/Tickables/Indicators/Bollinger.h Classes/Widgets/SimulationController.cpp Classes/Widgets/SimulationController.h Classes/Tickables/Strategies/TestStrategy.cpp Classes/Tickables/Strategies/TestStrategy.h Classes/Widgets/StockList.cpp Classes/Widgets/StockList.h)
+        Classes/Helpers/ImageLoader.h
+        Classes/Data/ReversedData.h
+        Classes/Tickables/Indicators/Bollinger.cpp
+        Classes/Tickables/Indicators/Bollinger.h
+        Classes/Widgets/SimulationController.cpp
+        Classes/Widgets/SimulationController.h
+        Classes/Tickables/Strategies/IndicatorFromChartExample.cpp
+        Classes/Tickables/Strategies/IndicatorFromChartExample.h
+        Classes/Widgets/ProfitAndLossesView.cpp
+        Classes/Widgets/ProfitAndLossesView.h
+        Classes/Widgets/PlotItem/PlotItem.cpp
+        Classes/Widgets/PlotItem/PlotItem.h
+        Classes/Tickables/Strategies/IndicatorToChartExample.cpp
+        Classes/Tickables/Strategies/IndicatorToChartExample.h
+        Classes/Widgets/StrategyEditor/StrategyEditor.cpp
+        Classes/Widgets/StrategyEditor/StrategyEditor.h
+        Classes/Nodes/SMANode.cpp
+        Classes/Nodes/SMANode.h
+        Classes/Nodes/TestAddNode.cpp
+        Classes/Nodes/TestAddNode.h
+        Classes/Nodes/TestResultNode.cpp
+        Classes/Nodes/TestResultNode.h
+        Classes/Nodes/TestMultiplyNode.h
+        Classes/Nodes/TestMultiplyNode.cpp
+        Classes/Nodes/INode.h
+        Classes/Nodes/INode.cpp
+        Classes/Nodes/CrossNode.cpp
+        Classes/Widgets/StockList.h
+        Classes/Widgets/StockList.cpp
+        Classes/Nodes/CrossNode.h Classes/Nodes/GraphNode.cpp Classes/Nodes/GraphNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -142,6 +169,26 @@ target_include_directories(implot
         )
 
 target_link_libraries(implot PUBLIC imgui)
+
+
+set(IMNODES_SOURCE
+        external/node_editor/imnodes.cpp
+        )
+
+set(IMNODES_HEADER
+        external/node_editor/imnodes.h
+        external/node_editor/imnodes_internal.h
+        )
+
+add_library(imnodes STATIC ${IMNODES_SOURCE} ${IMNODES_HEADER})
+
+target_include_directories(imnodes
+        PUBLIC external/node_editor
+        )
+
+target_link_libraries(imnodes PUBLIC glfw imgui)
+
+
 #-EXTERNAL--END---------------
 
 #-APP----------------------------
@@ -169,6 +216,7 @@ target_include_directories(app PUBLIC
 target_link_libraries(app PUBLIC
         imgui
         implot
+        imnodes
         )
 
 #-APP-END--------------------------
@@ -183,6 +231,7 @@ set(INCLUDES
         external/imgui/misc/cpp
         external/imgui/backends
         external/implot
+        external/node_editor
         external/stb
         ${CMAKE_CURRENT_BINARY_DIR}/external/glad/include
         external/rapidcsv/src
@@ -202,6 +251,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         glad
         imgui
         implot
+        imnodes
         rapidcsv
         curl
         )

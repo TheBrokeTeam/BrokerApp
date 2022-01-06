@@ -7,10 +7,9 @@
 #include "../Editor.h"
 
 
-Widget::Widget(Editor* editor)
+Widget::Widget(Context* context)
 {
-    setContext(editor->getContext());
-    _editor    = editor;
+    setContext(context);
     _window    = nullptr;
     _widgetId = uuid::generate_uuid_v4();
 }
@@ -22,7 +21,26 @@ void Widget::updateAlways(float dt)
 
 void Widget::updateVisible(float dt)
 {
+    ImGui::TextColored(Editor::broker_white,_title.c_str());
+//    ImGui::SameLine();
+//
+//    //change the background of close button
+//    PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
+//    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
+//    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
+//
+//    //adding the close button
+//    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
+//    ImGui::SetCursorPosX( ImGui::GetWindowWidth() - info.my_image_width*2);
+//    if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture,ImVec2(info.my_image_width,info.my_image_height))){
+//        SetVisible(false);
+//    }
 
+//    PushStyleColor(ImGuiCol_Separator,Editor::broker_light_grey);
+
+    ImGui::Separator();
+
+    ImGui::Spacing();
 }
 
 void Widget::onShow()
@@ -36,7 +54,7 @@ void Widget::onHide()
 }
 
 void Widget::onPushStyleVar() {
-
+    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 
 void Widget::onPushStyleColor() {
@@ -91,8 +109,8 @@ void Widget::update(float dt)
         {
             if (_position.x == k_widget_position_screen_center)
             {
-                _position.x = _editor->getWindowSize().x * 0.5f;
-                _position.y = _editor->getWindowSize().y * 0.5f;
+                _position.x = getContext()->getEditor()->getWindowSize().x * 0.5f;
+                _position.y = getContext()->getEditor()->getWindowSize().y * 0.5f;
             }
 
             ImVec2 pivot_center = ImVec2(0.5f, 0.5f);
@@ -147,7 +165,6 @@ void Widget::update(float dt)
             // End
             popStyles();
             ImGui::End();
-
         }
     }
 }

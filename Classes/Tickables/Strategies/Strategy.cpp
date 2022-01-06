@@ -8,7 +8,6 @@
 #include "../../Contexts/Context.h"
 
 Strategy::Strategy(Ticker *ticker) : Tickable(ticker) {
-
 }
 
 void Strategy::onClose(BarHistory* barHistory) {
@@ -17,14 +16,16 @@ void Strategy::onClose(BarHistory* barHistory) {
     checkTarget();
 }
 
-void Strategy::render() {
+void Strategy::onRender() {
     std::vector<double> time;
     std::vector<double> y;
 
+    //call finish once if there is opened positions yet
     if(!_ticker->getContext()->isSimulating() &&  !_openedPositions.empty()){
         onFinish();
     }
 
+    //draw the closed trades
     for(auto &c : _closedPositions) {
         time.push_back(c.inTime);
         time.push_back(c.outTime);
@@ -41,10 +42,15 @@ void Strategy::render() {
 }
 
 void Strategy::reset() {
-    Tickable::reset();
     _openedPositions.clear();
     _closedPositions.clear();
     _profit = 0;
+
+    time.clear();
+    profitHistory.clear();
+    lossesHistory.clear();
+    profitMax = 0;
+    drawDownMax = 0;
 }
 
 void Strategy::rule() {}
@@ -57,6 +63,23 @@ void Strategy::closePosition(Position &pos) {
     pos.profit = pos.isShorting ? pos.inPrice - pos.outPrice : pos.outPrice - pos.inPrice;
     _closedPositions.push_back(pos);
     _profit += pos.profit;
+
+    if(_profit > profitMax)
+        profitMax = _profit;
+
+    if(_profit < drawDownMax)
+        drawDownMax = _profit;
+
+    if(_profit >= 0) {
+        profitHistory.push_back(_profit);
+        lossesHistory.push_back(0);
+    }
+    else{
+        lossesHistory.push_back(_profit);
+        profitHistory.push_back(0);
+    }
+    time.push_back(pos.outTime);
+
     std::cout << "Profit: " << pos.profit << std::endl;
     std::cout << "Total Profit: " << _profit << std::endl;
     removeOpenedPosition(pos);
@@ -104,12 +127,23 @@ void Strategy::checkTarget() {
 
 void Strategy::checkTarget(Strategy::Position &pos) {}
 
-Strategy::~Strategy() {
-
-}
 
 void Strategy::onFinish() {
     for(auto& p : _openedPositions)
         closePosition(p);
 }
+
+double Strategy::getProfit() {
+    return _profit;
+}
+
+Ticker *Strategy::getTicker() {
+    return _ticker;
+}
+
+const std::vector<Strategy::Position> &Strategy::getClosedPositions() {
+    return _closedPositions;
+}
+
+Strategy::~Strategy() {}
 

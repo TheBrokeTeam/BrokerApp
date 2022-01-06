@@ -2,8 +2,8 @@
 // Created by Arthur Abel Motelevicz on 24/12/21.
 //
 
-#ifndef BROKERAPP_INDICATORS_H
-#define BROKERAPP_INDICATORS_H
+#ifndef BROKERAPP_INDICATORSVIEW_H
+#define BROKERAPP_INDICATORSVIEW_H
 
 #include "Widget.h"
 #include <implot.h>
@@ -12,7 +12,7 @@
 #include "../Helpers/PlotHelper.h"
 #include "../Tickables/Indicators/Indicator.h"
 
-class Indicators : public Widget{
+class IndicatorsView : public Widget{
 public:
     typedef std::function<void(void)> TrashClickCallback;
 
@@ -30,6 +30,14 @@ public:
         SAR
     };
 
+    enum class Nodes{
+        ADD,
+        MULTIPLY,
+        SMA,
+        CROSS,
+        RESULT
+    };
+
     struct DragAndDropIndicatorItem {
             CandleIndicatorsTypes type;
             std::string      label{""};
@@ -39,10 +47,10 @@ public:
         }
     };
 
-    Indicators(Editor* editor);
+    IndicatorsView(Context* context);
     void updateVisible(float dt) override;
     std::vector<DragAndDropIndicatorItem>& getIndicators();
-
+    void onPushStyleVar() override;
     void setTrashCallback(TrashClickCallback callback);
 
 private:
@@ -53,4 +61,4 @@ private:
 };
 
 
-#endif //BROKERAPP_INDICATORS_H
+#endif //BROKERAPP_INDICATORSVIEW_H

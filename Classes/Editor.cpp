@@ -5,17 +5,7 @@
 #include "Editor.h"
 #include <GLFW/glfw3.h>
 #include <imgui.h>
-#include <imgui_internal.h>
-#include "Widgets/MainMenuBar.h"
-#include "Widgets/DataLoader.h"
-#include "Widgets/StockList.h"
-#include "Widgets/SimulationController.h"
-
-#include "Widgets/Chart.h"
-
 #include "Contexts/BackTestingContext.h"
-#include "Widget+Tickables/CandleChart.h"
-#include "Tickers/Ticker.h"
 #include "Helpers/ImageLoader.h"
 
 void Editor::start() {
@@ -25,14 +15,9 @@ void Editor::start() {
     loadImage(Icons::close_window,"../Resources/Icons/close.png");
     loadImage(Icons::trash,"../Resources/Icons/trash.png");
 
-    // Initialize the context
-    _context = std::make_shared<BackTestingContext>();
+    _context = std::make_shared<BackTestingContext>(this);
 
-    _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
-    _widgets.emplace_back(std::make_shared<DataLoader>(this));
-    _widgets.emplace_back(std::make_shared<SimulationController>(this));
-    _widgets.emplace_back(std::make_shared<Chart>(this));
-    _widgets.emplace_back(std::make_shared<StockList>(this));
+    _context->initialize();
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -45,23 +30,21 @@ void Editor::start() {
     style.Colors[ImGuiCol_SeparatorActive] = Editor::broker_yellow;
 
     //TODO:: make a way to change the layout configuration at run time
-    ImGui::LoadIniSettingsFromDisk("ui_num_1"); //LV: ?
+    ImGui::LoadIniSettingsFromDisk("ui_num_1");
 }
 
 void Editor::update() {
     //calculate deltime
     auto dt = getDeltaTime();
 
-    //update context first
-    _context->update(dt);
+    //update data context first
+    _context->updateData(dt);
 
+    //call docking behavior
     showDockSpace();
 
-    // Editor - update widgets
-    for (std::shared_ptr<Widget>& widget : _widgets)
-    {
-        widget->update(dt);
-    }
+    //update widgets
+    _context->updateUI(dt);
 }
 
 float Editor::getDeltaTime(){
@@ -69,51 +52,6 @@ float Editor::getDeltaTime(){
     float dt = currentTime -_lastTime;
     _lastTime = currentTime;
     return dt;
-}
-
-Context* Editor::getContext(){
-    return _context.get();
-}
-
-Editor::~Editor() {}
-
-void Editor::addChartWidget(Ticker *ticker) {
-    auto charts = getWidget<Chart>();
-    charts->addChart(std::make_shared<CandleChart>(this,ticker));
-    _context->loadTicker(*ticker->getSymbol());
-}
-
-void Editor::showDataLoader(bool show) {
-    auto donwloader = getWidget<DataLoader>();
-    if(donwloader)
-        donwloader->SetVisible(show);
-
-    MainMenuBar::_show_downloader = show;
-}
-
-void Editor::showStockList(bool show) {
-    auto donwloader = getWidget<StockList>();
-    if(donwloader)
-        donwloader->SetVisible(show);
-
-    MainMenuBar::_show_stocklist = show;
-}
-
-void Editor::showCharts(bool show) {
-    auto charts = getWidget<Chart>();
-    if(charts)
-        getWidget<Chart>()->SetVisible(show);
-
-    MainMenuBar::_show_charts = show;
-
-}
-
-void Editor::showIndicators(bool show) {
-    auto charts = getWidget<Chart>();
-    if(charts)
-        charts->enableIndicatorsOnCharts(show);
-
-    MainMenuBar::_show_indicators = show;
 }
 
 void Editor::loadImage(Icons icon,const std::string& filepath)
@@ -138,27 +76,16 @@ Editor::ImageInfo Editor::getTexture(Editor::Icons icon) {
     return _imagesRef.at(icon);
 }
 
-void Editor::showTabBars(bool show) {
-    for(auto& w :_widgets){
-        w->showTabBar(show);
-    }
-    MainMenuBar::_show_tabbars = show;
-}
 
 void Editor::showDockSpace()
 {
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 }
 
-void Editor::showSimulationController(bool show) {
-    auto simulator = getWidget<SimulationController>();
-    if(simulator)
-        simulator->SetVisible(show);
+Editor::~Editor() {}
 
-    MainMenuBar::_show_simulator = show;
-}
-
+//APPLICATION ENTRY POINT
 int main(int argc, char const* argv[]){
-    Editor app("AIBroker",1400,750,argc,argv);
+    Editor app("",1400,750,argc,argv);
     app.run();
 }

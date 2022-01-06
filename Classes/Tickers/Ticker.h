@@ -12,26 +12,33 @@
 #include <set>
 #include <vector>
 #include "../Data/BarHistory.h"
+#include "../Data/Symbol.h"
 #include "../Contexts/Contextualizable.h"
 
 class Tickable;
 class BarData;
-class Symbol;
+class Indicator;
+class Strategy;
 struct TickData;
+
+typedef const std::string& TickerId;
 
 class Ticker : public Contextualizable{
 public:
-    Ticker(Context* context, std::shared_ptr<Symbol> symbol);
+    Ticker(Context* context,const Symbol& symbol);
     virtual ~Ticker() = default;
 
     void reset();
-    void addTickable(Tickable* tickable);
+    void addIndicator(Tickable* tickable);
+    void addStrategy(Tickable* tickable);
+
     bool removeTickable(Tickable *tickable);
 
     void tick(const TickData &tickData);
 
     Symbol* getSymbol();
     BarHistory* getBarHistory();
+    TickerId getTickerId();
 
 private:
     void open(const TickData &tickData);
@@ -40,13 +47,16 @@ private:
     bool lastWasClosed = false;
 
     //hold all the tickables
-    std::vector<Tickable*> _tickables;
+    std::vector<Indicator*> _indicators;
+    std::vector<Strategy*> _strategies;
+
 
     //to save loaded data
     BarHistory _barHistory;
 
-    std::shared_ptr<Symbol> _symbol{nullptr};
+    Symbol _symbol{""};
 
+    std::string _id;
 };
 
 

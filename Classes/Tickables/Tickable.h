@@ -16,12 +16,12 @@
 class Tickable {
 public:
     Tickable(Ticker* ticker);
+    virtual ~Tickable();
     virtual void onOpen(BarHistory* barHistory);
     virtual void onClose(BarHistory* barHistory);
     virtual void onTick(BarHistory* barHistory);
 
     virtual void onLoad(BarHistory* barHistory);
-    virtual void reset();
 
 protected:
     Ticker* _ticker{nullptr};

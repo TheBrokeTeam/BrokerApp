@@ -6,24 +6,27 @@
 #include "../Contexts/Context.h"
 #include "../Tickables/Tickable.h"
 
-Ticker::Ticker(Context *context,std::shared_ptr<Symbol> symbol): _symbol(std::move(symbol)) {
+Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
     setContext(context);
-}
-
-void Ticker::addTickable(Tickable *tickable)
-{
-    _tickables.push_back(tickable);
-    tickable->onLoad(&_barHistory);
+    _id = uuid::generate_uuid_v4();
 }
 
 bool Ticker::removeTickable(Tickable *tickable)
 {
-    for(auto it  = _tickables.begin(); it != _tickables.end(); it++) {
-        if (tickable == (*it)) {
-            _tickables.erase(it);
+    for(auto it  = _indicators.begin(); it != _indicators.end(); it++) {
+        if (tickable == dynamic_cast<Tickable*>(*it)) {
+            _indicators.erase(it);
             return true;
         }
     }
+
+    for(auto it  = _strategies.begin(); it != _strategies.end(); it++) {
+        if (tickable == dynamic_cast<Tickable*>(*it)) {
+            _strategies.erase(it);
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -40,7 +43,11 @@ void Ticker::open(const TickData& tickData) {
 
     _barHistory.append(data);
 
-    for(auto& t : _tickables){
+    for(auto& t : _indicators){
+        t->onOpen(&_barHistory);
+    }
+
+    for(auto& t : _strategies){
         t->onOpen(&_barHistory);
     }
 }
@@ -55,7 +62,7 @@ void Ticker::tick(const TickData& tickData) {
     }
 
     //check if it is the close moment based on symbol interval
-    long lastSecondOfCurrentBar = _barHistory[0].time + _symbol->getTimeIntervalInMinutes()*60 - 1;
+    long lastSecondOfCurrentBar = _barHistory[0].time + _symbol.getTimeIntervalInMinutes()*60 - 1;
     if(lastSecondOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
@@ -71,7 +78,11 @@ void Ticker::tick(const TickData& tickData) {
 
     _barHistory.updateLasBar(data);
 
-    for(auto& t : _tickables){
+    for(auto& t : _indicators){
+        t->onTick(&_barHistory);
+    }
+
+    for(auto& t : _strategies){
         t->onTick(&_barHistory);
     }
 }
@@ -86,7 +97,11 @@ void Ticker::close(const TickData& tickData) {
 
     _barHistory.updateLasBar(data);
 
-    for(auto& t : _tickables){
+    for(auto& t : _indicators){
+        t->onClose(&_barHistory);
+    }
+
+    for(auto& t : _strategies){
         t->onClose(&_barHistory);
     }
 }
@@ -94,15 +109,34 @@ void Ticker::close(const TickData& tickData) {
 void Ticker::reset() {
     _barHistory.clear();
     lastWasClosed = false;
-    for(auto& t : _tickables){
+
+    for(auto& t : _indicators){
+        t->reset();
+    }
+
+    for(auto& t : _strategies){
         t->reset();
     }
 }
 
 Symbol *Ticker::getSymbol() {
-    return _symbol.get();
+    return &_symbol;
 }
 
 BarHistory *Ticker::getBarHistory() {
     return &_barHistory;
+}
+
+TickerId Ticker::getTickerId() {
+    return _id;
+}
+
+void Ticker::addIndicator(Tickable *tickable) {
+    _indicators.push_back(dynamic_cast<Indicator*>(tickable));
+    tickable->onLoad(&_barHistory);
+}
+
+void Ticker::addStrategy(Tickable *tickable) {
+    _strategies.push_back(dynamic_cast<Strategy*>(tickable));
+    tickable->onLoad(&_barHistory);
 }

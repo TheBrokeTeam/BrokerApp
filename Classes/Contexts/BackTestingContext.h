@@ -16,15 +16,29 @@ public:
         std::string extractedFileName{""};
     };
 
-    BackTestingContext() = default;
+    BackTestingContext(Editor* editor);
+    void initialize() override;
 
     Ticker* loadSymbol(const Symbol &symbol) override;
-    void loadTicker(const Symbol& symbol) override;
-    void update(float dt) override;
+    void loadTicker() override;
+    void updateData(float dt) override;
 
     void startSimulation(Ticker* ticker) override;
     void setSimulationSpeed(float speed) override;
     bool isSimulating() override;
+
+    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
+    std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
+    std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) override;
+    std::shared_ptr<UiNode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, NodeType type) override;
+
+
+
+    void plotIndicators() override;
+    void plotStrategy() override;
+    void plotNodes(float dt) override;
+
+    void showTabBars(bool show) override;
 
 private:
 
@@ -36,11 +50,13 @@ private:
 
     DownloadResponse download_file(std::string url, std::string filename);
 
-    std::map<Symbol,Ticker> _tickers;
-    std::map<std::string,std::vector<TickData>> _data;
+    //TODO:: single symbol for now until backtesting is good
+    std::shared_ptr<Ticker> _ticker{nullptr};
+//    std::shared_ptr<Strategy> _strategy{nullptr};
+
+    std::vector<TickData> _data;
 
     //simulating
-    Ticker* _tickerToSimulate{nullptr};
     int _countTicks = 0;
     bool _simulating = false;
     int _currentIndex = 0;
@@ -49,7 +65,8 @@ private:
     float _speed = 1.0f;
     float _speedLimit = 1000.0f;
 
-
+    //joke time
+    bool _shouldShowLuizPopup = false;
 };
 
 #endif //BROKERAPP_BACKTESTINGCONTEXT_H
