@@ -30,7 +30,7 @@ public:
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
     std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
     std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) override;
-    std::shared_ptr<UiNode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, NodeType type) override;
+    std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) override;
 
 
 

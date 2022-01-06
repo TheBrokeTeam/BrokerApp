@@ -24,14 +24,10 @@
 #include "../Widgets/StrategyEditor/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
-#include "../Nodes/TestAddNode.h"
-#include "../Nodes/TestMultiplyNode.h"
-#include "../Nodes/TestResultNode.h"
 #include "../Nodes/CrossNode.h"
 
 #include "../Nodes/Add.h"
 #include "../Nodes/ShowOutput.h"
-
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -389,57 +385,60 @@ std::shared_ptr<INode> BackTestingContext::createNode(IndicatorsView::Nodes type
 
     std::shared_ptr<INode> node{nullptr};
 
-    switch (type) {
-        case IndicatorsView::Nodes::ADD:
-            {
-                node = std::make_shared<TestAddNode>();
-                _nodes.push_back(node);
-            }
-            break;
-        case IndicatorsView::Nodes::MULTIPLY:
-        {
-            node = std::make_shared<TestMultiplyNode>();
-            _nodes.push_back(node);
-        }
-            break;
-        case IndicatorsView::Nodes::SMA:
-        {
-            auto smaInd = loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA);
-            node = std::make_shared<SMANode>(smaInd);
-            _nodes.push_back(node);
-        }
-            break;
-        case IndicatorsView::Nodes::CROSS:
-        {
-            node = std::make_shared<CrossNode>();
-            _nodes.push_back(node);
-        }
-            break;
-        case IndicatorsView::Nodes::RESULT:
-            {
-                node = std::make_shared<TestResultNode>();
-                _nodes.push_back(node);
-            }
-            break;
-        default:
-            break;
-    }
+//    switch (type) {
+//        case IndicatorsView::Nodes::ADD:
+//            {
+//                node = std::make_shared<TestAddNode>();
+//                _nodes.push_back(node);
+//            }
+//            break;
+//        case IndicatorsView::Nodes::MULTIPLY:
+//        {
+//            node = std::make_shared<TestMultiplyNode>();
+//            _nodes.push_back(node);
+//        }
+//            break;
+//        case IndicatorsView::Nodes::SMA:
+//        {
+//            auto smaInd = loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA);
+//            node = std::make_shared<SMANode>(smaInd);
+//            _nodes.push_back(node);
+//        }
+//            break;
+//        case IndicatorsView::Nodes::CROSS:
+//        {
+//            node = std::make_shared<CrossNode>();
+//            _nodes.push_back(node);
+//        }
+//            break;
+//        case IndicatorsView::Nodes::RESULT:
+//            {
+//                node = std::make_shared<TestResultNode>();
+//                _nodes.push_back(node);
+//            }
+//            break;
+//        default:
+//            break;
+//    }
 
     return node;
 }
 
-std::shared_ptr<UiNode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, NodeType type)
+std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type)
 {
-    std::shared_ptr<UiNode> node{nullptr};
+    std::shared_ptr<INode> node{nullptr};
+
     switch (type) {
-        case NodeType::ADD:
+        case UiNodeType::ADD:
             node = std::make_shared<Add>(_graph);
             break;
-        case NodeType::RESULT:
+        case UiNodeType::SMA:
+            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA),_graph);
+            break;
+        case UiNodeType::RESULT:
             node = std::make_shared<ShowOutput>(_graph);
             getWidget<StrategyEditor>()->addRootId(node->getId());
             break;
-        case NodeType::VALUE:
         default:
             break;
     }

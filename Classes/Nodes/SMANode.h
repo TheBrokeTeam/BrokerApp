@@ -8,16 +8,18 @@
 #include "../Widgets/IndicatorsView.h"
 #include "../Nodes/INode.h"
 #include "../Tickables/Indicators/Indicator.h"
+#include "../Helpers/graph.h"
 
 class SMANode: public INode {
 public:
-    SMANode(std::shared_ptr<Indicator> sma);
+    SMANode(std::shared_ptr<Indicator> sma,std::shared_ptr<graph::Graph<GraphNode>> graph);
     void onRender(float dt) override;
+    void handleStack(std::stack<float>& stack) override;
 
-    int _idOutput;
+//    int _idOutput;
 private:
     std::weak_ptr<Indicator> _indicator;
-    IndicatorsView::CandleIndicatorsTypes _type = IndicatorsView::CandleIndicatorsTypes::SMA;
+    std::shared_ptr<graph::Graph<GraphNode>> _graph;
 };
 
 

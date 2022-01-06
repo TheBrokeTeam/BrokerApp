@@ -6,12 +6,11 @@
 #define BROKERAPP_SHOWOUTPUT_H
 
 #include <memory>
-#include "GraphNode.h"
 #include "../Helpers/graph.h"
 #include "INode.h"
 
 
-class ShowOutput : public UiNode{
+class ShowOutput : public INode{
 public:
     ShowOutput(std::shared_ptr<graph::Graph<GraphNode>> _graph);
     ~ShowOutput();

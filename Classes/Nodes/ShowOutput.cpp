@@ -10,10 +10,11 @@
 ShowOutput::ShowOutput(std::shared_ptr<graph::Graph<GraphNode>> graph): _graph(graph)
 {
     setName("Show Value");
+    setType(UiNodeType::RESULT);
+
     const GraphNode value(NodeType::VALUE, 0.f);
     const GraphNode op(NodeType::RESULT, this);
 
-    type = UiNodeType::RESULT;
     _idInput = graph->insert_node(value);
     _id = graph->insert_node(op);
 

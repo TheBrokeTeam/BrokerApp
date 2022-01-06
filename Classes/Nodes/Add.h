@@ -6,12 +6,10 @@
 #define BROKERAPP_ADD_H
 
 #include <memory>
-#include "GraphNode.h"
 #include "../Helpers/graph.h"
 #include "INode.h"
 
-
-class Add : public UiNode{
+class Add : public INode{
 public:
     Add(std::shared_ptr<graph::Graph<GraphNode>> _graph);
     ~Add();

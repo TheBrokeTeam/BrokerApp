@@ -47,7 +47,7 @@ void StrategyEditor::updateVisible(float dt) {
         ImNodes::Link(edge.id, edge.from, edge.to);
     }
 
-    ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_TopRight, mini_map_node_hovering_callback, links.data());
+    ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_TopRight, mini_map_node_hovering_callback);
     ImNodes::EndNodeEditor();
     if (ImGui::BeginDragDropTarget()) {
 
@@ -57,7 +57,7 @@ void StrategyEditor::updateVisible(float dt) {
             int i = *(int *) payload->Data;
 
             puts("AGORA é a hora de plotar!!!");
-            auto node = getContext()->createNode(_graph,NodeType(i));
+            auto node = getContext()->createNode(_graph,UiNodeType(i));
             if(node)
                 _uiNodes.push_back(node);
         }
@@ -121,12 +121,12 @@ void StrategyEditor::updateVisible(float dt) {
             {
                 _graph->erase_node(node_id);
                 auto iter = std::find_if(
-                        _uiNodes.begin(), _uiNodes.end(), [node_id](std::shared_ptr<UiNode> node) -> bool {
+                        _uiNodes.begin(), _uiNodes.end(), [node_id](std::shared_ptr<INode> node) -> bool {
                             return node->getId() == node_id;
                         });
                 // Erase any additional internal nodes
                 bool found = false;
-                switch ((*iter)->type)
+                switch ((*iter)->getType())
                 {
                     case UiNodeType::ADD:
                         {
@@ -158,43 +158,29 @@ void StrategyEditor::updateVisible(float dt) {
         evaluateGraph(id);
 }
 
-INode* StrategyEditor::getNodeFromLinkId(int id){
-    for(auto& n : _nodes){
-        if(auto node = n.lock()){
-            if(node->hasInput(id)){
-                return node.get();
-            }
-            if(node->hasOutput(id)){
-                return node.get();
-            }
-        }
-    }
-    return nullptr;
-}
+
 
 void StrategyEditor::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 
 void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
-    std::weak_ptr<INode> node = newNode;
-    if(node.lock())
-        _nodes.push_back(node);
+    _uiNodes.push_back(newNode);
 }
 
 void StrategyEditor::removeNode(std::shared_ptr<INode> node) {
-    auto it = _nodes.begin();
-    for(int i = 0; i < _nodes.size(); i++) {
-        if(it->lock()->getId() == node->getId()) {
-            _nodes.erase(it);
+    auto it = _uiNodes.begin();
+    for(int i = 0; i < _uiNodes.size(); i++) {
+        if((*it)->getId() == node->getId()) {
+            _uiNodes.erase(it);
             break;
         }
     }
 }
 
 void StrategyEditor::clear() {
-    _nodes.clear();
-    links.clear();
+    _uiNodes.clear();
+//    _links.clear();
 }
 
 void StrategyEditor::evaluateGraph(int id) {
@@ -210,8 +196,8 @@ void StrategyEditor::evaluateGraph(int id) {
         postorder.pop();
         const GraphNode node = _graph->node(id);
 
-        if (node.onwer) {
-            node.onwer->handleStack(value_stack);
+        if (node.owner) {
+            node.owner->handleStack(value_stack);
         } else {
             // If the edge does not have an edge connecting to another node, then just use the value
             // at this node. It means the node's input pin has not been connected to anything and

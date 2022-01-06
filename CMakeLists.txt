@@ -71,16 +71,10 @@ add_executable(BrokerApp
         Classes/Widgets/StrategyEditor/StrategyEditor.h
         Classes/Nodes/SMANode.cpp
         Classes/Nodes/SMANode.h
-        Classes/Nodes/TestAddNode.cpp
-        Classes/Nodes/TestAddNode.h
-        Classes/Nodes/TestResultNode.cpp
-        Classes/Nodes/TestResultNode.h
-        Classes/Nodes/TestMultiplyNode.h
-        Classes/Nodes/TestMultiplyNode.cpp
         Classes/Nodes/INode.h
         Classes/Nodes/INode.cpp
         Classes/Nodes/CrossNode.cpp
-        Classes/Nodes/CrossNode.h Classes/Nodes/GraphNode.cpp Classes/Nodes/GraphNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/ShowOutput.cpp Classes/Nodes/ShowOutput.h)
+        Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/ShowOutput.cpp Classes/Nodes/ShowOutput.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

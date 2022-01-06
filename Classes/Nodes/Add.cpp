@@ -10,10 +10,11 @@
 Add::Add(std::shared_ptr<graph::Graph<GraphNode>> graph): _graph(graph)
 {
     setName("ADD");
+    setType(UiNodeType::ADD);
+
     const GraphNode value(NodeType::VALUE, 0.f);
     const GraphNode op(NodeType::ADD, this);
 
-    type = UiNodeType::ADD;
     _idInput1 = graph->insert_node(value);
     _idInput2 = graph->insert_node(value);
     _id = graph->insert_node(op);
