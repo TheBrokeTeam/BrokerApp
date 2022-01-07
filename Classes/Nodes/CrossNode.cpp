@@ -24,20 +24,20 @@ CrossNode::CrossNode(std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph
 }
 
 void CrossNode::onRender(float dt) {
-    const float node_width = 120.f;
+    const float node_width = 50.f;
 
     //render node
     {
-        bool isInputConnected = numberOfConnections(_idInput1) > 0;
+        bool isInputConnected = numberOfConnectionsTo(_idInput1) > 0;
         ImNodes::BeginInputAttribute(_idInput1, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
-        const float label_width = ImGui::CalcTextSize("input 1").x;
-        ImGui::TextUnformatted("input 1");
-        if (!isInputConnected) {
-            ImGui::SameLine();
-            ImGui::PushItemWidth(node_width - label_width);
-            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput1)->value, 0.01f);
-            ImGui::PopItemWidth();
-        }
+        const float label_width = ImGui::CalcTextSize("A").x;
+        ImGui::TextUnformatted("A");
+//        if (!isInputConnected) {
+//            ImGui::SameLine();
+//            ImGui::PushItemWidth(node_width - label_width);
+//            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput1)->value, 0.01f);
+//            ImGui::PopItemWidth();
+//        }
 //        else{
 //            ImGui::SameLine();
 //            ImGui::PushItemWidth(node_width - label_width);
@@ -45,22 +45,23 @@ void CrossNode::onRender(float dt) {
 //            ImGui::PopItemWidth();
 //        }
         ImGui::SameLine();
-
-        ImGui::Checkbox("Cross up", &_isCrossUp);
+        const float label_up_width = ImGui::CalcTextSize("up").x;
+        ImGui::Indent(node_width - label_up_width);
+        ImGui::Checkbox("up", &_isCrossUp);
         ImNodes::EndInputAttribute();
     }
 
     {
-        bool isInputConnected = numberOfConnections(_idInput2) > 0;
+        bool isInputConnected = numberOfConnectionsTo(_idInput2) > 0;
         ImNodes::BeginInputAttribute(_idInput2, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
-        const float label_width = ImGui::CalcTextSize("input 2").x;
-        ImGui::TextUnformatted("input 2");
-        if (!isInputConnected) {
-            ImGui::SameLine();
-            ImGui::PushItemWidth(node_width - label_width);
-            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput2)->value, 0.01f);
-            ImGui::PopItemWidth();
-        }
+        const float label_width = ImGui::CalcTextSize("B").x;
+        ImGui::TextUnformatted("B");
+//        if (!isInputConnected) {
+//            ImGui::SameLine();
+//            ImGui::PushItemWidth(node_width - label_width);
+//            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput2)->value, 0.01f);
+//            ImGui::PopItemWidth();
+//        }
 //        else{
 //            ImGui::SameLine();
 //            ImGui::PushItemWidth(node_width - label_width);
@@ -70,11 +71,18 @@ void CrossNode::onRender(float dt) {
 
         ImNodes::EndInputAttribute();
     }
+    {
+        ImGui::SameLine();
+        bool isOutputConnected = numberOfConnectionsFrom(_id) > 0;
+        ImNodes::BeginOutputAttribute(_id,isOutputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
+        const float label_width = ImGui::CalcTextSize("out").x;
+//    ImGui::PushItemWidth(node_width - label_width);
+        ImGui::Indent(node_width - label_width);
+        ImGui::Text("out");
+//    ImGui::PopItemWidth();
 
-    ImNodes::BeginOutputAttribute(_id);
-    ImGui::Indent(ImGui::GetItemRectSize().x + ImGui::CalcTextSize("output").x);
-    ImGui::Text("output");
-    ImNodes::EndInputAttribute();
+        ImNodes::EndInputAttribute();
+    }
 }
 
 
@@ -103,4 +111,6 @@ void CrossNode::handleStack(std::stack<float> &stack) {
 
 //delete graph relations
 CrossNode::~CrossNode() {}
+
+
 

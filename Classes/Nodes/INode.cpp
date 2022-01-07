@@ -83,9 +83,21 @@ int INode::addEdge(int from, int to) {
     return _graph->insert_edge(from,to);
 }
 
-int INode::numberOfConnections(int nodeId) {
+int INode::numberOfConnectionsTo(int nodeId) {
     return _graph->num_edges_from_node(nodeId);
 }
+
+int INode::numberOfConnectionsFrom(int nodeId) {
+    int countToNode = 0;
+    auto edges = _graph->edges();
+    for(auto& e : edges){
+        if(e.to == nodeId)
+            countToNode++;
+    }
+    return countToNode;
+}
+
+
 
 GraphNode *INode::getGraphNode(int id) {
     return &_graph->node(id);

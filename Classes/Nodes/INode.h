@@ -51,7 +51,9 @@ public:
     int addNode(const GraphNode& node);
     int addEdge(int from, int to);
 
-    int numberOfConnections(int nodeId);
+    int numberOfConnectionsTo(int nodeId);
+    int numberOfConnectionsFrom(int nodeId);
+
     GraphNode* getGraphNode(int id);
 
         //just for root nodes

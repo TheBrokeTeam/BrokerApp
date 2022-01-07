@@ -30,7 +30,7 @@
 //        ImNodes::BeginInputAttribute(_idInput1);
 //        const float label_width = ImGui::CalcTextSize("left").x;
 //        ImGui::TextUnformatted("left");
-//        if (numberOfConnections(_idInput1) == 0ull)
+//        if (numberOfConnectionsTo(_idInput1) == 0ull)
 //        {
 //            ImGui::SameLine();
 //            ImGui::PushItemWidth(node_width - label_width);
@@ -44,7 +44,7 @@
 //        ImNodes::BeginInputAttribute(_idInput2);
 //        const float label_width = ImGui::CalcTextSize("right").x;
 //        ImGui::TextUnformatted("right");
-//        if (numberOfConnections(_idInput2) == 0ull)
+//        if (numberOfConnectionsTo(_idInput2) == 0ull)
 //        {
 //            ImGui::SameLine();
 //            ImGui::PushItemWidth(node_width - label_width);
