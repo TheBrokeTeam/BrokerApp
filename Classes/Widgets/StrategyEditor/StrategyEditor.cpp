@@ -208,7 +208,7 @@ void StrategyEditor::deleteUiNodeFromFromList(int id,bool shouldRemoveIndicator)
                 if(auto ind = (*it)->getIndicator())
                     getContext()->removeIndicator(ind,false);
                 else
-                    puts("wtf?");
+                    assert(false);
 
             //delete from root ids if needed
             removeRootId(id);
