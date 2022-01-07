@@ -6,14 +6,17 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "../Widgets/StrategyEditor/StrategyEditor.h"
 
-INode::INode(std::shared_ptr<graph::Graph<GraphNode>> graph):_graph(std::move(graph))
+
+INode::INode(StrategyEditor* strategyEditor):_nodeEditor(strategyEditor)
 {
     ImVec2 mousePos = ImGui::GetMousePos();
     ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
     // TODO::understand why is that
     //this values was by try and error: ImVec2(8,35)
     pos = mousePos - winPos - ImVec2(8,35);
+    _graph = strategyEditor->getGraph();
 }
 
 void INode::render(float dt) {
@@ -26,8 +29,19 @@ void INode::render(float dt) {
     }
 
     ImNodes::BeginNodeTitleBar();
-    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_black);
+    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_dark_grey);
     ImGui::Text(_name.c_str());
+    //has icon to render
+    if(_icon != 0){
+        ImGui::SameLine();
+        auto info = _nodeEditor->getContext()->getEditor()->getTexture(Editor::Icons(_icon));
+//        ImGui::SetCursorPosX(nodeWidth / 2 - info.my_image_width/2 - 4);
+        const float titleSize = ImGui::CalcTextSize(_name.c_str()).x;
+//        ImGui::Indent(titleSize);
+        ImGui::Image((void *) (intptr_t) info.my_image_texture,
+                           ImVec2(info.my_image_width, info.my_image_height));
+    }
+
     ImGui::PopStyleColor();
     ImNodes::EndNodeTitleBar();
 
@@ -50,6 +64,10 @@ const UiNodeType &INode::getType() {
 
 void INode::setType(const UiNodeType &type) {
     _type = type;
+}
+
+void INode::setIcon(int icon) {
+    _icon = icon ;
 }
 
 void INode::initStyle() {
@@ -97,8 +115,6 @@ int INode::numberOfConnectionsFrom(int nodeId) {
     return countToNode;
 }
 
-
-
 GraphNode *INode::getGraphNode(int id) {
     return &_graph->node(id);
 }
@@ -109,3 +125,4 @@ INode::~INode() {
 
     _internalNodes.clear();
 }
+

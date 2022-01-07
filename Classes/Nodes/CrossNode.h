@@ -9,7 +9,7 @@
 
 class CrossNode : public INode {
 public:
-    CrossNode(std::shared_ptr<graph::Graph<GraphNode>> graph);
+    CrossNode(StrategyEditor* nodeEditor);
     ~CrossNode();
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;

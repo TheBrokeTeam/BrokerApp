@@ -9,7 +9,7 @@
 #include "../Editor.h"
 
 
-SMANode::SMANode(std::shared_ptr<Indicator> sma, std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph){
+SMANode::SMANode(std::shared_ptr<Indicator> sma,StrategyEditor* nodeEditor):INode(nodeEditor){
     setName("SMA Indicator");
     setType(UiNodeType::SMA);
     setIndicator(sma);

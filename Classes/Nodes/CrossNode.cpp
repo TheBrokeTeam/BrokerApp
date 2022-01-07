@@ -8,9 +8,10 @@
 #include "../Editor.h"
 
 
-CrossNode::CrossNode(std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph) {
+CrossNode::CrossNode(StrategyEditor* nodeEditor):INode(nodeEditor) {
     setName("Cross");
     setType(UiNodeType::CROSS);
+    setIcon(static_cast<int>(Editor::Icons::node_cross_black));
 
     const GraphNode value(NodeType::VALUE);
     const GraphNode op(NodeType::CROSS, this);
@@ -32,18 +33,6 @@ void CrossNode::onRender(float dt) {
         ImNodes::BeginInputAttribute(_idInput1, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
         const float label_width = ImGui::CalcTextSize("A").x;
         ImGui::TextUnformatted("A");
-//        if (!isInputConnected) {
-//            ImGui::SameLine();
-//            ImGui::PushItemWidth(node_width - label_width);
-//            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput1)->value, 0.01f);
-//            ImGui::PopItemWidth();
-//        }
-//        else{
-//            ImGui::SameLine();
-//            ImGui::PushItemWidth(node_width - label_width);
-//            ImGui::Text("%.2f", _currentInput1);
-//            ImGui::PopItemWidth();
-//        }
         ImGui::SameLine();
         const float label_up_width = ImGui::CalcTextSize("up").x;
         ImGui::Indent(node_width - label_up_width);

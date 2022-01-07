@@ -12,7 +12,7 @@
 
 class SMANode: public INode {
 public:
-    SMANode(std::shared_ptr<Indicator> sma,std::shared_ptr<graph::Graph<GraphNode>> graph);
+    SMANode(std::shared_ptr<Indicator> sma,StrategyEditor* nodeEditor);
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
     void initStyle() override;

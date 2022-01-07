@@ -6,7 +6,7 @@
 #include <imnodes.h>
 #include "../Editor.h"
 
-CrossCounter::CrossCounter(std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph)
+CrossCounter::CrossCounter(StrategyEditor* nodeEditor):INode(nodeEditor)
 {
     setName("Cross counter");
     setType(UiNodeType::COUNTER);

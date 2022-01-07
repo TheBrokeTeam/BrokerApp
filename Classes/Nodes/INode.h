@@ -15,7 +15,7 @@
 #include "../Helpers/graph.h"
 #include "../Tickables/Indicators/Indicator.h"
 
-
+class StrategyEditor;
 //Internal Nodes inside th graph
 enum class NodeType
 {
@@ -40,9 +40,10 @@ enum class UiNodeType
 
 class GraphNode;
 
+
 class INode {
 public:
-    INode(std::shared_ptr<graph::Graph<GraphNode>> graph);
+    INode(StrategyEditor* strategyEditor);
     virtual ~INode();
 
     virtual void handleStack(std::stack<float>& stack) = 0;
@@ -86,6 +87,7 @@ public:
     }
     const UiNodeType& getType();
     void setType(const UiNodeType& type);
+    void setIcon(int icon);
 protected:
     void setName(const std::string& name);
     int _id;
@@ -99,7 +101,8 @@ private:
     std::shared_ptr<graph::Graph<GraphNode>> _graph;
     bool _isIndicatorNode = false;
     std::weak_ptr<Indicator> _indicator;
-
+    StrategyEditor* _nodeEditor{nullptr};
+    int _icon{0};
 };
 
 class GraphNode {

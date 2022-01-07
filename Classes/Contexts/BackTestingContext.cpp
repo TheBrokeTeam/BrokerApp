@@ -49,6 +49,8 @@ void BackTestingContext::initialize() {
 
     getWidget<ProfitAndLossesView>()->SetVisible(false);
 
+    _strategyEditor = getWidget<StrategyEditor>();
+
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         removeAllIndicators();
 //        //create test strategy for tests
@@ -342,10 +344,9 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
 
     switch (type) {
         case UiNodeType::SMA:
-            {
-                auto se = getWidget<StrategyEditor>();
-                node = std::make_shared<SMANode>(indicator,se->getGraph());
-                se->addNode(node);
+        {
+                node = std::make_shared<SMANode>(indicator,_strategyEditor);
+                _strategyEditor->addNode(node);
             }
             break;
         default:
@@ -362,13 +363,13 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
 
     switch (type) {
         case UiNodeType::SMA:
-            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, true),_graph);
+            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, true),_strategyEditor);
             break;
         case UiNodeType::CROSS:
-            node = std::make_shared<CrossNode>(_graph);
+            node = std::make_shared<CrossNode>(_strategyEditor);
             break;
         case UiNodeType::COUNTER:
-            node = std::make_shared<CrossCounter>(_graph);
+            node = std::make_shared<CrossCounter>(_strategyEditor);
             getWidget<StrategyEditor>()->addRootId(node->getId());
             break;
         default:

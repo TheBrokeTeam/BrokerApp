@@ -14,12 +14,22 @@ void Editor::start() {
     loadImage(Icons::indicator_ma,"../Resources/Icons/ma.png");
     loadImage(Icons::close_window,"../Resources/Icons/close.png");
     loadImage(Icons::trash,"../Resources/Icons/trash.png");
+
+    //node icons white
     loadImage(Icons::node_bar_seq_down,"../Resources/Icons/node_bar_seq_down_w.png");
     loadImage(Icons::node_bar_seq_up,"../Resources/Icons/node_bar_seq_up_w.png");
     loadImage(Icons::node_counter,"../Resources/Icons/node_counter_w.png");
     loadImage(Icons::node_cross,"../Resources/Icons/node_cross_w.png");
     loadImage(Icons::node_trend,"../Resources/Icons/node_trend_w.png");
     loadImage(Icons::node_trade,"../Resources/Icons/node_trade_w.png");
+
+    //node icons black
+    loadImage(Icons::node_bar_seq_down_black,"../Resources/Icons/node_bar_seq_down.png");
+    loadImage(Icons::node_bar_seq_up_black,"../Resources/Icons/node_bar_seq_up.png");
+    loadImage(Icons::node_counter_black,"../Resources/Icons/node_counter.png");
+    loadImage(Icons::node_cross_black,"../Resources/Icons/node_cross.png");
+    loadImage(Icons::node_trend_black,"../Resources/Icons/node_trend.png");
+    loadImage(Icons::node_trade_black,"../Resources/Icons/node_trade.png");
 
     _context = std::make_shared<BackTestingContext>(this);
 

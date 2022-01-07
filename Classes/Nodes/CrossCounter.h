@@ -12,7 +12,7 @@
 
 class CrossCounter : public INode{
 public:
-    CrossCounter(std::shared_ptr<graph::Graph<GraphNode>> _graph);
+    CrossCounter(StrategyEditor* nodeEditor);
     ~CrossCounter();
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
