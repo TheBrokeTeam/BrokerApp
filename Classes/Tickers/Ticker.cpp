@@ -14,7 +14,7 @@ Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
 bool Ticker::removeTickable(Tickable *tickable)
 {
     for(auto it  = _indicators.begin(); it != _indicators.end(); it++) {
-        if (tickable == dynamic_cast<Tickable*>(*it)) {
+        if (tickable == it->lock().get()) {
             _indicators.erase(it);
             return true;
         }
@@ -44,7 +44,8 @@ void Ticker::open(const TickData& tickData) {
     _barHistory.append(data);
 
     for(auto& t : _indicators){
-        t->onOpen(&_barHistory);
+        if(auto ind = t.lock())
+            ind->onOpen(&_barHistory);
     }
 
     for(auto& t : _strategies){
@@ -79,7 +80,8 @@ void Ticker::tick(const TickData& tickData) {
     _barHistory.updateLasBar(data);
 
     for(auto& t : _indicators){
-        t->onTick(&_barHistory);
+        if(auto ind = t.lock())
+            ind->onTick(&_barHistory);
     }
 
     for(auto& t : _strategies){
@@ -98,7 +100,8 @@ void Ticker::close(const TickData& tickData) {
     _barHistory.updateLasBar(data);
 
     for(auto& t : _indicators){
-        t->onClose(&_barHistory);
+        if(auto ind = t.lock())
+            ind->onClose(&_barHistory);
     }
 
     for(auto& t : _strategies){
@@ -111,7 +114,8 @@ void Ticker::reset() {
     lastWasClosed = false;
 
     for(auto& t : _indicators){
-        t->reset();
+        if(auto ind = t.lock())
+            ind->reset();
     }
 
     for(auto& t : _strategies){
@@ -131,9 +135,9 @@ TickerId Ticker::getTickerId() {
     return _id;
 }
 
-void Ticker::addIndicator(Tickable *tickable) {
-    _indicators.push_back(dynamic_cast<Indicator*>(tickable));
-    tickable->onLoad(&_barHistory);
+void Ticker::addIndicator(std::shared_ptr<Indicator> indicator) {
+    _indicators.push_back(indicator);
+    indicator->onLoad(&_barHistory);
 }
 
 void Ticker::addStrategy(Tickable *tickable) {

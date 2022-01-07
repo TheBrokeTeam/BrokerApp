@@ -119,7 +119,6 @@ void StrategyEditor::updateVisible(float dt) {
             ImNodes::GetSelectedNodes(selected_nodes.data());
             for (const int node_id : selected_nodes)
             {
-                _graph->erase_node(node_id);
                 deleteUiNodeFromFromList(node_id);
             }
         }
@@ -206,7 +205,10 @@ void StrategyEditor::deleteUiNodeFromFromList(int id,bool shouldRemoveIndicator)
 
             //remove indicator if it's an indicator node
             if((*it)->getIsIndicatorNode() && shouldRemoveIndicator)
-                getContext()->removeIndicator((*it)->getIndicator(),false);
+                if(auto ind = (*it)->getIndicator())
+                    getContext()->removeIndicator(ind,false);
+                else
+                    puts("wtf?");
 
             //delete from root ids if needed
             removeRootId(id);

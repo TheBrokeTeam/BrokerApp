@@ -29,7 +29,7 @@ public:
     virtual ~Ticker() = default;
 
     void reset();
-    void addIndicator(Tickable* tickable);
+    void addIndicator(std::shared_ptr<Indicator> indicator);
     void addStrategy(Tickable* tickable);
 
     bool removeTickable(Tickable *tickable);
@@ -47,7 +47,7 @@ private:
     bool lastWasClosed = false;
 
     //hold all the tickables
-    std::vector<Indicator*> _indicators;
+    std::vector<std::weak_ptr<Indicator>> _indicators;
     std::vector<Strategy*> _strategies;
 
 

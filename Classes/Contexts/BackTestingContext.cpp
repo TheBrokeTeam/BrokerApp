@@ -260,7 +260,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             std::shared_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back().get());
+            _ticker->addIndicator(_indicators.back());
             if(shouldCreateNode)
                 createIndicatorNode(UiNodeType::SMA,_indicators.back());
         }
@@ -270,7 +270,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             std::shared_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back().get());
+            _ticker->addIndicator(_indicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::EMA:
@@ -387,12 +387,13 @@ void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator,bo
     //now delete from indicators list
     for(auto it = _indicators.begin(); it != _indicators.end(); it++){
         if((*it)->getId() == indicator->getId())
-
-            if(shouldDeleteNode)
+        {
+            if (shouldDeleteNode)
                 getWidget<StrategyEditor>()->removeNodeIndicator(indicator);
 
             _indicators.erase(it);
             break;
+        }
     }
 }
 
