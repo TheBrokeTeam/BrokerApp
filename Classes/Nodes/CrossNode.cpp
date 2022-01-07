@@ -27,7 +27,6 @@ CrossNode::CrossNode(StrategyEditor* nodeEditor):INode(nodeEditor) {
 void CrossNode::onRender(float dt) {
     const float node_width = 50.f;
 
-    //render node
     {
         bool isInputConnected = numberOfConnectionsTo(_idInput1) > 0;
         ImNodes::BeginInputAttribute(_idInput1, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
@@ -43,21 +42,7 @@ void CrossNode::onRender(float dt) {
     {
         bool isInputConnected = numberOfConnectionsTo(_idInput2) > 0;
         ImNodes::BeginInputAttribute(_idInput2, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
-        const float label_width = ImGui::CalcTextSize("B").x;
         ImGui::TextUnformatted("B");
-//        if (!isInputConnected) {
-//            ImGui::SameLine();
-//            ImGui::PushItemWidth(node_width - label_width);
-//            ImGui::DragFloat("##hidelabel", &getGraphNode(_idInput2)->value, 0.01f);
-//            ImGui::PopItemWidth();
-//        }
-//        else{
-//            ImGui::SameLine();
-//            ImGui::PushItemWidth(node_width - label_width);
-//            ImGui::Text("%.2f", _currentInput2);
-//            ImGui::PopItemWidth();
-//        }
-
         ImNodes::EndInputAttribute();
     }
     {
@@ -65,11 +50,8 @@ void CrossNode::onRender(float dt) {
         bool isOutputConnected = numberOfConnectionsFrom(_id) > 0;
         ImNodes::BeginOutputAttribute(_id,isOutputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
         const float label_width = ImGui::CalcTextSize("out").x;
-//    ImGui::PushItemWidth(node_width - label_width);
-        ImGui::Indent(node_width - label_width);
+        ImGui::Indent(node_width - label_width + 6);
         ImGui::Text("out");
-//    ImGui::PopItemWidth();
-
         ImNodes::EndInputAttribute();
     }
 }

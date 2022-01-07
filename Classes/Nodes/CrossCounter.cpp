@@ -8,8 +8,9 @@
 
 CrossCounter::CrossCounter(StrategyEditor* nodeEditor):INode(nodeEditor)
 {
-    setName("Cross counter");
-    setType(UiNodeType::COUNTER);
+    setName("Counter");
+    setType(UiNodeType::COUNTER);;
+    setIcon(static_cast<int>(Editor::Icons::node_counter_black));
 
     const GraphNode value(NodeType::VALUE, 0.f);
     const GraphNode op(NodeType::CROSS_COUNTER, this);
@@ -22,19 +23,15 @@ CrossCounter::CrossCounter(StrategyEditor* nodeEditor):INode(nodeEditor)
 
 
 void CrossCounter::onRender(float dt) {
-    const float node_width = 100.0f;
     bool isInputConnected = numberOfConnectionsTo(_idInput) > 0;
     ImNodes::BeginInputAttribute(_idInput, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
 
     if(!isInputConnected)
         _counter = 0;
 
-    const float label_width = ImGui::CalcTextSize("input").x;
-    ImGui::TextUnformatted("input");
+    ImGui::TextUnformatted("A");
     ImGui::SameLine();
-    ImGui::PushItemWidth(node_width - label_width);
     ImGui::Text("%d",_counter);
-    ImGui::PopItemWidth();
     ImNodes::EndInputAttribute();
 }
 
