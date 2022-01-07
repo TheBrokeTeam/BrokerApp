@@ -59,7 +59,7 @@ void CrossNode::onRender(float dt) {
 
 void CrossNode::handleStack(std::stack<float> &stack) {
     //initial update
-    //the order get from stack is inverse the added on graph
+    //the order get from stack is inverse the added on graph **????
     _currentInput2  = stack.top();
     stack.pop();
     _currentInput1  = stack.top();
