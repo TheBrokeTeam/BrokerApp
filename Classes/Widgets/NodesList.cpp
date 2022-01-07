@@ -48,7 +48,7 @@ void NodesList::drawView() {
 
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
                     ImGui::SetDragDropPayload(NodesList::NODES_DRAG_ID, &k, sizeof(int));
-                    auto info = getContext()->getEditor()->getTexture(Editor::Icons::indicator_ma);
+                    auto info = getContext()->getEditor()->getTexture(_dragAndDropItems.at(k).icon);
                     ImGui::Image((void *) (intptr_t) info.my_image_texture,
                                  ImVec2(info.my_image_width * 0.5, info.my_image_height * 0.5));
                     ImGui::EndDragDropSource();
