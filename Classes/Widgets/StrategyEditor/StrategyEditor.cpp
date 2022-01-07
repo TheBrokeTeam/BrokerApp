@@ -54,16 +54,13 @@ void StrategyEditor::updateVisible(float dt) {
     ImNodes::EndNodeEditor();
     if (ImGui::BeginDragDropTarget()) {
 
-        //######################################################
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID)) {
-            //indice of dragged item
-            int i = *(int *) payload->Data;
-
-            puts("AGORA é a hora de plotar!!!");
-            auto node = getContext()->createNode(_graph,UiNodeType(i));
+        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(NodesList::NODES_DRAG_ID)) {
+            UiNodeType type = *(UiNodeType *) payload->Data;
+            auto node = getContext()->createNode(_graph,type);
             if(node)
                 _uiNodes.push_back(node);
         }
+
         ImGui::EndDragDropTarget();
     }
 
@@ -143,8 +140,7 @@ void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
 }
 
 void StrategyEditor::clear() {
-    _uiNodes.clear();
-//    _links.clear();
+    //TODO::see if it is needed yet
 }
 
 void StrategyEditor::evaluateGraph(int id) {

@@ -51,9 +51,6 @@ void BackTestingContext::initialize() {
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         removeAllIndicators();
-
-        getWidget<StrategyEditor>()->clear();
-
 //        //create test strategy for tests
 //        _ticker->removeTickable(_strategy.get());
 //
@@ -75,9 +72,6 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
 
     _ticker.reset();
     _ticker = std::make_shared<Ticker>(this,symbol);
-
-    for(auto& i :_indicators)
-        _ticker->addIndicator(i.get());
 
 //    //create test strategy for tests
 //    _strategy.reset();
@@ -361,13 +355,14 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
     return node;
 }
 
+//this will be called from strategy editor widget
 std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type)
 {
     std::shared_ptr<INode> node{nullptr};
 
     switch (type) {
         case UiNodeType::SMA:
-            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA),_graph);
+            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, true),_graph);
             break;
         case UiNodeType::CROSS:
             node = std::make_shared<CrossNode>(_graph);
@@ -384,8 +379,8 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
 }
 
 void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) {
-    //first delete from ticker
 
+    //first delete from ticker
     if(_ticker->removeTickable(indicator.get()))
         puts("indicator removed successfully");
 
@@ -402,7 +397,9 @@ void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator,bo
 }
 
 void BackTestingContext::removeAllIndicators() {
+    auto strategyEditor = getWidget<StrategyEditor>();
     for(auto& i : _indicators){
+        strategyEditor->removeNodeIndicator(i);
         if(_ticker->removeTickable(i.get()))
             puts("indicator removed successfully");
     }

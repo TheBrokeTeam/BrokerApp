@@ -35,30 +35,19 @@ void NodesList::drawView() {
         for (int k = 0; k < _dragAndDropItems.size(); ++k) {
 
             if (ImGui::BeginChild("##Node item")) {
-//                ImGui::Button("##dummy_name", ImVec2(30, 30));
-//                ImGui::PushStyleColor(ImGuiCol_Button, Editor::broker_yellow_active);
-//                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_yellow_hover);
 
                 auto info = getContext()->getEditor()->getTexture(_dragAndDropItems.at(k).icon);
                 ImGui::SetCursorPosX(nodeWidth / 2 - info.my_image_width/2 - 4);
                 ImGui::ImageButton((void *) (intptr_t) info.my_image_texture,
                                        ImVec2(info.my_image_width, info.my_image_height));
 
-//                ImGui::PopStyleColor(2);
-
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
-                    ImGui::SetDragDropPayload(NodesList::NODES_DRAG_ID, &k, sizeof(int));
+                    ImGui::SetDragDropPayload(NodesList::NODES_DRAG_ID, &_dragAndDropItems.at(k).type, sizeof(UiNodeType));
                     auto info = getContext()->getEditor()->getTexture(_dragAndDropItems.at(k).icon);
                     ImGui::Image((void *) (intptr_t) info.my_image_texture,
                                  ImVec2(info.my_image_width * 0.5, info.my_image_height * 0.5));
                     ImGui::EndDragDropSource();
                 }
-
-                const bool hovered = ImGui::IsItemHovered();
-
-//            if (hovered) {
-//                puts((std::string("Mouse no indicador: ") + _dragAndDropItems[k].label).c_str());
-//            }
 
                 //AddC lose button at the end of indicators list
                 if (k == (_dragAndDropItems.size() - 1)) {
