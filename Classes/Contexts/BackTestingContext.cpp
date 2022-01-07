@@ -366,16 +366,13 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
     std::shared_ptr<INode> node{nullptr};
 
     switch (type) {
-        case UiNodeType::ADD:
-            node = std::make_shared<Add>(_graph);
-            break;
         case UiNodeType::SMA:
             node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA),_graph);
             break;
         case UiNodeType::CROSS:
             node = std::make_shared<CrossNode>(_graph);
             break;
-        case UiNodeType::CROSS_COUNTER:
+        case UiNodeType::COUNTER:
             node = std::make_shared<CrossCounter>(_graph);
             getWidget<StrategyEditor>()->addRootId(node->getId());
             break;

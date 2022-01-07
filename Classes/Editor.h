@@ -41,7 +41,13 @@ public:
         none,
         indicator_ma,
         close_window,
-        trash
+        trash,
+        node_cross,
+        node_counter,
+        node_bar_seq_down,
+        node_bar_seq_up,
+        node_trend,
+        node_trade
     };
 
     ImageInfo getTexture(Icons icon);

@@ -14,6 +14,12 @@ void Editor::start() {
     loadImage(Icons::indicator_ma,"../Resources/Icons/ma.png");
     loadImage(Icons::close_window,"../Resources/Icons/close.png");
     loadImage(Icons::trash,"../Resources/Icons/trash.png");
+    loadImage(Icons::node_bar_seq_down,"../Resources/Icons/node_bar_seq_down_w.png");
+    loadImage(Icons::node_bar_seq_up,"../Resources/Icons/node_bar_seq_up_w.png");
+    loadImage(Icons::node_counter,"../Resources/Icons/node_counter_w.png");
+    loadImage(Icons::node_cross,"../Resources/Icons/node_cross_w.png");
+    loadImage(Icons::node_trend,"../Resources/Icons/node_trend_w.png");
+    loadImage(Icons::node_trade,"../Resources/Icons/node_trade_w.png");
 
     _context = std::make_shared<BackTestingContext>(this);
 

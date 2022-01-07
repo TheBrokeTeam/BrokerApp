@@ -9,7 +9,7 @@
 CrossCounter::CrossCounter(std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph)
 {
     setName("Cross counter");
-    setType(UiNodeType::CROSS_COUNTER);
+    setType(UiNodeType::COUNTER);
 
     const GraphNode value(NodeType::VALUE, 0.f);
     const GraphNode op(NodeType::CROSS_COUNTER, this);

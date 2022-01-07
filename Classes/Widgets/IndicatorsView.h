@@ -31,14 +31,6 @@ public:
         SAR
     };
 
-    enum class Nodes{
-        ADD,
-        MULTIPLY,
-        SMA,
-        CROSS,
-        RESULT
-    };
-
     struct DragAndDropIndicatorItem {
             CandleIndicatorsTypes type;
             std::string      label{""};

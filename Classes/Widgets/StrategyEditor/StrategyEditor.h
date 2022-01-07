@@ -9,6 +9,7 @@
 #include "../../Tickables/Strategies/Strategy.h"
 #include "../../Nodes/INode.h"
 #include "../../Helpers/graph.h"
+#include "../NodesList.h"
 
 class StrategyEditor : public Widget {
 public:
@@ -34,6 +35,7 @@ private:
     std::vector<int> _rootNodes;
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     std::vector<std::shared_ptr<INode>> _uiNodes;
+    std::unique_ptr<NodesList> _nodesList{nullptr};
 };
 
 #endif //BROKERAPP_STRATEGYEDITOR_H

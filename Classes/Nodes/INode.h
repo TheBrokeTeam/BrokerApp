@@ -15,21 +15,26 @@
 #include "../Helpers/graph.h"
 #include "../Tickables/Indicators/Indicator.h"
 
+
+//Internal Nodes inside th graph
 enum class NodeType
 {
-    ADD,
     SMA,
     CROSS,
     CROSS_COUNTER,
     VALUE
 };
 
+//all types of possible nodes rendered on editor (indicators + other nodes)
 enum class UiNodeType
 {
-    ADD,
     SMA,
     CROSS,
-    CROSS_COUNTER,
+    COUNTER,
+    BAR_SEQ_DOWN,
+    BAR_SEQ_UP,
+    TREND,
+    TRADE
 };
 
 

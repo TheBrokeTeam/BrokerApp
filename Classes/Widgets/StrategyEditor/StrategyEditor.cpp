@@ -17,10 +17,15 @@ StrategyEditor::StrategyEditor(Context* context) : Widget(context) {
     _title                  = "Strategy editor";
     _is_window              = true;
     _graph = std::make_shared<graph::Graph<GraphNode>>();
+    _nodesList = std::make_unique<NodesList>(context);
 }
 
 void StrategyEditor::updateVisible(float dt) {
     Widget::updateVisible(dt);
+
+    _nodesList->updateVisible(dt);
+
+    ImGui::SameLine();
 
     ImNodes::PushColorStyle(ImNodesCol_Link, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
     ImNodes::PushColorStyle(ImNodesCol_LinkHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));

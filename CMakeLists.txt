@@ -74,7 +74,7 @@ add_executable(BrokerApp
         Classes/Nodes/INode.h
         Classes/Nodes/INode.cpp
         Classes/Nodes/CrossNode.cpp
-        Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/CrossCounter.cpp Classes/Nodes/CrossCounter.h)
+        Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/CrossCounter.cpp Classes/Nodes/CrossCounter.h Classes/Widgets/NodesList.cpp Classes/Widgets/NodesList.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
