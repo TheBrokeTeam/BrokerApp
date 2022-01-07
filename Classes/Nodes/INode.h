@@ -20,6 +20,7 @@ class StrategyEditor;
 enum class NodeType
 {
     SMA,
+    EMA,
     CROSS,
     COUNTER,
     BAR_SEQ_DOWN,
@@ -33,6 +34,7 @@ enum class NodeType
 enum class UiNodeType
 {
     SMA,
+    EMA,
     CROSS,
     COUNTER,
     BAR_SEQ_DOWN,

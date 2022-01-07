@@ -36,6 +36,8 @@ add_executable(BrokerApp
         Classes/Tickables/Tickable.h
         Classes/Tickables/Indicators/Indicator.cpp
         Classes/Tickables/Indicators/Indicator.h
+        Classes/Tickables/Indicators/EMA.h
+        Classes/Tickables/Indicators/EMA.cpp
         Classes/Tickables/Strategies/Strategy.cpp
         Classes/Tickables/Strategies/Strategy.h
         Classes/Data/Position.cpp

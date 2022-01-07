@@ -52,7 +52,7 @@ private:
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
-//    std::shared_ptr<Strategy> _strategy{nullptr};
+    std::shared_ptr<Strategy> _strategy{nullptr};
     StrategyEditor* _strategyEditor{nullptr};
 
 

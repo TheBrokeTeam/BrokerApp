@@ -52,9 +52,9 @@ void TradeNode::onRender(float dt) {
 }
 
 void TradeNode::handleStack(std::stack<float> &stack) {
-    const float  inputValueLong = stack.top();
+    const float  inputValueShort= stack.top();
     stack.pop();
-    const float  inputValueShort = stack.top();
+    const float  inputValueLong = stack.top();
     stack.pop();
 
     if(_strategy->isPositioned) return;

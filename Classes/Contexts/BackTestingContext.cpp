@@ -15,6 +15,7 @@
 #include <rapidcsv.h>
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
+#include "../Tickables/Indicators/EMA.h"
 
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
@@ -275,13 +276,20 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL:
         {
-            std::shared_ptr<Bollinger> boll = std::make_unique<Bollinger>(_ticker.get());
+            std::shared_ptr<Bollinger> boll = std::make_shared<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::EMA:
+        {
+            std::shared_ptr<EMA> ema = std::make_shared<EMA>(_ticker.get());
+            _indicators.push_back(std::move(ema));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back());
+        }
+            break;
         case IndicatorsView::CandleIndicatorsTypes::WMA:
         case IndicatorsView::CandleIndicatorsTypes::AVL:
         case IndicatorsView::CandleIndicatorsTypes::VWAP:
@@ -333,8 +341,8 @@ void BackTestingContext::plotIndicators() {
 }
 
 void BackTestingContext::plotStrategy() {
-    for(auto&s : _strategies)
-        s->render();
+    if(_strategy)
+        _strategy->render();
 }
 
 //develop phase
@@ -381,11 +389,10 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             break;
         case UiNodeType::TRADE:
             {
-                auto strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
-                _strategies.push_back(strategy);
-                auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategies.back().get());
+                _strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
+                auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategy.get());
                 _ticker->addStrategy(strategyPtr);
-                getWidget<ProfitAndLossesView>()->setStrategyTest(_strategies.back());
+                getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
                 _strategyEditor->addRootId(node->getId());
              }
