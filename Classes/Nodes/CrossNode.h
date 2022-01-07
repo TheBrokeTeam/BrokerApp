@@ -13,6 +13,7 @@ public:
     ~CrossNode();
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
+    void endEvaluate() override;
 
 private:
     int _idInput1;

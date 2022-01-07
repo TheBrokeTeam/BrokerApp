@@ -128,10 +128,28 @@ void StrategyEditor::updateVisible(float dt) {
         }
     }
 
+    //call willStartEvaluate on all nodes once at first
+    bool startEvaluateCalled = false;
+
     for(auto id : _rootNodes) {
-        if(_graph->node(id).owner->getRootNodeConnectionsNumber() > 0)
+        if(_graph->node(id).owner->getRootNodeConnectionsNumber() > 0) {
+            if(!startEvaluateCalled)
+            {
+                for(auto& n :_uiNodes)
+                    n->willStartEvaluate();
+
+                startEvaluateCalled = true;
+            }
             evaluateGraph(id);
+        }
     }
+
+    //call endEvaluate on all nodes
+    if(startEvaluateCalled){
+        for(auto& n :_uiNodes)
+            n->endEvaluate();
+    }
+
 }
 
 void StrategyEditor::onPushStyleVar() {

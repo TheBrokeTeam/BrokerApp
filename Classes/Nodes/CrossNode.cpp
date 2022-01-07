@@ -8,7 +8,7 @@
 #include "../Editor.h"
 
 
-CrossNode::CrossNode(StrategyEditor* nodeEditor, Ticker* ticker):INode(nodeEditor) {
+CrossNode::CrossNode(StrategyEditor* nodeEditor):INode(nodeEditor) {
     setNodeName("Cross");
     setType(UiNodeType::CROSS);
     setIcon(static_cast<int>(Editor::Icons::node_cross_black));
@@ -71,18 +71,17 @@ void CrossNode::handleStack(std::stack<float> &stack) {
     else
         _output = _currentInput2 < _currentInput1 && _lastInput2 > _lastInput1;
 
-    //final update
-    _lastInput1 = _currentInput1;
-    _lastInput2 = _currentInput2;
-
-    if(_output)
-        _countCross++;
-
     stack.push(_output);
 }
 
 //delete graph relations
 CrossNode::~CrossNode() {}
+
+void CrossNode::endEvaluate()
+{
+    _lastInput1 = _currentInput1;
+    _lastInput2 = _currentInput2;
+}
 
 
 

@@ -59,6 +59,10 @@ public:
     int numberOfConnectionsTo(int nodeId);
     int numberOfConnectionsFrom(int nodeId);
 
+    virtual void willStartEvaluate() {};
+    virtual void endEvaluate() {};
+
+
     GraphNode* getGraphNode(int id);
 
         //just for root nodes
