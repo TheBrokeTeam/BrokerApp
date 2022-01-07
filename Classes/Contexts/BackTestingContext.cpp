@@ -25,8 +25,8 @@
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/CrossNode.h"
-#include "../Nodes/CrossCounter.h"
-#include "../Nodes/Add.h"
+#include "../Nodes/Counter.h"
+#include "../Nodes/TradeNode.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -47,7 +47,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
 
-    getWidget<ProfitAndLossesView>()->SetVisible(false);
+//    getWidget<ProfitAndLossesView>()->SetVisible(false);
 
     _strategyEditor = getWidget<StrategyEditor>();
 
@@ -229,8 +229,14 @@ void BackTestingContext::updateData(float dt) {
         _currentTime = 0;
         for(int i = 0; i < numberOfTicks; i++)
         {
+            //TODO::review this
+            //needed to avoid memory trash
+            if(i >= _data.size())
+                _simulating = false;
+
             auto& tickData = _data[_currentIndex++];
             _ticker->tick(tickData);
+
             if(_currentIndex >= _data.size())
                 _simulating = false;
         }
@@ -327,7 +333,8 @@ void BackTestingContext::plotIndicators() {
 }
 
 void BackTestingContext::plotStrategy() {
-//    _strategy->render();
+    for(auto&s : _strategies)
+        s->render();
 }
 
 //develop phase
@@ -369,8 +376,19 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             node = std::make_shared<CrossNode>(_strategyEditor);
             break;
         case UiNodeType::COUNTER:
-            node = std::make_shared<CrossCounter>(_strategyEditor);
+            node = std::make_shared<Counter>(_strategyEditor);
             getWidget<StrategyEditor>()->addRootId(node->getId());
+            break;
+        case UiNodeType::TRADE:
+            {
+                auto strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
+                _strategies.push_back(strategy);
+                auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategies.back().get());
+                _ticker->addStrategy(strategyPtr);
+                getWidget<ProfitAndLossesView>()->setStrategyTest(_strategies.back());
+                node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
+                _strategyEditor->addRootId(node->getId());
+             }
             break;
         default:
             break;

@@ -9,7 +9,7 @@
 //
 //Add::Add(std::shared_ptr<graph::Graph<GraphNode>> graph):INode(graph)
 //{
-//    setName("ADD");
+//    setNodeName("ADD");
 //    setType(UiNodeType::ADD);
 //
 //    const GraphNode value(NodeType::VALUE, 0.f);
@@ -17,10 +17,10 @@
 //
 //    _idInput1 = addNode(value);
 //    _idInput2 = addNode(value);
-//    _id = addNode(op);
+//    _plotId = addNode(op);
 //
-//    addEdge(_id, _idInput1);
-//    addEdge(_id, _idInput2);
+//    addEdge(_plotId, _idInput1);
+//    addEdge(_plotId, _idInput2);
 //}
 //
 //void Add::onRender(float dt) {
@@ -56,7 +56,7 @@
 //
 //    ImGui::Spacing();
 //    {
-//        ImNodes::BeginOutputAttribute(_id);
+//        ImNodes::BeginOutputAttribute(_plotId);
 //        const float label_width = ImGui::CalcTextSize("result").x;
 //        ImGui::Indent(node_width - label_width);
 //        ImGui::TextUnformatted("result");

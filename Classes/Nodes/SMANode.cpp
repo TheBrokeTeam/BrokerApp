@@ -10,7 +10,7 @@
 
 
 SMANode::SMANode(std::shared_ptr<Indicator> sma,StrategyEditor* nodeEditor):INode(nodeEditor){
-    setName("SMA Indicator");
+    setNodeName("SMA Indicator");
     setType(UiNodeType::SMA);
     setIndicator(sma);
 

@@ -121,6 +121,8 @@ void Strategy::checkTarget() {
     for(auto &pos : _openedPositions){
         pos.outTime =  barHist[0].time;
         pos.outPrice = barHist[0].close;;
+        pos.profit = pos.isShorting ? pos.inPrice - pos.outPrice : pos.outPrice - pos.inPrice;
+
         checkTarget(pos);
     }
 }

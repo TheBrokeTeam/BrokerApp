@@ -21,7 +21,11 @@ enum class NodeType
 {
     SMA,
     CROSS,
-    CROSS_COUNTER,
+    COUNTER,
+    BAR_SEQ_DOWN,
+    BAR_SEQ_UP,
+    TREND,
+    TRADE,
     VALUE
 };
 
@@ -89,7 +93,7 @@ public:
     void setType(const UiNodeType& type);
     void setIcon(int icon);
 protected:
-    void setName(const std::string& name);
+    void setNodeName(const std::string& name);
     int _id;
     UiNodeType _type;
 

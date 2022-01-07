@@ -6,8 +6,8 @@
 #include "../../Helpers/Utils.h"
 
 PlotItem::PlotItem() {
-    _id = uuid::generate_uuid_v4();
-    _plotName = "##" + _id;
+    _plotId = uuid::generate_uuid_v4();
+    _plotName = "##" + _plotId;
 }
 
 const std::string& PlotItem::getName() {
@@ -19,7 +19,7 @@ const std::string& PlotItem::getPlotName() {
 }
 
 const std::string &PlotItem::getId() {
-    return _id;
+    return _plotId;
 }
 
 void PlotItem::render() {
@@ -30,8 +30,8 @@ void PlotItem::render() {
     }
 }
 
-void PlotItem::setName(const std::string& name) {
-    _plotName = name + "##" + _id;
+void PlotItem::setPlotName(const std::string& name) {
+    _plotName = name + "##" + _plotId;
     _name = name;
 }
 
@@ -41,11 +41,11 @@ void PlotItem::popupRender() {
         const int buffMaxSize = 50;
         static char buff[buffMaxSize] = "";
 
-        for(int i = 0; i < _id.length(); i++ )
+        for(int i = 0; i < _plotId.length(); i++ )
         {
             if(i >= buffMaxSize-1)
                 break;
-            buff[i] = _id.at(i);
+            buff[i] = _plotId.at(i);
         }
 
         int flagsID = ImGuiInputTextFlags_CharsUppercase;
@@ -54,13 +54,13 @@ void PlotItem::popupRender() {
 
         ImGui::SetNextItemWidth(350);
         if (ImGui::InputText("##ID",buff,buffMaxSize,flagsID)) {
-            setName(buff);
+            setPlotName(buff);
         }
 
         ImGui::SameLine();
 
         if(ImGui::Button("Copy ID",ImVec2(100,30))){
-            ImGui::SetClipboardText(_id.c_str());
+            ImGui::SetClipboardText(_plotId.c_str());
         }
 
         ImGui::Separator();

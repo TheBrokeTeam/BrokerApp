@@ -1,19 +1,19 @@
 //
 // Created by Arthur Abel Motelevicz on 05/01/22.
 //
-#include "CrossCounter.h"
+#include "Counter.h"
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
 
-CrossCounter::CrossCounter(StrategyEditor* nodeEditor):INode(nodeEditor)
+Counter::Counter(StrategyEditor* nodeEditor): INode(nodeEditor)
 {
-    setName("Counter");
+    setNodeName("Counter");
     setType(UiNodeType::COUNTER);;
     setIcon(static_cast<int>(Editor::Icons::node_counter_black));
 
     const GraphNode value(NodeType::VALUE, 0.f);
-    const GraphNode op(NodeType::CROSS_COUNTER, this);
+    const GraphNode op(NodeType::COUNTER, this);
 
     _idInput = addNode(value);
     _id = addNode(op);
@@ -22,7 +22,7 @@ CrossCounter::CrossCounter(StrategyEditor* nodeEditor):INode(nodeEditor)
 }
 
 
-void CrossCounter::onRender(float dt) {
+void Counter::onRender(float dt) {
     bool isInputConnected = numberOfConnectionsTo(_idInput) > 0;
     ImNodes::BeginInputAttribute(_idInput, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
 
@@ -36,7 +36,7 @@ void CrossCounter::onRender(float dt) {
 }
 
 
-void CrossCounter::handleStack(std::stack<float> &stack) {
+void Counter::handleStack(std::stack<float> &stack) {
     const float inputValue = stack.top();
     stack.pop();
     if (inputValue > 0) {
@@ -44,9 +44,9 @@ void CrossCounter::handleStack(std::stack<float> &stack) {
     }
 }
 
-CrossCounter::~CrossCounter() {}
+Counter::~Counter() {}
 
-int CrossCounter::getRootNodeConnectionsNumber() {
+int Counter::getRootNodeConnectionsNumber() {
     return numberOfConnectionsTo(_idInput);
 }
 

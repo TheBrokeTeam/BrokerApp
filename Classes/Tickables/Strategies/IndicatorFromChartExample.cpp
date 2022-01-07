@@ -7,7 +7,7 @@
 
 
 IndicatorFromChartExample::IndicatorFromChartExample(Ticker *ticker) : Strategy(ticker) {
-    setName("Strategy: Indicator From Chart");
+    setPlotName("Strategy: Indicator From Chart");
 //    _smaSlow = SMA(ticker);
 //    _smaFast = SMA(ticker);
 //

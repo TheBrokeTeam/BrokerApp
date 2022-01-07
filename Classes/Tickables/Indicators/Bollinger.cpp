@@ -5,7 +5,7 @@
 #include "Bollinger.h"
 
 Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
-    setName("BOLL");
+    setPlotName("BOLL");
 }
 
 void Bollinger::calculate(BarHistory* barHistory)

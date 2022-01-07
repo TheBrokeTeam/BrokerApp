@@ -5,7 +5,7 @@
 #include "SMA.h"
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
-    setName("SMA");
+    setPlotName("SMA");
 }
 
 void SMA::calculate(BarHistory* barHistory)

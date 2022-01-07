@@ -8,8 +8,8 @@
 #include "../Editor.h"
 
 
-CrossNode::CrossNode(StrategyEditor* nodeEditor):INode(nodeEditor) {
-    setName("Cross");
+CrossNode::CrossNode(StrategyEditor* nodeEditor, Ticker* ticker):INode(nodeEditor) {
+    setNodeName("Cross");
     setType(UiNodeType::CROSS);
     setIcon(static_cast<int>(Editor::Icons::node_cross_black));
 
@@ -59,9 +59,10 @@ void CrossNode::onRender(float dt) {
 
 void CrossNode::handleStack(std::stack<float> &stack) {
     //initial update
-    _currentInput1  = stack.top();
-    stack.pop();
+    //the order get from stack is inverse the added on graph
     _currentInput2  = stack.top();
+    stack.pop();
+    _currentInput1  = stack.top();
     stack.pop();
 
     //do the logic

@@ -150,10 +150,10 @@ void StrategyEditor::clear() {
     }
 }
 
-void StrategyEditor::evaluateGraph(int id) {
+void StrategyEditor::evaluateGraph(int rootNodeId) {
     std::stack<int> postorder;
     dfs_traverse(
-            *_graph, id, [&postorder](const int node_id) -> void {
+            *_graph, rootNodeId, [&postorder](const int node_id) -> void {
                 postorder.push(node_id);
             });
 

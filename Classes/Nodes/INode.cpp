@@ -54,7 +54,7 @@ void INode::render(float dt) {
     finishStyle();
 }
 
-void INode::setName(const std::string &name) {
+void INode::setNodeName(const std::string &name) {
     _name = name;
 }
 
