@@ -18,6 +18,10 @@ StrategyEditor::StrategyEditor(Context* context) : Widget(context) {
     _is_window              = true;
     _graph = std::make_shared<graph::Graph<GraphNode>>();
     _nodesList = std::make_unique<NodesList>(context);
+
+    _nodesList->setTrashCallback([this](){
+        clear();
+    });
 }
 
 void StrategyEditor::updateVisible(float dt) {
@@ -139,7 +143,11 @@ void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
 }
 
 void StrategyEditor::clear() {
-    //TODO::see if it is needed yet
+    auto copyNodes = _uiNodes;
+    for(auto n : copyNodes){
+        if(!n->getIsIndicatorNode())
+            deleteUiNodeFromFromList(n->getId(),false);
+    }
 }
 
 void StrategyEditor::evaluateGraph(int id) {

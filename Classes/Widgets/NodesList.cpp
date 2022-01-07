@@ -24,7 +24,7 @@ void NodesList::updateVisible(float dt) {
 }
 
 void NodesList::drawView() {
-    float nodeWidth = 30;
+    float nodeWidth = 60;
     ImGui::PushStyleColor(ImGuiCol_Button, Editor::broker_black);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_light_grey);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_yellow);
@@ -49,7 +49,17 @@ void NodesList::drawView() {
                     ImGui::EndDragDropSource();
                 }
 
-                //AddC lose button at the end of indicators list
+                const bool hovered = ImGui::IsItemHovered();
+
+                if(hovered){
+                    ImGui::BeginTooltip();
+                    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                    ImGui::TextUnformatted(_dragAndDropItems.at(k).desc.c_str());
+                    ImGui::PopTextWrapPos();
+                    ImGui::EndTooltip();
+                }
+
+
                 if (k == (_dragAndDropItems.size() - 1)) {
                     ImGui::Spacing();
                     //change the background of trash button
