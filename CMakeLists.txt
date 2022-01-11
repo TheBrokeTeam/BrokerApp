@@ -8,6 +8,8 @@ add_executable(BrokerApp
         Classes/Editor.h
         Classes/Widgets/Widget.cpp
         Classes/Widgets/Widget.h
+        Classes/Widgets/StockList.cpp
+        Classes/Widgets/StockList.h
         Classes/Contexts/Context.cpp
         Classes/Contexts/Context.h
         Classes/Widgets/MainMenuBar.cpp
