@@ -11,7 +11,7 @@ else
     git clone https://github.com/btzy/nativefiledialog-extended.git "$DIR/nativefiledialog-extended"
     git clone https://github.com/d99kris/rapidcsv.git "$DIR/rapidcsv"
     git clone https://github.com/nothings/stb.git "$DIR/stb"
-
+    git clone https://github.com/Microsoft/vcpkg.git "$DIR/vcpkg"
 
 #    FORKS TEAM
     git clone --branch docking git@github.com:TheBrokeTeam/imgui.git "$DIR/imgui"
@@ -19,4 +19,8 @@ else
     git clone git@github.com:TheBrokeTeam/imnodes.git "$DIR/node_editor"
     git clone git@github.com:TheBrokeTeam/miniz-cpp.git "$DIR/miniz-cpp"
 
+    cd "$DIR/vcpkg" || exit
+    ./bootstrap-vcpkg.sh
+    ./vcpkg integrate install
+    ./vcpkg install jsoncpp
 fi

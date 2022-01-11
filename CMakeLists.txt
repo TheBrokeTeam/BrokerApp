@@ -76,7 +76,29 @@ add_executable(BrokerApp
         Classes/Nodes/INode.h
         Classes/Nodes/INode.cpp
         Classes/Nodes/CrossNode.cpp
-        Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/Counter.cpp Classes/Nodes/Counter.h Classes/Widgets/NodesList.cpp Classes/Widgets/NodesList.h Classes/Nodes/TradeNode.cpp Classes/Nodes/TradeNode.h Classes/Tickables/Strategies/TradeNodeStrategy.cpp Classes/Tickables/Strategies/TradeNodeStrategy.h)
+        Classes/Nodes/CrossNode.h
+        Classes/Nodes/Add.cpp
+        Classes/Nodes/Add.h
+        Classes/Nodes/Counter.cpp
+        Classes/Nodes/Counter.h
+        Classes/Widgets/NodesList.cpp
+        Classes/Widgets/NodesList.h
+        Classes/Nodes/TradeNode.cpp
+        Classes/Nodes/TradeNode.h
+        Classes/Tickables/Strategies/TradeNodeStrategy.cpp
+        Classes/Tickables/Strategies/TradeNodeStrategy.h
+        Classes/Networking/APIManager.cpp
+        Classes/Networking/APIManager.h
+        Classes/Networking/APIRouter.cpp
+        Classes/Networking/APIRouter.h
+        Classes/Networking/Routes/SymbolRouter.cpp
+        Classes/Networking/Routes/SymbolRouter.h
+        Classes/Networking/Routes/UserRouter.cpp
+        Classes/Networking/Routes/UserRouter.h
+        Classes/Networking/Services/SymbolService.cpp
+        Classes/Networking/Services/SymbolService.h
+        Classes/Networking/Services/UserService.cpp
+        Classes/Networking/Services/UserService.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -102,16 +124,25 @@ add_subdirectory(external/fmt)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
-#add_subdirectory(external/curl)
 
-set(CURL_LIBRARY "-lcurl")
+#-- JSONCPP --------------------------------------------------------------
+set(JSON_INC_PATH external/vcpkg/packages/jsoncpp_x64-osx/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${JSON_INC_PATH})
+set(JSON_LIB_PATH external/vcpkg/packages/jsoncpp_x64-osx/lib)
+target_link_directories(${PROJECT_NAME} PUBLIC ${JSON_LIB_PATH})
+#--END JSONCPP ------------------------------------------------------------
+
+#--CURL STUFF -------------------------------------------------------------
+include(FindCURL)
 find_package(CURL REQUIRED)
-
-if(NOT CURL_FOUND)
-    message(FATAL_ERROR "CURL NOT FOUND!")
+if(CURL_FOUND)
+    message(STATUS "Found CURL version: ${CURL_VERSION_STRING}")
+    message(STATUS "Using CURL include dir(s): ${CURL_INCLUDE_DIRS}")
+    message(STATUS "Using CURL lib(s): ${CURL_LIBRARIES}")
 else()
-    message("CURL FOUND!")
+    message(FATAL_ERROR "Could not find CURL")
 endif()
+#--END CURL----------------------------------------------------------------
 
 set(IMGUI_SOURCE
         external/imgui/imgui.h
@@ -247,7 +278,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         implot
         imnodes
         rapidcsv
-        curl
+        ${CURL_LIBRARIES}
+        jsoncpp
         )
 #-APPLICATION-LIBRARIES-END-------------------
 
