@@ -17,8 +17,8 @@ void EMA::calculate(BarHistory* barHistory)
         if (_data.empty()) {
             for(int i = 0; i < _averageSize; i++) {
                 value += (*barHistory)[i].close;
-                value /= _averageSize;
             }
+            value /= _averageSize;
 
         } else {
             double factor = (1.0 * _smothingSize)/(1.0 * (1+_averageSize));
