@@ -16,6 +16,7 @@
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 #include "../Tickables/Indicators/EMA.h"
+#include "../Tickables/Indicators/WMA.h"
 
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
@@ -264,38 +265,42 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
     std::shared_ptr<Indicator> indicator{nullptr};
 
     switch (type) {
-        case IndicatorsView::CandleIndicatorsTypes::SMA:
-        {
+        case IndicatorsView::CandleIndicatorsTypes::SMA: {
             std::shared_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
             _indicators.push_back(std::move(sma));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back());
-            if(shouldCreateNode)
-                createIndicatorNode(UiNodeType::SMA,_indicators.back());
+            if (shouldCreateNode)
+                createIndicatorNode(UiNodeType::SMA, _indicators.back());
         }
             break;
-        case IndicatorsView::CandleIndicatorsTypes::BOLL:
-        {
+        case IndicatorsView::CandleIndicatorsTypes::BOLL: {
             std::shared_ptr<Bollinger> boll = std::make_shared<Bollinger>(_ticker.get());
             _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back());
         }
             break;
-        case IndicatorsView::CandleIndicatorsTypes::EMA:
-        {
+        case IndicatorsView::CandleIndicatorsTypes::EMA: {
             std::shared_ptr<EMA> ema = std::make_shared<EMA>(_ticker.get());
             _indicators.push_back(std::move(ema));
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back());
         }
             break;
-        case IndicatorsView::CandleIndicatorsTypes::WMA:
+        case IndicatorsView::CandleIndicatorsTypes::WMA: {
+
+            std::shared_ptr<WMA> wma = std::make_shared<WMA>(_ticker.get());
+            _indicators.push_back(std::move(wma));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back());
+        }
+            break;
         case IndicatorsView::CandleIndicatorsTypes::AVL:
         case IndicatorsView::CandleIndicatorsTypes::VWAP:
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
         case IndicatorsView::CandleIndicatorsTypes::SAR :
-            _shouldShowLuizPopup = true;
+            _shouldShowLuizPopup = false;
             break;
         default:
             break;
