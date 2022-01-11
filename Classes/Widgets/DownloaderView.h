@@ -14,8 +14,8 @@ public:
     DownloaderView(Context* context);
 
     struct FetchInfo{
-        std::string fetchInterVal{"15m"};
-        std::string fetchYear{"2021"};
+        std::string fetchInterVal{"1m"};
+        std::string fetchYear{"2022"};
         std::string fetchMonth{"01"};
         std::string fetchSymbol{"ETHUSDT"};
     };

@@ -41,7 +41,7 @@ void DownloaderView::updateVisible(float dt)
 
     ImGui::SetNextItemWidth(100);
 
-    static int interval = 3;
+    static int interval = 0;
 
     if (ImGui::Combo("##intervalid", &interval, "1m\0""3m\0""5m\0""15m\0""30m\0""1h\0""2h\0""4h\0""6h\0""8h\0""12h\0""1d\0""3d\0""1w\0""1mo\0")) {
         //change color text
@@ -58,8 +58,8 @@ void DownloaderView::updateVisible(float dt)
     ImGui::SetNextItemWidth(100);
 
     static int yr = 3;
-    if (ImGui::Combo("##YearId", &yr, "2018\0""2019\0""2020\0""2021\0")) {
-        static const std::string yearArr[]{"2018","2019","2020","2021"};
+    if (ImGui::Combo("##YearId", &yr, "2019\0""2020\0""2021\0""2022\0")) {
+        static const std::string yearArr[]{"2019","2020","2021","2022"};
         _info.fetchYear = yearArr[yr];
     }
 
@@ -93,7 +93,8 @@ void DownloaderView::updateVisible(float dt)
         symbol.setTimeInterval(Symbol::Interval(interval));
 
         //TODO:: the ticker should  be created by charts widget
-        getContext()->loadSymbol(symbol);
+//        getContext()->loadSymbol(symbol);
+        getContext()->fetchSymbol(symbol);
     }
 }
 

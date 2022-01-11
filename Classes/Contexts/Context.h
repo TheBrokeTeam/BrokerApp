@@ -22,6 +22,8 @@ public:
     Context(Editor* editor);
 
     virtual Ticker* loadSymbol(const Symbol& symbol) = 0;
+    virtual Ticker* fetchSymbol(const Symbol& symbol) = 0;
+
     virtual void loadTicker() = 0;
     virtual void updateData(float dt);
     virtual void startSimulation(Ticker* ticker) = 0;
