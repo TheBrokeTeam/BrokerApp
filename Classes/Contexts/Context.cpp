@@ -36,16 +36,16 @@ Indicator *Context::getIndicatorById(const std::string &id) {
     return nullptr;
 }
 
-Strategy *Context::getStrategyById(const std::string &id) {
-    for (const auto& strategy : _strategies)
-    {
-        if (strategy->getId() == id)
-        {
-            return strategy.get();
-        }
-    }
-    return nullptr;
-}
+//Strategy *Context::getStrategyById(const std::string &id) {
+//    for (const auto& strategy : _strategies)
+//    {
+//        if (strategy->getId() == id)
+//        {
+//            return strategy.get();
+//        }
+//    }
+//    return nullptr;
+//}
 
 Indicator *Context::getIndicatorByName(const std::string &name) {
     for (const auto& indicator : _indicators)
@@ -58,13 +58,13 @@ Indicator *Context::getIndicatorByName(const std::string &name) {
     return nullptr;
 }
 
-Strategy *Context::getStrategyByName(const std::string &name) {
-    for (const auto& strategy : _strategies)
-    {
-        if (strategy->getName() == name)
-        {
-            return strategy.get();
-        }
-    }
-    return nullptr;
-}
+//Strategy *Context::getStrategyByName(const std::string &name) {
+//    for (const auto& strategy : _strategies)
+//    {
+//        if (strategy->getName() == name)
+//        {
+//            return strategy.get();
+//        }
+//    }
+//    return nullptr;
+//}

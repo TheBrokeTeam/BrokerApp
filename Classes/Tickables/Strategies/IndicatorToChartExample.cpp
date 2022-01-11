@@ -6,7 +6,7 @@
 #include "../../Contexts/Context.h"
 
 IndicatorToChartExample::IndicatorToChartExample(Ticker *ticker) : Strategy(ticker) {
-    setName("Strategy: Indicator to chart");
+    setPlotName("Strategy: Indicator to chart");
 
     _bollinger = dynamic_cast<Bollinger*>(ticker->getContext()->loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL).get());
 

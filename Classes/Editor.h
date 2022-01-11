@@ -43,7 +43,19 @@ public:
         none,
         indicator_ma,
         close_window,
-        trash
+        trash,
+        node_cross,
+        node_counter,
+        node_bar_seq_down,
+        node_bar_seq_up,
+        node_trend,
+        node_trade,
+        node_cross_black,
+        node_counter_black,
+        node_bar_seq_down_black,
+        node_bar_seq_up_black,
+        node_trend_black,
+        node_trade_black
     };
 
     ImageInfo getTexture(Icons icon);

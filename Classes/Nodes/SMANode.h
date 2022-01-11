@@ -7,17 +7,17 @@
 
 #include "../Widgets/IndicatorsView.h"
 #include "../Nodes/INode.h"
-#include "../Tickables/Indicators/Indicator.h"
+#include "../Tickables/Indicators/SMA.h"
+#include "../Helpers/graph.h"
 
 class SMANode: public INode {
 public:
-    SMANode(std::shared_ptr<Indicator> sma);
+    SMANode(std::shared_ptr<Indicator> sma,StrategyEditor* nodeEditor);
     void onRender(float dt) override;
-
-    int _idOutput;
+    void handleStack(std::stack<float>& stack) override;
+    void initStyle() override;
+    void finishStyle()override ;
 private:
-    std::weak_ptr<Indicator> _indicator;
-    IndicatorsView::CandleIndicatorsTypes _type = IndicatorsView::CandleIndicatorsTypes::SMA;
 };
 
 

@@ -11,54 +11,117 @@
 #include <variant>
 #include <map>
 
+#include <stack>
+#include "../Helpers/graph.h"
+#include "../Tickables/Indicators/Indicator.h"
+
+class StrategyEditor;
+//Internal Nodes inside th graph
+enum class NodeType
+{
+    SMA,
+    EMA,
+    CROSS,
+    COUNTER,
+    BAR_SEQ_DOWN,
+    BAR_SEQ_UP,
+    TREND,
+    TRADE,
+    VALUE
+};
+
+//all types of possible nodes rendered on editor (indicators + other nodes)
+enum class UiNodeType
+{
+    SMA,
+    EMA,
+    CROSS,
+    COUNTER,
+    BAR_SEQ_DOWN,
+    BAR_SEQ_UP,
+    TREND,
+    TRADE
+};
+
+
+class GraphNode;
+
+
 class INode {
 public:
-    inline static int current_id = 0;
-    INode();
+    INode(StrategyEditor* strategyEditor);
     virtual ~INode();
 
+    virtual void handleStack(std::stack<float>& stack) = 0;
     virtual void onRender(float dt) = 0;
+
+    int addNode(const GraphNode& node);
+    int addEdge(int from, int to);
+
+    int numberOfConnectionsTo(int nodeId);
+    int numberOfConnectionsFrom(int nodeId);
+
+    virtual void willStartEvaluate() {};
+    virtual void endEvaluate() {};
+
+
+    GraphNode* getGraphNode(int id);
+
+        //just for root nodes
+    virtual int getRootNodeConnectionsNumber(){
+        return 0;
+    };
+
+    std::shared_ptr<Indicator> getIndicator(){
+        return _indicator.lock();
+    }
+
+    void  setIndicator(std::shared_ptr<Indicator> indicator){
+        _indicator = indicator;
+        _isIndicatorNode = true;
+    }
+
+    bool getIsIndicatorNode() const{
+        return _isIndicatorNode;
+    };
+
     void render(float dt);
-    bool hasInput(int id);
-    bool hasOutput(int id);
+
+    //For customize the title bar.. should be used in pair
+    virtual void initStyle();
+    virtual void finishStyle();
+
+
     int getId() const{
         return _id;
     }
-
-    double getValueFromId(int id)
-    {
-        auto it = _map.find(id);
-        if(it != _map.end()) {
-            auto v = _map.at(id);
-            return v;
-        }
-        assert(false);
-    }
-
-    void setValueForId(int id, double newValue)
-    {
-        auto it = _map.find(id);
-        if(it != _map.end()) {
-            it->second = newValue;
-            return;
-        }
-        assert(false);
-    }
-
+    const UiNodeType& getType();
+    void setType(const UiNodeType& type);
+    void setIcon(int icon);
 protected:
-    void setName(const std::string& name);
-    int generateId();
-    int addInput();
-    int addOutput();
-    std::map<int,double> _map;
+    void setNodeName(const std::string& name);
+    int _id;
+    UiNodeType _type;
 
 private:
-    int _id;
     std::string _name = "Node name";
     ImVec2 pos;
     bool _init = false;
-    std::vector<int> _inputIds;
-    std::vector<int> _outputIds;
+    std::vector<int> _internalNodes;
+    std::shared_ptr<graph::Graph<GraphNode>> _graph;
+    bool _isIndicatorNode = false;
+    std::weak_ptr<Indicator> _indicator;
+    StrategyEditor* _nodeEditor{nullptr};
+    int _icon{0};
+};
+
+class GraphNode {
+public:
+    INode* owner{nullptr};
+    NodeType type;
+    float value;
+    explicit GraphNode(const NodeType t,INode* o = nullptr) : type(t), value(0.f), owner(o) {}
+    GraphNode(const NodeType t, const float v) : type(t), value(v) {}
 };
 
 

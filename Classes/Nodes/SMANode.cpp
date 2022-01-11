@@ -9,23 +9,67 @@
 #include "../Editor.h"
 
 
-SMANode::SMANode(std::shared_ptr<Indicator> sma):_indicator(std::move(sma)){
-    setName("SMA Indicator");
-    _idOutput = addOutput();
+SMANode::SMANode(std::shared_ptr<Indicator> sma,StrategyEditor* nodeEditor):INode(nodeEditor){
+    setNodeName("SMA Indicator");
+    setType(UiNodeType::SMA);
+    setIndicator(sma);
+
+    const GraphNode op(NodeType::SMA, this);
+    _id = addNode(op);
 }
 
 void SMANode::onRender(float dt) {
+    const float node_width = 100.f;
+    //set node's values from indicator
+    ImNodes::BeginOutputAttribute(_id);
+    ImGui::Indent(node_width - ImGui::CalcTextSize("output").x);
+    ImGui::Text("output");
+    ImNodes::EndOutputAttribute();
+}
 
-    if(auto indicator = _indicator.lock()) {
-        auto sma = dynamic_cast<SMA*>(indicator.get());
-        //set node's values from indicator
-        if(sma->size() > 0)
-            setValueForId(_idOutput, (*sma)[0]);
+void SMANode::handleStack(std::stack<float> &stack) {
 
-        ImNodes::BeginOutputAttribute(_idOutput);
-
-        ImGui::Indent(40);
-        ImGui::Text("output");
-        ImNodes::EndOutputAttribute();
+    //Safe check ---------
+    /**Todo:: call context to remove this node if the indicator is not valid anymore */
+    auto smaShared = getIndicator();
+    if(!smaShared){
+        stack.push(0.0f);
+        return;
     }
+    //--------------------
+
+    auto &sma = *dynamic_cast<SMA *>(smaShared.get());
+
+    if (sma.size() > 0)
+        stack.push(sma[0]);
+    else
+        stack.push(0.0f);
+
+}
+
+void SMANode::initStyle() {
+    auto smaShared = getIndicator();
+    if(!smaShared) {
+        INode::initStyle();
+        return;
+    }
+
+    auto &sma = *dynamic_cast<SMA*>(smaShared.get());
+
+    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+
+    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(sma.getColor()));
+    ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
+}
+
+void SMANode::finishStyle() {
+    ImGui::PopStyleColor();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
+    ImNodes::PopColorStyle();
 }

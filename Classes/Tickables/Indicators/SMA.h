@@ -10,6 +10,7 @@
 class SMA : public Indicator,  public ReversedData<double>{
 public:
     explicit SMA(Ticker* ticker);
+    ~SMA();
     void calculate(BarHistory* barHistory) override;
     void setAverageSize(int size);
     int getAverageSize() const;
@@ -17,7 +18,7 @@ public:
     void onRender() override;
     void onPopupRender() override;
     void reset() override;
-
+    const ImVec4& getColor();
 
 private:
     int _averageSize = 12; // minimum size is 1

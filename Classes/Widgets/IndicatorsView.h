@@ -17,6 +17,7 @@ public:
     typedef std::function<void(void)> TrashClickCallback;
 
     static inline const char* CANDLE_INDICATORS_DRAG_ID = "CANDLE_INDICATOR";
+    static inline const char* CANDLE_INDICATORS_DRAG_ID_REMOVING = "CANDLE_INDICATOR_REMOVING";
     static inline const char* VOLUME_INDICATORS_DRAG_ID = "VOLUME_INDICATOR";
 
     enum class CandleIndicatorsTypes{
@@ -28,14 +29,6 @@ public:
         AVL,
         TRIX,
         SAR
-    };
-
-    enum class Nodes{
-        ADD,
-        MULTIPLY,
-        SMA,
-        CROSS,
-        RESULT
     };
 
     struct DragAndDropIndicatorItem {

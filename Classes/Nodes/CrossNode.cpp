@@ -1,6 +1,6 @@
-//
-// Created by Arthur Abel Motelevicz on 03/01/22.
-//
+////
+//// Created by Arthur Abel Motelevicz on 03/01/22.
+////
 
 #include "CrossNode.h"
 #include <imgui.h>
@@ -8,17 +8,62 @@
 #include "../Editor.h"
 
 
-CrossNode::CrossNode() {
-    setName("Cross");
-    _idInput1 = addInput();
-    _idInput2 = addInput();
-    _idOuput = addOutput();
+CrossNode::CrossNode(StrategyEditor* nodeEditor):INode(nodeEditor) {
+    setNodeName("Cross");
+    setType(UiNodeType::CROSS);
+    setIcon(static_cast<int>(Editor::Icons::node_cross_black));
+
+    const GraphNode value(NodeType::VALUE);
+    const GraphNode op(NodeType::CROSS, this);
+
+    _idInput1 = addNode(value);
+    _idInput2 = addNode(value);
+    _id = addNode(op);
+
+    addEdge(_id,_idInput1);
+    addEdge(_id,_idInput2);
 }
 
 void CrossNode::onRender(float dt) {
+    const float node_width = 50.f;
+
+    {
+        bool isInputConnected = numberOfConnectionsTo(_idInput1) > 0;
+        ImNodes::BeginInputAttribute(_idInput1, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
+        const float label_width = ImGui::CalcTextSize("A").x;
+        ImGui::TextUnformatted("A");
+        ImGui::SameLine();
+        const float label_up_width = ImGui::CalcTextSize("up").x;
+        ImGui::Indent(node_width - label_up_width);
+        ImGui::Checkbox("up", &_isCrossUp);
+        ImNodes::EndInputAttribute();
+    }
+
+    {
+        bool isInputConnected = numberOfConnectionsTo(_idInput2) > 0;
+        ImNodes::BeginInputAttribute(_idInput2, isInputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
+        ImGui::TextUnformatted("B");
+        ImNodes::EndInputAttribute();
+    }
+    {
+        ImGui::SameLine();
+        bool isOutputConnected = numberOfConnectionsFrom(_id) > 0;
+        ImNodes::BeginOutputAttribute(_id,isOutputConnected ? ImNodesPinShape_CircleFilled : ImNodesPinShape_Circle);
+        const float label_width = ImGui::CalcTextSize("out").x;
+        ImGui::Indent(node_width - label_width + 6);
+        ImGui::Text("out");
+        ImNodes::EndInputAttribute();
+    }
+}
+
+
+void CrossNode::handleStack(std::stack<float> &stack) {
     //initial update
-    _currentInput1 = getValueFromId(_idInput1);
-    _currentInput2 = getValueFromId(_idInput2);
+    //the order get from stack is inverse the added on graph **????
+    _currentInput2  = stack.top();
+    stack.pop();
+    _currentInput1  = stack.top();
+    stack.pop();
 
     //do the logic
     if(_isCrossUp)
@@ -26,30 +71,17 @@ void CrossNode::onRender(float dt) {
     else
         _output = _currentInput2 < _currentInput1 && _lastInput2 > _lastInput1;
 
+    stack.push(_output);
+}
 
-    if(_currentInput1 > 0 && _currentInput2 > 0)
-        setValueForId(_idOuput, _output);
+//delete graph relations
+CrossNode::~CrossNode() {}
 
-    //render node
-    ImNodes::BeginInputAttribute(_idInput1);
-    ImGui::Text("input 1");
-    ImGui::SameLine();
-    ImGui::Checkbox("Cross up",&_isCrossUp);
-    ImNodes::EndInputAttribute();
-
-    ImNodes::BeginInputAttribute(_idInput2);
-    ImGui::Text("input 2");
-    ImGui::Dummy(ImVec2(100,5));
-    ImNodes::EndInputAttribute();
-
-    ImNodes::BeginOutputAttribute(_idOuput);
-    ImGui::Indent(ImGui::GetItemRectSize().x);
-    ImGui::Text("output");
-    ImNodes::EndInputAttribute();
-
-    //final update
+void CrossNode::endEvaluate()
+{
     _lastInput1 = _currentInput1;
     _lastInput2 = _currentInput2;
 }
 
-CrossNode::~CrossNode() {}
+
+

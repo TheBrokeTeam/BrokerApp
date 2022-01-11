@@ -9,8 +9,8 @@
 #include "../../Helpers/Utils.h"
 
 Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {
-    _id = uuid::generate_uuid_v4();
-    _name = "##" + _id;
+    _plotId = uuid::generate_uuid_v4();
+    _name = "##" + _plotId;
 }
 
 void Indicator::calculate(BarHistory* barHistory) {}

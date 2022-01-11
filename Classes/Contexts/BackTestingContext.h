@@ -27,16 +27,16 @@ public:
     void setSimulationSpeed(float speed) override;
     bool isSimulating() override;
 
-    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type) override;
-    std::shared_ptr<INode> createNode(IndicatorsView::CandleIndicatorsTypes type) override;
-    std::shared_ptr<INode> createNode(IndicatorsView::Nodes type) override;
-    std::shared_ptr<UiNode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, NodeType type) override;
+    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false) override;
+    std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) override;
+    std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) override;
 
+    void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;
+    void removeAllIndicators() override;
 
 
     void plotIndicators() override;
     void plotStrategy() override;
-    void plotNodes(float dt) override;
 
     void showTabBars(bool show) override;
 
@@ -52,7 +52,9 @@ private:
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
-//    std::shared_ptr<Strategy> _strategy{nullptr};
+    std::shared_ptr<Strategy> _strategy{nullptr};
+    StrategyEditor* _strategyEditor{nullptr};
+
 
     std::vector<TickData> _data;
 

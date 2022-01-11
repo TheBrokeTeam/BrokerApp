@@ -8,27 +8,34 @@
 #include "../Widget.h"
 #include "../../Tickables/Strategies/Strategy.h"
 #include "../../Nodes/INode.h"
-#include "../../Nodes/GraphNode.h"
 #include "../../Helpers/graph.h"
+#include "../NodesList.h"
 
 class StrategyEditor : public Widget {
 public:
     explicit StrategyEditor(Context* context);
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
-    void addNode(std::shared_ptr<INode> node);
-    void removeNode(std::shared_ptr<INode> newNode);
+    void addNode(std::shared_ptr<INode> newNode);
+    void evaluateGraph(int id);
     void clear();
 
-    std::vector<std::weak_ptr<INode>> _nodes;
-    std::vector<std::pair<int, int>> links;
+    const std::shared_ptr<graph::Graph<GraphNode>>& getGraph();
 
-    std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
-    std::vector<std::weak_ptr<UiNode>> _uiNodes;
+    void addRootId(int id);
+    void removeRootId(int id);
+
+    void removeNodeIndicator(std::shared_ptr<Indicator> indicator);
+
+
 
 private:
-    INode* getNodeFromLinkId(int id);
-
+    std::shared_ptr<INode> getNodeFromId(int id);
+    void deleteUiNodeFromFromList(int id, bool shouldRemoveIndicator = true);
+    std::vector<int> _rootNodes;
+    std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
+    std::vector<std::shared_ptr<INode>> _uiNodes;
+    std::unique_ptr<NodesList> _nodesList{nullptr};
 };
 
 #endif //BROKERAPP_STRATEGYEDITOR_H

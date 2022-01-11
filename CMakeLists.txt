@@ -36,6 +36,8 @@ add_executable(BrokerApp
         Classes/Tickables/Tickable.h
         Classes/Tickables/Indicators/Indicator.cpp
         Classes/Tickables/Indicators/Indicator.h
+        Classes/Tickables/Indicators/EMA.h
+        Classes/Tickables/Indicators/EMA.cpp
         Classes/Tickables/Strategies/Strategy.cpp
         Classes/Tickables/Strategies/Strategy.h
         Classes/Data/Position.cpp
@@ -71,18 +73,10 @@ add_executable(BrokerApp
         Classes/Widgets/StrategyEditor/StrategyEditor.h
         Classes/Nodes/SMANode.cpp
         Classes/Nodes/SMANode.h
-        Classes/Nodes/TestAddNode.cpp
-        Classes/Nodes/TestAddNode.h
-        Classes/Nodes/TestResultNode.cpp
-        Classes/Nodes/TestResultNode.h
-        Classes/Nodes/TestMultiplyNode.h
-        Classes/Nodes/TestMultiplyNode.cpp
         Classes/Nodes/INode.h
         Classes/Nodes/INode.cpp
         Classes/Nodes/CrossNode.cpp
-        Classes/Widgets/StockList.h
-        Classes/Widgets/StockList.cpp
-        Classes/Nodes/CrossNode.h Classes/Nodes/GraphNode.cpp Classes/Nodes/GraphNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h)
+        Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/Counter.cpp Classes/Nodes/Counter.h Classes/Widgets/NodesList.cpp Classes/Widgets/NodesList.h Classes/Nodes/TradeNode.cpp Classes/Nodes/TradeNode.h Classes/Tickables/Strategies/TradeNodeStrategy.cpp Classes/Tickables/Strategies/TradeNodeStrategy.h Classes/Tickables/Indicators/WMA.cpp Classes/Tickables/Indicators/WMA.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

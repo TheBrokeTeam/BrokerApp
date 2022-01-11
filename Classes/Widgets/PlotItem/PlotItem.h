@@ -18,8 +18,9 @@ public:
     virtual void reset();
     virtual void onPopupRender();
 
-    void setName(const std::string& name);
+    void setPlotName(const std::string& name);
     const std::string& getName();
+    const std::string& getPlotName();
     const std::string& getId();
     const std::vector<double>& getTime();
 
@@ -28,7 +29,7 @@ public:
 protected:
     std::string _name{""};
     std::string _plotName{""};
-    std::string _id{""};
+    std::string _plotId{""};
     std::vector<double> _time;
 
 private:

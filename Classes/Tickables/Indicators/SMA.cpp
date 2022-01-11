@@ -5,7 +5,7 @@
 #include "SMA.h"
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
-    setName("SMA");
+    setPlotName("SMA");
 }
 
 void SMA::calculate(BarHistory* barHistory)
@@ -47,6 +47,14 @@ void SMA::setAverageSize(int size) {
 
 int SMA::getAverageSize() const {
     return _averageSize;
+}
+
+const ImVec4 &SMA::getColor() {
+    return _color;
+}
+
+SMA::~SMA() {
+
 }
 
 
