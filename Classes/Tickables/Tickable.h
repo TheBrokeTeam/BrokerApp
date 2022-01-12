@@ -20,12 +20,18 @@ public:
     virtual void onOpen(BarHistory* barHistory);
     virtual void onClose(BarHistory* barHistory);
     virtual void onTick(BarHistory* barHistory);
+    void setPriority(int priority);
+    int getPriority();
+    virtual void reset();
 
     virtual void onLoad(BarHistory* barHistory);
+    bool operator < (const Tickable& rhs){ rhs._priority > _priority;}
 
 protected:
     Ticker* _ticker{nullptr};
     BarHistory* _barHistory{nullptr};
+private:
+    int _priority = 0;
 };
 
 

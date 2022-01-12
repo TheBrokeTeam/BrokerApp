@@ -37,7 +37,7 @@ void EMA::onRender() {
 
 void EMA::onPopupRender() {
     if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
-        reset();
+        resetPlot();
         onLoad(_ticker->getBarHistory());
     }
     ImGui::Separator();
@@ -52,8 +52,8 @@ void EMA::onPopupRender() {
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
 
-void EMA::reset() {
-    Indicator::reset();
+void EMA::resetPlot() {
+    Indicator::resetPlot();
     _data.clear();
 }
 

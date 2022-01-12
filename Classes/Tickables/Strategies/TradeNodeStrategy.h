@@ -12,7 +12,7 @@ public:
     TradeNodeStrategy(Ticker* ticker);
     ~TradeNodeStrategy();
     void checkTarget(Strategy::Position &pos) override;
-    void reset() override;
+    void resetPlot() override;
     float takeProfit = 5.0f;    //0 - 100
     float stopLoss = 5.0f;      //0 - 100
     bool isPositioned = false;

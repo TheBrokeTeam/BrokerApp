@@ -19,8 +19,8 @@ void TradeNodeStrategy::checkTarget(Strategy::Position &pos) {
 
 TradeNodeStrategy::~TradeNodeStrategy() {}
 
-void TradeNodeStrategy::reset() {
-    Strategy::reset();
+void TradeNodeStrategy::resetPlot() {
+    Strategy::resetPlot();
     isPositioned = false;
 }
 

@@ -38,8 +38,8 @@ void Bollinger::calculate(BarHistory* barHistory)
     }
 }
 
-void Bollinger::reset() {
-    Indicator::reset();
+void Bollinger::resetPlot() {
+    Indicator::resetPlot();
     _data.clear();
 }
 

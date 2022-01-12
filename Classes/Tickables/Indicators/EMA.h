@@ -19,7 +19,7 @@ public:
 
     void onRender() override;
     void onPopupRender() override;
-    void reset() override;
+    void resetPlot() override;
 
 
 private:

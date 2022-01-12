@@ -26,3 +26,15 @@ Tickable::~Tickable() {
     _ticker = nullptr;
     _barHistory = nullptr;
 }
+
+void Tickable::setPriority(int priority) {
+    _priority = priority;
+}
+
+int Tickable::getPriority() {
+    return _priority;
+}
+
+void Tickable::reset() {
+
+}

@@ -13,16 +13,23 @@ Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
 
 bool Ticker::removeTickable(Tickable *tickable)
 {
-    for(auto it  = _indicators.begin(); it != _indicators.end(); it++) {
-        if (tickable == it->lock().get()) {
-            _indicators.erase(it);
-            return true;
-        }
-    }
+//    for(auto it  = _indicators.begin(); it != _indicators.end(); it++) {
+//        if (tickable == it->lock().get()) {
+//            _indicators.erase(it);
+//            return true;
+//        }
+//    }
+//
+//    for(auto it  = _strategies.begin(); it != _strategies.end(); it++) {
+//        if (tickable == dynamic_cast<Tickable*>(*it)) {
+//            _strategies.erase(it);
+//            return true;
+//        }
+//    }
 
-    for(auto it  = _strategies.begin(); it != _strategies.end(); it++) {
-        if (tickable == dynamic_cast<Tickable*>(*it)) {
-            _strategies.erase(it);
+    for(auto it  = _tickables.begin(); it != _tickables.end(); it++) {
+        if (tickable == (*it)) {
+            _tickables.erase(it);
             return true;
         }
     }
@@ -43,13 +50,9 @@ void Ticker::open(const TickData& tickData) {
 
     _barHistory.append(data);
 
-    for(auto& t : _indicators){
-        if(auto ind = t.lock())
-            ind->onOpen(&_barHistory);
-    }
-
-    for(auto& t : _strategies){
-        t->onOpen(&_barHistory);
+    for(auto& t : _tickables){
+        if(auto tickable = t.lock())
+            tickable->onTick(&_barHistory);
     }
 }
 
@@ -79,13 +82,9 @@ void Ticker::tick(const TickData& tickData) {
 
     _barHistory.updateLasBar(data);
 
-    for(auto& t : _indicators){
-        if(auto ind = t.lock())
-            ind->onTick(&_barHistory);
-    }
-
-    for(auto& t : _strategies){
-        t->onTick(&_barHistory);
+    for(auto& t : _tickables){
+        if(auto tickable = t.lock())
+            tickable->onTick(&_barHistory);
     }
 }
 
@@ -99,33 +98,20 @@ void Ticker::close(const TickData& tickData) {
 
     _barHistory.updateLasBar(data);
 
-    for(auto& t : _indicators){
-        if(auto ind = t.lock())
-            ind->onClose(&_barHistory);
-    }
-
-    //For now is just the node editor on this
     for(auto& t : _tickables){
-        if(auto tickable = t)
+        if(auto tickable = t.lock())
             tickable->onClose(&_barHistory);
     }
 
-    for(auto& t : _strategies){
-        t->onClose(&_barHistory);
-    }
 }
 
 void Ticker::reset() {
     _barHistory.clear();
     lastWasClosed = false;
-
-    for(auto& t : _indicators){
-        if(auto ind = t.lock())
-            ind->reset();
-    }
-
-    for(auto& t : _strategies){
-        t->reset();
+    
+    for(auto& t : _tickables){
+        if(auto tickable = t.lock())
+            tickable->reset();
     }
 }
 
@@ -141,17 +127,17 @@ TickerId Ticker::getTickerId() {
     return _id;
 }
 
-void Ticker::addIndicator(std::shared_ptr<Indicator> indicator) {
-    _indicators.push_back(indicator);
-    indicator->onLoad(&_barHistory);
-}
-
-void Ticker::addStrategy(Tickable *tickable) {
-    _strategies.push_back(dynamic_cast<Strategy*>(tickable));
-    tickable->onLoad(&_barHistory);
-}
+//void Ticker::addIndicator(std::shared_ptr<Indicator> indicator) {
+//    _indicators.push_back(indicator);
+//    indicator->onLoad(&_barHistory);
+//}
+//
+//void Ticker::addStrategy(Tickable *tickable) {
+//    _strategies.push_back(dynamic_cast<Strategy*>(tickable));
+//    tickable->onLoad(&_barHistory);
+//}
 
 void Ticker::addTickable(Tickable *tickable) {
-    _tickables.push_back(tickable);
-    tickable->onLoad(&_barHistory);
+    auto tickableAdded = _tickables.insert(tickable);
+    (*tickableAdded.first)->onLoad(&_barHistory);
 }

@@ -21,17 +21,22 @@ void Indicator::onClose(BarHistory* barHistory) {
 }
 
 void Indicator::onLoad(BarHistory *barHistory) {
-    reset();
+    resetPlot();
     auto tempBarHist = std::make_unique<BarHistory>();
     for(auto&d : (*barHistory).getData()){
         tempBarHist->append(d);
         calculate(tempBarHist.get());
     }
 }
-void Indicator::reset() {
-    PlotItem::reset();
+void Indicator::resetPlot() {
+    PlotItem::resetPlot();
 }
 
 Indicator::~Indicator() {}
+
+void Indicator::reset() {
+    Tickable::reset();
+    resetPlot();
+}
 
 

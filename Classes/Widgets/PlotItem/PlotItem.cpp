@@ -75,7 +75,7 @@ void PlotItem::popupRender() {
 
 void PlotItem::onPopupRender() {}
 
-void PlotItem::reset() {
+void PlotItem::resetPlot() {
     _time.clear();
 }
 

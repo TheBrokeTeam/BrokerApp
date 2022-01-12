@@ -41,8 +41,8 @@ void Strategy::onRender() {
     }
 }
 
-void Strategy::reset() {
-    PlotItem::reset();
+void Strategy::resetPlot() {
+    PlotItem::resetPlot();
     _openedPositions.clear();
     _closedPositions.clear();
     _profit = 0;
@@ -148,4 +148,9 @@ const std::vector<Strategy::Position> &Strategy::getClosedPositions() {
 }
 
 Strategy::~Strategy() {}
+
+void Strategy::reset() {
+    Tickable::reset();
+    resetPlot();
+}
 

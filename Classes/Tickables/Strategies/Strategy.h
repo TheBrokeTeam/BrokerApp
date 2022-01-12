@@ -23,6 +23,7 @@ public:
     Strategy(Ticker* ticker);
     virtual ~Strategy();
     void onClose(BarHistory* barHistory) override;
+    void resetPlot() override;
     virtual void reset() override;
 
     //called when simulation ends
