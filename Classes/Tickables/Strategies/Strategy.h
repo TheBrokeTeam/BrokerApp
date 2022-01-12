@@ -23,7 +23,7 @@ public:
     Strategy(Ticker* ticker);
     virtual ~Strategy();
     void onClose(BarHistory* barHistory) override;
-    void reset() override;
+    virtual void reset() override;
 
     //called when simulation ends
     void onFinish();
@@ -41,7 +41,7 @@ public:
     //testing profit and losses
     std::vector<double> profitHistory;
     std::vector<double> lossesHistory;
-    std::vector<double> time;
+
     double drawDownMax = 0;
     double profitMax = 0;
     Ticker* getTicker();

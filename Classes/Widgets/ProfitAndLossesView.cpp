@@ -46,7 +46,7 @@ void ProfitAndLossesView::updateVisible(float dt) {
 
     if (ImPlot::BeginPlot("##PnL")) {
         ImPlot::SetupAxes(0, 0, xFlags, yFlags);
-        ImPlot::SetupAxisLimits(ImAxis_X1, _strategy.lock()->time.front(), _strategy.lock()->time.back());
+        ImPlot::SetupAxisLimits(ImAxis_X1, _strategy.lock()->getTime().front(), _strategy.lock()->getTime().back());
         ImPlot::SetupAxisLimits(ImAxis_Y1, _strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
 
         ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
@@ -54,8 +54,8 @@ void ProfitAndLossesView::updateVisible(float dt) {
         //Fit the data manually with some offset
         if(shouldFitRange) {
             double tenBars = 10 * 60 * _strategy.lock()->getTicker()->getSymbol()->getTimeIntervalInMinutes();
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy.lock()->time.front() - tenBars,
-                                                               _strategy.lock()->time.back() + tenBars);
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy.lock()->getTime().front() - tenBars,
+                                                               _strategy.lock()->getTime().back() + tenBars);
             ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
         }
 

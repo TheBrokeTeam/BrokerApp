@@ -67,8 +67,10 @@ void Editor::update() {
 
 float Editor::getDeltaTime(){
     auto currentTime = glfwGetTime();
-    float dt = currentTime -_lastTime;
-    _lastTime = currentTime;
+//    float dt = currentTime -_lastTime;
+//TODO:: fixing in 16 ms to avoid issues when debugging
+    float dt = 0.01666;
+//    _lastTime = currentTime;
     return dt;
 }
 

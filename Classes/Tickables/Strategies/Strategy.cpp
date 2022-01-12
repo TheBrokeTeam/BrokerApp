@@ -42,11 +42,11 @@ void Strategy::onRender() {
 }
 
 void Strategy::reset() {
+    PlotItem::reset();
     _openedPositions.clear();
     _closedPositions.clear();
     _profit = 0;
 
-    time.clear();
     profitHistory.clear();
     lossesHistory.clear();
     profitMax = 0;
@@ -78,7 +78,7 @@ void Strategy::closePosition(Position &pos) {
         lossesHistory.push_back(_profit);
         profitHistory.push_back(0);
     }
-    time.push_back(pos.outTime);
+    _time.push_back(pos.outTime);
 
     std::cout << "Profit: " << pos.profit << std::endl;
     std::cout << "Total Profit: " << _profit << std::endl;
