@@ -3,6 +3,7 @@
 //
 
 #include "TRIX.h"
+#include <iostream>
 
 
 
@@ -24,9 +25,8 @@ double TRIX::calculateEMA(std::vector<double> sequence, int averageSize) {
 
         } else {
             double factor = (2.0)/(1.0 * (1+averageSize));
-            value = (sequence.back() * (1 - factor)) + (sequence[0] * factor);
+            value = (sequence[1] * (1 - factor)) + (sequence[0] * factor);
         }
-        sequence.push_back(value);
         return value;
     }
 }
@@ -34,32 +34,30 @@ double TRIX::calculateEMA(std::vector<double> sequence, int averageSize) {
 void TRIX::calculate(BarHistory* barHistory)
 {
     if(barHistory->size() != 0) {
-       priceSequence.push_back((*barHistory)[0].close);
-       EMA1.push_back(calculateEMA(priceSequence, _averageSize));
-       EMA2.push_back(calculateEMA(EMA1, _averageSize));
-       EMA3.push_back(calculateEMA(EMA2, _averageSize));
+        priceSequence.insert(priceSequence.begin(), (*barHistory)[0].close);
+
+        double e1, e2, e3;
+
+        if (priceSequence.size() >= _averageSize) {
+            e1 = calculateEMA(priceSequence, _averageSize);
+            EMA1.insert(EMA1.begin(), e1);
+        }
+
+        if (EMA1.size() >= _averageSize) {
+            e2 = calculateEMA(EMA1, _averageSize);
+            EMA2.insert(EMA2.begin(), e2);
+        }
+
+        if (EMA2.size() >= _averageSize) {
+            e3 = calculateEMA(EMA2, _averageSize);
+            EMA3.insert(EMA3.begin(), e3);
+        }
+
     }
 
-
-//    if(barHistory->size() >= _averageSize * 2) {
-//        //calcula EM2
-//    }
-//
-//    if(barHistory->size() >= _averageSize * 3) {
-//        //calcula EM3
-//    }
-//
-//    if(barHistory->size() >= (_averageSize * 3 + 2)) {
-//        //calcula TRIX
-//    }
-
-
-//
-//        std::tuple<std::vector<double>, std::vector<double>> EMA;
-//        EMA = calculateEMA(barHistory);
-//        EMA = calculateEMA(EMA)
     if (EMA3.size() >= 2) {
-        _data.push_back((EMA3[0] - EMA3[1])/EMA3[1]);
+        double trix = (EMA3[0] - EMA3[1])/EMA3[1];
+        _data.push_back(trix);
         _time.push_back((*barHistory)[0].time);
     }
 
@@ -68,6 +66,8 @@ void TRIX::calculate(BarHistory* barHistory)
 void TRIX::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
     ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+//    for (double i: _data)
+//            std::cout << i << ' ';
 }
 
 void TRIX::onPopupRender() {
