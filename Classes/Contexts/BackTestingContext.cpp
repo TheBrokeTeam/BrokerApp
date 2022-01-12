@@ -389,6 +389,13 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             break;
         case UiNodeType::TRADE:
             {
+                //if already has an active strategy change it
+                if(_strategy != nullptr)
+                {
+                    _ticker->removeTickable(_strategy.get());
+                    _strategy.reset();
+                }
+
                 _strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
                 auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategy.get());
                 _ticker->addStrategy(strategyPtr);
