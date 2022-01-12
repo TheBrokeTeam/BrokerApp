@@ -36,6 +36,8 @@ public:
 
 
     void plotIndicators() override;
+    void plotSubplotIndicators() override;
+
     void plotStrategy() override;
 
     void showTabBars(bool show) override;

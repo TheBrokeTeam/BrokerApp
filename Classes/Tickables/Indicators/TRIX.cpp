@@ -63,12 +63,7 @@ void TRIX::calculate(BarHistory* barHistory)
 
 }
 
-void TRIX::onRender() {
-    ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
-//    for (double i: _data)
-//            std::cout << i << ' ';
-}
+void TRIX::onRender() {}
 
 void TRIX::onPopupRender() {
     if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
@@ -100,8 +95,41 @@ int TRIX::getAverageSize() const {
     return _averageSize;
 }
 
+void TRIX::render() {
+    static int counter = 0;
+
+    if (ImPlot::BeginPlot("##TRIX")) {
+
+        int xFlags = ImPlotAxisFlags_Time;
+        xFlags |= ImPlotAxisFlags_NoTickLabels;
+
+        if(counter < 3)
+        {
+            xFlags |= ImPlotAxisFlags_AutoFit;
+            counter++;
+        }
+
+        ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
+        ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
+        ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
+
+        // fit data on screen even when zooming
+        if (ImPlot::FitThisFrame()) {
+            for (int i = 0; i < _data.size(); ++i) {
+                ImPlot::FitPoint(ImPlotPoint(_time[i], _data[i]));
+            }
+        }
+
+        ImPlot::SetNextLineStyle(_color, _lineWidth);
+        ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+
+        ImPlot::EndPlot();
+    }
+}
 
 
 TRIX::~TRIX() {
 
 }
+
+

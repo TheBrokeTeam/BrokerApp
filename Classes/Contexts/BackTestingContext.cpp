@@ -53,7 +53,9 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
     _widgets.emplace_back(std::make_shared<StockList>(this));
 
-//    getWidget<ProfitAndLossesView>()->SetVisible(false);
+    getWidget<StockList>()->SetVisible(false);
+
+    getWidget<ProfitAndLossesView>()->SetVisible(false);
 
     _strategyEditor = getWidget<StrategyEditor>();
 
@@ -305,9 +307,9 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
         {
             std::shared_ptr<TRIX> trix = std::make_shared<TRIX>(_ticker.get());
-            _indicators.push_back(std::move(trix));
-            indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _subplotIndicators.push_back(std::move(trix));
+            indicator = _subplotIndicators.back();
+            _ticker->addIndicator(_subplotIndicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::PSAR :
@@ -454,6 +456,12 @@ void BackTestingContext::removeAllIndicators() {
     }
 
     _indicators.clear();
+}
+
+void BackTestingContext::plotSubplotIndicators() {
+    for(auto& i : _subplotIndicators) {
+        i->render();
+    }
 }
 
 

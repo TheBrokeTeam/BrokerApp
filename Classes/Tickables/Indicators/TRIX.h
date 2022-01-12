@@ -17,6 +17,8 @@ public:
     int getAverageSize() const;
 
     void onRender() override;
+    void render() override;
+
     void onPopupRender() override;
     void reset() override;
 

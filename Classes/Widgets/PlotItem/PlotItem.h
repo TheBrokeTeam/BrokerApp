@@ -24,7 +24,7 @@ public:
     const std::string& getId();
     const std::vector<double>& getTime();
 
-    void render();
+    virtual void render();
 
 protected:
     std::string _name{""};

@@ -37,8 +37,15 @@ void CandleChart::render(float dt)
 
 //    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
 
-        static float ratios[] = {2,1};
-        if(ImPlot::BeginSubplots("##Subplots",2,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios)){
+        static std::vector<float> ratios;
+
+        ratios.push_back(2);
+        ratios.push_back(1);
+
+        for(int i = 0; i < getContext()->getSubplotIndicatorsCount(); i++)
+            ratios.push_back(1);
+
+    if(ImPlot::BeginSubplots("##Subplots",2 + getContext()->getSubplotIndicatorsCount(),1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios.data())){
 
             if (ImPlot::BeginPlot("##OHLC"))
             {
@@ -147,8 +154,10 @@ void CandleChart::render(float dt)
                 ImPlot::EndPlot();
             }
 
+        getContext()->plotSubplotIndicators();
 
-            if (ImPlot::BeginPlot("##Volume")) {
+
+        if (ImPlot::BeginPlot("##Volume")) {
 
                 ImDrawList* drawList =  ImPlot::GetPlotDrawList();
 
@@ -193,8 +202,11 @@ void CandleChart::render(float dt)
                 }
                 //#################################
 
+
                 ImPlot::EndPlot();
             }
+
+            //call indicators on their own subplots
 
             ImPlot::EndSubplots();
         }
