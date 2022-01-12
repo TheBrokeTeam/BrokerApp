@@ -30,7 +30,7 @@ private:
     std::vector<double>  EMA1;
     std::vector<double>  EMA2;
     std::vector<double>  EMA3;
-    double calculateEMA(std::vector<double>, int averageSize);
+    double calculateEMA(std::vector<double> origin, std::vector<double> destination, int averageSize);
 
 
 };
