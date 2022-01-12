@@ -33,7 +33,7 @@ void BarHistory::clear() {
     _volume.clear();
 }
 
-void BarHistory::updateLasBar(const BarData &barData) {
+void BarHistory::updateLasBar(const BarData &barData) { //todo: rename
     _data[_data.size() - 1]= barData;
     _volume[_volume.size() - 1] = barData.volume;
 }
