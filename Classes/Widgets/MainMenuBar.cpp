@@ -10,6 +10,7 @@
 #include "SimulationController.h"
 #include "ChartView.h"
 #include "ProfitAndLossesView.h"
+#include "StrategyEditor.h"
 #include <fmt/format.h>
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
@@ -41,8 +42,10 @@ void MainMenuBar::updateAlways(float dt)
         {
             if (ImGui::MenuItem("Data downloader", "CTRL+D",&(getContext()->getWidget<DownloaderView>()->GetVisible()))){}
             if (ImGui::MenuItem("Simulator", "CTRL+S",&(getContext()->getWidget<SimulationController>()->GetVisible()))){}
-            if (ImGui::MenuItem("ChartView", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
-            if (ImGui::MenuItem("IndicatorsView", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
+            if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
+            if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
+            if (ImGui::MenuItem("Strategy View", "",&(getContext()->getWidget<StrategyEditor>()->GetVisible()))){}
+
             if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
 
 
