@@ -6,7 +6,7 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
-#include "../Widgets/StrategyEditor/StrategyEditor.h"
+#include "../Widgets/StrategyEditor.h"
 
 
 INode::INode(StrategyEditor* strategyEditor):_nodeEditor(strategyEditor)

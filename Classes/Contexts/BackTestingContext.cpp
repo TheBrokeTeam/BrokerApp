@@ -22,7 +22,7 @@
 #include "../Widgets/SimulationController.h"
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
-#include "../Widgets/StrategyEditor/StrategyEditor.h"
+#include "../Widgets/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/CrossNode.h"
@@ -225,21 +225,22 @@ void BackTestingContext::updateData(float dt) {
     if(!_simulating) return;
 
     _currentTime += dt*_speed;
-    if(_currentTime >= _timeToTick){
+    if(_currentTime >= _timeToTick)
+    {
+        //at least one it should be
         int numberOfTicks = floor(_currentTime/_timeToTick);
+        assert(numberOfTicks >= 1);
+
         _currentTime = 0;
         for(int i = 0; i < numberOfTicks; i++)
         {
-            //TODO::review this
-            //needed to avoid memory trash
-            if(i >= _data.size())
+            if(_currentIndex >= _data.size()) {
                 _simulating = false;
+                return;
+            }
 
             auto& tickData = _data[_currentIndex++];
             _ticker->tick(tickData);
-
-            if(_currentIndex >= _data.size())
-                _simulating = false;
         }
     }
 }

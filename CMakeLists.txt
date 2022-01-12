@@ -69,8 +69,8 @@ add_executable(BrokerApp
         Classes/Widgets/PlotItem/PlotItem.h
         Classes/Tickables/Strategies/IndicatorToChartExample.cpp
         Classes/Tickables/Strategies/IndicatorToChartExample.h
-        Classes/Widgets/StrategyEditor/StrategyEditor.cpp
-        Classes/Widgets/StrategyEditor/StrategyEditor.h
+        Classes/Widgets/StrategyEditor.cpp
+        Classes/Widgets/StrategyEditor.h
         Classes/Nodes/SMANode.cpp
         Classes/Nodes/SMANode.h
         Classes/Nodes/INode.h

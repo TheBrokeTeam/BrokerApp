@@ -5,11 +5,11 @@
 #ifndef BROKERAPP_STRATEGYEDITOR_H
 #define BROKERAPP_STRATEGYEDITOR_H
 
-#include "../Widget.h"
-#include "../../Tickables/Strategies/Strategy.h"
-#include "../../Nodes/INode.h"
-#include "../../Helpers/graph.h"
-#include "../NodesList.h"
+#include "Widget.h"
+#include "../Tickables/Strategies/Strategy.h"
+#include "../Nodes/INode.h"
+#include "../Helpers/graph.h"
+#include "NodesList.h"
 
 class StrategyEditor : public Widget {
 public:
