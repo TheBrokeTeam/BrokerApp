@@ -13,6 +13,7 @@
 #include <fmt/format.h>
 #include <zip_file.hpp>
 #include <rapidcsv.h>
+#include "../Helpers/JsonUtils.h"
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 #include "../Tickables/Indicators/EMA.h"
@@ -446,7 +447,7 @@ Ticker *BackTestingContext::fetchSymbol(const Symbol &symbol) {
     _ticker = std::make_shared<Ticker>(this,symbol);
 
     _data.clear();
-    _data = loadJson(jsonData,symbol);
+    _data = loadJson(jsonData, symbol);
 
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
@@ -455,10 +456,10 @@ Ticker *BackTestingContext::fetchSymbol(const Symbol &symbol) {
     return _ticker.get();
 }
 
-std::vector<TickData> BackTestingContext::loadJson(const Json::Value& json,const Symbol& symbol) {
+std::vector<TickData> BackTestingContext::loadJson(const rapidjson::Document& json,const Symbol& symbol) {
     std::vector<TickData> output;
 
-    for(auto& data : json)
+    for(auto& data : json.GetArray())
     {
         TickData data_open;
         TickData data_high;
@@ -466,19 +467,19 @@ std::vector<TickData> BackTestingContext::loadJson(const Json::Value& json,const
         TickData data_close;
 
         //converting ms to sec and add simulated time for the sub tick on the bars
-        double timeInSec = data["open_time"].asDouble()/1000.0;
+        double timeInSec = data["open_time"].GetDouble()/1000.0;
         data_open.time  = timeInSec;
         data_high.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.25 * 60;
         data_low.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.5* 60;
         data_close.time  = timeInSec + symbol.getTimeIntervalInMinutes()*60 - 1;
 
-        data_open.price =  data["open"].asDouble();
-        data_high.price = data["high"].asDouble();
-        data_low.price =  data["low"].asDouble();
-        data_close.price = data["close"].asDouble();
+        data_open.price =  data["open"].GetDouble();
+        data_high.price = data["high"].GetDouble();
+        data_low.price =  data["low"].GetDouble();
+        data_close.price = data["close"].GetDouble();
 
         //0.25 volume for each tick
-        double volume = data["volume"].asDouble()*0.25;
+        double volume = data["volume"].GetDouble()*0.25;
 
         data_open.volume = volume;
         data_high.volume = volume;

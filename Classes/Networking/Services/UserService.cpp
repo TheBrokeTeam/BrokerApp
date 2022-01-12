@@ -2,25 +2,23 @@
 // Created by Maykon Meneghel on 10/01/22.
 //
 
-#include <map>
-#include <utility>
 #include "UserService.h"
 #include "../Routes/UserRouter.h"
 
 UserService::UserService() = default;
 
-Json::Value UserService::createNewUser(Json::Value body) {
-    return this->apiManager.Request(UserRouter().createOne(std::move(body)));
+rapidjson::Document UserService::createNewUser(const rapidjson::Document& body) {
+    return this->apiManager.Request(UserRouter().createOne(body));
 }
 
-Json::Value UserService::deleteUser() {
+rapidjson::Document UserService::getAccessKey(const rapidjson::Document& body) {
+    return this->apiManager.Request(UserRouter().getAuthorization(body));
+}
+
+rapidjson::Document UserService::deleteUser() {
     return this->apiManager.Request(UserRouter().deleteOne());
 }
 
-Json::Value UserService::getAccessKey(Json::Value body) {
-    return this->apiManager.Request(UserRouter().getAuthorization(std::move(body)));
-}
-
-Json::Value UserService::updateUser() {
+rapidjson::Document UserService::updateUser() {
     return this->apiManager.Request(UserRouter().updateOne());
 }

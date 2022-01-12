@@ -13,8 +13,8 @@ private:
     APIManager apiManager = APIManager();
 public:
     SymbolService();
-    Json::Value fetchDataByCode(const std::string& code);
-    Json::Value fetchAllSymbols();
+    rapidjson::Document fetchDataByCode(const std::string& code);
+    rapidjson::Document fetchAllSymbols();
 };
 
 

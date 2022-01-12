@@ -8,7 +8,7 @@
 #include "Context.h"
 #include <map>
 #include <set>
-#include <json/json.h>
+#include <rapidjson/document.h>
 
 class BackTestingContext : public Context {
 public:
@@ -47,7 +47,7 @@ private:
 
     bool dataAlreadyExists(const Symbol& symbol);
     std::vector<TickData> loadCsv(const Symbol& symbol);
-    std::vector<TickData> loadJson(const Json::Value& json,const Symbol& symbol);
+    std::vector<TickData> loadJson(const rapidjson::Document& json,const Symbol& symbol);
 
     std::string getFilePathFromSymbol(const Symbol& symbol);
 

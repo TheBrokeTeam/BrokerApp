@@ -98,7 +98,7 @@ add_executable(BrokerApp
         Classes/Networking/Services/SymbolService.cpp
         Classes/Networking/Services/SymbolService.h
         Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h)
+        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -124,13 +124,7 @@ add_subdirectory(external/fmt)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
-
-#-- JSONCPP --------------------------------------------------------------
-set(JSON_INC_PATH external/vcpkg/packages/jsoncpp_x64-osx/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${JSON_INC_PATH})
-set(JSON_LIB_PATH external/vcpkg/packages/jsoncpp_x64-osx/lib)
-target_link_directories(${PROJECT_NAME} PUBLIC ${JSON_LIB_PATH})
-#--END JSONCPP ------------------------------------------------------------
+add_subdirectory(external/rapidjson)
 
 #--CURL STUFF -------------------------------------------------------------
 include(FindCURL)
@@ -260,6 +254,7 @@ set(INCLUDES
         external/stb
         ${CMAKE_CURRENT_BINARY_DIR}/external/glad/include
         external/rapidcsv/src
+        external/rapidjson/include
         ${CURL_INCLUDE_DIR}
         )
 
@@ -279,7 +274,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         imnodes
         rapidcsv
         ${CURL_LIBRARIES}
-        jsoncpp
         )
 #-APPLICATION-LIBRARIES-END-------------------
 

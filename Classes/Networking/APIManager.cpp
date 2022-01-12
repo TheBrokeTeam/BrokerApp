@@ -7,7 +7,7 @@
 
 APIManager::APIManager() = default;
 
-Json::Value APIManager::Request(APIRouter router) {
+rapidjson::Document APIManager::Request(APIRouter router) {
     return router.request(this->baseURL);
 }
 

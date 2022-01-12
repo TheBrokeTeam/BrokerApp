@@ -7,7 +7,9 @@
 
 #include <string>
 #include <map>
-#include <json/json.h>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
 
 enum RequestMethod {
     get,
@@ -20,23 +22,21 @@ class APIRouter {
 private:
     RequestMethod method;
     std::string path;
-    Json::Value body;
+    std::string body;
 protected:
-    Json::Value get(const std::string& endpoint);
-    Json::Value post(const std::string& endpoint);
-    Json::Value patch(const std::string& endpoint);
-    Json::Value del(const std::string& endpoint);
+    rapidjson::Document get(const std::string& endpoint);
+    rapidjson::Document post(const std::string& endpoint);
+    rapidjson::Document patch(const std::string& endpoint);
+    rapidjson::Document del(const std::string& endpoint);
 public:
     APIRouter(RequestMethod method, std::string path);
     RequestMethod getMethod();
     std::string getPath();
-    Json::Value getBody();
-    void setBody(Json::Value newBody);
-    Json::Value request(const std::string& endpoint);
+    std::string getBody();
+    void setBody(std::string newBody);
+    rapidjson::Document request(const std::string& endpoint);
 };
 
 static size_t WriteCallback(void *ptr, size_t size, size_t nmemb, std::string* data);
-
-static Json::Value JsonDecode(const std::string& text);
 
 #endif //UNTITLED1_APIROUTER_H

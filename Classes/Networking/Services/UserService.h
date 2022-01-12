@@ -7,17 +7,16 @@
 
 #include "../APIManager.h"
 #include <string>
-#include <json/json.h>
 
 class UserService {
 private:
     APIManager apiManager = APIManager();
 public:
     UserService();
-    Json::Value getAccessKey(Json::Value body);
-    Json::Value createNewUser(Json::Value body);
-    Json::Value updateUser();
-    Json::Value deleteUser();
+    rapidjson::Document getAccessKey(const rapidjson::Document& body);
+    rapidjson::Document createNewUser(const rapidjson::Document& body);
+    rapidjson::Document updateUser();
+    rapidjson::Document deleteUser();
 };
 
 

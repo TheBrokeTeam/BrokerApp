@@ -14,7 +14,7 @@ protected:
     std::string accessKey = "XXX";
 public:
     APIManager();
-    Json::Value Request(APIRouter router);
+    rapidjson::Document Request(APIRouter router);
 };
 
 #endif //UNTITLED1_APIMANAGER_H

@@ -9,10 +9,10 @@
 SymbolService::SymbolService() = default;
 
 
-Json::Value SymbolService::fetchDataByCode(const std::string& code) {
+rapidjson::Document SymbolService::fetchDataByCode(const std::string& code) {
     return this->apiManager.Request(SymbolRouter().getDataSymbol(code));
 }
 
-Json::Value SymbolService::fetchAllSymbols() {
+rapidjson::Document SymbolService::fetchAllSymbols() {
     return this->apiManager.Request(SymbolRouter().getAllSymbols());
 }

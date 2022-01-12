@@ -6,13 +6,15 @@
 #include <utility>
 #include "curl//curl.h"
 #include "curl/easy.h"
-#include <json/json.h>
 #include <iostream>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
 
 APIRouter::APIRouter(RequestMethod method, std::string path) {
     this->method = method;
     this->path = std::move(path);
-    this->body = {{"",""}};
+    this->body = "";
 }
 
 std::string APIRouter::getPath() {
@@ -23,21 +25,22 @@ RequestMethod APIRouter::getMethod() {
     return this->method;
 }
 
-Json::Value APIRouter::getBody() {
+std::string APIRouter::getBody() {
     return this->body;
 }
 
-void APIRouter::setBody(Json::Value newBody) {
+void APIRouter::setBody(std::string newBody) {
     this->body = std::move(newBody);
 }
 
-Json::Value APIRouter::get(const std::string& baseURL) {
+rapidjson::Document APIRouter::get(const std::string& baseURL) {
     std::string endpoint = baseURL + this->getPath();
 
     std::cout << endpoint << std::endl;
     CURL *curl;
     CURLcode error;
 
+    rapidjson::Document documentResponse;
     std::string readBuffer;
     std::string readHeader;
     long response_code;
@@ -72,23 +75,23 @@ Json::Value APIRouter::get(const std::string& baseURL) {
 
         curl = NULL;
 
-        if(error != 0) {
-            Json::Value errorMessage;
-            errorMessage["code"] = std::to_string(response_code);
-            errorMessage["message"] = readBuffer;
-            return errorMessage;
-        }
-        return JsonDecode(readBuffer);
+        documentResponse.Parse(readBuffer.c_str());
+        return documentResponse;
     }
-    return JsonDecode("");
+
+    documentResponse.SetObject();
+    rapidjson::Document::AllocatorType& allocator = documentResponse.GetAllocator();
+    documentResponse.AddMember("message", "CURL Error", allocator);
+    return documentResponse;
 }
 
-Json::Value APIRouter::post(const std::string& baseURL) {
+rapidjson::Document APIRouter::post(const std::string& baseURL) {
     std::string endpoint = baseURL + this->getPath();
 
     CURL *curl;
     CURLcode error;
 
+    rapidjson::Document documentResponse;
     std::string readBuffer;
     std::string readHeader;
     long response_code;
@@ -109,7 +112,7 @@ Json::Value APIRouter::post(const std::string& baseURL) {
         curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50L);
         curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
 
-        std::string bodyString = this->getBody().toStyledString();
+        std::string bodyString = this->getBody();
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, bodyString.c_str());
         curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, bodyString.length());
         curl_easy_setopt(curl, CURLOPT_POST, 1);
@@ -127,23 +130,23 @@ Json::Value APIRouter::post(const std::string& baseURL) {
 
         curl = NULL;
 
-        if(error != 0) {
-            Json::Value errorMessage;
-            errorMessage["code"] = std::to_string(response_code);
-            errorMessage["message"] = readBuffer;
-            return errorMessage;
-        }
-        return JsonDecode(readBuffer);
+        documentResponse.Parse(readBuffer.c_str());
+        return documentResponse;
     }
-    return JsonDecode("");
+
+    documentResponse.SetObject();
+    rapidjson::Document::AllocatorType& allocator = documentResponse.GetAllocator();
+    documentResponse.AddMember("message", "CURL Error", allocator);
+    return documentResponse;
 }
 
-Json::Value APIRouter::patch(const std::string& baseURL) {
+rapidjson::Document APIRouter::patch(const std::string& baseURL) {
     std::string endpoint = baseURL + this->getPath();
 
     CURL *curl;
     CURLcode error;
 
+    rapidjson::Document documentResponse;
     std::string readBuffer;
     std::string readHeader;
     long response_code;
@@ -177,23 +180,23 @@ Json::Value APIRouter::patch(const std::string& baseURL) {
 
         curl = NULL;
 
-        if(error != 0) {
-            Json::Value errorMessage;
-            errorMessage["code"] = std::to_string(response_code);
-            errorMessage["message"] = readBuffer;
-            return errorMessage;
-        }
-        return JsonDecode(readBuffer);
+        documentResponse.Parse(readBuffer.c_str());
+        return documentResponse;
     }
-    return JsonDecode("");
+
+    documentResponse.SetObject();
+    rapidjson::Document::AllocatorType& allocator = documentResponse.GetAllocator();
+    documentResponse.AddMember("message", "CURL Error", allocator);
+    return documentResponse;
 }
 
-Json::Value APIRouter::del(const std::string& baseURL) {
+rapidjson::Document APIRouter::del(const std::string& baseURL) {
     std::string endpoint = baseURL + this->getPath();
 
     CURL *curl;
     CURLcode error;
 
+    rapidjson::Document documentResponse;
     std::string readBuffer;
     std::string readHeader;
     long response_code;
@@ -227,18 +230,17 @@ Json::Value APIRouter::del(const std::string& baseURL) {
 
         curl = NULL;
 
-        if(error != 0) {
-            Json::Value errorMessage;
-            errorMessage["code"] = std::to_string(response_code);
-            errorMessage["message"] = readBuffer;
-            return errorMessage;
-        }
-        return JsonDecode(readBuffer);
+        documentResponse.Parse(readBuffer.c_str());
+        return documentResponse;
     }
-    return JsonDecode("");
+
+    documentResponse.SetObject();
+    rapidjson::Document::AllocatorType& allocator = documentResponse.GetAllocator();
+    documentResponse.AddMember("message", "CURL Error", allocator);
+    return documentResponse;
 }
 
-Json::Value APIRouter::request(const std::string& baseURL) {
+rapidjson::Document APIRouter::request(const std::string& baseURL) {
     switch(this->getMethod()) {
         case RequestMethod::get:
             std::cout << "I'm here GET" << std::endl;
@@ -258,14 +260,4 @@ Json::Value APIRouter::request(const std::string& baseURL) {
 static size_t WriteCallback(void *ptr, size_t size, size_t nmemb, std::string* data) {
     data->append((char*) ptr, size * nmemb);
     return size * nmemb;
-}
-
-static Json::Value JsonDecode(const std::string& text) {
-    Json::Value root;
-    Json::Reader reader;
-    bool result = reader.parse(text, root);
-    if(!result){
-        std::cout << "Error: " << text << std::endl;
-    }
-    return root;
 }
