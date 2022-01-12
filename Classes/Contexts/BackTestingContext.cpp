@@ -16,6 +16,7 @@
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 #include "../Tickables/Indicators/EMA.h"
+#include "../Tickables/Indicators/TRIX.h"
 
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
@@ -294,6 +295,13 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::AVL:
         case IndicatorsView::CandleIndicatorsTypes::VWAP:
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
+        {
+            std::shared_ptr<TRIX> trix = std::make_shared<TRIX>(_ticker.get());
+            _indicators.push_back(std::move(trix));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back());
+        }
+            break;
         case IndicatorsView::CandleIndicatorsTypes::SAR :
             _shouldShowLuizPopup = true;
             break;

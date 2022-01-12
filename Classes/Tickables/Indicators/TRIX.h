@@ -26,10 +26,11 @@ private:
     int _averageSize = 14; // must be >= 1
     ImVec4 _color{1, 1, 1, 1};
     float _lineWidth = 2.0f;
+    std::vector<double>  priceSequence;
     std::vector<double>  EMA1;
     std::vector<double>  EMA2;
     std::vector<double>  EMA3;
-    std::tuple<std::vector<double>, std::vector<double>> calculateEMA(BarHistory* barHistory);
+    double calculateEMA(std::vector<double>, int averageSize);
 
 
 };

@@ -10,61 +10,59 @@ TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
     setPlotName("TRIX");
 }
 
-std::tuple<std::vector<double>, std::vector<double>> TRIX::calculateEMA(BarHistory* barHistory) {
+double TRIX::calculateEMA(std::vector<double> sequence, int averageSize) {
 
-    if(barHistory->size() >= _averageSize)
+    if(sequence.size() >= averageSize)
     {
         double value = 0;
-        std::vector<double> data;
-        std::vector<double> time;
 
-        if (data.empty()) {
-            for(int i = 0; i < _averageSize; i++) {
-                value += (*barHistory)[i].close;
+        if (sequence.empty()) {
+            for(int i = 0; i < averageSize; i++) {
+                value += sequence[i];
             }
-            value /= _averageSize;
+            value /= averageSize;
 
         } else {
-            double factor = (1.0 * _smothingSize)/(1.0 * (1+_averageSize));
-            value = (data.back() * (1 - factor)) + ((*barHistory)[0].close * factor);
+            double factor = (2.0)/(1.0 * (1+averageSize));
+            value = (sequence.back() * (1 - factor)) + (sequence[0] * factor);
         }
-
-        data.push_back(value);
-        time.push_back((*barHistory)[0].time);
-
-        return {data, time};
+        sequence.push_back(value);
+        return value;
     }
 }
 
 void TRIX::calculate(BarHistory* barHistory)
 {
-
-    if(barHistory->size() >= _averageSize) {
-        //calcula EM1
-    }
-
-    if(barHistory->size() >= _averageSize * 2) {
-        //calcula EM2
-    }
-
-    if(barHistory->size() >= _averageSize * 3) {
-        //calcula EM3
-    }
-
-    if(barHistory->size() >= (_averageSize * 3 + 2)) {
-        //calcula TRIX
+    if(barHistory->size() != 0) {
+       priceSequence.push_back((*barHistory)[0].close);
+       EMA1.push_back(calculateEMA(priceSequence, _averageSize));
+       EMA2.push_back(calculateEMA(EMA1, _averageSize));
+       EMA3.push_back(calculateEMA(EMA2, _averageSize));
     }
 
 
-    double value = 0;
+//    if(barHistory->size() >= _averageSize * 2) {
+//        //calcula EM2
+//    }
+//
+//    if(barHistory->size() >= _averageSize * 3) {
+//        //calcula EM3
+//    }
+//
+//    if(barHistory->size() >= (_averageSize * 3 + 2)) {
+//        //calcula TRIX
+//    }
 
-        std::tuple<std::vector<double>, std::vector<double>> EMA;
-        EMA = calculateEMA(barHistory);
-        EMA = calculateEMA(EMA)
 
-        _data.push_back(value);
+//
+//        std::tuple<std::vector<double>, std::vector<double>> EMA;
+//        EMA = calculateEMA(barHistory);
+//        EMA = calculateEMA(EMA)
+    if (EMA3.size() >= 2) {
+        _data.push_back((EMA3[0] - EMA3[1])/EMA3[1]);
         _time.push_back((*barHistory)[0].time);
     }
+
 }
 
 void TRIX::onRender() {
@@ -102,13 +100,6 @@ int TRIX::getAverageSize() const {
     return _averageSize;
 }
 
-void TRIX::setSmothingSize(int size) {
-    _smothingSize = size;
-}
-
-int TRIX::getSmothingSize() const {
-    return _smothingSize;
-}
 
 
 TRIX::~TRIX() {
