@@ -28,14 +28,14 @@ public:
         VWAP,
         AVL,
         TRIX,
-        SAR
+        PSAR
     };
 
     struct DragAndDropIndicatorItem {
             CandleIndicatorsTypes type;
             std::string      label{""};
             DragAndDropIndicatorItem(CandleIndicatorsTypes type): type(type){
-                static std::string names[8]{"SMA","EMA","WMA","BOLL","VWAP","AVL","TRIX","SAR"};
+                static std::string names[8]{"SMA","EMA","WMA","BOLL","VWAP","AVL","TRIX","PSAR"};
                 label = names[int(type)];
         }
     };

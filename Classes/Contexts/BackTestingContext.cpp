@@ -18,6 +18,7 @@
 #include "../Tickables/Indicators/EMA.h"
 #include "../Tickables/Indicators/TRIX.h"
 #include "../Tickables/Indicators/WMA.h"
+#include "../Tickables/Indicators/PSAR.h"
 
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
@@ -309,8 +310,14 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             _ticker->addIndicator(_indicators.back());
         }
             break;
-        case IndicatorsView::CandleIndicatorsTypes::SAR :
-            _shouldShowLuizPopup = false;
+        case IndicatorsView::CandleIndicatorsTypes::PSAR :
+        {
+            std::shared_ptr<PSAR> psar = std::make_shared<PSAR>(_ticker.get());
+            _indicators.push_back(std::move(psar));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back());
+        }
+            break;
             break;
         default:
             break;
