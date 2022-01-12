@@ -11,9 +11,10 @@
 #include "../Helpers/graph.h"
 #include "NodesList.h"
 
-class StrategyEditor : public Widget {
+class StrategyEditor : public Widget , public Tickable {
 public:
-    explicit StrategyEditor(Context* context);
+    StrategyEditor(Ticker* ticker, Context* context);
+    void onClose(BarHistory* barHistory) override;
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
     void addNode(std::shared_ptr<INode> newNode);

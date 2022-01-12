@@ -46,7 +46,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<ChartView>(this));
     _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
-    _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
+    _widgets.emplace_back(std::make_shared<StrategyEditor>(nullptr,this));
 
 //    getWidget<ProfitAndLossesView>()->SetVisible(false);
 
@@ -390,16 +390,22 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             break;
         case UiNodeType::TRADE:
             {
+                auto nodeEditor = getWidget<StrategyEditor>();
+
                 //if already has an active strategy change it
                 if(_strategy != nullptr)
                 {
                     _ticker->removeTickable(_strategy.get());
+                    _ticker->removeTickable(nodeEditor);
                     _strategy.reset();
                 }
 
                 _strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
                 auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategy.get());
+
+                _ticker->addTickable(nodeEditor);
                 _ticker->addStrategy(strategyPtr);
+
                 getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
                 _strategyEditor->addRootId(node->getId());

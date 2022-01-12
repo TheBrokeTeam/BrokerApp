@@ -104,6 +104,12 @@ void Ticker::close(const TickData& tickData) {
             ind->onClose(&_barHistory);
     }
 
+    //For now is just the node editor on this
+    for(auto& t : _tickables){
+        if(auto tickable = t)
+            tickable->onClose(&_barHistory);
+    }
+
     for(auto& t : _strategies){
         t->onClose(&_barHistory);
     }
@@ -142,5 +148,10 @@ void Ticker::addIndicator(std::shared_ptr<Indicator> indicator) {
 
 void Ticker::addStrategy(Tickable *tickable) {
     _strategies.push_back(dynamic_cast<Strategy*>(tickable));
+    tickable->onLoad(&_barHistory);
+}
+
+void Ticker::addTickable(Tickable *tickable) {
+    _tickables.push_back(tickable);
     tickable->onLoad(&_barHistory);
 }
