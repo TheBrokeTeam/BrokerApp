@@ -28,6 +28,9 @@
 #include "../Nodes/CrossNode.h"
 #include "../Nodes/Counter.h"
 #include "../Nodes/TradeNode.h"
+#include "../Nodes/UpSequenceNode.h"
+#include "../Nodes/DownSequenceNode.h"
+
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -75,6 +78,10 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
 
     _ticker.reset();
     _ticker = std::make_shared<Ticker>(this,symbol);
+
+    auto nodeEditor = getWidget<StrategyEditor>();
+    nodeEditor->setPriority(2);
+    _ticker->addTickable(nodeEditor);
 
 //    //create test strategy for tests
 //    _strategy.reset();
@@ -388,18 +395,17 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             node = std::make_shared<CrossNode>(_strategyEditor);
             break;
         case UiNodeType::COUNTER:
-            node = std::make_shared<Counter>(_strategyEditor);
-            getWidget<StrategyEditor>()->addRootId(node->getId());
+            {
+                node = std::make_shared<Counter>(_strategyEditor);
+                getWidget<StrategyEditor>()->addRootId(node->getId());
+            }
             break;
         case UiNodeType::TRADE:
             {
-                auto nodeEditor = getWidget<StrategyEditor>();
-
                 //if already has an active strategy change it
                 if(_strategy != nullptr)
                 {
                     _ticker->removeTickable(_strategy.get());
-                    _ticker->removeTickable(nodeEditor);
                     _strategy.reset();
                 }
 
@@ -409,13 +415,16 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
                 strategyPtr->setPriority(3);
                 _ticker->addTickable(strategyPtr);
 
-                nodeEditor->setPriority(2);
-                _ticker->addTickable(nodeEditor);
-
                 getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
                 _strategyEditor->addRootId(node->getId());
              }
+            break;
+        case UiNodeType::BAR_SEQ_UP:
+            node = std::make_shared<UpSequenceNode>(_strategyEditor,_ticker.get());
+            break;
+        case UiNodeType::BAR_SEQ_DOWN:
+            node = std::make_shared<DownSequenceNode>(_strategyEditor,_ticker.get());
             break;
         default:
             break;

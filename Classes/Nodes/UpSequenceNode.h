@@ -5,9 +5,19 @@
 #ifndef BROKERAPP_UPSEQUENCENODE_H
 #define BROKERAPP_UPSEQUENCENODE_H
 
+#include "INode.h"
+#include "../Tickers/Ticker.h"
 
-class UpSequenceNode {
+class UpSequenceNode : public INode {
+public:
+    UpSequenceNode(StrategyEditor* nodeEditor,Ticker* ticker);
+    ~UpSequenceNode();
+    void onRender(float dt) override;
+    void handleStack(std::stack<float>& stack) override;
 
+private:
+    Ticker* _ticker{nullptr};
+    int _sequence = 5;
 };
 
 

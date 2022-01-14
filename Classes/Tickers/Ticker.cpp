@@ -96,11 +96,11 @@ void Ticker::reset() {
     }
 }
 
-Symbol *Ticker::getSymbol() {
+Symbol* Ticker::getSymbol() {
     return &_symbol;
 }
 
-BarHistory *Ticker::getBarHistory() {
+BarHistory* Ticker::getBarHistory() {
     return &_barHistory;
 }
 
@@ -109,6 +109,10 @@ TickerId Ticker::getTickerId() {
 }
 
 void Ticker::addTickable(Tickable *tickable) {
+
+    const bool is_in = _tickables.find(tickable) != _tickables.end();
+    if(is_in) return;
+
     auto tickableAdded = _tickables.insert(tickable);
     (*tickableAdded.first)->onLoad(&_barHistory);
 }

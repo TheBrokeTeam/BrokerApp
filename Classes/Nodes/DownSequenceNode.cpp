@@ -1,22 +1,22 @@
 //
-// Created by Arthur Abel Motelevicz on 12/01/22.
+// Created by Arthur Abel Motelevicz on 13/01/22.
 //
 
-#include "UpSequenceNode.h"
+#include "DownSequenceNode.h"
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
 
-UpSequenceNode::UpSequenceNode(StrategyEditor* nodeEditor,Ticker* ticker):INode(nodeEditor),_ticker(ticker){
-    setNodeName("Up Sequence");
-    setType(UiNodeType::BAR_SEQ_UP);
-    setIcon(static_cast<int>(Editor::Icons::node_bar_seq_up_black));
+DownSequenceNode::DownSequenceNode(StrategyEditor* nodeEditor,Ticker* ticker):INode(nodeEditor),_ticker(ticker){
+    setNodeName("Down Sequence");
+    setType(UiNodeType::BAR_SEQ_DOWN);
+    setIcon(static_cast<int>(Editor::Icons::node_bar_seq_down_black));
 
-    const GraphNode op(NodeType::BAR_SEQ_UP, this);
+    const GraphNode op(NodeType::BAR_SEQ_DOWN, this);
     _id = addNode(op);
 }
 
-void UpSequenceNode::onRender(float dt) {
+void DownSequenceNode::onRender(float dt) {
     const float node_width = 100.f;
     //set node's values from indicator
     ImGui::PushItemWidth(80);
@@ -29,7 +29,7 @@ void UpSequenceNode::onRender(float dt) {
     ImNodes::EndOutputAttribute();
 }
 
-void UpSequenceNode::handleStack(std::stack<float> &stack)
+void DownSequenceNode::handleStack(std::stack<float> &stack)
 {
     auto barHistory = _ticker->getBarHistory();
 
@@ -43,9 +43,9 @@ void UpSequenceNode::handleStack(std::stack<float> &stack)
 
     std::vector<bool> sequence;
     for(int i = 0; i < _sequence - 1; i++) {
-        bool currentBarIsPositive = (*barHistory)[i].close > (*barHistory)[i].open;
-        bool lastBarIsPositive = (*barHistory)[i+1].close > (*barHistory)[i+1].open;
-        sequence.push_back((*barHistory)[i].close > (*barHistory)[i + 1].close && currentBarIsPositive && lastBarIsPositive);
+        bool currentBarIsNegative = (*barHistory)[i].close < (*barHistory)[i].open;
+        bool lastBarIsNegative = (*barHistory)[i+1].close < (*barHistory)[i+1].open;
+        sequence.push_back((*barHistory)[i].close < (*barHistory)[i + 1].close && currentBarIsNegative && lastBarIsNegative);
     }
 
     bool isUpSequence = true;
@@ -58,4 +58,4 @@ void UpSequenceNode::handleStack(std::stack<float> &stack)
         stack.push(0.0);
 }
 
-UpSequenceNode::~UpSequenceNode() {}
+DownSequenceNode::~DownSequenceNode() {}
