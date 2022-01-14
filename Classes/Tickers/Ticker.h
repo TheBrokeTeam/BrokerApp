@@ -14,12 +14,19 @@
 #include "../Data/BarHistory.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Contextualizable.h"
+#include "../Tickables/Tickable.h"
 
-class Tickable;
 class BarData;
 class Indicator;
 class Strategy;
 struct TickData;
+
+struct TickableComparison
+{
+    bool operator () (Tickable* lhs, Tickable* rhs) const  {
+        return  lhs->getPriority() <= rhs->getPriority();
+    }
+};
 
 typedef const std::string& TickerId;
 
@@ -52,7 +59,7 @@ private:
 
     bool lastWasClosed = false;
 
-    std::set<std::weak_ptr<Tickable>> _tickables;
+    std::set<Tickable*,TickableComparison> _tickables;
 
     //to save loaded data
     BarHistory _barHistory;

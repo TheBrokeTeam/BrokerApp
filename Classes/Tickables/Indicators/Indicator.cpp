@@ -7,6 +7,8 @@
 #include <implot_internal.h>
 
 #include "../../Helpers/Utils.h"
+#include "../../Tickers/Ticker.h"
+
 
 Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {
     _plotId = uuid::generate_uuid_v4();

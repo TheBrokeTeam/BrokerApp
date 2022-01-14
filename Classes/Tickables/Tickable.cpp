@@ -3,6 +3,7 @@
 //
 
 #include "Tickable.h"
+#include "../Tickers/Ticker.h"
 
 Tickable::Tickable(Ticker* ticker): _ticker(ticker){}
 

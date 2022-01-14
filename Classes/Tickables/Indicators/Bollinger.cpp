@@ -3,6 +3,8 @@
 //
 
 #include "Bollinger.h"
+#include "../../Tickers/Ticker.h"
+
 
 Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
     setPlotName("BOLL");

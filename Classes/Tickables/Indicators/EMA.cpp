@@ -3,6 +3,7 @@
 //
 
 #include "EMA.h"
+#include "../../Tickers/Ticker.h"
 
 EMA::EMA(Ticker *ticker): Indicator(ticker) {
     setPlotName("EMA");

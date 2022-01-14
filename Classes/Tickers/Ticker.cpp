@@ -51,8 +51,8 @@ void Ticker::open(const TickData& tickData) {
     _barHistory.append(data);
 
     for(auto& t : _tickables){
-        if(auto tickable = t.lock())
-            tickable->onTick(&_barHistory);
+//        if(auto tickable = t.lock())
+        t->onTick(&_barHistory);
     }
 }
 
@@ -83,8 +83,8 @@ void Ticker::tick(const TickData& tickData) {
     _barHistory.updateLasBar(data);
 
     for(auto& t : _tickables){
-        if(auto tickable = t.lock())
-            tickable->onTick(&_barHistory);
+//        if(auto tickable = t.lock())
+            t->onTick(&_barHistory);
     }
 }
 
@@ -99,8 +99,8 @@ void Ticker::close(const TickData& tickData) {
     _barHistory.updateLasBar(data);
 
     for(auto& t : _tickables){
-        if(auto tickable = t.lock())
-            tickable->onClose(&_barHistory);
+//        if(auto tickable = t.lock())
+            t->onClose(&_barHistory);
     }
 
 }
@@ -110,8 +110,8 @@ void Ticker::reset() {
     lastWasClosed = false;
     
     for(auto& t : _tickables){
-        if(auto tickable = t.lock())
-            tickable->reset();
+//        if(auto tickable = t.lock())
+            t->reset();
     }
 }
 

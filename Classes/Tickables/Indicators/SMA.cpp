@@ -3,6 +3,8 @@
 //
 
 #include "SMA.h"
+#include "../../Tickers/Ticker.h"
+
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
     setPlotName("SMA");

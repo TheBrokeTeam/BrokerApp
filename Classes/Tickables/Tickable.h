@@ -9,9 +9,9 @@
 #include "../Data/TickData.h"
 #include "../Data/Symbol.h"
 #include "../Data/BarHistory.h"
-#include "../Tickers/Ticker.h"
 
 #define barHist (*_barHistory)
+class Ticker;
 
 class Tickable {
 public:
@@ -25,7 +25,7 @@ public:
     virtual void reset();
 
     virtual void onLoad(BarHistory* barHistory);
-    bool operator < (const Tickable& rhs){ rhs._priority > _priority;}
+    bool operator < (Tickable& rhs){ _priority < rhs._priority;}
 
 protected:
     Ticker* _ticker{nullptr};

@@ -268,9 +268,10 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::SMA:
         {
             std::shared_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
+            sma->setPriority(1);
             _indicators.push_back(std::move(sma));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _ticker->addTickable(_indicators.back().get());
             if(shouldCreateNode)
                 createIndicatorNode(UiNodeType::SMA,_indicators.back());
         }
@@ -278,17 +279,19 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::BOLL:
         {
             std::shared_ptr<Bollinger> boll = std::make_shared<Bollinger>(_ticker.get());
+            boll->setPriority(1);
             _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _ticker->addTickable(_indicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::EMA:
         {
             std::shared_ptr<EMA> ema = std::make_shared<EMA>(_ticker.get());
+            ema->setPriority(1);
             _indicators.push_back(std::move(ema));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _ticker->addTickable(_indicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::WMA:
@@ -403,8 +406,12 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
                 _strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
                 auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategy.get());
 
+                strategyPtr->setPriority(3);
+                _ticker->addTickable(strategyPtr);
+
+                nodeEditor->setPriority(2);
                 _ticker->addTickable(nodeEditor);
-                _ticker->addStrategy(strategyPtr);
+
 
                 getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
