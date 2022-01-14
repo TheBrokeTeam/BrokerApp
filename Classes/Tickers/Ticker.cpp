@@ -4,7 +4,6 @@
 
 #include "Ticker.h"
 #include "../Contexts/Context.h"
-#include "../Tickables/Tickable.h"
 
 Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
     setContext(context);
@@ -13,20 +12,6 @@ Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
 
 bool Ticker::removeTickable(Tickable *tickable)
 {
-//    for(auto it  = _indicators.begin(); it != _indicators.end(); it++) {
-//        if (tickable == it->lock().get()) {
-//            _indicators.erase(it);
-//            return true;
-//        }
-//    }
-//
-//    for(auto it  = _strategies.begin(); it != _strategies.end(); it++) {
-//        if (tickable == dynamic_cast<Tickable*>(*it)) {
-//            _strategies.erase(it);
-//            return true;
-//        }
-//    }
-
     for(auto it  = _tickables.begin(); it != _tickables.end(); it++) {
         if (tickable == (*it)) {
             _tickables.erase(it);
@@ -51,7 +36,6 @@ void Ticker::open(const TickData& tickData) {
     _barHistory.append(data);
 
     for(auto& t : _tickables){
-//        if(auto tickable = t.lock())
         t->onTick(&_barHistory);
     }
 }
@@ -83,7 +67,6 @@ void Ticker::tick(const TickData& tickData) {
     _barHistory.updateLasBar(data);
 
     for(auto& t : _tickables){
-//        if(auto tickable = t.lock())
             t->onTick(&_barHistory);
     }
 }
@@ -99,7 +82,6 @@ void Ticker::close(const TickData& tickData) {
     _barHistory.updateLasBar(data);
 
     for(auto& t : _tickables){
-//        if(auto tickable = t.lock())
             t->onClose(&_barHistory);
     }
 
@@ -110,7 +92,6 @@ void Ticker::reset() {
     lastWasClosed = false;
     
     for(auto& t : _tickables){
-//        if(auto tickable = t.lock())
             t->reset();
     }
 }
@@ -126,16 +107,6 @@ BarHistory *Ticker::getBarHistory() {
 TickerId Ticker::getTickerId() {
     return _id;
 }
-
-//void Ticker::addIndicator(std::shared_ptr<Indicator> indicator) {
-//    _indicators.push_back(indicator);
-//    indicator->onLoad(&_barHistory);
-//}
-//
-//void Ticker::addStrategy(Tickable *tickable) {
-//    _strategies.push_back(dynamic_cast<Strategy*>(tickable));
-//    tickable->onLoad(&_barHistory);
-//}
 
 void Ticker::addTickable(Tickable *tickable) {
     auto tickableAdded = _tickables.insert(tickable);

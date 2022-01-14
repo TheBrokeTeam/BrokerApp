@@ -412,7 +412,6 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
                 nodeEditor->setPriority(2);
                 _ticker->addTickable(nodeEditor);
 
-
                 getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
                 _strategyEditor->addRootId(node->getId());
