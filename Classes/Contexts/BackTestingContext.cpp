@@ -30,6 +30,7 @@
 #include "../Nodes/TradeNode.h"
 #include "../Nodes/UpSequenceNode.h"
 #include "../Nodes/DownSequenceNode.h"
+#include "../Nodes/BarValueNode.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -425,6 +426,10 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             break;
         case UiNodeType::BAR_SEQ_DOWN:
             node = std::make_shared<DownSequenceNode>(_strategyEditor,_ticker.get());
+            break;
+            //TEMP TEST
+        case UiNodeType::TREND:
+            node = std::make_shared<BarValueNode>(_strategyEditor,_ticker.get());
             break;
         default:
             break;

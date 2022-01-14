@@ -76,7 +76,7 @@ add_executable(BrokerApp
         Classes/Nodes/INode.h
         Classes/Nodes/INode.cpp
         Classes/Nodes/CrossNode.cpp
-        Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/Counter.cpp Classes/Nodes/Counter.h Classes/Widgets/NodesList.cpp Classes/Widgets/NodesList.h Classes/Nodes/TradeNode.cpp Classes/Nodes/TradeNode.h Classes/Tickables/Strategies/TradeNodeStrategy.cpp Classes/Tickables/Strategies/TradeNodeStrategy.h Classes/Nodes/UpSequenceNode.cpp Classes/Nodes/UpSequenceNode.h Classes/Nodes/DownSequenceNode.cpp Classes/Nodes/DownSequenceNode.h)
+        Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/Counter.cpp Classes/Nodes/Counter.h Classes/Widgets/NodesList.cpp Classes/Widgets/NodesList.h Classes/Nodes/TradeNode.cpp Classes/Nodes/TradeNode.h Classes/Tickables/Strategies/TradeNodeStrategy.cpp Classes/Tickables/Strategies/TradeNodeStrategy.h Classes/Nodes/UpSequenceNode.cpp Classes/Nodes/UpSequenceNode.h Classes/Nodes/DownSequenceNode.cpp Classes/Nodes/DownSequenceNode.h Classes/Nodes/BarValueNode.cpp Classes/Nodes/BarValueNode.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
