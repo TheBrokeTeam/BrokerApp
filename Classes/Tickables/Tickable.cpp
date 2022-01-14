@@ -36,6 +36,4 @@ int Tickable::getPriority() {
     return _priority;
 }
 
-void Tickable::reset() {
-
-}
+void Tickable::reset() {}

@@ -38,7 +38,8 @@ static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "3d", "1w", "1mo"};
 
 BackTestingContext::BackTestingContext(Editor *editor) : Context(editor) {
-
+    _ticker.reset();
+    _ticker = std::make_shared<Ticker>(this);
 }
 
 void BackTestingContext::initialize() {
@@ -67,9 +68,11 @@ void BackTestingContext::initialize() {
 //        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
     });
 
+    _strategyEditor->setPriority(2);
+    _ticker->addTickable(_strategyEditor);
 }
 
-Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
+void BackTestingContext::loadSymbol(const Symbol& symbol) {
 
     std::string filename = "data.zip";
     auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
@@ -77,29 +80,15 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     if(!dataAlreadyExists(symbol))
         auto resp = download_file(url,filename);
 
-    _ticker.reset();
-    _ticker = std::make_shared<Ticker>(this,symbol);
-
-    auto nodeEditor = getWidget<StrategyEditor>();
-    nodeEditor->setPriority(2);
-    _ticker->addTickable(nodeEditor);
-
-//    //create test strategy for tests
-//    _strategy.reset();
-//    _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
-//    _ticker->addStrategy(_strategy.get());
-//
-//    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
-
-   _data.clear();
+    _data.clear();
     _data = loadCsv(symbol);
+
+    _ticker->setSymbol(symbol);
+    _ticker->reset();
+    loadTicker();
 
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
-    loadTicker();
-
-    return _ticker.get();
-
 }
 
 BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {

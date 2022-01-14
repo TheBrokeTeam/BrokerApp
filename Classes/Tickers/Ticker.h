@@ -32,23 +32,16 @@ typedef const std::string& TickerId;
 
 class Ticker : public Contextualizable{
 public:
-    Ticker(Context* context,const Symbol& symbol);
+    Ticker(Context* context);
     virtual ~Ticker() = default;
 
     void reset();
-//    void addIndicator(std::shared_ptr<Indicator> indicator);
-//    void addStrategy(Tickable* tickable);
-
-    //this is for the node editor be ticked too
-    //TODO:: understand if there is a better way
     void addTickable(Tickable* tickable);
-
-
-
     bool removeTickable(Tickable *tickable);
 
     void tick(const TickData &tickData);
 
+    void setSymbol(const Symbol& symbol);
     Symbol* getSymbol();
     BarHistory* getBarHistory();
     TickerId getTickerId();

@@ -92,7 +92,6 @@ void DownloaderView::updateVisible(float dt)
 
         symbol.setTimeInterval(Symbol::Interval(interval));
 
-        //TODO:: the ticker should  be created by charts widget
         getContext()->loadSymbol(symbol);
     }
 }

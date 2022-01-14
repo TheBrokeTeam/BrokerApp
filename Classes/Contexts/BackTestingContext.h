@@ -19,7 +19,7 @@ public:
     BackTestingContext(Editor* editor);
     void initialize() override;
 
-    Ticker* loadSymbol(const Symbol &symbol) override;
+    void loadSymbol(const Symbol &symbol) override;
     void loadTicker() override;
     void updateData(float dt) override;
 

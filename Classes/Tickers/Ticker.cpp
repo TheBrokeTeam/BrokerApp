@@ -5,7 +5,7 @@
 #include "Ticker.h"
 #include "../Contexts/Context.h"
 
-Ticker::Ticker(Context *context,const Symbol& symbol): _symbol(symbol) {
+Ticker::Ticker(Context *context){
     setContext(context);
     _id = uuid::generate_uuid_v4();
 }
@@ -91,9 +91,8 @@ void Ticker::reset() {
     _barHistory.clear();
     lastWasClosed = false;
     
-    for(auto& t : _tickables){
-            t->reset();
-    }
+    for(auto& t : _tickables)
+        t->reset();
 }
 
 Symbol* Ticker::getSymbol() {
@@ -115,4 +114,8 @@ void Ticker::addTickable(Tickable *tickable) {
 
     auto tickableAdded = _tickables.insert(tickable);
     (*tickableAdded.first)->onLoad(&_barHistory);
+}
+
+void Ticker::setSymbol(const Symbol &symbol) {
+    _symbol = symbol;
 }
