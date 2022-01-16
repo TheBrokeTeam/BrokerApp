@@ -9,6 +9,16 @@ PSAR::PSAR(Ticker *ticker): Indicator(ticker) {
     setPlotName("PSAR");
 }
 
+void PSAR::save(bool signal, double sar, double time) {
+    PSARData data;
+
+    data.value = sar;
+    data.signal = signal;
+
+    _data.push_back(data);
+    _time.push_back(time);
+}
+
 void PSAR::calculate(BarHistory* barHistory)
 {
     if(barHistory->size() != 0) {
@@ -20,10 +30,8 @@ void PSAR::calculate(BarHistory* barHistory)
         _ep = _high[0];
         _signal = true;
         _sar = _low[0];
-        _af_step = _af;
 
-        _data.push_back(_sar);
-        _time.push_back((*barHistory)[0].time);
+        PSAR::save(_signal, _sar, (*barHistory)[0].time);
 
     } else {
         if (_signal) { // se é long...
@@ -38,8 +46,7 @@ void PSAR::calculate(BarHistory* barHistory)
                     _sar = _high[0];
                 }
 
-                _data.push_back(_sar);
-                _time.push_back((*barHistory)[0].time);
+                PSAR::save(_signal, _sar, (*barHistory)[0].time);
 
                 _af = _af_step;
                 _ep = _low[0];
@@ -54,8 +61,7 @@ void PSAR::calculate(BarHistory* barHistory)
                 }
 
             } else {
-                _data.push_back(_sar);
-                _time.push_back((*barHistory)[0].time);
+                PSAR::save(_signal, _sar, (*barHistory)[0].time);
 
                 if (_high[0] > _ep) {
                     _ep = _high[0];
@@ -84,8 +90,7 @@ void PSAR::calculate(BarHistory* barHistory)
                     _sar = _low[0];
                 }
 
-                _data.push_back(_sar);
-                _time.push_back((*barHistory)[0].time);
+                PSAR::save(_signal, _sar, (*barHistory)[0].time);
 
                 _af = _af_step;
                 _ep = _high[0];
@@ -98,8 +103,7 @@ void PSAR::calculate(BarHistory* barHistory)
                 }
 
             } else {
-                _data.push_back(_sar);
-                _time.push_back((*barHistory)[0].time);
+                PSAR::save(_signal, _sar, (*barHistory)[0].time);
 
                 if (_low[0] < _ep) {
                     _ep = _low[0];
@@ -122,8 +126,23 @@ void PSAR::calculate(BarHistory* barHistory)
 }
 
 void PSAR::onRender() {
-    ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotScatter(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+    std::vector<double> bottom, top, time_b, time_t;
+
+    for(int i = 0; i < _data.size(); i++){
+        if (_data[i].signal) {
+            bottom.push_back(_data[i].value);
+            time_b.push_back(_time[i]);
+        } else {
+            top.push_back(_data[i].value);
+            time_t.push_back(_time[i]);
+        }
+    }
+
+    ImPlot::SetNextLineStyle(_colorTop,_lineWidth);
+    ImPlot::PlotScatter(_plotName.c_str(), time_t.data(), top.data(), time_t.size());
+    ImPlot::SetNextLineStyle(_colorBottom,_lineWidth);
+    ImPlot::PlotScatter(_plotName.c_str(), time_b.data(), bottom.data(), time_b.size());
+
 //    for (auto i: _data)
 //        std::cout << i << ' ';
 }
@@ -140,13 +159,15 @@ void PSAR::onPopupRender() {
     }
     ImGui::Separator();
 
-    ImGui::ColorEdit4("Color",{&_color.x});
+    ImGui::ColorEdit4("ColorTop",{&_colorTop.x});
+    ImGui::ColorEdit4("ColorBottom",{&_colorBottom.x});
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
 
 void PSAR::reset() {
     Indicator::reset();
+    _af = _af_step;
     _low.clear();
     _high.clear();
     _data.clear();
