@@ -66,38 +66,75 @@ void ProfitAndLossesView::updateVisible(float dt) {
         //TODO:: use a baseline value as start from context
         double baseLine = 0;
         double cumulatedProfit = baseLine;
-        double lastTime = _strategy.lock()->getClosedPositions().front().inTime;
+
+        double lastTime;
+        double lastCumulatedProfit = _strategy.lock()->getClosedPositions().front().profit;
+
 
         if(!shouldLinkPlots)
             ImPlot::BeginItem("##PnL");
 
 //        const double candleWidthOffset = (_strategy.lock()->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60)/2.0;
 
-        for(auto& p : _strategy.lock()->getClosedPositions()){
+//        for(auto& p : _strategy.lock()->getClosedPositions()){
+        std::vector<double> plotTime;
+        std::vector<double> plotProfit;
+        std::vector<double> plotLosses;
+
+
+
+        for(int i = 0; i < _strategy.lock()->getClosedPositions().size() - 1; i++)
+        {
+
+            auto& p = _strategy.lock()->getClosedPositions().at(i);
+
             auto color = cumulatedProfit >= 0 ? Editor::broker_pnl_profit : Editor::broker_pnl_loss;
 
-            double startX = lastTime;
-            double startY = baseLine;
+            double startX = p.inTime;
+            double startY = cumulatedProfit;
 
             double endX = p.outTime;
-            double endY = cumulatedProfit;
+            double endY = cumulatedProfit + p.profit;
 
-            lastTime = endX;
+            plotTime.push_back(startX);
+            plotTime.push_back(endX);
+            //cross the baseline profit
+            if(cumulatedProfit >= baseLine && endY < baseLine) {
+                plotProfit.push_back(cumulatedProfit);\
+                plotProfit.push_back(cumulatedProfit);
 
-            ImU32 color32 = ImGui::GetColorU32(color);
-            ImVec2 startPos = ImPlot::PlotToPixels(startX, startY);
-            ImVec2 endPos = ImPlot::PlotToPixels(endX, endY);
+            }
 
-            drawList->AddRectFilled(startPos, endPos, color32);
+//            ImU32 color32 = ImGui::GetColorU32(color);
+//            ImVec2 startPos = ImPlot::PlotToPixels(startX, startY);
+//            ImVec2 endPos = ImPlot::PlotToPixels(endX, endY);
+//            ImVec2 basePosRight = ImPlot::PlotToPixels(endX, baseLine);
+//            ImVec2 basePosLeft= ImPlot::PlotToPixels(startX, baseLine);
+//
+//            drawList->AddTriangleFilled(startPos,basePosLeft,basePosRight,color32);
+//            drawList->AddTriangleFilled(startPos,endPos,basePosRight,color32);
+//
+//            auto colorLine = cumulatedProfit >= 0 ? Editor::broker_pnl_profit_line : Editor::broker_pnl_loss_line;
+//            ImU32 colorLine32 = ImGui::GetColorU32(colorLine);
+//
+//            ImVec2 lineLeft = ImPlot::PlotToPixels(startX, startY);
+//            ImVec2 lineRight = ImPlot::PlotToPixels(endX, endY);
+//            drawList->AddLine(lineLeft, lineRight, colorLine32, 2.0f);
+//
+//
+            if(i > 0){
+                plotTime.push_back(lastTime);
+                plotTime.push_back(startX);
 
-            auto colorLine = cumulatedProfit >= 0 ? Editor::broker_pnl_profit_line : Editor::broker_pnl_loss_line;
-            ImU32 colorLine32 = ImGui::GetColorU32(colorLine);
+//                ImVec2 lastEndPos = ImPlot::PlotToPixels(lastTime, lastCumulatedProfit);
+//                ImVec2 nextStartPos = ImPlot::PlotToPixels(startX, baseLine);
+//                drawList->AddRectFilled(lastEndPos,nextStartPos, color32);
+            }
 
-            ImVec2 lineLeft = ImPlot::PlotToPixels(startX, endY);
-            ImVec2 lineRight = ImPlot::PlotToPixels(endX, endY);
-            drawList->AddLine(lineLeft, lineRight, colorLine32, 2.0f);
-
+            lastTime = p.outTime;
             cumulatedProfit += p.profit;
+
+            lastCumulatedProfit = cumulatedProfit;
 
         }
 
