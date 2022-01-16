@@ -28,7 +28,7 @@ public:
 private:
     ImVec4 _colorTop{175.0/250.0, 50.0/255.0, 50.0/255.0, 1};
     ImVec4 _colorBottom{75.0/255.0, 200.0/255, 75.0/255.0, 1};
-    float _lineWidth = 0.15f;
+    float _lineWidth = 1.5f;
     std::vector<double> _low;
     std::vector<double> _high;
     float _af = 0.02;
