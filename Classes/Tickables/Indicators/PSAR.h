@@ -7,8 +7,14 @@
 
 
 #include "Indicator.h"
+class PSARData{
+public:
+    bool signal;
+    double value;
 
-class PSAR : public Indicator,  public ReversedData<double>{
+};
+
+class PSAR : public Indicator,  public ReversedData<PSARData>{
 public:
     explicit PSAR(Ticker* ticker);
     ~PSAR();
@@ -17,11 +23,12 @@ public:
     void onRender() override;
     void onPopupRender() override;
     void reset() override;
-
+    void save(bool signal, double sar, double time);
 
 private:
-    ImVec4 _color{1, 1, 1, 1};
-    float _lineWidth = 2.0f;
+    ImVec4 _colorTop{1, 1, 1, 1};
+    ImVec4 _colorBottom{1, 1, 1, 1};
+    float _lineWidth = 0.8f;
     std::vector<double> _low;
     std::vector<double> _high;
     float _af = 0.02;
@@ -30,6 +37,7 @@ private:
     double _ep;
     double _sar;
     bool _signal = true;
+
 
 };
 
