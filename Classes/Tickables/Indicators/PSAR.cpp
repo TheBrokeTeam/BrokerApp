@@ -138,9 +138,11 @@ void PSAR::onRender() {
         }
     }
 
-    ImPlot::SetNextLineStyle(_colorTop,_lineWidth);
+    //ImPlot::SetNextLineStyle(_colorTop,_lineWidth);
+    ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, _lineWidth, _colorTop, 1 , _colorTop);
     ImPlot::PlotScatter(_plotName.c_str(), time_t.data(), top.data(), time_t.size());
-    ImPlot::SetNextLineStyle(_colorBottom,_lineWidth);
+    //ImPlot::SetNextLineStyle(_colorBottom,_lineWidth);
+    ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, _lineWidth, _colorBottom, 1, _colorBottom);
     ImPlot::PlotScatter(_plotName.c_str(), time_b.data(), bottom.data(), time_b.size());
 
 //    for (auto i: _data)
