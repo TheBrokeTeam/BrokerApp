@@ -123,7 +123,7 @@ void PSAR::calculate(BarHistory* barHistory)
 
 void PSAR::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+    ImPlot::PlotScatter(_plotName.c_str(), _time.data(), _data.data(), _time.size());
 //    for (auto i: _data)
 //        std::cout << i << ' ';
 }
