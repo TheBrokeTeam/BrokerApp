@@ -445,6 +445,18 @@ void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator,bo
             break;
         }
     }
+
+    //now delete from indicators list
+    for(auto it = _subplotIndicators.begin(); it != _subplotIndicators.end(); it++){
+        if((*it)->getId() == indicator->getId())
+        {
+            if (shouldDeleteNode)
+                getWidget<StrategyEditor>()->removeNodeIndicator(indicator);
+
+            _subplotIndicators.erase(it);
+            break;
+        }
+    }
 }
 
 void BackTestingContext::removeAllIndicators() {
@@ -455,7 +467,14 @@ void BackTestingContext::removeAllIndicators() {
             puts("indicator removed successfully");
     }
 
+    for(auto& i : _subplotIndicators){
+        strategyEditor->removeNodeIndicator(i);
+        if(_ticker->removeTickable(i.get()))
+            puts("indicator removed successfully");
+    }
+
     _indicators.clear();
+    _subplotIndicators.clear();
 }
 
 void BackTestingContext::plotSubplotIndicators() {

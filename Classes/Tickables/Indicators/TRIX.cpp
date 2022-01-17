@@ -3,8 +3,8 @@
 //
 
 #include "TRIX.h"
+#include "../../Widgets/IndicatorsView.h"
 #include <iostream>
-
 
 
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
@@ -101,9 +101,8 @@ void TRIX::render() {
         xFlags |= ImPlotAxisFlags_NoTickLabels;
 
         ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-        ImPlot::SetupAxisLimits(ImAxis_X1, _time.back(),_time.front());
 
-
+        ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
         ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
 
         // fit data on screen even when zooming
@@ -115,6 +114,11 @@ void TRIX::render() {
 
         ImPlot::SetNextLineStyle(_color, _lineWidth);
         ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+
+        if (ImPlot::BeginDragDropSourceItem(_plotName.c_str())) {
+            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, this, sizeof(Indicator));
+            ImPlot::EndDragDropSource();
+        }
 
         ImPlot::EndPlot();
     }
