@@ -85,8 +85,8 @@ void IndicatorsView::drawView() {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING)) {
             std::shared_ptr<Indicator> i(nullptr);
             if (typeid(payload->Data) == typeid(Indicator)) {
-                Indicator a = *(Indicator*) payload->Data;
-                i = std::make_shared<Indicator>(a);
+//                Indicator a = *(Indicator*) payload->Data;
+//                i = std::make_shared<Indicator>(a);
 //                std::shared_ptr<Indicator> i(payload->Data);
                 //i = std::make_shared<Indicator>(payload->Data);
             } else {
