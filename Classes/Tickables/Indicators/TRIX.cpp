@@ -96,21 +96,14 @@ int TRIX::getAverageSize() const {
 }
 
 void TRIX::render() {
-    static int counter = 0;
-
     if (ImPlot::BeginPlot("##TRIX")) {
-
         int xFlags = ImPlotAxisFlags_Time;
         xFlags |= ImPlotAxisFlags_NoTickLabels;
 
-        if(counter < 3)
-        {
-            xFlags |= ImPlotAxisFlags_AutoFit;
-            counter++;
-        }
-
         ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-        ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
+        ImPlot::SetupAxisLimits(ImAxis_X1, _time.back(),_time.front());
+
+
         ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
 
         // fit data on screen even when zooming

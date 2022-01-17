@@ -39,13 +39,14 @@ void CandleChart::render(float dt)
 
         static std::vector<float> ratios;
 
+        ratios.push_back(5);
         ratios.push_back(2);
-        ratios.push_back(1);
+        ratios.push_back(0);
 
         for(int i = 0; i < getContext()->getSubplotIndicatorsCount(); i++)
-            ratios.push_back(1);
+            ratios[2] = 3;
 
-    if(ImPlot::BeginSubplots("##Subplots",2 + getContext()->getSubplotIndicatorsCount(),1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios.data())){
+    if(ImPlot::BeginSubplots("##Subplots",3,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios.data())){
 
             if (ImPlot::BeginPlot("##OHLC"))
             {
