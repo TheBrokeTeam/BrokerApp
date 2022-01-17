@@ -24,6 +24,25 @@ void CandleChart::updateVisible(float dt) {
     render(dt);
 }
 
+std::vector<float> CandleChart::calculateRatios() {
+
+    std::vector<float> ratios;
+
+    ratios.push_back(5);
+
+    for (int i = 0; i < getContext()->getSubplotIndicatorsCount(); i++) {
+        ratios.push_back(2);
+    }
+
+    ratios.push_back(3);
+
+    while (ratios.size() < getContext()->getSubplotIndicatorsCount() + _maxSubplots) {
+        ratios.push_back(0);
+    }
+
+    return ratios;
+}
+
 void CandleChart::render(float dt)
 {
     if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;
@@ -37,16 +56,9 @@ void CandleChart::render(float dt)
 
 //    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
 
-        static std::vector<float> ratios;
+    std::vector<float> ratios = calculateRatios();
 
-        ratios.push_back(5);
-        ratios.push_back(2);
-        ratios.push_back(0);
-
-        for(int i = 0; i < getContext()->getSubplotIndicatorsCount(); i++)
-            ratios[2] = 3;
-
-    if(ImPlot::BeginSubplots("##Subplots",3,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios.data())){
+    if(ImPlot::BeginSubplots("##Subplots",_maxSubplots,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios.data())){
 
             if (ImPlot::BeginPlot("##OHLC"))
             {
