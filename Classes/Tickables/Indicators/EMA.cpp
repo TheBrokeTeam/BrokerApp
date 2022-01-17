@@ -22,7 +22,7 @@ void EMA::calculate(BarHistory* barHistory)
 
         } else {
             double factor = (1.0 * _smothingSize)/(1.0 * (1+_averageSize));
-            value = (_data[0] * (1 - factor)) + ((*barHistory)[0].close * factor); //data[0] é o EMA de ontem (ultimo disponivel).
+            value = (_data.back() * (1.0 - factor)) + ((*barHistory)[0].close * factor); //data[0] é o EMA de ontem (ultimo disponivel).
         }
 
         _data.push_back(value);
