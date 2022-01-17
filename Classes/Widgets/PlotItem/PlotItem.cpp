@@ -30,6 +30,8 @@ void PlotItem::render() {
     }
 }
 
+void PlotItem::onRender(){}
+
 void PlotItem::setPlotName(const std::string& name) {
     _plotName = name + "##" + _plotId;
     _name = name;
