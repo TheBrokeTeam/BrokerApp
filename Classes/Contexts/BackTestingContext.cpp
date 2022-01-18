@@ -478,7 +478,7 @@ void BackTestingContext::removeAllIndicators() {
 
 void BackTestingContext::plotSubplotIndicators() {
     for(auto& i : _subplotIndicators) {
-        if (ImPlot::BeginPlot(i->getPlotName().c_str())) {
+        if (ImPlot::BeginPlot(("##"+i->getPlotName()).c_str())) {
             i->render();
             if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
                 ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
