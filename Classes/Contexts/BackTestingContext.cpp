@@ -307,7 +307,6 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
         {
             std::shared_ptr<TRIX> trix = std::make_shared<TRIX>(_ticker.get());
-            trix->setSharedPtr(trix);
             _subplotIndicators.push_back(std::move(trix));
             indicator = _subplotIndicators.back();
             _ticker->addIndicator(_subplotIndicators.back());
@@ -320,7 +319,6 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             indicator = _indicators.back();
             _ticker->addIndicator(_indicators.back());
         }
-            break;
             break;
         default:
             break;
@@ -480,9 +478,14 @@ void BackTestingContext::removeAllIndicators() {
 
 void BackTestingContext::plotSubplotIndicators() {
     for(auto& i : _subplotIndicators) {
-        i->render();
-
-
+        if (ImPlot::BeginPlot(i->getPlotName().c_str())) {
+            i->render();
+            if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
+                ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
+                ImPlot::EndDragDropSource();
+            }
+            ImPlot::EndPlot();
+        }
     }
 }
 
