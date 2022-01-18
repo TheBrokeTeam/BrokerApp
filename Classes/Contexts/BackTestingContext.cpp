@@ -307,6 +307,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
         {
             std::shared_ptr<TRIX> trix = std::make_shared<TRIX>(_ticker.get());
+            trix->setSharedPtr(trix);
             _subplotIndicators.push_back(std::move(trix));
             indicator = _subplotIndicators.back();
             _ticker->addIndicator(_subplotIndicators.back());

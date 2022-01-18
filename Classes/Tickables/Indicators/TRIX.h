@@ -21,7 +21,9 @@ public:
 
     void onPopupRender() override;
     void reset() override;
-
+    void setSharedPtr(const std::shared_ptr<Indicator>& shrdPtr) {
+        _shrdPtr = shrdPtr;
+    }
 
 private:
     int _averageSize = 14; // must be >= 1
@@ -32,7 +34,7 @@ private:
     std::vector<double>  EMA2;
     std::vector<double>  EMA3;
     double calculateEMA(std::vector<double> origin, std::vector<double> destination, int averageSize);
-    std::shared_ptr<Indicator> _iptr;
+    std::shared_ptr<Indicator> _shrdPtr{nullptr};
 
 };
 
