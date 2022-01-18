@@ -8,7 +8,7 @@
 
 #include "Indicator.h"
 
-class TRIX : public Indicator,  public ReversedData<double>{
+class TRIX : public Indicator,  public ReversedData<double>, public std::enable_shared_from_this<Indicator> {
 public:
     explicit TRIX(Ticker* ticker);
     ~TRIX();
@@ -32,7 +32,7 @@ private:
     std::vector<double>  EMA2;
     std::vector<double>  EMA3;
     double calculateEMA(std::vector<double> origin, std::vector<double> destination, int averageSize);
-
+    std::shared_ptr<Indicator> _iptr;
 
 };
 

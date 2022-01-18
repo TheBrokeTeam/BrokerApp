@@ -170,6 +170,7 @@ void CandleChart::render(float dt)
         getContext()->plotSubplotIndicators();
 
 
+
         if (ImPlot::BeginPlot("##Volume")) {
 
                 ImDrawList* drawList =  ImPlot::GetPlotDrawList();

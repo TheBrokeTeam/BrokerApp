@@ -9,6 +9,7 @@
 
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
     setPlotName("TRIX");
+    _iptr = shared_from_this();
 }
 
 double TRIX::calculateEMA(std::vector<double> origin,std::vector<double> destination, int averageSize) {
@@ -96,6 +97,7 @@ int TRIX::getAverageSize() const {
 }
 
 void TRIX::render() {
+
     if (ImPlot::BeginPlot("##TRIX")) {
         int xFlags = ImPlotAxisFlags_Time;
         xFlags |= ImPlotAxisFlags_NoTickLabels;
@@ -116,7 +118,7 @@ void TRIX::render() {
         ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
 
         if (ImPlot::BeginDragDropSourceItem(_plotName.c_str())) {
-            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, this, sizeof(Indicator));
+            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &_iptr, sizeof(std::shared_ptr<Indicator>));
             ImPlot::EndDragDropSource();
         }
 
