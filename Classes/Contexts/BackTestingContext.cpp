@@ -480,6 +480,8 @@ void BackTestingContext::removeAllIndicators() {
 void BackTestingContext::plotSubplotIndicators() {
     for(auto& i : _subplotIndicators) {
         i->render();
+
+
     }
 }
 
