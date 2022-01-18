@@ -320,7 +320,6 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             _ticker->addIndicator(_indicators.back());
         }
             break;
-            break;
         default:
             break;
     }
@@ -445,6 +444,18 @@ void BackTestingContext::removeIndicator(std::shared_ptr<Indicator> indicator,bo
             break;
         }
     }
+
+    //now delete from indicators list
+    for(auto it = _subplotIndicators.begin(); it != _subplotIndicators.end(); it++){
+        if((*it)->getId() == indicator->getId())
+        {
+            if (shouldDeleteNode)
+                getWidget<StrategyEditor>()->removeNodeIndicator(indicator);
+
+            _subplotIndicators.erase(it);
+            break;
+        }
+    }
 }
 
 void BackTestingContext::removeAllIndicators() {
@@ -455,12 +466,26 @@ void BackTestingContext::removeAllIndicators() {
             puts("indicator removed successfully");
     }
 
+    for(auto& i : _subplotIndicators){
+        strategyEditor->removeNodeIndicator(i);
+        if(_ticker->removeTickable(i.get()))
+            puts("indicator removed successfully");
+    }
+
     _indicators.clear();
+    _subplotIndicators.clear();
 }
 
 void BackTestingContext::plotSubplotIndicators() {
     for(auto& i : _subplotIndicators) {
-        i->render();
+        if (ImPlot::BeginPlot(i->getPlotName().c_str())) {
+            i->render();
+            if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
+                ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
+                ImPlot::EndDragDropSource();
+            }
+            ImPlot::EndPlot();
+        }
     }
 }
 

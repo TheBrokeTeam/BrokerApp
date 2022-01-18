@@ -3,8 +3,8 @@
 //
 
 #include "TRIX.h"
+#include "../../Widgets/IndicatorsView.h"
 #include <iostream>
-
 
 
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
@@ -96,33 +96,28 @@ int TRIX::getAverageSize() const {
 }
 
 void TRIX::render() {
-    if (ImPlot::BeginPlot("##TRIX")) {
-        int xFlags = ImPlotAxisFlags_Time;
-        xFlags |= ImPlotAxisFlags_NoTickLabels;
 
-        ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-        ImPlot::SetupAxisLimits(ImAxis_X1, _time.back(),_time.front());
+    int xFlags = ImPlotAxisFlags_Time;
+    xFlags |= ImPlotAxisFlags_NoTickLabels;
 
+    ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
 
-        ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
+    ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
+    ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
 
-        // fit data on screen even when zooming
-        if (ImPlot::FitThisFrame()) {
-            for (int i = 0; i < _data.size(); ++i) {
-                ImPlot::FitPoint(ImPlotPoint(_time[i], _data[i]));
-            }
+    // fit data on screen even when zooming
+    if (ImPlot::FitThisFrame()) {
+        for (int i = 0; i < _data.size(); ++i) {
+            ImPlot::FitPoint(ImPlotPoint(_time[i], _data[i]));
         }
-
-        ImPlot::SetNextLineStyle(_color, _lineWidth);
-        ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
-
-        ImPlot::EndPlot();
     }
+
+    ImPlot::SetNextLineStyle(_color, _lineWidth);
+    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+
 }
 
 
-TRIX::~TRIX() {
-
-}
+TRIX::~TRIX() {}
 
 

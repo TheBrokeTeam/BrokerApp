@@ -14,7 +14,7 @@ class PlotItem {
 public:
     PlotItem();
     virtual ~PlotItem();
-    virtual void onRender() = 0;
+    virtual void onRender();
     virtual void reset();
     virtual void onPopupRender();
 

@@ -8,7 +8,7 @@
 
 #include "Indicator.h"
 
-class TRIX : public Indicator,  public ReversedData<double>{
+class TRIX : public Indicator,  public ReversedData<double> {
 public:
     explicit TRIX(Ticker* ticker);
     ~TRIX();
@@ -22,7 +22,6 @@ public:
     void onPopupRender() override;
     void reset() override;
 
-
 private:
     int _averageSize = 14; // must be >= 1
     ImVec4 _color{1, 1, 1, 1};
@@ -32,7 +31,6 @@ private:
     std::vector<double>  EMA2;
     std::vector<double>  EMA3;
     double calculateEMA(std::vector<double> origin, std::vector<double> destination, int averageSize);
-
 
 };
 

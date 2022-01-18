@@ -5,6 +5,7 @@
 #include "IndicatorsView.h"
 #include "../Editor.h"
 #include "../Tickables/Indicators/SMA.h"
+#include <typeinfo>
 
 
 IndicatorsView::IndicatorsView(Context* context) : Widget(context) {
@@ -82,8 +83,17 @@ void IndicatorsView::drawView() {
 
     if (ImGui::BeginDragDropTarget()) {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING)) {
-            std::shared_ptr<Indicator> i = *(std::shared_ptr<Indicator>*) payload->Data;
+            std::shared_ptr<Indicator> i(nullptr);
+//            if (typeid(payload->Data) == typeid(Indicator)) {
+////                Indicator a = *(Indicator*) payload->Data;
+////                i = std::make_shared<Indicator>(a);
+////                std::shared_ptr<Indicator> i(payload->Data);
+//                //i = std::make_shared<Indicator>(payload->Data);
+//            } else {
+            i = *(std::shared_ptr<Indicator>*) payload->Data;
+
             getContext()->removeIndicator(i,true);
+
         }
         ImGui::EndDragDropTarget();
     }
