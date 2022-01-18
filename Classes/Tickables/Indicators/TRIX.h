@@ -8,7 +8,7 @@
 
 #include "Indicator.h"
 
-class TRIX : public Indicator,  public ReversedData<double>, public std::enable_shared_from_this<Indicator> {
+class TRIX : public Indicator,  public ReversedData<double> {
 public:
     explicit TRIX(Ticker* ticker);
     ~TRIX();

@@ -9,7 +9,7 @@
 
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
     setPlotName("TRIX");
-    _iptr = shared_from_this();
+    _iptr = std::shared_ptr<Indicator>(this);
 }
 
 double TRIX::calculateEMA(std::vector<double> origin,std::vector<double> destination, int averageSize) {

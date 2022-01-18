@@ -90,9 +90,9 @@ void IndicatorsView::drawView() {
 ////                std::shared_ptr<Indicator> i(payload->Data);
 //                //i = std::make_shared<Indicator>(payload->Data);
 //            } else {
-           // i = *(std::shared_ptr<Indicator>*) payload->Data;
+            i = *(std::shared_ptr<Indicator>*) payload->Data;
 
-            getContext()->removeIndicator(*(std::shared_ptr<Indicator>*) payload->Data,true);
+            getContext()->removeIndicator(i,true);
 
         }
         ImGui::EndDragDropTarget();
