@@ -7,6 +7,8 @@
 #include <implot_internal.h>
 
 #include "../../Helpers/Utils.h"
+#include "../../Tickers/Ticker.h"
+
 
 Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {
     _plotId = uuid::generate_uuid_v4();
@@ -21,17 +23,22 @@ void Indicator::onClose(BarHistory* barHistory) {
 }
 
 void Indicator::onLoad(BarHistory *barHistory) {
-    reset();
+    resetPlot();
     auto tempBarHist = std::make_unique<BarHistory>();
     for(auto&d : (*barHistory).getData()){
         tempBarHist->append(d);
         calculate(tempBarHist.get());
     }
 }
-void Indicator::reset() {
-    PlotItem::reset();
+void Indicator::resetPlot() {
+    PlotItem::resetPlot();
 }
 
 Indicator::~Indicator() {}
+
+void Indicator::reset() {
+    Tickable::reset();
+    resetPlot();
+}
 
 

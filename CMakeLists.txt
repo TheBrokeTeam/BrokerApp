@@ -71,13 +71,15 @@ add_executable(BrokerApp
         Classes/Widgets/PlotItem/PlotItem.h
         Classes/Tickables/Strategies/IndicatorToChartExample.cpp
         Classes/Tickables/Strategies/IndicatorToChartExample.h
-        Classes/Widgets/StrategyEditor/StrategyEditor.cpp
-        Classes/Widgets/StrategyEditor/StrategyEditor.h
+        Classes/Widgets/StrategyEditor.cpp
+        Classes/Widgets/StrategyEditor.h
         Classes/Nodes/SMANode.cpp
         Classes/Nodes/SMANode.h
         Classes/Nodes/INode.h
         Classes/Nodes/INode.cpp
         Classes/Nodes/CrossNode.cpp
+        Classes/Nodes/CrossNode.h 
+Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/Counter.cpp Classes/Nodes/Counter.h Classes/Widgets/NodesList.cpp Classes/Widgets/NodesList.h Classes/Nodes/TradeNode.cpp Classes/Nodes/TradeNode.h Classes/Tickables/Strategies/TradeNodeStrategy.cpp Classes/Tickables/Strategies/TradeNodeStrategy.h Classes/Nodes/UpSequenceNode.cpp Classes/Nodes/UpSequenceNode.h Classes/Nodes/DownSequenceNode.cpp Classes/Nodes/DownSequenceNode.h Classes/Nodes/BarValueNode.cpp Classes/Nodes/BarValueNode.h)
         Classes/Nodes/CrossNode.h Classes/Nodes/Add.cpp Classes/Nodes/Add.h Classes/Nodes/Counter.cpp Classes/Nodes/Counter.h Classes/Widgets/NodesList.cpp Classes/Widgets/NodesList.h Classes/Nodes/TradeNode.cpp Classes/Nodes/TradeNode.h Classes/Tickables/Strategies/TradeNodeStrategy.cpp Classes/Tickables/Strategies/TradeNodeStrategy.h Classes/Tickables/Indicators/WMA.cpp Classes/Tickables/Indicators/WMA.h Classes/Tickables/Indicators/TRIX.cpp Classes/Tickables/Indicators/TRIX.h Classes/Tickables/Indicators/PSAR.cpp Classes/Tickables/Indicators/PSAR.h)
 
 ###############################################################################

@@ -3,6 +3,7 @@
 //
 
 #include "Tickable.h"
+#include "../Tickers/Ticker.h"
 
 Tickable::Tickable(Ticker* ticker): _ticker(ticker){}
 
@@ -26,3 +27,13 @@ Tickable::~Tickable() {
     _ticker = nullptr;
     _barHistory = nullptr;
 }
+
+void Tickable::setPriority(int priority) {
+    _priority = priority;
+}
+
+int Tickable::getPriority() {
+    return _priority;
+}
+
+void Tickable::reset() {}

@@ -3,6 +3,8 @@
 //
 
 #include "Bollinger.h"
+#include "../../Tickers/Ticker.h"
+
 
 Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
     setPlotName("BOLL");
@@ -38,8 +40,8 @@ void Bollinger::calculate(BarHistory* barHistory)
     }
 }
 
-void Bollinger::reset() {
-    Indicator::reset();
+void Bollinger::resetPlot() {
+    Indicator::resetPlot();
     _data.clear();
 }
 

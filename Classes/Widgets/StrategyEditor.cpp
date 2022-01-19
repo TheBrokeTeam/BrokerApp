@@ -3,9 +3,9 @@
 //
 
 #include "StrategyEditor.h"
-#include "../../Editor.h"
+#include "../Editor.h"
 #include <imnodes.h>
-#include "../../Nodes/Add.h"
+#include "../Nodes/Add.h"
 
 // User callback
 void mini_map_node_hovering_callback(int node_id, void* user_data)
@@ -13,7 +13,7 @@ void mini_map_node_hovering_callback(int node_id, void* user_data)
     ImGui::SetTooltip("This is node %d", node_id);
 }
 
-StrategyEditor::StrategyEditor(Context* context) : Widget(context) {
+StrategyEditor::StrategyEditor(Ticker* ticker,Context* context) : Widget(context), Tickable(ticker) {
     _title                  = "Strategy editor";
     _is_window              = true;
     _graph = std::make_shared<graph::Graph<GraphNode>>();
@@ -127,29 +127,6 @@ void StrategyEditor::updateVisible(float dt) {
             }
         }
     }
-
-    //call willStartEvaluate on all nodes once at first
-    bool startEvaluateCalled = false;
-
-    for(auto id : _rootNodes) {
-        if(_graph->node(id).owner->getRootNodeConnectionsNumber() > 0) {
-            if(!startEvaluateCalled)
-            {
-                for(auto& n :_uiNodes)
-                    n->willStartEvaluate();
-
-                startEvaluateCalled = true;
-            }
-            evaluateGraph(id);
-        }
-    }
-
-    //call endEvaluate on all nodes
-    if(startEvaluateCalled){
-        for(auto& n :_uiNodes)
-            n->endEvaluate();
-    }
-
 }
 
 void StrategyEditor::onPushStyleVar() {
@@ -256,5 +233,31 @@ void StrategyEditor::removeNodeIndicator(std::shared_ptr<Indicator> indicator) {
                 break;
             }
         }
+    }
+}
+
+void StrategyEditor::onClose(BarHistory *barHistory) {
+    Tickable::onClose(barHistory);
+
+    //call willStartEvaluate on all nodes once at first
+    bool startEvaluateCalled = false;
+
+    for(auto id : _rootNodes) {
+        if(_graph->node(id).owner->getRootNodeConnectionsNumber() > 0) {
+            if(!startEvaluateCalled)
+            {
+                for(auto& n :_uiNodes)
+                    n->willStartEvaluate();
+
+                startEvaluateCalled = true;
+            }
+            evaluateGraph(id);
+        }
+    }
+
+    //call endEvaluate on all nodes
+    if(startEvaluateCalled){
+        for(auto& n :_uiNodes)
+            n->endEvaluate();
     }
 }

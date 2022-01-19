@@ -3,6 +3,8 @@
 //
 
 #include "SMA.h"
+#include "../../Tickers/Ticker.h"
+
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
     setPlotName("SMA");
@@ -28,7 +30,7 @@ void SMA::onRender() {
 
 void SMA::onPopupRender() {
     if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
-        reset();
+        resetPlot();
         onLoad(_ticker->getBarHistory());
     }
     ImGui::ColorEdit4("Color",{&_color.x});
@@ -36,8 +38,8 @@ void SMA::onPopupRender() {
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
 
-void SMA::reset() {
-    Indicator::reset();
+void SMA::resetPlot() {
+    Indicator::resetPlot();
     _data.clear();
 }
 

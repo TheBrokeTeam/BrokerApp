@@ -19,7 +19,7 @@ public:
     BackTestingContext(Editor* editor);
     void initialize() override;
 
-    Ticker* loadSymbol(const Symbol &symbol) override;
+    void loadSymbol(const Symbol &symbol) override;
     void loadTicker() override;
     void updateData(float dt) override;
 
@@ -30,6 +30,7 @@ public:
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false) override;
     std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) override;
     std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) override;
+
 
     void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;
     void removeAllIndicators() override;

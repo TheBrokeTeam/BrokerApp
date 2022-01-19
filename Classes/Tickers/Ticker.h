@@ -14,28 +14,34 @@
 #include "../Data/BarHistory.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Contextualizable.h"
+#include "../Tickables/Tickable.h"
 
-class Tickable;
 class BarData;
 class Indicator;
 class Strategy;
 struct TickData;
 
+struct TickableComparison
+{
+    bool operator () (Tickable* lhs, Tickable* rhs) const  {
+        return  lhs->getPriority() <= rhs->getPriority();
+    }
+};
+
 typedef const std::string& TickerId;
 
 class Ticker : public Contextualizable{
 public:
-    Ticker(Context* context,const Symbol& symbol);
+    Ticker(Context* context);
     virtual ~Ticker() = default;
 
     void reset();
-    void addIndicator(std::shared_ptr<Indicator> indicator);
-    void addStrategy(Tickable* tickable);
-
+    void addTickable(Tickable* tickable);
     bool removeTickable(Tickable *tickable);
 
     void tick(const TickData &tickData);
 
+    void setSymbol(const Symbol& symbol);
     Symbol* getSymbol();
     BarHistory* getBarHistory();
     TickerId getTickerId();
@@ -46,10 +52,7 @@ private:
 
     bool lastWasClosed = false;
 
-    //hold all the tickables
-    std::vector<std::weak_ptr<Indicator>> _indicators;
-    std::vector<Strategy*> _strategies;
-
+    std::set<Tickable*,TickableComparison> _tickables;
 
     //to save loaded data
     BarHistory _barHistory;

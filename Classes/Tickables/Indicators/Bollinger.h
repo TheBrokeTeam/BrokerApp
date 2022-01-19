@@ -19,7 +19,7 @@ class Bollinger : public Indicator, public ReversedData<BollingerData> {
 public:
     explicit Bollinger(Ticker* ticker);
     void calculate(BarHistory* barHistory) override;
-    void reset() override;
+    void resetPlot() override;
     void onRender() override;
     int getAverageSize();
 private:

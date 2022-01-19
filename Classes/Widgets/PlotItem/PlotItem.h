@@ -14,8 +14,8 @@ class PlotItem {
 public:
     PlotItem();
     virtual ~PlotItem();
-    virtual void onRender();
-    virtual void reset();
+    virtual void onRender() = 0;
+    virtual void resetPlot();
     virtual void onPopupRender();
 
     void setPlotName(const std::string& name);

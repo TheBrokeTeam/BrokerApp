@@ -25,20 +25,24 @@
 #include "../Widgets/SimulationController.h"
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
-#include "../Widgets/StockList.h"
-#include "../Widgets/StrategyEditor/StrategyEditor.h"
+#include "../Widgets/StrategyEditor.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/CrossNode.h"
 #include "../Nodes/Counter.h"
 #include "../Nodes/TradeNode.h"
+#include "../Nodes/UpSequenceNode.h"
+#include "../Nodes/DownSequenceNode.h"
+#include "../Nodes/BarValueNode.h"
+
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
                                         "3d", "1w", "1mo"};
 
 BackTestingContext::BackTestingContext(Editor *editor) : Context(editor) {
-
+    _ticker.reset();
+    _ticker = std::make_shared<Ticker>(this);
 }
 
 void BackTestingContext::initialize() {
@@ -70,9 +74,11 @@ void BackTestingContext::initialize() {
 //        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
     });
 
+    _strategyEditor->setPriority(2);
+    _ticker->addTickable(_strategyEditor);
 }
 
-Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
+void BackTestingContext::loadSymbol(const Symbol& symbol) {
 
     std::string filename = "data.zip";
     auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
@@ -80,25 +86,15 @@ Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
     if(!dataAlreadyExists(symbol))
         auto resp = download_file(url,filename);
 
-    _ticker.reset();
-    _ticker = std::make_shared<Ticker>(this,symbol);
-
-//    //create test strategy for tests
-//    _strategy.reset();
-//    _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
-//    _ticker->addStrategy(_strategy.get());
-//
-//    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
-
-   _data.clear();
+    _data.clear();
     _data = loadCsv(symbol);
+
+    _ticker->setSymbol(symbol);
+    _ticker->reset();
+    loadTicker();
 
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
-    loadTicker();
-
-    return _ticker.get();
-
 }
 
 BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {
@@ -232,21 +228,22 @@ void BackTestingContext::updateData(float dt) {
     if(!_simulating) return;
 
     _currentTime += dt*_speed;
-    if(_currentTime >= _timeToTick){
+    if(_currentTime >= _timeToTick)
+    {
+        //at least one it should be
         int numberOfTicks = floor(_currentTime/_timeToTick);
+        assert(numberOfTicks >= 1);
+
         _currentTime = 0;
         for(int i = 0; i < numberOfTicks; i++)
         {
-            //TODO::review this
-            //needed to avoid memory trash
-            if(i >= _data.size())
+            if(_currentIndex >= _data.size()) {
                 _simulating = false;
+                return;
+            }
 
             auto& tickData = _data[_currentIndex++];
             _ticker->tick(tickData);
-
-            if(_currentIndex >= _data.size())
-                _simulating = false;
         }
     }
 }
@@ -273,25 +270,28 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
     switch (type) {
         case IndicatorsView::CandleIndicatorsTypes::SMA: {
             std::shared_ptr<SMA> sma = std::make_unique<SMA>(_ticker.get());
+            sma->setPriority(1);
             _indicators.push_back(std::move(sma));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
-            if (shouldCreateNode)
-                createIndicatorNode(UiNodeType::SMA, _indicators.back());
+            _ticker->addTickable(_indicators.back().get());
+            if(shouldCreateNode)
+                createIndicatorNode(UiNodeType::SMA,_indicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL: {
             std::shared_ptr<Bollinger> boll = std::make_shared<Bollinger>(_ticker.get());
+            boll->setPriority(1);
             _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _ticker->addTickable(_indicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::EMA: {
             std::shared_ptr<EMA> ema = std::make_shared<EMA>(_ticker.get());
+            ema->setPriority(1);
             _indicators.push_back(std::move(ema));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _ticker->addTickable(_indicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::WMA: {
@@ -407,18 +407,40 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             node = std::make_shared<CrossNode>(_strategyEditor);
             break;
         case UiNodeType::COUNTER:
-            node = std::make_shared<Counter>(_strategyEditor);
-            getWidget<StrategyEditor>()->addRootId(node->getId());
+            {
+                node = std::make_shared<Counter>(_strategyEditor);
+                getWidget<StrategyEditor>()->addRootId(node->getId());
+            }
             break;
         case UiNodeType::TRADE:
             {
+                //if already has an active strategy change it
+                if(_strategy != nullptr)
+                {
+                    _ticker->removeTickable(_strategy.get());
+                    _strategy.reset();
+                }
+
                 _strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
                 auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategy.get());
-                _ticker->addStrategy(strategyPtr);
+
+                strategyPtr->setPriority(3);
+                _ticker->addTickable(strategyPtr);
+
                 getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
                 _strategyEditor->addRootId(node->getId());
              }
+            break;
+        case UiNodeType::BAR_SEQ_UP:
+            node = std::make_shared<UpSequenceNode>(_strategyEditor,_ticker.get());
+            break;
+        case UiNodeType::BAR_SEQ_DOWN:
+            node = std::make_shared<DownSequenceNode>(_strategyEditor,_ticker.get());
+            break;
+            //TEMP TEST
+        case UiNodeType::TREND:
+            node = std::make_shared<BarValueNode>(_strategyEditor,_ticker.get());
             break;
         default:
             break;
