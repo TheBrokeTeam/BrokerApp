@@ -10,7 +10,7 @@
 
 class APIManager {
 protected:
-    std::string baseURL = "http://localhost:3200";
+    std::string baseURL = "https://preditchart.com.br";
     std::string accessKey = "XXX";
 public:
     APIManager();
