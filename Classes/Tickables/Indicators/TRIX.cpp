@@ -8,7 +8,6 @@
 #include "../../Tickers/Ticker.h"
 
 
-
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
     setPlotName("TRIX");
 }

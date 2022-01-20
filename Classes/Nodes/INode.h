@@ -21,6 +21,7 @@ enum class NodeType
 {
     SMA,
     EMA,
+    BOLL,
     CROSS,
     COUNTER,
     BAR_SEQ_DOWN,
@@ -35,6 +36,7 @@ enum class UiNodeType
 {
     SMA,
     EMA,
+    BOLL,
     CROSS,
     COUNTER,
     BAR_SEQ_DOWN,

@@ -55,9 +55,8 @@ void Bollinger::onRender() {
 //    ImPlot::SetNextLineStyle(ImVec4(0.5,0.5,1,1));
 
     //TODO:: the custom render was needed to use custom Reversed data type. Maybe it is possible in some way.
-    auto color = ImVec4(0.5,0.5,1,0.25);
 
-    ImPlot::GetCurrentItem()->Color = ImGui::GetColorU32(color);
+    ImPlot::GetCurrentItem()->Color = ImGui::GetColorU32(_color);
 
     auto drawList = ImPlot::GetPlotDrawList();
 
@@ -80,7 +79,7 @@ void Bollinger::onRender() {
         ImVec2 p3 = ImPlot::PlotToPixels(p3_x, p3_y);
         ImVec2 p4 = ImPlot::PlotToPixels(p4_x, p4_y);
 
-        ImU32 color32 = ImGui::GetColorU32(color);
+        ImU32 color32 = ImGui::GetColorU32(_color);
 
         drawList->AddTriangleFilled(p1,p2,p3,color32);
         drawList->AddTriangleFilled(p1,p3,p4,color32);
@@ -89,5 +88,9 @@ void Bollinger::onRender() {
 
 int Bollinger::getAverageSize() {
     return _averageSize;
+}
+
+const ImVec4 &Bollinger::getColor() {
+    return _color;
 }
 

@@ -29,6 +29,8 @@
 #include "../Widgets/StockList.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
+#include "../Nodes/BollingerNode.h"
+
 #include "../Nodes/CrossNode.h"
 #include "../Nodes/Counter.h"
 #include "../Nodes/TradeNode.h"
@@ -285,6 +287,8 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             _indicators.push_back(std::move(boll));
             indicator = _indicators.back();
             _ticker->addTickable(_indicators.back().get());
+            if(shouldCreateNode)
+                createIndicatorNode(UiNodeType::BOLL,_indicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::EMA: {
@@ -384,9 +388,15 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
     switch (type) {
         case UiNodeType::SMA:
         {
-                node = std::make_shared<SMANode>(indicator,_strategyEditor);
-                _strategyEditor->addNode(node);
-            }
+            node = std::make_shared<SMANode>(indicator,_strategyEditor);
+            _strategyEditor->addNode(node);
+        }
+            break;
+        case UiNodeType::BOLL:
+        {
+            node = std::make_shared<BollingerNode>(indicator,_strategyEditor);
+            _strategyEditor->addNode(node);
+        }
             break;
         default:
             break;
@@ -403,6 +413,9 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
     switch (type) {
         case UiNodeType::SMA:
             node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, true),_strategyEditor);
+            break;
+        case UiNodeType::BOLL:
+            node = std::make_shared<BollingerNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL, true),_strategyEditor);
             break;
         case UiNodeType::CROSS:
             node = std::make_shared<CrossNode>(_strategyEditor);

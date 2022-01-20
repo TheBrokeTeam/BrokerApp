@@ -100,7 +100,7 @@ add_executable(BrokerApp
         Classes/Tickables/Indicators/TRIX.cpp
         Classes/Tickables/Indicators/TRIX.h
         Classes/Tickables/Indicators/PSAR.cpp
-        Classes/Tickables/Indicators/PSAR.h)
+        Classes/Tickables/Indicators/PSAR.h Classes/Nodes/BollingerNode.cpp Classes/Nodes/BollingerNode.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
