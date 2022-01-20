@@ -19,6 +19,7 @@
 #include "../Tickables/Indicators/TRIX.h"
 #include "../Tickables/Indicators/WMA.h"
 #include "../Tickables/Indicators/PSAR.h"
+#include "../Tickables/Indicators/VWAP.h"
 
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
@@ -307,8 +308,12 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             _ticker->addTickable(_indicators.back().get());
         }
             break;
-        case IndicatorsView::CandleIndicatorsTypes::AVL:
-        case IndicatorsView::CandleIndicatorsTypes::VWAP:
+        case IndicatorsView::CandleIndicatorsTypes::VWAP: {
+            std::shared_ptr<VWAP> vwap = std::make_shared<VWAP>(_ticker.get());
+            _indicators.push_back(std::move(vwap));
+            indicator = _indicators.back();
+            _ticker->addIndicator(_indicators.back());
+        }
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
         {
             std::shared_ptr<TRIX> trix = std::make_shared<TRIX>(_ticker.get());
