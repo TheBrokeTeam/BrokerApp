@@ -17,13 +17,12 @@ VWAP::VWAP(Ticker *ticker): Indicator(ticker) {
 
 void VWAP::calculate(BarHistory* barHistory)
 {
-    if (isNewPeriod((*barHistory).getTimeData().front(), Day)) {
+    if (isNewPeriod((*barHistory)[0].time, Day)) {
         setupNewPeriod();
     }
 
-    double lastVolume = (*barHistory).getVolumeData().front();
-    BarData lastData = (*barHistory).getData().front();
-    double typicalPrice = calculateTypicalPrice(lastData.low, lastData.high, lastData.close);
+    double lastVolume = (*barHistory)[0].volume;
+    double typicalPrice = calculateTypicalPrice((*barHistory)[0].low, (*barHistory)[0].high, (*barHistory)[0].close);
     _accVolume += lastVolume;
     _accTypicalPriceWeighted += typicalPrice * lastVolume;
 
