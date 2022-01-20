@@ -19,9 +19,7 @@ public:
     void initStyle() override;
     void finishStyle()override ;
 private:
-    bool _isTopValue = false;
-    bool _isBottomValue = false;
-
+    int _radioBtn = 1;
 };
 
 

@@ -21,8 +21,10 @@ BollingerNode::BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor
 void BollingerNode::onRender(float dt) {
     const float node_width = 100.f;
     //set node's values from indicator
-    ImGui::RadioButton("top",&_isTopValue);
-    ImGui::RadioButton("bottom",&_isTopValue);
+    static int e = 0;
+
+    ImGui::RadioButton("top",&_radioBtn,1);
+    ImGui::RadioButton("bottom",&_radioBtn,2);
 
     ImNodes::BeginOutputAttribute(_id);
     ImGui::Indent(node_width - ImGui::CalcTextSize("output").x);
@@ -43,9 +45,9 @@ void BollingerNode::handleStack(std::stack<float> &stack) {
 
     auto &boll = *dynamic_cast<Bollinger *>(smaShared.get());
 
-    if (boll.size() > 0 && _isTopValue)
+    if (boll.size() > 0 && _radioBtn == 1)
         stack.push(boll[0].top);
-    else if (boll.size() > 0 && _isTopValue)
+    else if (boll.size() > 0 && _radioBtn == 2)
         stack.push(boll[0].bottom);
     else
         stack.push(0.0f);
