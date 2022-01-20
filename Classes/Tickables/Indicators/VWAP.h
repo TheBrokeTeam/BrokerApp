@@ -28,7 +28,7 @@ public:
 private:
     double _accVolume;
     double _accTypicalPriceWeighted;
-    PeriodType _periodType;
+    PeriodType _periodType = Year;
     void setupNewPeriod();
     bool isNewPeriod(double timestamp, PeriodType period);
     double calculateTypicalPrice(double low, double high, double close);

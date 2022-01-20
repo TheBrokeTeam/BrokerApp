@@ -17,12 +17,13 @@ VWAP::VWAP(Ticker *ticker): Indicator(ticker) {
 
 void VWAP::calculate(BarHistory* barHistory)
 {
-    if (isNewPeriod((*barHistory)[0].time, Day)) {
+    if (isNewPeriod((*barHistory)[0].time, _periodType)) {
         setupNewPeriod();
     }
 
     double lastVolume = (*barHistory)[0].volume;
     double typicalPrice = calculateTypicalPrice((*barHistory)[0].low, (*barHistory)[0].high, (*barHistory)[0].close);
+
     _accVolume += lastVolume;
     _accTypicalPriceWeighted += typicalPrice * lastVolume;
 
@@ -38,6 +39,12 @@ void VWAP::onRender() {
 }
 
 void VWAP::onPopupRender() {
+    const char* items[] = { "Day","Week", "Month", "Year"  };
+    static int item_current = 0;
+    if (ImGui::Combo("Period", &item_current, items, IM_ARRAYSIZE(items))) {
+        _periodType = static_cast<PeriodType>(item_current);
+        resetPlot();
+    }
 
     ImGui::ColorEdit4("Color",{&_color.x});
     ImGui::Separator();
@@ -46,6 +53,7 @@ void VWAP::onPopupRender() {
 
 void VWAP::reset() {
     Indicator::reset();
+    setupNewPeriod();
     _data.clear();
 }
 
@@ -68,7 +76,7 @@ double VWAP::calculateTypicalPrice(double low, double high, double close) {
 
 
 bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
-    static time_t lastTimestamp;
+    static time_t lastTimestamp; // add valor
     const time_t time = timestamp; //chrono::duration<double>(timestamp);
 
     auto lt = *std::localtime(&lastTimestamp);
@@ -89,15 +97,24 @@ bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
             } else if (t.tm_year == lt.tm_year && t.tm_mon == lt.tm_mon && t.tm_mday > lt.tm_mday) {
                 newPeriod = true;
             }
-        case Week:
-            if (t.tm_year >= lt.tm_year) {
-                newPeriod = true;
-            } else if (t.tm_year == lt.tm_year && t.tm_mon > lt.tm_mon) {
-                newPeriod = true;
-            } else if (t.tm_year >= lt.tm_year && t.tm_mon >= lt.tm_mon && t.tm_mday >= lt.tm_mday &&
-                       t.tm_wday <= lt.tm_wday) {
+        case Year:
+            if (t.tm_year > lt.tm_year) {
                 newPeriod = true;
             }
+        case Month:
+            if (t.tm_year >= lt.tm_year && t.tm_mon > lt.tm_mon) {
+                newPeriod = true;
+            }
+        case Week:
+            //
+//            if (t.tm_year >= lt.tm_year) {
+//                newPeriod = true;
+//            } else if (t.tm_year == lt.tm_year && t.tm_mon > lt.tm_mon) {
+//                newPeriod = true;
+//            } else if (t.tm_year >= lt.tm_year && t.tm_mon >= lt.tm_mon && t.tm_mday >= lt.tm_mday &&
+//                       t.tm_wday <= lt.tm_wday) {
+//                newPeriod = true;
+//            }
         default:
             break;
     }
