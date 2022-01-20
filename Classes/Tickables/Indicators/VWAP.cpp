@@ -20,7 +20,7 @@ void VWAP::calculate(BarHistory* barHistory)
     if (isNewPeriod((*barHistory).getTimeData().front(), Day)) {
         setupNewPeriod();
     }
-    
+
     double lastVolume = (*barHistory).getVolumeData().front();
     BarData lastData = (*barHistory).getData().front();
     double typicalPrice = calculateTypicalPrice(lastData.low, lastData.high, lastData.close);
