@@ -26,6 +26,7 @@
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
+#include "../Widgets/StockList.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/CrossNode.h"
@@ -54,7 +55,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<ChartView>(this));
     _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
-    _widgets.emplace_back(std::make_shared<StrategyEditor>(this));
+    _widgets.emplace_back(std::make_shared<StrategyEditor>(_ticker.get(),this));
     _widgets.emplace_back(std::make_shared<StockList>(this));
 
     getWidget<StockList>()->SetVisible(false);
@@ -299,7 +300,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             std::shared_ptr<WMA> wma = std::make_shared<WMA>(_ticker.get());
             _indicators.push_back(std::move(wma));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _ticker->addTickable(_indicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::AVL:
@@ -309,7 +310,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             std::shared_ptr<TRIX> trix = std::make_shared<TRIX>(_ticker.get());
             _subplotIndicators.push_back(std::move(trix));
             indicator = _subplotIndicators.back();
-            _ticker->addIndicator(_subplotIndicators.back());
+            _ticker->addTickable(_subplotIndicators.back().get());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::PSAR :
@@ -317,7 +318,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             std::shared_ptr<PSAR> psar = std::make_shared<PSAR>(_ticker.get());
             _indicators.push_back(std::move(psar));
             indicator = _indicators.back();
-            _ticker->addIndicator(_indicators.back());
+            _ticker->addTickable(_indicators.back().get());
         }
             break;
         default:

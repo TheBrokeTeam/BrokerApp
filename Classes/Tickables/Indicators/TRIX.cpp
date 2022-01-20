@@ -5,6 +5,8 @@
 #include "TRIX.h"
 #include "../../Widgets/IndicatorsView.h"
 #include <iostream>
+#include "../../Tickers/Ticker.h"
+
 
 
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {

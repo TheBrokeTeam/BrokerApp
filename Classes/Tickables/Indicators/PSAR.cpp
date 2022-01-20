@@ -4,6 +4,8 @@
 
 #include "PSAR.h"
 #include <iostream>
+#include "../../Tickers/Ticker.h"
+
 
 PSAR::PSAR(Ticker *ticker): Indicator(ticker) {
     setPlotName("PSAR");

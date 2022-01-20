@@ -3,6 +3,8 @@
 //
 
 #include "WMA.h"
+#include "../../Tickers/Ticker.h"
+
 
 WMA::WMA(Ticker *ticker): Indicator(ticker) {
     setPlotName("WMA");
