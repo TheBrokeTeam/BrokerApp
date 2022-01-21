@@ -54,13 +54,13 @@ void VWAP::onPopupRender() {
     }
 
     if(_periodType == Week){
-        const char* items[] = { "Sunday","Monday","Tuesday", "Wednesday", "Thursday", "Friday","Saturday"};
-        if (ImGui::Combo("Week day to reset", &_weekDayToReset, items, IM_ARRAYSIZE(items))) {
+        const char* weekdays[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        if (ImGui::Combo("Week day to reset", &_weekDayToReset, weekdays, IM_ARRAYSIZE(weekdays))) {
             resetVwap();
         }
     }
 
-    ImGui::ColorEdit4("Color",{&_color.x});
+    ImGui::ColorEdit4("Color",&_color.x);
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }

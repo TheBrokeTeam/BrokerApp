@@ -66,13 +66,11 @@ int EMA::getAverageSize() const {
     return _averageSize;
 }
 
-void EMA::setSmothingSize(int size) {
-    _smothingSize = size;
+
+const ImVec4 &EMA::getColor() {
+    return _color;
 }
 
-int EMA::getSmothingSize() const {
-    return _smothingSize;
-}
 
 
 EMA::~EMA() {
