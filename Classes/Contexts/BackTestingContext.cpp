@@ -38,6 +38,7 @@
 #include "../Nodes/UpSequenceNode.h"
 #include "../Nodes/DownSequenceNode.h"
 #include "../Nodes/BarValueNode.h"
+#include "../Nodes/VWAPNode.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -310,8 +311,12 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             break;
         case IndicatorsView::CandleIndicatorsTypes::VWAP: {
             std::shared_ptr<VWAP> vwap = std::make_shared<VWAP>(_ticker.get());
+            vwap->setPriority(1);
             _indicators.push_back(std::move(vwap));
             _ticker->addTickable(_indicators.back().get());
+            if(shouldCreateNode)
+                createIndicatorNode(UiNodeType::VWAP,_indicators.back());
+
         }
             break;
 
@@ -397,13 +402,19 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
             node = std::make_shared<SMANode>(indicator,_strategyEditor);
             _strategyEditor->addNode(node);
         }
-            break;
+        break;
         case UiNodeType::BOLL:
         {
             node = std::make_shared<BollingerNode>(indicator,_strategyEditor);
             _strategyEditor->addNode(node);
         }
-            break;
+        break;
+        case UiNodeType::VWAP:
+        {
+            node = std::make_shared<VWAPNode>(indicator,_strategyEditor);
+            _strategyEditor->addNode(node);
+        }
+        break;
         default:
             break;
     }
@@ -422,6 +433,9 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
             break;
         case UiNodeType::BOLL:
             node = std::make_shared<BollingerNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL, true),_strategyEditor);
+            break;
+        case UiNodeType::VWAP:
+            node = std::make_shared<VWAPNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::VWAP, true),_strategyEditor);
             break;
         case UiNodeType::CROSS:
             node = std::make_shared<CrossNode>(_strategyEditor);
