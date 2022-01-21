@@ -337,7 +337,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             indicator = _subplotIndicators.back();
             _ticker->addTickable(_subplotIndicators.back().get());
             if(shouldCreateNode)
-                createIndicatorNode(UiNodeType::TRIX,_indicators.back());
+                createIndicatorNode(UiNodeType::TRIX,_subplotIndicators.back());
 
         }
             break;
