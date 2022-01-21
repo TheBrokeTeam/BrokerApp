@@ -20,7 +20,7 @@ public:
     void onRender() override;
     void onPopupRender() override;
     void resetPlot() override;
-
+    const ImVec4& getColor();
 
 private:
     int _smothingSize = 2; // must be <= 1 + _averageSize... it's almost always 2.
