@@ -40,6 +40,7 @@
 #include "../Nodes/BarValueNode.h"
 #include "../Nodes/VWAPNode.h"
 #include "../Nodes/EMANode.h"
+#include "../Nodes/WMANode.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -308,9 +309,12 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::WMA: {
 
             std::shared_ptr<WMA> wma = std::make_shared<WMA>(_ticker.get());
+            wma->setPriority(1);
             _indicators.push_back(std::move(wma));
             indicator = _indicators.back();
             _ticker->addTickable(_indicators.back().get());
+            if(shouldCreateNode)
+                createIndicatorNode(UiNodeType::WMA,_indicators.back());
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::VWAP: {
@@ -412,7 +416,13 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
             node = std::make_shared<EMANode>(indicator,_strategyEditor);
             _strategyEditor->addNode(node);
         }
-            break;
+        break;
+        case UiNodeType::WMA:
+        {
+            node = std::make_shared<WMANode>(indicator,_strategyEditor);
+            _strategyEditor->addNode(node);
+        }
+        break;
         case UiNodeType::BOLL:
         {
             node = std::make_shared<BollingerNode>(indicator,_strategyEditor);

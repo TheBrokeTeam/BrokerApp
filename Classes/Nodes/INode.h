@@ -21,6 +21,7 @@ enum class NodeType
 {
     SMA,
     EMA,
+    WMA,
     BOLL,
     VWAP,
     CROSS,
@@ -37,6 +38,7 @@ enum class UiNodeType
 {
     SMA,
     EMA,
+    WMA,
     BOLL,
     VWAP,
     CROSS,
