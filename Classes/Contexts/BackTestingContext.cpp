@@ -30,6 +30,7 @@
 #include "../Widgets/StockList.h"
 #include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
+#include "../Nodes/PSARNode.h"
 #include "../Nodes/BollingerNode.h"
 
 #include "../Nodes/CrossNode.h"
@@ -339,9 +340,13 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::PSAR :
         {
             std::shared_ptr<PSAR> psar = std::make_shared<PSAR>(_ticker.get());
+            psar->setPriority(1);
             _indicators.push_back(std::move(psar));
             indicator = _indicators.back();
             _ticker->addTickable(_indicators.back().get());
+            if(shouldCreateNode)
+                createIndicatorNode(UiNodeType::PSAR,_indicators.back());
+
         }
             break;
         default:
@@ -426,6 +431,12 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
         case UiNodeType::BOLL:
         {
             node = std::make_shared<BollingerNode>(indicator,_strategyEditor);
+            _strategyEditor->addNode(node);
+        }
+        break;
+        case UiNodeType::PSAR:
+        {
+            node = std::make_shared<PSARNode>(indicator,_strategyEditor);
             _strategyEditor->addNode(node);
         }
         break;

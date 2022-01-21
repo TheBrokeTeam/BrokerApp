@@ -179,6 +179,9 @@ void PSAR::reset() {
     resetPlot();
 }
 
+const ImVec4 &PSAR::getColor() {
+    return _colorBottom;
+}
 
 PSAR::~PSAR() {
 
