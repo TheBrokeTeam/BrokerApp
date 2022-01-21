@@ -2,7 +2,7 @@
 // Created by Luiz Veloso on 11/01/22.
 //
 
-#ifndef BROKERAPP_TRIX_H
+#ifndef BROKERAPP_TRIXNODE_H
 #define BROKERAPP_TRIX_H
 
 
@@ -21,6 +21,7 @@ public:
 
     void onPopupRender() override;
     void reset() override;
+    const ImVec4& getColor();
 
 private:
     int _averageSize = 14; // must be >= 1
@@ -35,4 +36,4 @@ private:
 };
 
 
-#endif //BROKERAPP_TRIX_H
+#endif //BROKERAPP_TRIXNODE_H

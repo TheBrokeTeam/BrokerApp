@@ -104,7 +104,15 @@ add_executable(BrokerApp
 		Classes/Nodes/BollingerNode.cpp 
 		Classes/Nodes/BollingerNode.h
 		Classes/Tickables/Indicators/VWAP.h
-		Classes/Tickables/Indicators/VWAP.cpp Classes/Nodes/VWAPNode.cpp Classes/Nodes/VWAPNode.h Classes/Nodes/EMANode.cpp Classes/Nodes/EMANode.h Classes/Nodes/WMANode.cpp Classes/Nodes/WMANode.h)
+		Classes/Tickables/Indicators/VWAP.cpp
+		Classes/Nodes/VWAPNode.cpp
+		Classes/Nodes/VWAPNode.h
+		Classes/Nodes/EMANode.cpp
+		Classes/Nodes/EMANode.h
+		Classes/Nodes/WMANode.cpp
+		Classes/Nodes/WMANode.h
+		Classes/Nodes/TRIXNode.cpp
+		Classes/Nodes/TRIXNode.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
