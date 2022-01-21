@@ -42,6 +42,7 @@
 #include "../Nodes/VWAPNode.h"
 #include "../Nodes/EMANode.h"
 #include "../Nodes/WMANode.h"
+#include "../Nodes/TRIXNode.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -332,9 +333,13 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
         case IndicatorsView::CandleIndicatorsTypes::TRIX:
         {
             std::shared_ptr<TRIX> trix = std::make_shared<TRIX>(_ticker.get());
+            trix->setPriority(1);
             _subplotIndicators.push_back(std::move(trix));
             indicator = _subplotIndicators.back();
             _ticker->addTickable(_subplotIndicators.back().get());
+            if(shouldCreateNode)
+                createIndicatorNode(UiNodeType::TRIX,_subplotIndicators.back());
+
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::PSAR :
@@ -443,6 +448,12 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
         case UiNodeType::VWAP:
         {
             node = std::make_shared<VWAPNode>(indicator,_strategyEditor);
+            _strategyEditor->addNode(node);
+        }
+        break;
+        case UiNodeType::TRIX:
+        {
+            node = std::make_shared<TRIXNode>(indicator,_strategyEditor);
             _strategyEditor->addNode(node);
         }
         break;

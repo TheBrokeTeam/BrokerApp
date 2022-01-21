@@ -21,6 +21,7 @@ public:
 
     void onPopupRender() override;
     void reset() override;
+    const ImVec4& getColor();
 
 private:
     int _averageSize = 14; // must be >= 1
