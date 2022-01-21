@@ -52,6 +52,9 @@ void WMA::reset() {
     _data.clear();
 }
 
+const ImVec4 &WMA::getColor() {
+    return _color;
+}
 
 WMA::~WMA() {
 
