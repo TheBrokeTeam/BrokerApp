@@ -2,7 +2,7 @@
 // Created by Luiz Veloso on 11/01/22.
 //
 
-#ifndef BROKERAPP_TRIXNODE_H
+#ifndef BROKERAPP_TRIX_H
 #define BROKERAPP_TRIX_H
 
 
@@ -36,4 +36,4 @@ private:
 };
 
 
-#endif //BROKERAPP_TRIXNODE_H
+#endif //BROKERAPP_TRIX_H

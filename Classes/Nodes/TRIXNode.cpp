@@ -52,8 +52,7 @@ void TRIXNode::initStyle() {
         INode::initStyle();
         return;
     }
-
-    auto &trix = *dynamic_cast<TRIX*>(trixShared.get());
+    auto &trix = *dynamic_cast<TRIX *>(trixShared.get());
 
     ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(trix.getColor()));
     ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(trix.getColor()));
