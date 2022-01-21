@@ -28,9 +28,12 @@ public:
     const ImVec4& getColor();
 
 private:
+    void resetVwap();
     double _accVolume;
     double _accTypicalPriceWeighted;
     PeriodType _periodType = Day;
+    time_t _lastTimestamp = 0;
+
     void setupNewPeriod();
     bool isNewPeriod(double timestamp, PeriodType period);
     double calculateTypicalPrice(double low, double high, double close);
@@ -38,6 +41,9 @@ private:
 
     ImVec4 _color{1, 1, 1, 1};
     float _lineWidth = 2.0f;
+    int _weekDayToReset = 0;
+    double _weekTimeInSec = 24*60*60*7;
+
 
 };
 

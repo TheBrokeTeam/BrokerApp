@@ -50,8 +50,14 @@ void VWAP::onPopupRender() {
     static int item_current = 0;
     if (ImGui::Combo("Period", &item_current, items, IM_ARRAYSIZE(items))) {
         _periodType = static_cast<PeriodType>(item_current);
-        resetPlot();
-        onLoad(_ticker->getBarHistory());
+        resetVwap();
+    }
+
+    if(_periodType == Week){
+        const char* items[] = { "Sunday","Monday","Tuesday", "Wednesday", "Thursday", "Friday","Saturday"};
+        if (ImGui::Combo("Week day to reset", &_weekDayToReset, items, IM_ARRAYSIZE(items))) {
+            resetVwap();
+        }
     }
 
     ImGui::ColorEdit4("Color",{&_color.x});
@@ -64,6 +70,7 @@ void VWAP::resetPlot() {
     setupNewPeriod();
     _lineIndexes.clear();
     _data.clear();
+    _lastTimestamp = 0;
 }
 
 void VWAP::setupNewPeriod() {
@@ -85,10 +92,9 @@ double VWAP::calculateTypicalPrice(double low, double high, double close) {
 
 
 bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
-    static time_t lastTimestamp; // add valor
     const time_t time = timestamp; //chrono::duration<double>(timestamp);
 
-    auto lt = *std::localtime(&lastTimestamp);
+    auto lt = *std::localtime(&_lastTimestamp);
     auto t = *std::localtime(&time);
 
     t.tm_hour = 0;
@@ -117,32 +123,31 @@ bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
                 newPeriod = true;
             }
             break;
-        case Week:
-            //
-//            if (t.tm_year >= lt.tm_year) {
-//                newPeriod = true;
-//            } else if (t.tm_year == lt.tm_year && t.tm_mon > lt.tm_mon) {
-//                newPeriod = true;
-//            } else if (t.tm_year >= lt.tm_year && t.tm_mon >= lt.tm_mon && t.tm_mday >= lt.tm_mday &&
-//                       t.tm_wday <= lt.tm_wday) {
-//                newPeriod = true;
-//            }
+        case Week: {
+            double deltaTime = time - _lastTimestamp;
+            if(t.tm_wday == _weekDayToReset && deltaTime >= _weekTimeInSec)
+                newPeriod = true;
+        }
             break;
         default:
             break;
     }
 
-
-
     if (newPeriod) {
-        lastTimestamp = time;
-        if(_time.size() > 0)
+        _lastTimestamp = time;
+        if(_time.size() > 0) {
             _lineIndexes.push_back(_time.size());
+        }
         return true;
     } else {
         return false;
     }
 
+}
+
+void VWAP::resetVwap() {
+    resetPlot();
+    onLoad(_ticker->getBarHistory());
 }
 
 
