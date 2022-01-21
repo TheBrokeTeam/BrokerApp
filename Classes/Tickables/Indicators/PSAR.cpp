@@ -175,9 +175,8 @@ void PSAR::reset() {
     _low.clear();
     _high.clear();
     _data.clear();
-    _time.clear(); // (lv) pergunta: devo remover isso nos resets tbm?
-
-    //todo: (lv) perguntar pro tato pra entender melhor os resets.
+    //reset time on parent class Plot Item
+    resetPlot();
 }
 
 

@@ -14,24 +14,27 @@ enum PeriodType {
     Year
 };
 
+
 class VWAP : public Indicator,  public ReversedData<double>{
 public:
+
     explicit VWAP(Ticker* ticker);
     ~VWAP();
     void calculate(BarHistory* barHistory) override;
 
     void onRender() override;
     void onPopupRender() override;
-    void reset() override;
+    void resetPlot() override;
     const ImVec4& getColor();
 
 private:
     double _accVolume;
     double _accTypicalPriceWeighted;
-    PeriodType _periodType = Year;
+    PeriodType _periodType = Day;
     void setupNewPeriod();
     bool isNewPeriod(double timestamp, PeriodType period);
     double calculateTypicalPrice(double low, double high, double close);
+    std::vector<int> _lineIndexes;
 
     ImVec4 _color{1, 1, 1, 1};
     float _lineWidth = 2.0f;

@@ -8,6 +8,8 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include "../../Tickers/Ticker.h"
+
 using namespace std;
 
 
@@ -34,8 +36,13 @@ void VWAP::calculate(BarHistory* barHistory)
 }
 
 void VWAP::onRender() {
-    ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+    for(int i = 0 ; i < _lineIndexes.size(); i++) {
+        ImPlot::SetNextLineStyle(_color, _lineWidth);
+        if(i == 0)
+            ImPlot::PlotLine(_plotName.c_str(), &_time[0], &_data[0], _lineIndexes[0]);
+        else
+            ImPlot::PlotLine(_plotName.c_str(), &_time[_lineIndexes[i-1]], &_data[_lineIndexes[i-1]], _lineIndexes[i] - _lineIndexes[i-1]);
+    }
 }
 
 void VWAP::onPopupRender() {
@@ -44,6 +51,7 @@ void VWAP::onPopupRender() {
     if (ImGui::Combo("Period", &item_current, items, IM_ARRAYSIZE(items))) {
         _periodType = static_cast<PeriodType>(item_current);
         resetPlot();
+        onLoad(_ticker->getBarHistory());
     }
 
     ImGui::ColorEdit4("Color",{&_color.x});
@@ -51,9 +59,10 @@ void VWAP::onPopupRender() {
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
 
-void VWAP::reset() {
-    Indicator::reset();
+void VWAP::resetPlot() {
+    Indicator::resetPlot();
     setupNewPeriod();
+    _lineIndexes.clear();
     _data.clear();
 }
 
@@ -97,14 +106,17 @@ bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
             } else if (t.tm_year == lt.tm_year && t.tm_mon == lt.tm_mon && t.tm_mday > lt.tm_mday) {
                 newPeriod = true;
             }
+            break;
         case Year:
             if (t.tm_year > lt.tm_year) {
                 newPeriod = true;
             }
+            break;
         case Month:
             if (t.tm_year >= lt.tm_year && t.tm_mon > lt.tm_mon) {
                 newPeriod = true;
             }
+            break;
         case Week:
             //
 //            if (t.tm_year >= lt.tm_year) {
@@ -115,13 +127,17 @@ bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
 //                       t.tm_wday <= lt.tm_wday) {
 //                newPeriod = true;
 //            }
+            break;
         default:
             break;
     }
 
 
+
     if (newPeriod) {
         lastTimestamp = time;
+        if(_time.size() > 0)
+            _lineIndexes.push_back(_time.size());
         return true;
     } else {
         return false;

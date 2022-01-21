@@ -11,7 +11,6 @@ class PSARData{
 public:
     bool signal;
     double value;
-
 };
 
 class PSAR : public Indicator,  public ReversedData<PSARData>{
