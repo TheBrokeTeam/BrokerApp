@@ -16,14 +16,21 @@ public:
     int size();
     const  std::vector<double>& getTimeData();
     const  std::vector<double>& getVolumeData();
-    void updateLasBar(const BarData& barData);
+    const  std::vector<double>& getOpenData();
+    const  std::vector<double>& getHighData();
+    const  std::vector<double>& getLowData();
+    const  std::vector<double>& getCloseData();
+
+    void updateLastBar(const BarData& barData);
     void clear();
 
 private:
     std::vector<double> _time;
     std::vector<double> _volume;
-
-
+    std::vector<double> _open;
+    std::vector<double> _high;
+    std::vector<double> _low;
+    std::vector<double> _close;
 };
 
 #endif //BROKERAPP_BARHISTORY_H
