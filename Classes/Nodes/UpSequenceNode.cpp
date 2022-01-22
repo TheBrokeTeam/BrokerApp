@@ -43,9 +43,9 @@ void UpSequenceNode::handleStack(std::stack<float> &stack)
 
     std::vector<bool> sequence;
     for(int i = 0; i < _sequence - 1; i++) {
-        bool currentBarIsPositive = (*barHistory)[i].close > (*barHistory)[i].open;
-        bool lastBarIsPositive = (*barHistory)[i+1].close > (*barHistory)[i+1].open;
-        sequence.push_back((*barHistory)[i].close > (*barHistory)[i + 1].close && currentBarIsPositive && lastBarIsPositive);
+        bool currentBarIsPositive = (*barHistory)(i,BarDataType::CLOSE) > (*barHistory)(i,BarDataType::OPEN);
+        bool lastBarIsPositive = (*barHistory)(i+1,BarDataType::CLOSE) > (*barHistory)(i+1,BarDataType::OPEN);
+        sequence.push_back((*barHistory)(i,BarDataType::CLOSE) > (*barHistory)(i+1,BarDataType::CLOSE) && currentBarIsPositive && lastBarIsPositive);
     }
 
     bool isUpSequence = true;

@@ -40,7 +40,7 @@ void EMANode::handleStack(std::stack<float> &stack) {
     auto &ema = *dynamic_cast<EMA *>(smaShared.get());
 
     if (ema.size() > 0)
-        stack.push(ema[0]);
+        stack.push(ema(0));
     else
         stack.push(0.0f);
 

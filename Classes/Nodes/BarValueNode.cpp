@@ -35,7 +35,7 @@ void BarValueNode::handleStack(std::stack<float> &stack)
         return;
     }
 
-    stack.push((*barHistory)[0].close);
+    stack.push((*barHistory)(0,BarDataType::CLOSE));
 }
 
 BarValueNode::~BarValueNode() {}

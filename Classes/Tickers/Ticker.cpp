@@ -50,7 +50,7 @@ void Ticker::tick(const TickData& tickData) {
     }
 
     //check if it is the close moment based on symbol interval
-    long lastSecondOfCurrentBar = _barHistory[0].time + _symbol.getTimeIntervalInMinutes()*60 - 1;
+    long lastSecondOfCurrentBar = _barHistory(0,BarDataType::TIME) + _symbol.getTimeIntervalInMinutes()*60 - 1;
     if(lastSecondOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
@@ -58,7 +58,14 @@ void Ticker::tick(const TickData& tickData) {
     }
 
     //normal tick update
-    BarData data = _barHistory[0];
+    BarData data;
+
+    data.time = _barHistory(0,BarDataType::TIME);
+    data.open = _barHistory(0,BarDataType::OPEN);
+    data.high = _barHistory(0,BarDataType::HIGH);
+    data.low = _barHistory(0,BarDataType::LOW);
+    data.close = _barHistory(0,BarDataType::CLOSE);
+    data.volume = _barHistory(0,BarDataType::VOLUME);
 
     data.volume += tickData.volume;
     data.high = tickData.price > data.high ? tickData.price : data.high;
@@ -72,7 +79,14 @@ void Ticker::tick(const TickData& tickData) {
 }
 
 void Ticker::close(const TickData& tickData) {
-    BarData data = _barHistory[0];
+    BarData data;
+
+    data.time = _barHistory(0,BarDataType::TIME);
+    data.open = _barHistory(0,BarDataType::OPEN);
+    data.high = _barHistory(0,BarDataType::HIGH);
+    data.low = _barHistory(0,BarDataType::LOW);
+    data.close = _barHistory(0,BarDataType::CLOSE);
+    data.volume = _barHistory(0,BarDataType::VOLUME);
 
     data.volume += tickData.volume;
     data.high = tickData.price > data.high ? tickData.price : data.high;

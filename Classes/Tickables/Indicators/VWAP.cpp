@@ -19,29 +19,31 @@ VWAP::VWAP(Ticker *ticker): Indicator(ticker) {
 
 void VWAP::calculate(BarHistory* barHistory)
 {
-    if (isNewPeriod((*barHistory)[0].time, _periodType)) {
+    if (isNewPeriod((*barHistory)(0,BarDataType::TIME), _periodType)) {
         setupNewPeriod();
     }
 
-    double lastVolume = (*barHistory)[0].volume;
-    double typicalPrice = calculateTypicalPrice((*barHistory)[0].low, (*barHistory)[0].high, (*barHistory)[0].close);
+    double lastVolume = (*barHistory)(0,BarDataType::VOLUME);
+    double typicalPrice = calculateTypicalPrice((*barHistory)(0,BarDataType::LOW),
+                                                (*barHistory)(0,BarDataType::HIGH),
+                                                (*barHistory)(0,BarDataType::CLOSE));
 
     _accVolume += lastVolume;
     _accTypicalPriceWeighted += typicalPrice * lastVolume;
 
     double vwap = _accTypicalPriceWeighted/_accVolume;
 
-    _data.push_back(vwap);
-    _time.push_back((*barHistory)[0].time);
+    insert(vwap);
+    _time.push_back((*barHistory)(0,BarDataType::TIME));
 }
 
 void VWAP::onRender() {
     for(int i = 0 ; i < _lineIndexes.size(); i++) {
         ImPlot::SetNextLineStyle(_color, _lineWidth);
         if(i == 0)
-            ImPlot::PlotLine(_plotName.c_str(), &_time[0], &_data[0], _lineIndexes[0]);
+            ImPlot::PlotLine(_plotName.c_str(), &_time[0], &getData()[0], _lineIndexes[0]);
         else
-            ImPlot::PlotLine(_plotName.c_str(), &_time[_lineIndexes[i-1]], &_data[_lineIndexes[i-1]], _lineIndexes[i] - _lineIndexes[i-1]);
+            ImPlot::PlotLine(_plotName.c_str(), &_time[_lineIndexes[i-1]], &getData()[_lineIndexes[i-1]], _lineIndexes[i] - _lineIndexes[i-1]);
     }
 }
 
@@ -69,7 +71,7 @@ void VWAP::resetPlot() {
     Indicator::resetPlot();
     setupNewPeriod();
     _lineIndexes.clear();
-    _data.clear();
+    clear();
     _lastTimestamp = 0;
 }
 

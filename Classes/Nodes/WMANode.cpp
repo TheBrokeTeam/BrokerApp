@@ -39,7 +39,7 @@ void WMANode::handleStack(std::stack<float> &stack) {
     auto &wma = *dynamic_cast<WMA *>(wmaShared.get());
 
     if (wma.size() > 0)
-        stack.push(wma[0]);
+        stack.push(wma(0));
     else
         stack.push(0.0f);
 

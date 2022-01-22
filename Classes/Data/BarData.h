@@ -7,6 +7,15 @@
 
 #include <cstring>
 
+enum BarDataType{
+    TIME,
+    OPEN,
+    HIGH,
+    LOW,
+    CLOSE,
+    VOLUME
+};
+
 struct BarData {
 public:
     double time;

@@ -40,7 +40,7 @@ void VWAPNode::handleStack(std::stack<float> &stack) {
     auto &vwap = *dynamic_cast<VWAP *>(vwapShared.get());
 
     if (vwap.size() > 0)
-        stack.push(vwap[0]);
+        stack.push(vwap(0));
     else
         stack.push(0.0f);
 

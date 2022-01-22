@@ -35,7 +35,7 @@ double TRIX::calculateEMA(std::vector<double> origin,std::vector<double> destina
 void TRIX::calculate(BarHistory* barHistory)
 {
     if(barHistory->size() != 0) {
-        priceSequence.insert(priceSequence.begin(), (*barHistory)[0].close);
+        priceSequence.insert(priceSequence.begin(), (*barHistory)(0,BarDataType::CLOSE));
 
         double e1, e2, e3;
 
@@ -58,8 +58,8 @@ void TRIX::calculate(BarHistory* barHistory)
 
     if (EMA3.size() >= 2) {
         double trix = (EMA3[0] - EMA3[1])/EMA3[1];
-        _data.push_back(trix * 100); // todo: remover * 100. apenas para ajudar no teste até finalizar o TRIXNode.
-        _time.push_back((*barHistory)[0].time);
+        insert(trix * 100); // todo: remover * 100. apenas para ajudar no teste até finalizar o TRIXNode.
+        _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 
 }
@@ -85,7 +85,7 @@ void TRIX::onPopupRender() {
 
 void TRIX::reset() {
     Indicator::reset();
-    _data.clear();
+    clear();
 }
 
 void TRIX::setAverageSize(int size) {
@@ -108,13 +108,13 @@ void TRIX::render() {
 
     // fit data on screen even when zooming
     if (ImPlot::FitThisFrame()) {
-        for (int i = 0; i < _data.size(); ++i) {
-            ImPlot::FitPoint(ImPlotPoint(_time[i], _data[i]));
+        for (int i = 0; i < size(); ++i) {
+            ImPlot::FitPoint(ImPlotPoint(_time[i], getData()[i]));
         }
     }
 
     ImPlot::SetNextLineStyle(_color, _lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
 
 }
 

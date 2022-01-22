@@ -36,10 +36,10 @@ void IndicatorFromChartExample::rule() {
 
     if(_smaSlow.size() > 1 && _smaFast.size() > 1){
         //when the slow cross up the fast -> should short
-        bool crossUp = _smaSlow[0] > _smaFast[0] && _smaSlow[1] < _smaFast[1];
+        bool crossUp = _smaSlow(0) > _smaFast(0) && _smaSlow(1) < _smaFast(1);
 
         //when the slow cross down the fast -> should long
-        bool crossDown =_smaSlow[0] < _smaFast[0] && _smaSlow[1] > _smaFast[1];
+        bool crossDown =_smaSlow(0) < _smaFast(0) && _smaSlow(1) > _smaFast(1);
 
         if(crossUp) {
             auto id = openPosition(true);
@@ -55,11 +55,11 @@ void IndicatorFromChartExample::rule() {
 
     if(barHist.size() < 5) return;
 
-    double fifthPrice   = barHist[4].close;
-    double fourthPrice  = barHist[3].close;
-    double thirdPrice   = barHist[2].close;
-    double secondPrice  = barHist[1].close;
-    double lastPrice    = barHist[0].close;
+    double fifthPrice   = barHist(4,BarDataType::CLOSE);
+    double fourthPrice  = barHist(3,BarDataType::CLOSE);
+    double thirdPrice   = barHist(4,BarDataType::CLOSE);
+    double secondPrice  = barHist(1,BarDataType::CLOSE);
+    double lastPrice    = barHist(0,BarDataType::CLOSE);
 
     if( fifthPrice < fourthPrice &&
         fourthPrice < thirdPrice &&

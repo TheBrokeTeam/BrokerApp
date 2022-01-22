@@ -8,14 +8,13 @@
 
 #include "Indicator.h"
 
-class BollingerData{
-public:
-    double top;
-    double mid;
-    double bottom;
+enum BollingerDataType{
+    TOP,
+    MID,
+    BOTTOM
 };
 
-class Bollinger : public Indicator, public ReversedData<BollingerData> {
+class Bollinger : public Indicator, public ReversedData<double,3> {
 public:
     explicit Bollinger(Ticker* ticker);
     void calculate(BarHistory* barHistory) override;

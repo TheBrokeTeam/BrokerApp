@@ -15,25 +15,25 @@ void EMA::calculate(BarHistory* barHistory)
     {
         double value = 0;
 
-        if (_data.empty()) {
+        if (getData().empty()) {
             for(int i = 0; i < _averageSize; i++) {
-                value += (*barHistory)[i].close;
+                value += (*barHistory)(i,BarDataType::CLOSE);
             }
             value /= _averageSize;
 
         } else {
             double factor = (1.0 * _smothingSize)/(1.0 * (1+_averageSize));
-            value = (_data.back() * (1.0 - factor)) + ((*barHistory)[0].close * factor); //data[0] é o EMA de ontem (ultimo disponivel).
+            value = (getData().back() * (1.0 - factor)) + ((*barHistory)(0,BarDataType::CLOSE) * factor); //data[0] é o EMA de ontem (ultimo disponivel).
         }
 
-        _data.push_back(value);
-        _time.push_back((*barHistory)[0].time);
+        insert(value);
+        _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 }
 
 void EMA::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
 }
 
 void EMA::onPopupRender() {
@@ -55,7 +55,7 @@ void EMA::onPopupRender() {
 
 void EMA::resetPlot() {
     Indicator::resetPlot();
-    _data.clear();
+    clear();
 }
 
 void EMA::setAverageSize(int size) {
@@ -70,8 +70,6 @@ int EMA::getAverageSize() const {
 const ImVec4 &EMA::getColor() {
     return _color;
 }
-
-
 
 EMA::~EMA() {
 

@@ -46,9 +46,9 @@ void BollingerNode::handleStack(std::stack<float> &stack) {
     auto &boll = *dynamic_cast<Bollinger *>(smaShared.get());
 
     if (boll.size() > 0 && _radioBtn == 1)
-        stack.push(boll[0].top);
+        stack.push(boll(0,BollingerDataType::TOP));
     else if (boll.size() > 0 && _radioBtn == 2)
-        stack.push(boll[0].bottom);
+        stack.push(boll(0,BollingerDataType::BOTTOM));
     else
         stack.push(0.0f);
 

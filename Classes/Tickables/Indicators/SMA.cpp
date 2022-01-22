@@ -16,16 +16,16 @@ void SMA::calculate(BarHistory* barHistory)
     {
         double value = 0;
         for(int i = 0; i < _averageSize; i++)
-            value += (*barHistory)[i].close;
+            value += (*barHistory)(i,BarDataType::CLOSE);
 
-        _data.push_back(value/_averageSize);
-        _time.push_back((*barHistory)[0].time);
+        insert(value/_averageSize);
+        _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 }
 
 void SMA::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
 }
 
 void SMA::onPopupRender() {
@@ -40,7 +40,7 @@ void SMA::onPopupRender() {
 
 void SMA::resetPlot() {
     Indicator::resetPlot();
-    _data.clear();
+    clear();
 }
 
 void SMA::setAverageSize(int size) {
@@ -55,9 +55,7 @@ const ImVec4 &SMA::getColor() {
     return _color;
 }
 
-SMA::~SMA() {
-
-}
+SMA::~SMA() {}
 
 
 

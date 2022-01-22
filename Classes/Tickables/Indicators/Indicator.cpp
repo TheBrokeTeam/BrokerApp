@@ -25,7 +25,8 @@ void Indicator::onClose(BarHistory* barHistory) {
 void Indicator::onLoad(BarHistory *barHistory) {
     resetPlot();
     auto tempBarHist = std::make_unique<BarHistory>();
-    for(auto&d : (*barHistory).getData()){
+    for(int i = 0; i < barHistory->size(); i++){
+        auto d = barHistory->getBarDataAt(i);
         tempBarHist->append(d);
         calculate(tempBarHist.get());
     }

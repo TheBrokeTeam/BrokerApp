@@ -8,29 +8,12 @@
 #include <vector>
 #include "BarData.h"
 #include "ReversedData.h"
-
-class BarHistory : public ReversedData<BarData>{
+class BarHistory : public ReversedData<double,6>{
 public:
     void append(const BarData& data);
-    const std::vector<BarData>& getData();
-    int size();
-    const  std::vector<double>& getTimeData();
-    const  std::vector<double>& getVolumeData();
-    const  std::vector<double>& getOpenData();
-    const  std::vector<double>& getHighData();
-    const  std::vector<double>& getLowData();
-    const  std::vector<double>& getCloseData();
-
     void updateLastBar(const BarData& barData);
-    void clear();
+    BarData getBarDataAt(int idx);
 
-private:
-    std::vector<double> _time;
-    std::vector<double> _volume;
-    std::vector<double> _open;
-    std::vector<double> _high;
-    std::vector<double> _low;
-    std::vector<double> _close;
 };
 
 #endif //BROKERAPP_BARHISTORY_H

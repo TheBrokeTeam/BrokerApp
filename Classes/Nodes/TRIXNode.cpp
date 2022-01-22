@@ -40,7 +40,7 @@ void TRIXNode::handleStack(std::stack<float> &stack) {
     auto &trix = *dynamic_cast<TRIX *>(trixShared.get());
 
     if (trix.size() > 0)
-        stack.push(trix[0]);
+        stack.push(trix(0));
     else
         stack.push(0.0f);
 

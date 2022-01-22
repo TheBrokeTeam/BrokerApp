@@ -7,31 +7,51 @@
 
 #include <vector>
 
-template<typename T>
+template<typename T, int N = 1>
 class ReversedData {
 public:
-    //Warning:: this cannot be populate using = operator.
-    //It wont change the value inside array. Ex: T[i] = value; will not work.
-    T& operator[](int reversedIndex){
-        auto it = _data.begin();
-        std::advance(it, fixedIndex(reversedIndex));
+    ReversedData(){
+        for(int i = 1; i <= N; i++)
+            _data.push_back(std::vector<T>());
+    };
+
+    ~ReversedData(){
+        clear();
+    };
+
+    T& operator()(int reversedIndex, int n = 0){
+        auto it = _data[n].begin();
+        std::advance(it, fixedIndex(reversedIndex, n));
         return const_cast<T&>(*it);
     }
 
-    int fixedIndex(int reversedIndex)
+    int fixedIndex(int reversedIndex, int n = 0)
     {
-        assert(reversedIndex >= 0 && reversedIndex< _data.size() && "Reversed Index out of bounds");
-        int fixedIndex = std::max<int>(0,_data.size() - 1 - reversedIndex);
-        fixedIndex = std::min<int>(fixedIndex,_data.size() - 1);
+        assert(reversedIndex >= 0 && reversedIndex< _data[n].size() && "Reversed Index out of bounds");
+        int fixedIndex = std::max<int>(0,_data[n].size() - 1 - reversedIndex);
+        fixedIndex = std::min<int>(fixedIndex,_data[n].size() - 1);
         return fixedIndex;
     }
 
     int size(){
-        return _data.size();
+        return _data[0].size();
     }
 
-protected:
-    std::vector<T> _data;
+    std::vector<T>& getData(int n = 0){
+        return _data[n];
+    }
+
+    void insert(T val, int n = 0){
+        return _data[n].push_back(val);
+    }
+
+    void clear(){
+        for(auto& v : _data)
+            v.clear();
+    }
+
+private:
+    std::vector<std::vector<T>> _data;
 };
 
 
