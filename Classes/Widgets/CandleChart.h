@@ -30,10 +30,12 @@ private:
     ImPlotTime _t1;
     ImPlotTime _t2;
 
-    bool _initTime = false;
     Ticker* _ticker;
     int _maxSubplots = 10;
     std::vector<float> calculateRatios();
+
+    int _maxBarsToRender = 1000;
+    int _lastIdxX = 0;
 
 };
 
