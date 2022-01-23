@@ -20,8 +20,8 @@ public:
     BackTestingContext(Editor* editor);
     void initialize() override;
 
-    Ticker* loadSymbol(const Symbol &symbol) override;
-    Ticker* fetchSymbol(const Symbol& symbol) override;
+    Ticker* loadSymbol(Symbol symbol) override;
+    Ticker* fetchDataSymbol(Symbol symbol) override;
 
     void loadTicker() override;
     void updateData(float dt) override;
@@ -46,10 +46,10 @@ public:
 private:
 
     bool dataAlreadyExists(const Symbol& symbol);
-    std::vector<TickData> loadCsv(const Symbol& symbol);
-    std::vector<TickData> loadJson(const rapidjson::Document& json,const Symbol& symbol);
+    std::vector<TickData> loadCsv(Symbol symbol);
+    std::vector<TickData> loadJson(const rapidjson::Document& json, Symbol symbol);
 
-    std::string getFilePathFromSymbol(const Symbol& symbol);
+    std::string getFilePathFromSymbol(Symbol symbol);
 
     std::string build_url(std::string symbol, std::string year, std::string month, std::string interval);
 

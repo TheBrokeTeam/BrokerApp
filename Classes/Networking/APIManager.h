@@ -10,7 +10,7 @@
 
 class APIManager {
 protected:
-    std::string baseURL = "https://preditchart.com.br";
+    std::string baseURL = "https://api.binance.com/api/v3";
     std::string accessKey = "XXX";
 public:
     APIManager();

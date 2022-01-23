@@ -15,9 +15,9 @@ public:
 
     struct FetchInfo{
         std::string fetchInterVal{"1m"};
-        std::string fetchYear{"2022"};
-        std::string fetchMonth{"01"};
         std::string fetchSymbol{"ETHUSDT"};
+        long fetchStartTime{};
+        long fetchEndTime{};
     };
 
     void updateVisible(float dt) override;
@@ -26,6 +26,9 @@ public:
 
 private:
     FetchInfo _info;
+    tm startDate{};
+    tm endDate{};
+    bool showWarning=false;
 };
 
 #endif //BROKERAPP_DOWNLOADERVIEW_H

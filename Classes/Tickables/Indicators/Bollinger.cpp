@@ -49,7 +49,7 @@ void Bollinger::onRender() {
 
     //TODO:: this shaded render commented there is no artifact on it. Get it back.
 //    ImPlot::SetNextFillStyle(ImVec4(0.5,0.5,1,1),0.25f);
-//    ImPlot::PlotShaded(_name.c_str(),_time.data(),_bollinger_top.data(),_bollinger_bot.data(),_bollinger_mid.size());
+//    ImPlot::PlotShaded(_code.c_str(),_time.data(),_bollinger_top.data(),_bollinger_bot.data(),_bollinger_mid.size());
 //    ImPlot::SetNextLineStyle(ImVec4(0.5,0.5,1,1));
 
     //TODO:: the custom render was needed to use custom Reversed data type. Maybe it is possible in some way.

@@ -31,7 +31,7 @@
 #include "../Nodes/TradeNode.h"
 
 //Network
-#include "../Networking/Services/SymbolService.h"
+#include "../Networking/Services/KLineService.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -69,10 +69,10 @@ void BackTestingContext::initialize() {
 
 }
 
-Ticker* BackTestingContext::loadSymbol(const Symbol& symbol) {
+Ticker* BackTestingContext::loadSymbol(Symbol symbol) {
 
     std::string filename = "data.zip";
-    auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
+    auto url = build_url(symbol.getName(),symbol.year,symbol.month,symbol.getInterval());
 
     if(!dataAlreadyExists(symbol))
         auto resp = download_file(url,filename);
@@ -160,7 +160,7 @@ bool BackTestingContext::dataAlreadyExists(const Symbol &symbol) {
 }
 
 
-std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
+std::vector<TickData> BackTestingContext::loadCsv(Symbol symbol){
 
     std::vector<TickData> output;
     auto filePath = getFilePathFromSymbol(symbol);
@@ -208,11 +208,11 @@ bool BackTestingContext::isSimulating() {
     return _simulating;
 }
 
-std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
+std::string BackTestingContext::getFilePathFromSymbol(Symbol symbol) {
 
     std::string out = fmt::format("./{}-{}-{}-{}.csv",
             symbol.getName(),
-            interval_str[int(symbol.getTimeInterval())],
+            symbol.getInterval(),
             symbol.year,
             symbol.month);
 
@@ -438,10 +438,9 @@ void BackTestingContext::removeAllIndicators() {
     _indicators.clear();
 }
 
-Ticker *BackTestingContext::fetchSymbol(const Symbol &symbol) {
+Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
 
-    SymbolService service;
-    auto jsonData = service.fetchDataByCode(symbol.getName());
+    auto jsonData = symbol.fetchData();
 
     _ticker.reset();
     _ticker = std::make_shared<Ticker>(this,symbol);
@@ -456,30 +455,31 @@ Ticker *BackTestingContext::fetchSymbol(const Symbol &symbol) {
     return _ticker.get();
 }
 
-std::vector<TickData> BackTestingContext::loadJson(const rapidjson::Document& json,const Symbol& symbol) {
+std::vector<TickData> BackTestingContext::loadJson(const rapidjson::Document& json, Symbol symbol) {
     std::vector<TickData> output;
 
-    for(auto& data : json.GetArray())
-    {
+    for(rapidjson::SizeType i = 0; i < json.Size(); i++){
+        const rapidjson::Value &data_vec = json[i];
+
         TickData data_open;
         TickData data_high;
         TickData data_low;
         TickData data_close;
 
         //converting ms to sec and add simulated time for the sub tick on the bars
-        double timeInSec = data["open_time"].GetDouble()/1000.0;
-        data_open.time  = timeInSec;
-        data_high.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.25 * 60;
-        data_low.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.5* 60;
-        data_close.time  = timeInSec + symbol.getTimeIntervalInMinutes()*60 - 1;
+        double timeInSec = data_vec[rapidjson::SizeType(0)].GetDouble() / 1000.0;
+        data_open.time = timeInSec;
+        data_high.time = timeInSec + symbol.getTimeIntervalInMinutes() * 0.25 * 60;
+        data_low.time = timeInSec + symbol.getTimeIntervalInMinutes() * 0.5 * 60;
+        data_close.time = timeInSec + symbol.getTimeIntervalInMinutes() * 60 - 1;
 
-        data_open.price =  data["open"].GetDouble();
-        data_high.price = data["high"].GetDouble();
-        data_low.price =  data["low"].GetDouble();
-        data_close.price = data["close"].GetDouble();
+        data_open.price = std::atof(data_vec[rapidjson::SizeType(1)].GetString());
+        data_high.price = std::atof(data_vec[rapidjson::SizeType(2)].GetString());
+        data_low.price = std::atof(data_vec[rapidjson::SizeType(3)].GetString());
+        data_close.price = std::atof(data_vec[rapidjson::SizeType(4)].GetString());
 
         //0.25 volume for each tick
-        double volume = data["volume"].GetDouble()*0.25;
+        double volume = std::atof(data_vec[rapidjson::SizeType(5)].GetString()) * 0.25;
 
         data_open.volume = volume;
         data_high.volume = volume;
@@ -490,6 +490,7 @@ std::vector<TickData> BackTestingContext::loadJson(const rapidjson::Document& js
         output.push_back(data_high);
         output.push_back(data_low);
         output.push_back(data_close);
+
     }
 
     return output;
