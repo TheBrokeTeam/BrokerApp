@@ -4,6 +4,9 @@
 
 #include "TradeNode.h"
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
+
 TradeNode::TradeNode(StrategyEditor *nodeEditor,TradeNodeStrategy* strategy) : INode(nodeEditor), _strategy(strategy) {
     setNodeName("Trade");
     setType(UiNodeType::TRADE);;

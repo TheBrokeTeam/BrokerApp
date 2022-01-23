@@ -6,6 +6,8 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 
 PSARNode::PSARNode(std::shared_ptr<Indicator> psar,StrategyEditor* nodeEditor):INode(nodeEditor){

@@ -4,6 +4,7 @@
 
 #include "NodesList.h"
 #include "../Editor.h"
+#include "../Nodes/UiNodeType.h"
 
 NodesList::NodesList(Context* context) : Widget(context) {
 

@@ -6,6 +6,8 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 CrossNode::CrossNode(StrategyEditor* nodeEditor):INode(nodeEditor) {
     setNodeName("Cross");

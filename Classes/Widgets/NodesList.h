@@ -13,6 +13,7 @@
 #include "../Helpers/PlotHelper.h"
 #include "../Nodes/INode.h"
 #include "../Editor.h"
+#include "../Nodes/UiNodeType.h"
 
 class NodesList : public Widget{
 public:

@@ -7,6 +7,8 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 VWAPNode::VWAPNode(std::shared_ptr<Indicator> vwap,StrategyEditor* nodeEditor):INode(nodeEditor){
     setNodeName("VWAP Indicator");

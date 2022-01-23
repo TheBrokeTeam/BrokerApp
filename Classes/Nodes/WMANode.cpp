@@ -6,6 +6,8 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 WMANode::WMANode(std::shared_ptr<Indicator> wma, StrategyEditor* nodeEditor):INode(nodeEditor){
     setNodeName("WMA Indicator");
