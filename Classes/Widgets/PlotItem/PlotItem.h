@@ -21,6 +21,7 @@ public:
     void setPlotName(const std::string& name);
     const std::string& getName();
     const std::string& getPlotName();
+    const int getSize();
     const std::string& getId();
     const std::vector<double>& getTime();
 
