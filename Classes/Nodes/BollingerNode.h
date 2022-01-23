@@ -7,17 +7,15 @@
 
 
 #include "../Widgets/IndicatorsView.h"
-#include "../Nodes/INode.h"
+#include "../Nodes/BaseNode.h"
 #include "../Tickables/Indicators/SMA.h"
 #include "../Helpers/graph.h"
 
-class BollingerNode: public INode {
+class BollingerNode: public BaseNode {
 public:
     BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor* nodeEditor);
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
-    void initStyle() override;
-    void finishStyle()override ;
 private:
     int _radioBtn = 1;
 };

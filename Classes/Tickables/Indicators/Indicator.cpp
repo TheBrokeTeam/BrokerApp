@@ -35,6 +35,10 @@ void Indicator::resetPlot() {
     PlotItem::resetPlot();
 }
 
+const ImVec4 &Indicator::getColor() {
+    return _color;
+}
+
 Indicator::~Indicator() {}
 
 void Indicator::reset() {
@@ -42,4 +46,11 @@ void Indicator::reset() {
     resetPlot();
 }
 
+const NodeType Indicator::getNodeType() {
+    return _nodeType;
+}
+
+const UiNodeType Indicator::getUiNodeType() {
+    return _uiNodeType;
+}
 

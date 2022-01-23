@@ -8,6 +8,8 @@
 
 Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
     setPlotName("BOLL");
+    _uiNodeType = UiNodeType::BOLL;
+    _nodeType = NodeType::BOLL;
 }
 
 void Bollinger::calculate(BarHistory* barHistory)
@@ -65,7 +67,8 @@ int Bollinger::getAverageSize() {
     return _averageSize;
 }
 
-const ImVec4 &Bollinger::getColor() {
-    return _color;
-}
+//
+//const ImVec4 &Bollinger::getColor() {
+//    return _color;
+//}
 

@@ -7,6 +7,8 @@
 
 EMA::EMA(Ticker *ticker): Indicator(ticker) {
     setPlotName("EMA");
+    _uiNodeType = UiNodeType::EMA;
+    _nodeType = NodeType::EMA;
 }
 
 void EMA::calculate(BarHistory* barHistory)
@@ -32,7 +34,7 @@ void EMA::calculate(BarHistory* barHistory)
 }
 
 void EMA::onRender() {
-    ImPlot::SetNextLineStyle(_color,_lineWidth);
+    ImPlot::SetNextLineStyle(_color, _lineWidth);
     ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
 }
 
@@ -66,10 +68,6 @@ int EMA::getAverageSize() const {
     return _averageSize;
 }
 
-
-const ImVec4 &EMA::getColor() {
-    return _color;
-}
 
 EMA::~EMA() {
 

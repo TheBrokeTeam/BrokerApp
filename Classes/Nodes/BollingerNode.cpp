@@ -9,13 +9,7 @@
 #include "../Editor.h"
 
 
-BollingerNode::BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor* nodeEditor):INode(nodeEditor){
-    setNodeName("BOLL Indicator");
-    setType(UiNodeType::BOLL);
-    setIndicator(bollinger);
-
-    const GraphNode op(NodeType::BOLL, this);
-    _id = addNode(op);
+BollingerNode::BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor* nodeEditor):BaseNode(bollinger, nodeEditor){
 }
 
 void BollingerNode::onRender(float dt) {
@@ -52,31 +46,4 @@ void BollingerNode::handleStack(std::stack<float> &stack) {
     else
         stack.push(0.0f);
 
-}
-
-void BollingerNode::initStyle() {
-    auto smaShared = getIndicator();
-    if(!smaShared) {
-        INode::initStyle();
-        return;
-    }
-
-    auto &boll = *dynamic_cast<Bollinger*>(smaShared.get());
-
-    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(boll.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(boll.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(boll.getColor()));
-
-    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(boll.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(boll.getColor()));
-    ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
-}
-
-void BollingerNode::finishStyle() {
-    ImGui::PopStyleColor();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
 }
