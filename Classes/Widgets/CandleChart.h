@@ -36,6 +36,11 @@ private:
 
     int _maxBarsToRender = 1000;
     int _lastIdxX = 0;
+    int _lastMaxTime = 0;
+    int _lastMinTime = 0;
+
+    double _zoomOutMax;
+
 
 };
 
