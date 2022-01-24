@@ -12,12 +12,13 @@
 
 namespace json {
 
-    static std::string Stringfy(const rapidjson::Document& document) {
+    static std::string Stringfy(const rapidjson::Document &document) {
         rapidjson::StringBuffer strbuf;
         rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
         document.Accept(writer);
         return strbuf.GetString();
     }
+
 }
 
 #endif //BROKERAPP_JSONUTILS_H

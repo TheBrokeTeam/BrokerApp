@@ -7,6 +7,7 @@
 
 #include "BarData.h"
 #include "rapidjson/document.h"
+#include "TickData.h"
 #include <string>
 #include <vector>
 #include <imgui.h>
@@ -78,7 +79,9 @@ public:
 
     bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
 
-    rapidjson::Document fetchData();
+    std::vector<TickData> fetchData();
+
+    std::vector<TickData> loadJson(const rapidjson::Document& json);
 
 private:
     std::string _code;
@@ -87,6 +90,7 @@ private:
 
     Interval resolveInterval(const std::string&);
 };
+
 
 
 #endif //BROKERAPP_SYMBOL_H

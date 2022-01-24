@@ -6,6 +6,6 @@
 
 KLineRouter::KLineRouter() = default;
 
-APIRouter KLineRouter::getData(Symbol symbol) const {
-    return {get, this->endpoint + "?symbol=" + symbol.getName() +  "&interval=" + symbol.getInterval() + "&startTime=" +  std::to_string(symbol.getStartTime()) + "&endTime=" + std::to_string(symbol.getEndTime()) + "&limit=" + std::to_string(1000)};
+APIRouter KLineRouter::getData(const std::string& symbol, const std::string& interval, long startTime, long endTime, int limit) const {
+    return {get, this->endpoint + "?symbol=" + symbol +  "&interval=" + interval + "&startTime=" +  std::to_string(startTime) + "&endTime=" + std::to_string(endTime) + "&limit=" + std::to_string(limit)};
 }

@@ -7,6 +7,6 @@
 
 KLineService::KLineService() = default;
 
-rapidjson::Document KLineService::fetchData(const Symbol& symbol) {
-    return this->apiManager.Request(KLineRouter().getData(symbol));
+rapidjson::Document KLineService::fetchData(const std::string& symbol, const std::string& interval, long startTime, long endTime, int limit) {
+    return this->apiManager.Request(KLineRouter().getData(symbol, interval, startTime, endTime, limit));
 }

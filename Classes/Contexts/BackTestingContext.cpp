@@ -440,13 +440,12 @@ void BackTestingContext::removeAllIndicators() {
 
 Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
 
-    auto jsonData = symbol.fetchData();
-
     _ticker.reset();
-    _ticker = std::make_shared<Ticker>(this,symbol);
+    _ticker = std::make_shared<Ticker>(this, symbol);
 
     _data.clear();
-    _data = loadJson(jsonData, symbol);
+
+    _data = symbol.fetchData();
 
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));

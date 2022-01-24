@@ -14,7 +14,7 @@ private:
     APIManager apiManager = APIManager();
 public:
     KLineService();
-    rapidjson::Document fetchData(const Symbol&);
+    rapidjson::Document fetchData(const std::string&, const std::string&, long, long, int);
 };
 
 

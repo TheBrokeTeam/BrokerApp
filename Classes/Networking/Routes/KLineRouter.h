@@ -14,7 +14,7 @@ protected:
     std::string endpoint = "/klines";
 public:
     KLineRouter();
-    [[nodiscard]] APIRouter getData(Symbol) const;
+    [[nodiscard]] APIRouter getData(const std::string&, const std::string&, long, long, int) const;
 };
 
 
