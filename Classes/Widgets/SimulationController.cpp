@@ -27,7 +27,7 @@ void SimulationController::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_SliderGrabActive,Editor::broker_yellow);
 
     static float _speedSimulation = 0.1f;
-    if(ImGui::SliderFloat("##Speed",&_speedSimulation,0.00f,1.00f,"%.2f")){
+    if(ImGui::SliderFloat("##Speed",&_speedSimulation,0.00f,10.00f,"%.2f")){
         getContext()->setSimulationSpeed(_speedSimulation);
 
     }
