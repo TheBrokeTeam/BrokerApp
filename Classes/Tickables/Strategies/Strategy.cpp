@@ -41,12 +41,12 @@ void Strategy::onRender() {
     }
 }
 
-void Strategy::reset() {
+void Strategy::resetPlot() {
+    PlotItem::resetPlot();
     _openedPositions.clear();
     _closedPositions.clear();
     _profit = 0;
 
-    time.clear();
     profitHistory.clear();
     lossesHistory.clear();
     profitMax = 0;
@@ -78,7 +78,7 @@ void Strategy::closePosition(Position &pos) {
         lossesHistory.push_back(_profit);
         profitHistory.push_back(0);
     }
-    time.push_back(pos.outTime);
+    _time.push_back(pos.outTime);
 
     std::cout << "Profit: " << pos.profit << std::endl;
     std::cout << "Total Profit: " << _profit << std::endl;
@@ -96,11 +96,11 @@ void Strategy::removeOpenedPosition(const Position &pos) {
 
 std::string Strategy::openPosition(bool shorting) {
     Strategy::Position pos;
-    pos.inPrice =  barHist[0].close;
+    pos.inPrice =  barHist(0,BarDataType::CLOSE);
     pos.outPrice = pos.inPrice;
     pos.id = uuid::generate_uuid_v4();
     pos.isShorting = shorting;
-    pos.inTime =  barHist[0].time;
+    pos.inTime =  barHist(0,BarDataType::TIME);
     pos.outTime =  pos.inTime;
     pos.profit = 0;
     openPosition(pos);
@@ -119,8 +119,8 @@ bool Strategy::closePosition(const std::string &posId) {
 
 void Strategy::checkTarget() {
     for(auto &pos : _openedPositions){
-        pos.outTime =  barHist[0].time;
-        pos.outPrice = barHist[0].close;;
+        pos.outTime =  barHist(0,BarDataType::TIME);
+        pos.outPrice = barHist(0,BarDataType::CLOSE);
         pos.profit = pos.isShorting ? pos.inPrice - pos.outPrice : pos.outPrice - pos.inPrice;
 
         checkTarget(pos);
@@ -148,4 +148,9 @@ const std::vector<Strategy::Position> &Strategy::getClosedPositions() {
 }
 
 Strategy::~Strategy() {}
+
+void Strategy::reset() {
+    Tickable::reset();
+    resetPlot();
+}
 

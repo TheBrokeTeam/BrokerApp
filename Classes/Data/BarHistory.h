@@ -8,21 +8,11 @@
 #include <vector>
 #include "BarData.h"
 #include "ReversedData.h"
-
-class BarHistory : public ReversedData<BarData>{
+class BarHistory : public ReversedData<double,6>{
 public:
     void append(const BarData& data);
-    const std::vector<BarData>& getData();
-    int size();
-    const  std::vector<double>& getTimeData();
-    const  std::vector<double>& getVolumeData();
-    void updateLasBar(const BarData& barData);
-    void clear();
-
-private:
-    std::vector<double> _time;
-    std::vector<double> _volume;
-
+    void updateLastBar(const BarData& barData);
+    BarData getBarDataAt(int idx);
 
 };
 

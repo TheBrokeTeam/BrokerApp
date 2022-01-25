@@ -8,6 +8,8 @@ add_executable(BrokerApp
         Classes/Editor.h
         Classes/Widgets/Widget.cpp
         Classes/Widgets/Widget.h
+        Classes/Widgets/StockList.cpp
+        Classes/Widgets/StockList.h
         Classes/Contexts/Context.cpp
         Classes/Contexts/Context.h
         Classes/Widgets/MainMenuBar.cpp
@@ -69,8 +71,8 @@ add_executable(BrokerApp
         Classes/Widgets/PlotItem/PlotItem.h
         Classes/Tickables/Strategies/IndicatorToChartExample.cpp
         Classes/Tickables/Strategies/IndicatorToChartExample.h
-        Classes/Widgets/StrategyEditor/StrategyEditor.cpp
-        Classes/Widgets/StrategyEditor/StrategyEditor.h
+        Classes/Widgets/StrategyEditor.cpp
+        Classes/Widgets/StrategyEditor.h
         Classes/Nodes/SMANode.cpp
         Classes/Nodes/SMANode.h
         Classes/Nodes/INode.h
@@ -87,6 +89,31 @@ add_executable(BrokerApp
         Classes/Nodes/TradeNode.h
         Classes/Tickables/Strategies/TradeNodeStrategy.cpp
         Classes/Tickables/Strategies/TradeNodeStrategy.h
+        Classes/Nodes/UpSequenceNode.cpp
+        Classes/Nodes/UpSequenceNode.h
+        Classes/Nodes/DownSequenceNode.cpp
+        Classes/Nodes/DownSequenceNode.h
+        Classes/Nodes/BarValueNode.cpp
+        Classes/Nodes/BarValueNode.h
+        Classes/Tickables/Indicators/WMA.h
+        Classes/Tickables/Indicators/WMA.cpp
+        Classes/Tickables/Indicators/TRIX.cpp
+        Classes/Tickables/Indicators/TRIX.h
+        Classes/Tickables/Indicators/PSAR.cpp
+        Classes/Tickables/Indicators/PSAR.h 
+		Classes/Nodes/BollingerNode.cpp 
+		Classes/Nodes/BollingerNode.h
+		Classes/Tickables/Indicators/VWAP.h
+		Classes/Tickables/Indicators/VWAP.cpp
+		Classes/Nodes/VWAPNode.cpp
+		Classes/Nodes/VWAPNode.h
+		Classes/Nodes/EMANode.cpp
+		Classes/Nodes/EMANode.h
+		Classes/Nodes/WMANode.h
+		Classes/Nodes/WMANode.cpp
+		Classes/Nodes/TRIXNode.cpp
+		Classes/Nodes/TRIXNode.h
+        Classes/Nodes/PSARNode.cpp
         Classes/Networking/APIManager.cpp
         Classes/Networking/APIManager.h
         Classes/Networking/APIRouter.cpp
@@ -98,7 +125,8 @@ add_executable(BrokerApp
         Classes/Networking/Services/SymbolService.cpp
         Classes/Networking/Services/SymbolService.h
         Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h)
+        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
+		Classes/Nodes/PSARNode.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

@@ -3,6 +3,7 @@
 //
 
 #include "EMA.h"
+#include "../../Tickers/Ticker.h"
 
 EMA::EMA(Ticker *ticker): Indicator(ticker) {
     setPlotName("EMA");
@@ -14,30 +15,30 @@ void EMA::calculate(BarHistory* barHistory)
     {
         double value = 0;
 
-        if (_data.empty()) {
+        if (getData().empty()) {
             for(int i = 0; i < _averageSize; i++) {
-                value += (*barHistory)[i].close;
-                value /= _averageSize;
+                value += (*barHistory)(i,BarDataType::CLOSE);
             }
+            value /= _averageSize;
 
         } else {
             double factor = (1.0 * _smothingSize)/(1.0 * (1+_averageSize));
-            value = (_data.back() * (1 - factor)) + ((*barHistory)[0].close * factor);
+            value = (getData().back() * (1.0 - factor)) + ((*barHistory)(0,BarDataType::CLOSE) * factor); //data[0] é o EMA de ontem (ultimo disponivel).
         }
 
-        _data.push_back(value);
-        _time.push_back((*barHistory)[0].time);
+        insert(value);
+        _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 }
 
 void EMA::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), _data.data(), _time.size());
+    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
 }
 
 void EMA::onPopupRender() {
     if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
-        reset();
+        resetPlot();
         onLoad(_ticker->getBarHistory());
     }
     ImGui::Separator();
@@ -52,9 +53,9 @@ void EMA::onPopupRender() {
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
 
-void EMA::reset() {
-    Indicator::reset();
-    _data.clear();
+void EMA::resetPlot() {
+    Indicator::resetPlot();
+    clear();
 }
 
 void EMA::setAverageSize(int size) {
@@ -65,14 +66,10 @@ int EMA::getAverageSize() const {
     return _averageSize;
 }
 
-void EMA::setSmothingSize(int size) {
-    _smothingSize = size;
-}
 
-int EMA::getSmothingSize() const {
-    return _smothingSize;
+const ImVec4 &EMA::getColor() {
+    return _color;
 }
-
 
 EMA::~EMA() {
 

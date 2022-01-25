@@ -17,7 +17,7 @@ public:
 
     void onRender() override;
     void onPopupRender() override;
-    void reset() override;
+    void resetPlot() override;
     const ImVec4& getColor();
 
 private:

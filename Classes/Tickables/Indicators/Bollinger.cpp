@@ -3,6 +3,8 @@
 //
 
 #include "Bollinger.h"
+#include "../../Tickers/Ticker.h"
+
 
 Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
     setPlotName("BOLL");
@@ -16,36 +18,36 @@ void Bollinger::calculate(BarHistory* barHistory)
         double mean = 0;
         double den = 1.0 / _averageSize;
         for (int i = 0; i < _averageSize; ++i)
-            mean += (*barHistory)[i].close * den;
+            mean += (*barHistory)(i,BarDataType::CLOSE) * den;
 
         //calulate the standard deviation of this
         double den2 = 1.0 / (_averageSize - 1.0);
         double x   = 0;
         for (int i = 0; i < _averageSize; ++i)
-            x += ((*barHistory)[i].close - mean) * ((*barHistory)[i].close - mean) * den2;
+            x += ((*barHistory)(i,BarDataType::CLOSE) - mean) * ((*barHistory)(i,BarDataType::CLOSE) - mean) * den2;
 
         double stdv = sqrt(x);
 
-        BollingerData data;
+        double bottom = mean - 2 * stdv;
+        double mid = mean;
+        double top = mean + 2 * stdv;
 
-        data.bottom = mean - 2 * stdv;
-        data.mid = mean;
-        data.top = mean + 2 * stdv;
+        insert(bottom,BollingerDataType::BOTTOM);
+        insert(mid,BollingerDataType::MID);
+        insert(top,BollingerDataType::TOP);
 
-        _data.push_back(data);
-
-        _time.push_back((*barHistory)[0].time);
+        _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 }
 
-void Bollinger::reset() {
-    Indicator::reset();
-    _data.clear();
+void Bollinger::resetPlot() {
+    Indicator::resetPlot();
+    clear();
 }
 
 void Bollinger::onRender() {
     //safe check
-    if(_data.empty() || _data.size() < 2) return;
+    if(getData().empty() || size() < 2) return;
 
     //TODO:: this shaded render commented there is no artifact on it. Get it back.
 //    ImPlot::SetNextFillStyle(ImVec4(0.5,0.5,1,1),0.25f);
@@ -64,28 +66,20 @@ void Bollinger::onRender() {
         double p1_x = _time[i];
         double p1_y = _data[i].bottom;
 
-        double p2_x = _time[i];
-        double p2_y = _data[i].top;
+    ImPlot::PlotShaded(_name.c_str(),
+                       _time.data(),
+                       getData(BollingerDataType::TOP).data(),
+                       getData(BollingerDataType::BOTTOM).data(),
+                       size());
 
-        double p3_x = _time[i+1];
-        double p3_y = _data[i+1].top;
-
-        double p4_x = _time[i+1];
-        double p4_y = _data[i+1].bottom;
-
-        ImVec2 p1 = ImPlot::PlotToPixels(p1_x, p1_y);
-        ImVec2 p2 = ImPlot::PlotToPixels(p2_x, p2_y);
-        ImVec2 p3 = ImPlot::PlotToPixels(p3_x, p3_y);
-        ImVec2 p4 = ImPlot::PlotToPixels(p4_x, p4_y);
-
-        ImU32 color32 = ImGui::GetColorU32(color);
-
-        drawList->AddTriangleFilled(p1,p2,p3,color32);
-        drawList->AddTriangleFilled(p1,p3,p4,color32);
-    }
+    ImPlot::SetNextLineStyle(ImVec4(0.5,0.5,1,1));
 }
 
 int Bollinger::getAverageSize() {
     return _averageSize;
+}
+
+const ImVec4 &Bollinger::getColor() {
+    return _color;
 }
 

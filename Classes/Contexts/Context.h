@@ -21,12 +21,10 @@ class Context {
 public:
     Context(Editor* editor);
 
-    virtual Ticker* loadSymbol(Symbol) = 0;
+//    virtual void loadSymbol(Symbol symbol) = 0;
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
-
     bool startFetching = false;
     bool startSpinner = false;
-
     virtual void loadTicker() = 0;
     virtual void updateData(float dt);
     virtual void startSimulation(Ticker* ticker) = 0;
@@ -45,7 +43,12 @@ public:
 
 
     virtual void plotIndicators() = 0;
+    virtual void plotSubplotIndicators() = 0;
     virtual void plotStrategy() = 0;
+
+    int getSubplotIndicatorsCount(){
+        return _subplotIndicators.size();
+    }
 
     template<typename T>
     T* getWidget()
@@ -98,7 +101,9 @@ public:
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
-//    std::vector<std::shared_ptr<Strategy>> _strategies;
+    std::vector<std::shared_ptr<Indicator>> _subplotIndicators;
+
+    //    std::vector<std::shared_ptr<Strategy>> _strategies;
     std::vector<std::shared_ptr<INode>> _nodes;
 
     Editor *_editor{nullptr};

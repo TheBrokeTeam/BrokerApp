@@ -24,6 +24,25 @@ void CandleChart::updateVisible(float dt) {
     render(dt);
 }
 
+std::vector<float> CandleChart::calculateRatios() {
+
+    std::vector<float> ratios;
+
+    ratios.push_back(5);
+
+    for (int i = 0; i < getContext()->getSubplotIndicatorsCount(); i++) {
+        ratios.push_back(2);
+    }
+
+    ratios.push_back(3);
+
+    while (ratios.size() < getContext()->getSubplotIndicatorsCount() + _maxSubplots) {
+        ratios.push_back(0);
+    }
+
+    return ratios;
+}
+
 void CandleChart::render(float dt)
 {
     if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;
@@ -37,13 +56,14 @@ void CandleChart::render(float dt)
 
 //    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
 
-        static float ratios[] = {2,1};
-        if(ImPlot::BeginSubplots("##Subplots",2,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios)){
+    std::vector<float> ratios = calculateRatios();
+
+    if(ImPlot::BeginSubplots("##Subplots",_maxSubplots,1,ImVec2(-1,-1),ImPlotSubplotFlags_LinkCols,ratios.data())){
 
             if (ImPlot::BeginPlot("##OHLC"))
             {
                 ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-                ImPlot::SetupAxisLimits(ImAxis_X1, dataHist[dataHist.size()-1].time, dataHist[0].time);
+                ImPlot::SetupAxisLimits(ImAxis_X1, dataHist(dataHist.size()-1,BarDataType::TIME), dataHist(0,BarDataType::TIME),BarDataType::TIME);
                 ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
 
                 ImDrawList* drawList =  ImPlot::GetPlotDrawList();
@@ -55,19 +75,19 @@ void CandleChart::render(float dt)
                     // fit data on screen even when zooming
                     if (ImPlot::FitThisFrame()) {
                         for (int i = 0; i < dataHist.size(); ++i) {
-                            ImPlot::FitPoint(ImPlotPoint(dataHist[i].time, dataHist[i].low));
-                            ImPlot::FitPoint(ImPlotPoint(dataHist[i].time, dataHist[i].high));
+                            ImPlot::FitPoint(ImPlotPoint(dataHist(i,BarDataType::TIME), dataHist(i,BarDataType::LOW)));
+                            ImPlot::FitPoint(ImPlotPoint(dataHist(i,BarDataType::TIME), dataHist(i,BarDataType::HIGH)));
                         }
                     }
 
                     for (int i = 0; i < dataHist.size(); i++) {
-                        ImU32 color = ImGui::GetColorU32(dataHist[i].open > dataHist[i].close ? bear_color : bull_color);
-                        ImVec2 openPos = ImPlot::PlotToPixels(dataHist[i].time - candleWidth / 2, dataHist[i].open);
-                        ImVec2 closePos = ImPlot::PlotToPixels(dataHist[i].time + candleWidth / 2, dataHist[i].close);
+                        ImU32 color = ImGui::GetColorU32(dataHist(i,BarDataType::OPEN) > dataHist(i,BarDataType::CLOSE) ? bear_color : bull_color);
+                        ImVec2 openPos = ImPlot::PlotToPixels(dataHist(i,BarDataType::TIME) - candleWidth / 2, dataHist(i,BarDataType::OPEN));
+                        ImVec2 closePos = ImPlot::PlotToPixels(dataHist(i,BarDataType::TIME) + candleWidth / 2, dataHist(i,BarDataType::CLOSE));
                         drawList->AddRectFilled(openPos, closePos, color);
 
-                        ImVec2 lowPos = ImPlot::PlotToPixels(dataHist[i].time, dataHist[i].low);
-                        ImVec2 highPos = ImPlot::PlotToPixels(dataHist[i].time, dataHist[i].high);
+                        ImVec2 lowPos = ImPlot::PlotToPixels(dataHist(i,BarDataType::TIME), dataHist(i,BarDataType::LOW));
+                        ImVec2 highPos = ImPlot::PlotToPixels(dataHist(i,BarDataType::TIME), dataHist(i,BarDataType::HIGH));
                         drawList->AddLine(lowPos, highPos, color, ImMax(1.0f, (closePos.x - openPos.x) / 10.0f));
                     }
 
@@ -76,12 +96,12 @@ void CandleChart::render(float dt)
 //                        double x = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_Hr).ToDouble();
                     double x = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
                     int lastIdx = dataHist.size() - 1;
-                    int close_idx = PlotHelper::BinarySearch<double>(dataHist.getTimeData().data(), 0, lastIdx, x);
+                    int close_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME).data(), 0, lastIdx, x);
                     if (close_idx == -1)
                         close_idx = lastIdx;
 
-                    double close_val = dataHist.getData()[close_idx].close;
-                    double open_val =  dataHist.getData()[close_idx].open;
+                    double close_val = dataHist.getData(BarDataType::CLOSE)[close_idx];
+                    double open_val =  dataHist.getData(BarDataType::OPEN)[close_idx];
 
                     ImPlot::TagY(close_val, open_val < close_val ? bull_color : bear_color);
 
@@ -147,18 +167,21 @@ void CandleChart::render(float dt)
                 ImPlot::EndPlot();
             }
 
+        getContext()->plotSubplotIndicators();
 
-            if (ImPlot::BeginPlot("##Volume")) {
+
+
+        if (ImPlot::BeginPlot("##Volume")) {
 
                 ImDrawList* drawList =  ImPlot::GetPlotDrawList();
 
                 ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-                ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getTimeData().front(),dataHist.getTimeData().back());
+                ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME).front(),dataHist.getData(BarDataType::TIME).back());
                 ImPlot::SetupAxisFormat(ImAxis_Y1, PlotHelper::VolumeFormatter);
 
                 auto color = ImVec4(1.f,0.75f,0.25f,1);
                 ImPlot::SetNextFillStyle(color);
-                ImPlot::PlotBars("Volume",dataHist.getTimeData().data(),dataHist.getVolumeData().data(),dataHist.size(), candleWidth*0.5);
+                ImPlot::PlotBars("Volume",dataHist.getData(BarDataType::TIME).data(),dataHist.getData(BarDataType::VOLUME).data(),dataHist.size(), candleWidth*0.5);
 
                 //TICKER TOOL TIP ##################
                 const bool hovered = ImPlot::IsSubplotsHovered();
@@ -175,26 +198,29 @@ void CandleChart::render(float dt)
                     ImPlot::PopPlotClipRect();
 
                     // find mouse location index
-                    int idx = PlotHelper::BinarySearch(dataHist.getTimeData().data(), 0, dataHist.size()-1, mouse.x);
+                    int idx = PlotHelper::BinarySearch(dataHist.getData(BarDataType::TIME).data(), 0, dataHist.size()-1, mouse.x);
 
                     // render tool tip (won't be affected by plot clip rect)
                     if (ImPlot::IsPlotHovered() && idx != -1) {
                         ImGui::BeginTooltip();
                         char buff[32];
-                        ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist[idx].time),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
+                        ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist(idx,BarDataType::TIME)),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
                         ImGui::Text("Date:");   ImGui::SameLine(60); ImGui::Text("%s",  buff);
-                        ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist[idx].open);
-                        ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist[idx].close);
-                        ImGui::Text("High:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist[idx].high);
-                        ImGui::Text("Low:");    ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist[idx].low);
-                        ImGui::Text("Volume:"); ImGui::SameLine(60); ImGui::Text(fmt::format(std::locale("en_US.UTF-8"),"{:L}", (int)(dataHist[idx].volume)).c_str());
+                        ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist(idx,BarDataType::OPEN));
+                        ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist(idx,BarDataType::CLOSE));
+                        ImGui::Text("High:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist(idx,BarDataType::HIGH));
+                        ImGui::Text("Low:");    ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist(idx,BarDataType::LOW));
+                        ImGui::Text("Volume:"); ImGui::SameLine(60); ImGui::Text(fmt::format(std::locale("en_US.UTF-8"),"{:L}", (int)(dataHist(idx,BarDataType::VOLUME))).c_str());
                         ImGui::EndTooltip();
                     }
                 }
                 //#################################
 
+
                 ImPlot::EndPlot();
             }
+
+            //call indicators on their own subplots
 
             ImPlot::EndSubplots();
         }

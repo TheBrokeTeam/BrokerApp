@@ -32,6 +32,8 @@ private:
 
     bool _initTime = false;
     Ticker* _ticker;
+    int _maxSubplots = 10;
+    std::vector<float> calculateRatios();
 
 };
 

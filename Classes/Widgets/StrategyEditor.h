@@ -5,15 +5,16 @@
 #ifndef BROKERAPP_STRATEGYEDITOR_H
 #define BROKERAPP_STRATEGYEDITOR_H
 
-#include "../Widget.h"
-#include "../../Tickables/Strategies/Strategy.h"
-#include "../../Nodes/INode.h"
-#include "../../Helpers/graph.h"
-#include "../NodesList.h"
+#include "Widget.h"
+#include "../Tickables/Strategies/Strategy.h"
+#include "../Nodes/INode.h"
+#include "../Helpers/graph.h"
+#include "NodesList.h"
 
-class StrategyEditor : public Widget {
+class StrategyEditor : public Widget , public Tickable {
 public:
-    explicit StrategyEditor(Context* context);
+    StrategyEditor(Ticker* ticker, Context* context);
+    void onClose(BarHistory* barHistory) override;
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
     void addNode(std::shared_ptr<INode> newNode);

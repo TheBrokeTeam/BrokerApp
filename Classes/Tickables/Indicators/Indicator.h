@@ -20,7 +20,9 @@ public:
     virtual void calculate(BarHistory* barHistory);
     void onClose(BarHistory* barHistory) override;
     void onLoad(BarHistory* barHistory) override;
+    void resetPlot() override;
     void reset() override;
+
 private:
 
 };

@@ -21,6 +21,11 @@ enum class NodeType
 {
     SMA,
     EMA,
+    WMA,
+    TRIX,
+    PSAR,
+    BOLL,
+    VWAP,
     CROSS,
     COUNTER,
     BAR_SEQ_DOWN,
@@ -35,6 +40,11 @@ enum class UiNodeType
 {
     SMA,
     EMA,
+    WMA,
+    TRIX,
+    PSAR,
+    BOLL,
+    VWAP,
     CROSS,
     COUNTER,
     BAR_SEQ_DOWN,

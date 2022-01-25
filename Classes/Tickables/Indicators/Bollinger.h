@@ -8,22 +8,25 @@
 
 #include "Indicator.h"
 
-class BollingerData{
-public:
-    double top;
-    double mid;
-    double bottom;
+enum BollingerDataType{
+    TOP,
+    MID,
+    BOTTOM
 };
 
-class Bollinger : public Indicator, public ReversedData<BollingerData> {
+class Bollinger : public Indicator, public ReversedData<double,3> {
 public:
     explicit Bollinger(Ticker* ticker);
     void calculate(BarHistory* barHistory) override;
-    void reset() override;
+    void resetPlot() override;
     void onRender() override;
     int getAverageSize();
+    const ImVec4& getColor();
+
 private:
     int _averageSize = 20;
+    ImVec4 _color = ImVec4(0.5,0.5,1,0.25);
+
 };
 
 

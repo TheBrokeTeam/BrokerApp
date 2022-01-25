@@ -41,7 +41,7 @@ void SMANode::handleStack(std::stack<float> &stack) {
     auto &sma = *dynamic_cast<SMA *>(smaShared.get());
 
     if (sma.size() > 0)
-        stack.push(sma[0]);
+        stack.push(sma(0));
     else
         stack.push(0.0f);
 

@@ -7,7 +7,6 @@
 #include <imnodes.h>
 #include "../Editor.h"
 
-
 CrossNode::CrossNode(StrategyEditor* nodeEditor):INode(nodeEditor) {
     setNodeName("Cross");
     setType(UiNodeType::CROSS);
@@ -66,7 +65,7 @@ void CrossNode::handleStack(std::stack<float> &stack) {
     stack.pop();
 
     //do the logic
-    if(_isCrossUp)
+    if(!_isCrossUp)
         _output = _currentInput2 > _currentInput1 && _lastInput2 < _lastInput1;
     else
         _output = _currentInput2 < _currentInput1 && _lastInput2 > _lastInput1;

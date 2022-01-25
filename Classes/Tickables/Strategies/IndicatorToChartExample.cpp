@@ -21,9 +21,9 @@ void IndicatorToChartExample::rule() {
 
     if(barHist.size() < _bollinger->getAverageSize()) return;
 
-    double lastPrice = barHist[0].close;
-    double lastBollTop = (*_bollinger)[0].top;
-    double lastBollBottom = (*_bollinger)[0].bottom;
+    double lastPrice = barHist(0,BarDataType::CLOSE);
+    double lastBollTop = (*_bollinger)(0,BollingerDataType::TOP);
+    double lastBollBottom = (*_bollinger)(0,BollingerDataType::BOTTOM);
 
     if( lastPrice > lastBollTop){
         auto id = openPosition(false);

@@ -15,7 +15,7 @@ public:
     PlotItem();
     virtual ~PlotItem();
     virtual void onRender() = 0;
-    virtual void reset();
+    virtual void resetPlot();
     virtual void onPopupRender();
 
     void setPlotName(const std::string& name);
@@ -24,7 +24,7 @@ public:
     const std::string& getId();
     const std::vector<double>& getTime();
 
-    void render();
+    virtual void render();
 
 protected:
     std::string _name{""};
