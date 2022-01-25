@@ -49,14 +49,14 @@ void Bollinger::onRender() {
     //safe check
     if(getData().empty() || size() < 2) return;
 
+    //TODO:: this shaded render commented there is no artifact on it. Get it back.
     ImPlot::SetNextFillStyle(ImVec4(0.5,0.5,1,1),0.25f);
 
-    ImPlot::PlotShaded(_name.c_str(),
+    ImPlot::PlotShaded("##dummyBoll",
                        _time.data(),
                        getData(BollingerDataType::TOP).data(),
                        getData(BollingerDataType::BOTTOM).data(),
                        size());
-
 }
 
 int Bollinger::getAverageSize() {

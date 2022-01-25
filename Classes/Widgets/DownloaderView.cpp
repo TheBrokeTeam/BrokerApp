@@ -17,7 +17,7 @@ DownloaderView::DownloaderView(Context* context) : Widget(context)
     _is_window              = true;
     ImGui::SetDateToday(&endDate);
     startDate = endDate;
-    startDate.tm_year -= 1;
+    startDate.tm_mday -= 4;
 
     _info.fetchStartTime = ImGui::GetTimestamp(startDate, true);
     _info.fetchEndTime = ImGui::GetTimestamp(endDate, true);

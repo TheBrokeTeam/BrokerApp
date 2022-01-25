@@ -55,8 +55,7 @@ static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
 
 BackTestingContext::BackTestingContext(Editor *editor) : Context(editor) {
     _ticker.reset();
-    Symbol dummy;
-    _ticker = std::make_shared<Ticker>(this, dummy);
+    _ticker = std::make_shared<Ticker>(this);
 }
 
 void BackTestingContext::initialize() {
@@ -594,8 +593,9 @@ void BackTestingContext::plotSubplotIndicators() {
 
 Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
 
-    _ticker.reset();
-    _ticker = std::make_shared<Ticker>(this, symbol);
+    _ticker->setSymbol(symbol);
+    _ticker->reset();
+    _ticker->setSymbol(symbol);
     _data.clear();
 
     _data = symbol.fetchData();

@@ -32,7 +32,7 @@ typedef const std::string& TickerId;
 
 class Ticker : public Contextualizable{
 public:
-    Ticker(Context *context, Symbol symbol);
+    Ticker(Context* context);
     virtual ~Ticker() = default;
 
     void reset();

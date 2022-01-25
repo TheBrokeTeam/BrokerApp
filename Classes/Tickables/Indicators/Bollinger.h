@@ -24,7 +24,7 @@ public:
     const ImVec4& getColor();
 
 private:
-    int _averageSize = 20;
+    int _averageSize = 20; //very commmon
     ImVec4 _color = ImVec4(0.5,0.5,1,0.25);
 
 };

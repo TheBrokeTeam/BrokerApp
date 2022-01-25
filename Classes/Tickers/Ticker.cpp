@@ -5,7 +5,7 @@
 #include "Ticker.h"
 #include "../Contexts/Context.h"
 
-Ticker::Ticker(Context *context, Symbol symbol) {
+Ticker::Ticker(Context *context){
     setContext(context);
     _id = uuid::generate_uuid_v4();
 }
