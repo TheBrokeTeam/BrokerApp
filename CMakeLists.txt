@@ -158,7 +158,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h)
+        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 

@@ -46,8 +46,8 @@ public:
 private:
 
     bool dataAlreadyExists(const Symbol& symbol);
+
     std::vector<TickData> loadCsv(Symbol symbol);
-    std::vector<TickData> loadJson(const rapidjson::Document& json, Symbol symbol);
 
     std::string getFilePathFromSymbol(Symbol symbol);
 

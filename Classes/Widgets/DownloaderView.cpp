@@ -7,6 +7,8 @@
 #include "../Contexts/Context.h"
 #include "../Editor.h"
 #include "SubWidgets/DateChooser.h"
+#include "SubWidgets/Spinner.h"
+#include "SubWidgets/BufferingBar.h"
 #include <iostream>
 
 DownloaderView::DownloaderView(Context* context) : Widget(context)
@@ -119,7 +121,20 @@ void DownloaderView::updateVisible(float dt)
     ImGui::SameLine();
     ImGui::TextColored(Editor::broker_white,"End Date");
 
-    ImGui::Dummy(ImVec2(200,30));
+    const ImVec4 col = ImVec4(0.94f, 0.72f, 0.02f, 1.00f);
+    const ImVec4 bg = ImVec4(0.86f, 0.11f, 0.71f, 1.00f);
+
+    ImGui::Dummy(ImVec2(200,10));
+
+    if(getContext()->startFetching) {
+        ImGui::LoadingIndicatorCircle("Waiting", 10, bg, col, 12, 10);
+        Symbol symbol(_info.fetchSymbol, _info.fetchInterVal, _info.fetchStartTime, _info.fetchEndTime);
+
+        //TODO:: the ticker should  be created by charts widget
+        getContext()->fetchDataSymbol(symbol);
+    }
+
+    ImGui::Dummy(ImVec2(200,10));
 
     PushStyleColor(ImGuiCol_Button,Editor::broker_yellow);
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
@@ -127,20 +142,7 @@ void DownloaderView::updateVisible(float dt)
 
     if (ImGui::Button("Download",ImVec2(200,50))) {
         puts("Clicou no botão fetch!!!");
-
-        std::cout << "start_ts: " << _info.fetchStartTime << std::endl;
-        std::cout << "end_ts: " << _info.fetchEndTime << std::endl;
-
-        Symbol symbol(_info.fetchSymbol, _info.fetchInterVal, _info.fetchStartTime, _info.fetchEndTime);
-//        symbol.year = _info.fetchYear;
-//        symbol.month = _info.fetchMonth;
-
-        std::cout << "symbol code: " << symbol.getName() << std::endl;
-//        symbol.setTimeInterval(Symbol::Interval(interval));
-
-        //TODO:: the ticker should  be created by charts widget
-//        getContext()->loadSymbol(symbol);
-        getContext()->fetchDataSymbol(symbol);
+        getContext()->startFetching = true;
     }
 }
 

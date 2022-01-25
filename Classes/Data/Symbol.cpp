@@ -43,7 +43,7 @@ std::vector<TickData> Symbol::fetchData() {
     std::vector<TickData> data;
 
     while (currentTime < endTime){
-        long newEndTime = currentTime + 12 * 60 * 60 * 1000;
+        long newEndTime = currentTime + Symbol::getStepHourFromInterval() * 60 * 60 * 1000;
 
         rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime, 1000);
 
@@ -130,4 +130,25 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
     }
 
     return output;
+}
+
+int Symbol::getStepHourFromInterval() {
+    switch (_interval) {
+        case Interval::Interval_1Minute: return 16;
+        case Interval::Interval_3Minutes: return 50;
+        case Interval::Interval_5Minutes: return 83;
+        case Interval::Interval_15Minutes: return 250;
+        case Interval::Interval_30Minutes: return 500;
+        case Interval::Interval_1Hour: return 1000;
+        case Interval::Interval_2Hour: return 2000;
+        case Interval::Interval_4Hour: return 4000;
+        case Interval::Interval_6Hour: return 6000;
+        case Interval::Interval_8Hour: return 8000;
+        case Interval::Interval_12Hour: return 12000;
+        case Interval::Interval_1Day: return 24000;
+        case Interval::Interval_3Days: return 72000;
+        case Interval::Interval_1Week: return 168000;
+        case Interval::Interval_1Month: return 720000;
+        default: return 16;
+    }
 }

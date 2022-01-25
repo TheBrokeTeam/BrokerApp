@@ -89,6 +89,8 @@ private:
     TimeRange _range{0,0};
 
     Interval resolveInterval(const std::string&);
+
+    int getStepHourFromInterval();
 };
 
 

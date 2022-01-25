@@ -451,51 +451,7 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
     loadTicker();
 
+    startFetching = false;
+
     return _ticker.get();
 }
-
-std::vector<TickData> BackTestingContext::loadJson(const rapidjson::Document& json, Symbol symbol) {
-    std::vector<TickData> output;
-
-    for(rapidjson::SizeType i = 0; i < json.Size(); i++){
-        const rapidjson::Value &data_vec = json[i];
-
-        TickData data_open;
-        TickData data_high;
-        TickData data_low;
-        TickData data_close;
-
-        //converting ms to sec and add simulated time for the sub tick on the bars
-        double timeInSec = data_vec[rapidjson::SizeType(0)].GetDouble() / 1000.0;
-        data_open.time = timeInSec;
-        data_high.time = timeInSec + symbol.getTimeIntervalInMinutes() * 0.25 * 60;
-        data_low.time = timeInSec + symbol.getTimeIntervalInMinutes() * 0.5 * 60;
-        data_close.time = timeInSec + symbol.getTimeIntervalInMinutes() * 60 - 1;
-
-        data_open.price = std::atof(data_vec[rapidjson::SizeType(1)].GetString());
-        data_high.price = std::atof(data_vec[rapidjson::SizeType(2)].GetString());
-        data_low.price = std::atof(data_vec[rapidjson::SizeType(3)].GetString());
-        data_close.price = std::atof(data_vec[rapidjson::SizeType(4)].GetString());
-
-        //0.25 volume for each tick
-        double volume = std::atof(data_vec[rapidjson::SizeType(5)].GetString()) * 0.25;
-
-        data_open.volume = volume;
-        data_high.volume = volume;
-        data_low.volume = volume;
-        data_close.volume = volume;
-
-        output.push_back(data_open);
-        output.push_back(data_high);
-        output.push_back(data_low);
-        output.push_back(data_close);
-
-    }
-
-    return output;
-}
-
-
-
-
-
