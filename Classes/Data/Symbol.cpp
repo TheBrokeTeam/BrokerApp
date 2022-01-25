@@ -6,6 +6,7 @@
 #include "../Networking/Services/KLineService.h"
 #include <iostream>
 #include "../Helpers/JsonUtils.h"
+#include "rapidjson/filewritestream.h"
 #include <chrono>
 #include <thread>
 
@@ -42,17 +43,20 @@ std::vector<TickData> Symbol::fetchData() {
 
     std::vector<TickData> data;
 
+    int i = 0;
     while (currentTime < endTime){
-        long newEndTime = currentTime + Symbol::getStepHourFromInterval() * 60 * 60 * 1000;
+        std::thread t1(sleeping, 50);
 
-        rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime, 1000);
+        long newEndTime = currentTime + (this->getStepHourFromInterval() * (60 * 60 * 1000));
+
+        rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime - (60 * 1000), 1000);
 
         std::vector<TickData> d = loadJson(jsonData);
+
         data.insert(std::end(data), std::begin(d), std::end(d));
         currentTime = newEndTime;
 
-        // sleeping
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        t1.join();
     }
 
     return data;
@@ -132,7 +136,7 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
     return output;
 }
 
-int Symbol::getStepHourFromInterval() {
+long Symbol::getStepHourFromInterval() {
     switch (_interval) {
         case Interval::Interval_1Minute: return 16;
         case Interval::Interval_3Minutes: return 50;
@@ -151,4 +155,9 @@ int Symbol::getStepHourFromInterval() {
         case Interval::Interval_1Month: return 720000;
         default: return 16;
     }
+}
+
+
+void Symbol::sleeping(const int & ms) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }

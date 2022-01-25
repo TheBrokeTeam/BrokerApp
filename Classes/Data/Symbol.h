@@ -7,6 +7,7 @@
 
 #include "BarData.h"
 #include "rapidjson/document.h"
+#include "rapidjson/filewritestream.h"
 #include "TickData.h"
 #include <string>
 #include <vector>
@@ -59,7 +60,7 @@ public:
             case Interval::Interval_1Day: return "1d";
             case Interval::Interval_3Days: return "3d";
             case Interval::Interval_1Week: return "1w";
-            case Interval::Interval_1Month: return "1mo";
+            case Interval::Interval_1Month: return "1M";
             default:      return "[Unknown Interval]";
         }
     }
@@ -90,7 +91,9 @@ private:
 
     Interval resolveInterval(const std::string&);
 
-    int getStepHourFromInterval();
+    long getStepHourFromInterval();
+
+    static void sleeping(const int&);
 };
 
 

@@ -25,6 +25,8 @@ public:
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
 
     bool startFetching = false;
+    bool startSpinner = false;
+
     virtual void loadTicker() = 0;
     virtual void updateData(float dt);
     virtual void startSimulation(Ticker* ticker) = 0;

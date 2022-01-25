@@ -107,6 +107,8 @@ void DownloaderView::updateVisible(float dt)
 
 
             if (ImGui::Button("I got it!", ImVec2(120, 0))) {
+                ImGui::SetDateToday(&endDate);
+                _info.fetchEndTime = ImGui::GetTimestamp(endDate, true);
                 showWarning = false;
                 ImGui::CloseCurrentPopup();
             }
@@ -126,12 +128,16 @@ void DownloaderView::updateVisible(float dt)
 
     ImGui::Dummy(ImVec2(200,10));
 
-    if(getContext()->startFetching) {
-        ImGui::LoadingIndicatorCircle("Waiting", 10, bg, col, 12, 10);
-        Symbol symbol(_info.fetchSymbol, _info.fetchInterVal, _info.fetchStartTime, _info.fetchEndTime);
 
-        //TODO:: the ticker should  be created by charts widget
-        getContext()->fetchDataSymbol(symbol);
+    if(getContext()->startFetching) {
+        getContext()->startSpinner = true;
+        std::thread t(fetchingSymbol, _info, getContext());
+        t.detach();
+    }
+
+    if(getContext()->startSpinner) {
+        ImGui::SetCursorPosX(100);
+        ImGui::LoadingIndicatorCircle("Waiting", 10, bg, col, 12, 10);
     }
 
     ImGui::Dummy(ImVec2(200,10));
@@ -153,4 +159,13 @@ int DownloaderView::getWindowFlags() {
 
 void DownloaderView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+}
+
+void DownloaderView::fetchingSymbol(const FetchInfo& _info, Context* context) {
+    Symbol symbol(_info.fetchSymbol, _info.fetchInterVal, _info.fetchStartTime, _info.fetchEndTime);
+    context->startFetching = false;
+
+    //TODO:: the ticker should  be created by charts widget
+    context->fetchDataSymbol(symbol);
+    context->startSpinner = false;
 }
