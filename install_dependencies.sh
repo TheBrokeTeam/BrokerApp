@@ -15,7 +15,7 @@ else
 
 #    FORKS TEAM
     git clone --branch docking git@github.com:TheBrokeTeam/imgui.git "$DIR/imgui"
-    git clone git@github.com:TheBrokeTeam/implot.git "$DIR/implot"
+    git clone --branch brokerapp git@github.com:TheBrokeTeam/implot.git "$DIR/implot"
     git clone git@github.com:TheBrokeTeam/imnodes.git "$DIR/node_editor"
     git clone git@github.com:TheBrokeTeam/miniz-cpp.git "$DIR/miniz-cpp"
 
