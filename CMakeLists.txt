@@ -95,8 +95,8 @@ add_executable(BrokerApp
         Classes/Nodes/DownSequenceNode.h
         Classes/Nodes/BarValueNode.cpp
         Classes/Nodes/BarValueNode.h
-        Classes/Tickables/Indicators/WMA.cpp
         Classes/Tickables/Indicators/WMA.h
+        Classes/Tickables/Indicators/WMA.cpp
         Classes/Tickables/Indicators/TRIX.cpp
         Classes/Tickables/Indicators/TRIX.h
         Classes/Tickables/Indicators/PSAR.cpp
@@ -109,11 +109,23 @@ add_executable(BrokerApp
 		Classes/Nodes/VWAPNode.h
 		Classes/Nodes/EMANode.cpp
 		Classes/Nodes/EMANode.h
-		Classes/Nodes/WMANode.cpp
 		Classes/Nodes/WMANode.h
+		Classes/Nodes/WMANode.cpp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
+        Classes/Networking/APIManager.cpp
+        Classes/Networking/APIManager.h
+        Classes/Networking/APIRouter.cpp
+        Classes/Networking/APIRouter.h
+        Classes/Networking/Routes/SymbolRouter.cpp
+        Classes/Networking/Routes/SymbolRouter.h
+        Classes/Networking/Routes/UserRouter.cpp
+        Classes/Networking/Routes/UserRouter.h
+        Classes/Networking/Services/SymbolService.cpp
+        Classes/Networking/Services/SymbolService.h
+        Classes/Networking/Services/UserService.cpp
+        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h)
 
 ###############################################################################
@@ -140,16 +152,19 @@ add_subdirectory(external/fmt)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
-#add_subdirectory(external/curl)
+add_subdirectory(external/rapidjson)
 
-set(CURL_LIBRARY "-lcurl")
+#--CURL STUFF -------------------------------------------------------------
+include(FindCURL)
 find_package(CURL REQUIRED)
-
-if(NOT CURL_FOUND)
-    message(FATAL_ERROR "CURL NOT FOUND!")
+if(CURL_FOUND)
+    message(STATUS "Found CURL version: ${CURL_VERSION_STRING}")
+    message(STATUS "Using CURL include dir(s): ${CURL_INCLUDE_DIRS}")
+    message(STATUS "Using CURL lib(s): ${CURL_LIBRARIES}")
 else()
-    message("CURL FOUND!")
+    message(FATAL_ERROR "Could not find CURL")
 endif()
+#--END CURL----------------------------------------------------------------
 
 set(IMGUI_SOURCE
         external/imgui/imgui.h
@@ -171,7 +186,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp)
+        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -267,6 +282,7 @@ set(INCLUDES
         external/stb
         ${CMAKE_CURRENT_BINARY_DIR}/external/glad/include
         external/rapidcsv/src
+        external/rapidjson/include
         ${CURL_INCLUDE_DIR}
         )
 
@@ -285,7 +301,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         implot
         imnodes
         rapidcsv
-        curl
+        ${CURL_LIBRARIES}
         )
 #-APPLICATION-LIBRARIES-END-------------------
 

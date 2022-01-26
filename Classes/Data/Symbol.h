@@ -6,6 +6,9 @@
 #define BROKERAPP_SYMBOL_H
 
 #include "BarData.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filewritestream.h"
+#include "TickData.h"
 #include <string>
 #include <vector>
 #include <imgui.h>
@@ -13,13 +16,11 @@
 class Symbol {
 public:
 
-    //temp vars for download purposes
+    // temp vars for download purposes
     std::string month{"01"};
     std::string year{"2021"};
 
-
-    enum class Interval
-    {
+    enum class Interval {
         Interval_1Minute,
         Interval_3Minutes,
         Interval_5Minutes,
@@ -34,50 +35,67 @@ public:
         Interval_1Day,
         Interval_3Days,
         Interval_1Week,
-        Interval_1Month
+        Interval_1Month,
+        Interval_Unknown
     };
-    struct TimeRange{
-        double start;
-        double end;
+
+    struct TimeRange {
+        long start;
+        long end;
     };
+
+    inline const char * ToString(Interval v) const {
+        switch (v) {
+            case Interval::Interval_1Minute: return "1m";
+            case Interval::Interval_3Minutes: return "3m";
+            case Interval::Interval_5Minutes: return "5m";
+            case Interval::Interval_15Minutes: return "15m";
+            case Interval::Interval_30Minutes: return "30m";
+            case Interval::Interval_1Hour: return "1h";
+            case Interval::Interval_2Hour: return "2h";
+            case Interval::Interval_4Hour: return "4h";
+            case Interval::Interval_6Hour: return "6h";
+            case Interval::Interval_8Hour: return "8h";
+            case Interval::Interval_12Hour: return "12h";
+            case Interval::Interval_1Day: return "1d";
+            case Interval::Interval_3Days: return "3d";
+            case Interval::Interval_1Week: return "1w";
+            case Interval::Interval_1Month: return "1M";
+            default:      return "[Unknown Interval]";
+        }
+    }
+
+    void setName(const std::string&);
+    void setTimeInterval(Interval);
+    const std::string& getName();
+    std::string getInterval();
+    long getStartTime();
+    long getEndTime();
+    long getTimeIntervalInMinutes();
+    static int getMinutesFromTimeInterval(Interval interval);
 
     Symbol() = default;
-    explicit Symbol(std::string name) : _name(std::move(name)) {}
-
-    const std::string& getName() const{
-        return _name;
-    }
-
-    void setName(const std::string& symbol){
-        _name = symbol;
-    }
-
-    long getTimeIntervalInMinutes() const{
-        return getMinutesFromTimeInterval(_interval);
-    }
-
-    Interval getTimeInterval() const{
-        return _interval;
-    }
-
-    void setTimeInterval(Interval timeInterval){
-        _interval = timeInterval;
-    }
-
-    static int getMinutesFromTimeInterval(Interval interval) {
-        std::vector<int> intArr = {1,3,5,15,39,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
-        return intArr[int(interval)];
-    }
+    explicit Symbol(std::string code) : _code(std::move(code)) {}
+    explicit Symbol(const std::string& code, const std::string& interval, long startTime, long endTime);
 
     bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
 
+    std::vector<TickData> fetchData();
+
+    std::vector<TickData> loadJson(const rapidjson::Document& json);
 
 private:
-    std::string _name{""};
+    std::string _code;
     Interval _interval;
     TimeRange _range{0,0};
 
+    Interval resolveInterval(const std::string&);
+
+    long getStepHourFromInterval();
+
+    static void sleeping(const int&);
 };
+
 
 
 #endif //BROKERAPP_SYMBOL_H

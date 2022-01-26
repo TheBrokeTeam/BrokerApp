@@ -13,6 +13,7 @@
 #include <fmt/format.h>
 #include <zip_file.hpp>
 #include <rapidcsv.h>
+#include "../Helpers/JsonUtils.h"
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 #include "../Tickables/Indicators/EMA.h"
@@ -44,6 +45,9 @@
 #include "../Nodes/WMANode.h"
 #include "../Nodes/TRIXNode.h"
 
+
+//Network
+#include "../Networking/Services/KLineService.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -87,24 +91,24 @@ void BackTestingContext::initialize() {
     _ticker->addTickable(_strategyEditor);
 }
 
-void BackTestingContext::loadSymbol(const Symbol& symbol) {
-
-    std::string filename = "data.zip";
-    auto url = build_url(symbol.getName(),symbol.year,symbol.month,interval_str[int(symbol.getTimeInterval())]);
-
-    if(!dataAlreadyExists(symbol))
-        auto resp = download_file(url,filename);
-
-    _data.clear();
-    _data = loadCsv(symbol);
-
-    _ticker->setSymbol(symbol);
-    _ticker->reset();
-    loadTicker();
-
-    auto chart = getWidget<ChartView>();
-    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
-}
+//void BackTestingContext::loadSymbol(Symbol symbol) {
+//
+//    std::string filename = "data.zip";
+//    auto url = build_url(symbol.getName(),symbol.year,symbol.month,symbol.getInterval());
+//
+//    if(!dataAlreadyExists(symbol))
+//        auto resp = download_file(url,filename);
+//
+//    _data.clear();
+//    _data = loadCsv(symbol);
+//
+//    _ticker->setSymbol(symbol);
+//    _ticker->reset();
+//    loadTicker();
+//
+//    auto chart = getWidget<ChartView>();
+//    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
+//}
 
 BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {
     bool success = false;
@@ -168,7 +172,7 @@ bool BackTestingContext::dataAlreadyExists(const Symbol &symbol) {
 }
 
 
-std::vector<TickData> BackTestingContext::loadCsv(const Symbol& symbol){
+std::vector<TickData> BackTestingContext::loadCsv(Symbol symbol){
 
     std::vector<TickData> output;
     auto filePath = getFilePathFromSymbol(symbol);
@@ -216,11 +220,11 @@ bool BackTestingContext::isSimulating() {
     return _simulating;
 }
 
-std::string BackTestingContext::getFilePathFromSymbol(const Symbol& symbol) {
+std::string BackTestingContext::getFilePathFromSymbol(Symbol symbol) {
 
     std::string out = fmt::format("./{}-{}-{}-{}.csv",
             symbol.getName(),
-            interval_str[int(symbol.getTimeInterval())],
+            symbol.getInterval(),
             symbol.year,
             symbol.month);
 
@@ -587,7 +591,18 @@ void BackTestingContext::plotSubplotIndicators() {
     }
 }
 
+Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
 
+    _ticker->setSymbol(symbol);
+    _ticker->reset();
+    _ticker->setSymbol(symbol);
+    _data.clear();
 
+    _data = symbol.fetchData();
 
+    auto chart = getWidget<ChartView>();
+    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
+    loadTicker();
 
+    return _ticker.get();
+}
