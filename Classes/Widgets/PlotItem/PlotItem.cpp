@@ -4,6 +4,9 @@
 
 #include "PlotItem.h"
 #include "../../Helpers/Utils.h"
+#include "../../Helpers/PlotHelper.h"
+#include "../../Tickers/Ticker.h"
+
 
 PlotItem::PlotItem() {
     _plotId = uuid::generate_uuid_v4();
@@ -90,4 +93,30 @@ PlotItem::~PlotItem() {
     _time.clear();
 }
 
+int PlotItem::getRenderStartIndex(double time) {
+    int startIdx = PlotHelper::BinarySearch(_time.data(), 0, _time.size(),time);
+
+    if(startIdx == -1)
+        startIdx = 0;
+
+    return startIdx;
+}
+
+int PlotItem::getRenderEndIndex(double time) {
+    int endIdx = PlotHelper::BinarySearch(_time.data(), 0, _time.size(),time);
+
+    if(endIdx == -1)
+        endIdx = _time.size() - 1;
+
+    return endIdx;
+}
+
+PlotItemInfo PlotItem::getRenderInfo(Ticker *ticker) {
+    PlotItemInfo info;
+    info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime);
+    auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime);
+    info.size = endIndex - info.startIndex + 1;
+    assert(info.size > 0 && "Info size should not be negative!");
+    return  info;
+}
 

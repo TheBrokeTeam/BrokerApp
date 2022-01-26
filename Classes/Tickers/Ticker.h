@@ -32,7 +32,7 @@ typedef const std::string& TickerId;
 
 class Ticker : public Contextualizable{
 public:
-    struct RenderRange {
+    struct TickerRenderRange {
         double startTime;
         double endTime;
     };
@@ -57,12 +57,12 @@ public:
         _range.endTime = end;
     }
 
-    RenderRange getRenderRange(){
+    TickerRenderRange getRenderRange(){
         return _range;
     }
 
 private:
-    RenderRange _range{0,0};
+    TickerRenderRange _range{0, 0};
     void open(const TickData &tickData);
     void close(const TickData &tickData);
 
