@@ -151,14 +151,29 @@ void CandleChart::render(float dt)
                 //plot tag at the last candle on screen
                 ImPlotRect bnds = ImPlot::GetPlotLimits();
 //                        double x = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_Hr).ToDouble();
+                double minX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Min), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
                 double maxX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+
                 int lastIdx = dataHist.size() - 1;
                 int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME).data(), 0, lastIdx, maxX);
                 if (maxX_idx == -1)
                     maxX_idx = lastIdx;
 
-
                 _lastIdxX = maxX_idx;
+
+                //update ticker range #############
+                double startTime = minX;
+                double endTime = maxX;
+
+                if (startTime <  dataHist.getData(BarDataType::TIME).front()) startTime = dataHist.getData(BarDataType::TIME).front();
+                if (endTime >  dataHist.getData(BarDataType::TIME).back()) endTime = dataHist.getData(BarDataType::TIME).back();
+
+                if (startTime >  dataHist.getData(BarDataType::TIME).back()) startTime = dataHist.getData(BarDataType::TIME).front();
+                if (endTime <  dataHist.getData(BarDataType::TIME).front()) endTime = dataHist.getData(BarDataType::TIME).back();
+
+                _ticker->updateRenderRange(startTime,endTime);
+                //######################################
+
 
                 double close_val = dataHist.getData(BarDataType::CLOSE)[maxX_idx];
                 double open_val =  dataHist.getData(BarDataType::OPEN)[maxX_idx];
