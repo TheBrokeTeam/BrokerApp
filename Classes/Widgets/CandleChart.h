@@ -41,7 +41,7 @@ private:
 
     double _zoomOutMax;
 
-
+    float _positionerValue = 1.0f;
 };
 
 
