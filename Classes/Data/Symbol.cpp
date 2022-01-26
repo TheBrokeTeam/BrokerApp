@@ -5,8 +5,8 @@
 #include "Symbol.h"
 #include "../Networking/Services/KLineService.h"
 #include <iostream>
+#include <fmt/format.h>
 #include "../Helpers/JsonUtils.h"
-#include "rapidjson/filewritestream.h"
 #include <chrono>
 #include <thread>
 
@@ -35,33 +35,6 @@ Symbol::Interval Symbol::resolveInterval(const std::string& value) {
     if ( value == "1mo" ) return Interval::Interval_1Month;
 }
 
-std::vector<TickData> Symbol::fetchData() {
-    long currentTime = this->getStartTime();
-    long endTime = this->getEndTime();
-
-    KLineService service;
-
-    std::vector<TickData> data;
-
-    int i = 0;
-    while (currentTime < endTime){
-        std::thread t1(sleeping, 50);
-
-        long newEndTime = currentTime + (this->getStepHourFromInterval() * (60 * 60 * 1000));
-
-        rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime - (60 * 1000), 1000);
-
-        std::vector<TickData> d = loadJson(jsonData);
-
-        data.insert(std::end(data), std::begin(d), std::end(d));
-        currentTime = newEndTime;
-
-        t1.join();
-    }
-
-    return data;
-}
-
 void Symbol::setName(const std::string& symbol){
     _code = symbol;
 }
@@ -87,12 +60,34 @@ int Symbol::getMinutesFromTimeInterval(Interval interval) {
     return intArr[int(interval)];
 }
 
-long Symbol::getStartTime() {
+long Symbol::getStartTime() const {
     return _range.start;
 }
 
-long Symbol::getEndTime() {
+long Symbol::getEndTime() const {
     return _range.end;
+}
+
+std::string Symbol::getStartDate() {
+    return this->msToStringDate(_range.start);
+}
+
+std::string Symbol::getEndDate() {
+    return this->msToStringDate(_range.end);
+}
+
+std::string Symbol::msToStringDate(long ms) {
+    long inSecs = ms / 1000;
+    auto tm = *std::localtime(&inSecs);
+    long year = tm.tm_year + 1900;
+    long month = tm.tm_mon + 1;
+
+
+    return fmt::format("{:04}-{:02}", year, month);
+}
+
+void Symbol::sleeping(const int & ms) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
 std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
@@ -136,6 +131,49 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
     return output;
 }
 
+std::vector<TickData> Symbol::loadCSV(const rapidcsv::Document& doc, const std::string& date){
+
+    std::vector<TickData> output;
+    auto filePath = this->getSymbolFilePath(date, "csv");
+
+    std::cout << "Start Loading file: " << filePath << std::endl;
+
+    for(int i = 0; i < doc.GetRowCount(); i++)
+    {
+        TickData data_open;
+        TickData data_high;
+        TickData data_low;
+        TickData data_close;
+
+        //converting ms to sec and add simulated time for the sub tick on the bars
+        double timeInSec = doc.GetCell<long>(0,i)/1000.0;
+        data_open.time  = timeInSec;
+        data_high.time  = timeInSec + this->getTimeIntervalInMinutes()*0.25 * 60;
+        data_low.time  = timeInSec + this->getTimeIntervalInMinutes()*0.5* 60;
+        data_close.time  = timeInSec + this->getTimeIntervalInMinutes()*60 - 1;
+
+        data_open.price = doc.GetCell<double>(1,i);
+        data_high.price = doc.GetCell<double>(2,i);
+        data_low.price = doc.GetCell<double>(3,i);
+        data_close.price = doc.GetCell<double>(4,i);
+
+        //0.25 volume for each tick
+        double volume = doc.GetCell<double>(5,i)*0.25;
+        data_open.volume = volume;
+        data_high.volume = volume;
+        data_low.volume = volume;
+        data_close.volume = volume;
+
+        output.push_back(data_open);
+        output.push_back(data_high);
+        output.push_back(data_low);
+        output.push_back(data_close);
+    }
+
+    return output;
+}
+
+
 long Symbol::getStepHourFromInterval() {
     switch (_interval) {
         case Interval::Interval_1Minute: return 16;
@@ -157,7 +195,77 @@ long Symbol::getStepHourFromInterval() {
     }
 }
 
+std::string Symbol::getSymbolFilePath(const std::string& date, const std::string& extension) {
 
-void Symbol::sleeping(const int & ms) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+    std::string out = fmt::format("{}-{}-{}.{}",
+                                  this->getName(),
+                                  this->getInterval(),
+                                  date,
+                                  extension);
+
+    return out;
+}
+
+std::vector<TickData> Symbol::fetchData() {
+    long currentTime = this->getStartTime();
+    long endTime = this->getEndTime();
+
+    KLineService service;
+
+    std::vector<TickData> data;
+
+    int i = 0;
+    while (currentTime < endTime){
+        std::thread t1(sleeping, 50);
+
+        long newEndTime = currentTime + (this->getStepHourFromInterval() * (60 * 60 * 1000));
+
+        rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime - (60 * 1000), 1000);
+
+        std::vector<TickData> d = loadJson(jsonData);
+
+        data.insert(std::end(data), std::begin(d), std::end(d));
+        currentTime = newEndTime;
+
+        t1.join();
+    }
+
+    return data;
+}
+
+std::vector<TickData> Symbol::fetchCSVData() {
+    std::string startDate = this->getStartDate();
+    std::cout << startDate << "\n";
+
+    std::string endDate = this->getEndDate();
+    std::cout << endDate << "\n";
+
+    KLineService service;
+
+    rapidcsv::Document csvData = service.fetchCSVData(this->getName(),
+                                                      this->getInterval(),
+                                                      startDate,
+                                                      this->getSymbolFilePath(startDate, "zip"));
+
+    std::vector<TickData> data;
+
+    data = loadCSV(csvData, this->getStartDate());
+
+//    int i = 0;
+//    while (currentTime < endTime){
+//        std::thread t1(sleeping, 50);
+//
+//        long newEndTime = currentTime + (this->getStepHourFromInterval() * (60 * 60 * 1000));
+//
+//        rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime - (60 * 1000), 1000);
+//
+//        std::vector<TickData> d = loadJson(jsonData);
+//
+//        data.insert(std::end(data), std::begin(d), std::end(d));
+//        currentTime = newEndTime;
+//
+//        t1.join();
+//    }
+
+    return data;
 }

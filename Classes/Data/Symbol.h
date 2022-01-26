@@ -6,8 +6,9 @@
 #define BROKERAPP_SYMBOL_H
 
 #include "BarData.h"
-#include "rapidjson/document.h"
-#include "rapidjson/filewritestream.h"
+#include <rapidcsv.h>
+#include <rapidjson/document.h>
+#include <rapidjson/filewritestream.h>
 #include "TickData.h"
 #include <string>
 #include <vector>
@@ -16,9 +17,6 @@
 class Symbol {
 public:
 
-    // temp vars for download purposes
-    std::string month{"01"};
-    std::string year{"2021"};
 
     enum class Interval {
         Interval_1Minute,
@@ -69,8 +67,8 @@ public:
     void setTimeInterval(Interval);
     const std::string& getName();
     std::string getInterval();
-    long getStartTime();
-    long getEndTime();
+    long getStartTime() const;
+    long getEndTime() const;
     long getTimeIntervalInMinutes();
     static int getMinutesFromTimeInterval(Interval interval);
 
@@ -81,8 +79,12 @@ public:
     bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
 
     std::vector<TickData> fetchData();
+    std::vector<TickData> fetchCSVData();
 
     std::vector<TickData> loadJson(const rapidjson::Document& json);
+    std::vector<TickData> loadCSV(const rapidcsv::Document& csv, const std::string&);
+    std::string getStartDate();
+    std::string getEndDate();
 
 private:
     std::string _code;
@@ -92,8 +94,10 @@ private:
     Interval resolveInterval(const std::string&);
 
     long getStepHourFromInterval();
+    std::string getSymbolFilePath(const std::string&, const std::string&);
 
     static void sleeping(const int&);
+    std::string msToStringDate(long ms);
 };
 
 
