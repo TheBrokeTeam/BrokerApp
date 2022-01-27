@@ -61,7 +61,14 @@ public:
         return _range;
     }
 
+    double getZoomOutMax();
+    int getMaxBarsToRender();
+
 private:
+    double _zoomOutMax;
+    int _maxBarsToRender = 1000;
+
+
     TickerRenderRange _range{0, 0};
     void open(const TickData &tickData);
     void close(const TickData &tickData);

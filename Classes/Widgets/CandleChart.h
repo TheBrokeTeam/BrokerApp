@@ -34,12 +34,7 @@ private:
     int _maxSubplots = 10;
     std::vector<float> calculateRatios();
 
-    int _maxBarsToRender = 1000;
     int _lastIdxX = 0;
-    int _lastMaxTime = 0;
-    int _lastMinTime = 0;
-
-    double _zoomOutMax;
 
     float _positionerValue = 1.0f;
 };
