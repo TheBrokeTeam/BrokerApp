@@ -63,5 +63,4 @@ inline static float randomNumber(){
     return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
 
-
 #endif //BROKERAPP_UTILS_H

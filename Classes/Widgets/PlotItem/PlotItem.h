@@ -10,6 +10,13 @@
 #include <implot.h>
 #include <implot_internal.h>
 
+struct PlotItemInfo{
+    int startIndex;
+    int size;
+};
+
+class Ticker;
+
 class PlotItem {
 public:
     PlotItem();
@@ -26,14 +33,17 @@ public:
     const std::vector<double>& getTime();
 
     virtual void render();
-
 protected:
+
+    PlotItemInfo getRenderInfo(Ticker* ticker);
     std::string _name{""};
     std::string _plotName{""};
     std::string _plotId{""};
     std::vector<double> _time;
 
 private:
+    int getRenderStartIndex(double time);
+    int getRenderEndIndex(double time);
     void popupRender();
 };
 

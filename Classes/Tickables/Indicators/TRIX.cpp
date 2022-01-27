@@ -103,6 +103,8 @@ void TRIX::render() {
 
     ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
 
+    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
+
     ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
 
@@ -114,7 +116,8 @@ void TRIX::render() {
     }
 
     ImPlot::SetNextLineStyle(_color, _lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
+    auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
 
 }
 

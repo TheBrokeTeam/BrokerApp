@@ -4,6 +4,7 @@
 
 #include "SMA.h"
 #include "../../Tickers/Ticker.h"
+#include "../../Helpers/PlotHelper.h"
 
 
 SMA::SMA(Ticker *ticker): Indicator(ticker) {
@@ -25,7 +26,8 @@ void SMA::calculate(BarHistory* barHistory)
 
 void SMA::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
+    auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
 }
 
 void SMA::onPopupRender() {

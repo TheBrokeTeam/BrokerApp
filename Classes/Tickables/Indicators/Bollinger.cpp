@@ -54,13 +54,12 @@ void Bollinger::onRender() {
     //TODO:: this shaded render commented there is no artifact on it. Get it back.
     ImPlot::SetNextFillStyle(ImVec4(0.5,0.5,1,1),0.25f);
 
-    ImPlot::PlotShaded(_name.c_str(),
-                       _time.data(),
-                       getData(BollingerDataType::TOP).data(),
-                       getData(BollingerDataType::BOTTOM).data(),
-                       size());
-
-    ImPlot::SetNextLineStyle(ImVec4(0.5,0.5,1,1));
+    auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::PlotShaded("##dummyBoll",
+                       &_time[renderInfo.startIndex],
+                       &getData(BollingerDataType::TOP)[renderInfo.startIndex],
+                       &getData(BollingerDataType::BOTTOM)[renderInfo.startIndex],
+                       renderInfo.size);
 }
 
 int Bollinger::getAverageSize() {

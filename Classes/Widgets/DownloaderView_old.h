@@ -7,7 +7,6 @@
 
 
 #include "Widget.h"
-#include <thread>
 
 class DownloaderView : public Widget
 {
@@ -15,22 +14,18 @@ public:
     DownloaderView(Context* context);
 
     struct FetchInfo{
-        std::string fetchInterVal{"1m"};
+        std::string fetchInterVal{"15m"};
+        std::string fetchYear{"2021"};
+        std::string fetchMonth{"01"};
         std::string fetchSymbol{"ETHUSDT"};
-        long fetchStartTime{};
-        long fetchEndTime{};
     };
 
     void updateVisible(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
-    void static fetchingSymbol(const FetchInfo&, Context*);
 
 private:
     FetchInfo _info;
-    tm startDate{};
-    tm endDate{};
-    bool showWarning=false;
 };
 
 #endif //BROKERAPP_DOWNLOADERVIEW_H

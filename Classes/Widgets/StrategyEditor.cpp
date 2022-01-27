@@ -1,5 +1,5 @@
 //
-// Created by Arthur Abel Motelevicz on 01/01/22.
+// Created by Arthur Abel Motelevicz o 01/01/22.
 //
 
 #include "StrategyEditor.h"

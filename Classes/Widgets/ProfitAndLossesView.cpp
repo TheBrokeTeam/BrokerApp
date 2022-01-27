@@ -32,19 +32,19 @@ void ProfitAndLossesView::updateVisible(float dt) {
 
     int xFlags;
     int yFlags;
-    bool shouldFitRange;
+    bool shouldFitRange = true;
     if(getContext()->isSimulating()) {
         xFlags = ImPlotAxisFlags_Time | ImPlotAxisFlags_AutoFit;
         yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
-        shouldFitRange = true;
+//        shouldFitRange = true;
     }
     else{
         xFlags = ImPlotAxisFlags_Time;
         yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
-        shouldFitRange = false;
+//        shouldFitRange = false;
     }
 
-    if (ImPlot::BeginPlot("##PnL")) {
+    if (ImPlot::BeginPlot("##PnL",ImVec2(-1,0),ImPlotFlags_NoInputs)) {
         ImPlot::SetupAxes(0, 0, xFlags, yFlags);
         ImPlot::SetupAxisLimits(ImAxis_X1, _strategy.lock()->getTime().front(), _strategy.lock()->getTime().back());
         ImPlot::SetupAxisLimits(ImAxis_Y1, _strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
@@ -56,7 +56,7 @@ void ProfitAndLossesView::updateVisible(float dt) {
             double tenBars = 10 * 60 * _strategy.lock()->getTicker()->getSymbol()->getTimeIntervalInMinutes();
             ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy.lock()->getTime().front() - tenBars,
                                                                _strategy.lock()->getTime().back() + tenBars);
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy.lock()->drawDownMax*1.2, _strategy.lock()->profitMax*1.2);
         }
 
 

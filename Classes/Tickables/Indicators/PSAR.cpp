@@ -129,13 +129,17 @@ void PSAR::calculate(BarHistory* barHistory)
 void PSAR::onRender() {
     std::vector<double> bottom, top, time_b, time_t;
 
-    for(int i = 0; i < size(); i++){
-        if (getData()[i].signal) {
-            bottom.push_back(getData()[i].value);
-            time_b.push_back(_time[i]);
+    auto renderInfo = getRenderInfo(_ticker);
+    for(int i = 0; i < renderInfo.size; i++){
+        int idx = renderInfo.startIndex + i;
+        if(idx >= _time.size())
+            break;
+        if (getData()[idx].signal) {
+            bottom.push_back(getData()[idx].value);
+            time_b.push_back(_time[idx]);
         } else {
-            top.push_back(getData()[i].value);
-            time_t.push_back(_time[i]);
+            top.push_back(getData()[idx].value);
+            time_t.push_back(_time[idx]);
         }
     }
 

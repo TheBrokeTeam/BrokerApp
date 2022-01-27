@@ -34,9 +34,9 @@ void EMA::calculate(BarHistory* barHistory)
 }
 
 void EMA::onRender() {
-    ImPlot::SetNextLineStyle(_color, _lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
-}
+    ImPlot::SetNextLineStyle(_color,_lineWidth);
+    auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);}
 
 void EMA::onPopupRender() {
     if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){

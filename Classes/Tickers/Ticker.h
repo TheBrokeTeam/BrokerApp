@@ -32,6 +32,11 @@ typedef const std::string& TickerId;
 
 class Ticker : public Contextualizable{
 public:
+    struct TickerRenderRange {
+        double startTime;
+        double endTime;
+    };
+
     Ticker(Context* context);
     virtual ~Ticker() = default;
 
@@ -46,7 +51,25 @@ public:
     BarHistory* getBarHistory();
     TickerId getTickerId();
 
+    //called from chart
+    void updateRenderRange(double start, double end){
+        _range.startTime = start;
+        _range.endTime = end;
+    }
+
+    TickerRenderRange getRenderRange(){
+        return _range;
+    }
+
+    double getZoomOutMax();
+    int getMaxBarsToRender();
+
 private:
+    double _zoomOutMax;
+    int _maxBarsToRender = 1000;
+
+
+    TickerRenderRange _range{0, 0};
     void open(const TickData &tickData);
     void close(const TickData &tickData);
 
