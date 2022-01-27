@@ -38,12 +38,9 @@ void VWAP::calculate(BarHistory* barHistory)
 }
 
 void VWAP::onRender() {
-    for(int i = 0 ; i < _lineIndexes.size(); i++) {
+    for(int i = 0 ; i < _lineIndexes.size(); i+= 2) {
         ImPlot::SetNextLineStyle(_color, _lineWidth);
-        if(i == 0)
-            ImPlot::PlotLine(_plotName.c_str(), &_time[0], &getData()[0], _lineIndexes[0]);
-        else
-            ImPlot::PlotLine(_plotName.c_str(), &_time[_lineIndexes[i-1]], &getData()[_lineIndexes[i-1]], _lineIndexes[i] - _lineIndexes[i-1]);
+        ImPlot::PlotLine(_plotName.c_str(), &_time[_lineIndexes[i]], &getData()[_lineIndexes[i]], _lineIndexes[i+1] - _lineIndexes[i] + 1);
     }
 }
 
@@ -71,6 +68,10 @@ void VWAP::resetPlot() {
     Indicator::resetPlot();
     setupNewPeriod();
     _lineIndexes.clear();
+    //add first line indexes
+    _lineIndexes.push_back(0);
+    _lineIndexes.push_back(0);
+
     clear();
     _lastTimestamp = 0;
 }
@@ -139,9 +140,11 @@ bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
         _lastTimestamp = time;
         if(!_time.empty()) {
             _lineIndexes.push_back(_time.size());
+            _lineIndexes.push_back(_time.size());
         }
         return true;
     } else {
+        _lineIndexes.back() = _time.size();
         return false;
     }
 
