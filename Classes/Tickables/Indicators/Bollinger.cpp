@@ -8,8 +8,6 @@
 
 Bollinger::Bollinger (Ticker *ticker): Indicator(ticker) {
     setPlotName("BOLL");
-    _uiNodeType = UiNodeType::BOLL;
-    _nodeType = NodeType::BOLL;
 }
 
 void Bollinger::calculate(BarHistory* barHistory)

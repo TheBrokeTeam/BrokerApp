@@ -10,6 +10,8 @@
 
 
 BollingerNode::BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor* nodeEditor): IndicatorBaseNode(bollinger, nodeEditor){
+    setType(UiNodeType::BOLL);
+    setGraphNode(NodeType::BOLL);
 }
 
 void BollingerNode::onRender(float dt) {

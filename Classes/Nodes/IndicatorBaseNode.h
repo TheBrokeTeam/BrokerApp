@@ -16,6 +16,7 @@ public:
     void handleStack(std::stack<float>& stack) override;
     void initStyle() override;
     void finishStyle() override;
+    void setGraphNode(NodeType nodeType);
 private:
 };
 

@@ -7,8 +7,6 @@
 
 EMA::EMA(Ticker *ticker): Indicator(ticker) {
     setPlotName("EMA");
-    _uiNodeType = UiNodeType::EMA;
-    _nodeType = NodeType::EMA;
 }
 
 void EMA::calculate(BarHistory* barHistory)

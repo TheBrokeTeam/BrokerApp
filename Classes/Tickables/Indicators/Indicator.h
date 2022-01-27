@@ -9,8 +9,6 @@
 #include <string>
 #include "../Tickable.h"
 #include "../../Widgets/PlotItem/PlotItem.h"
-#include "../../Nodes/UiNodeType.h"
-#include "../../Nodes/NodeType.h"
 
 
 class Indicator : public Tickable, public PlotItem {
@@ -26,12 +24,8 @@ public:
     void resetPlot() override;
     void reset() override;
     const ImVec4& getColor();
-    const NodeType getNodeType();
-    const UiNodeType getUiNodeType();
 
 protected:
-    UiNodeType _uiNodeType;
-    NodeType _nodeType;
     ImVec4 _color{1, 1, 1, 1};
 
 private:

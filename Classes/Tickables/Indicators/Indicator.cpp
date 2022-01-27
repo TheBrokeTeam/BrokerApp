@@ -46,11 +46,3 @@ void Indicator::reset() {
     resetPlot();
 }
 
-const NodeType Indicator::getNodeType() {
-    return _nodeType;
-}
-
-const UiNodeType Indicator::getUiNodeType() {
-    return _uiNodeType;
-}
-

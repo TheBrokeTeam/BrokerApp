@@ -9,12 +9,12 @@
 
 
 IndicatorBaseNode::IndicatorBaseNode(std::shared_ptr<Indicator> ind, StrategyEditor* nodeEditor): INode(nodeEditor) {
-
     setNodeName(ind->getName() + std::string(" Indicator"));
-    setType(ind->getUiNodeType());
     setIndicator(ind);
+}
 
-    const GraphNode op(ind->getNodeType(), this);
+void IndicatorBaseNode::setGraphNode(NodeType nodeType) {
+    const GraphNode op(nodeType, this);
     _id = addNode(op);
 }
 
