@@ -9,7 +9,7 @@
 #include "../Editor.h"
 
 
-BollingerNode::BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor* nodeEditor):BaseNode(bollinger, nodeEditor){
+BollingerNode::BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor* nodeEditor): IndicatorBaseNode(bollinger, nodeEditor){
 }
 
 void BollingerNode::onRender(float dt) {

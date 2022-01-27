@@ -114,7 +114,7 @@ add_executable(BrokerApp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
-		Classes/Nodes/PSARNode.h Classes/Nodes/BaseNode.cpp Classes/Nodes/BaseNode.h)
+		Classes/Nodes/PSARNode.h Classes/Nodes/IndicatorBaseNode.cpp Classes/Nodes/IndicatorBaseNode.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

@@ -6,11 +6,11 @@
 #define BROKERAPP_EMANODE_H
 
 #include "../Widgets/IndicatorsView.h"
-#include "../Nodes/BaseNode.h"
+#include "../Nodes/IndicatorBaseNode.h"
 #include "../Tickables/Indicators/EMA.h"
 #include "../Helpers/graph.h"
 
-class EMANode: public BaseNode {
+class EMANode: public IndicatorBaseNode {
 public:
     EMANode(std::shared_ptr<Indicator> ema,StrategyEditor* nodeEditor);
     void handleStack(std::stack<float>& stack) override;

@@ -7,11 +7,11 @@
 
 
 #include "../Widgets/IndicatorsView.h"
-#include "../Nodes/BaseNode.h"
+#include "../Nodes/IndicatorBaseNode.h"
 #include "../Tickables/Indicators/SMA.h"
 #include "../Helpers/graph.h"
 
-class BollingerNode: public BaseNode {
+class BollingerNode: public IndicatorBaseNode {
 public:
     BollingerNode(std::shared_ptr<Indicator> bollinger,StrategyEditor* nodeEditor);
     void onRender(float dt) override;

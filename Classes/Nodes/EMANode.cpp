@@ -10,7 +10,7 @@
 #include "UiNodeType.h"
 
 
-EMANode::EMANode(std::shared_ptr<Indicator> ema,StrategyEditor* nodeEditor): BaseNode(ema, nodeEditor) {}
+EMANode::EMANode(std::shared_ptr<Indicator> ema,StrategyEditor* nodeEditor): IndicatorBaseNode(ema, nodeEditor) {}
 
 
 void EMANode::handleStack(std::stack<float> &stack) {

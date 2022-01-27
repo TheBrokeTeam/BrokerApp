@@ -2,13 +2,13 @@
 // Created by Luiz Veloso on 23/01/22.
 //
 
-#include "BaseNode.h"
+#include "IndicatorBaseNode.h"
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
 
 
-BaseNode::BaseNode(std::shared_ptr<Indicator> ind, StrategyEditor* nodeEditor): INode(nodeEditor) {
+IndicatorBaseNode::IndicatorBaseNode(std::shared_ptr<Indicator> ind, StrategyEditor* nodeEditor): INode(nodeEditor) {
 
     setNodeName(ind->getName() + std::string(" Indicator"));
     setType(ind->getUiNodeType());
@@ -18,7 +18,7 @@ BaseNode::BaseNode(std::shared_ptr<Indicator> ind, StrategyEditor* nodeEditor): 
     _id = addNode(op);
 }
 
-void BaseNode::onRender(float dt) {
+void IndicatorBaseNode::onRender(float dt) {
     const float node_width = 100.f;
     //set node's values from indicator
     ImNodes::BeginOutputAttribute(_id);
@@ -27,7 +27,7 @@ void BaseNode::onRender(float dt) {
     ImNodes::EndOutputAttribute();
 }
 
-void BaseNode::handleStack(std::stack<float> &stack) {
+void IndicatorBaseNode::handleStack(std::stack<float> &stack) {
 
     //Safe check ---------
     /**Todo:: call context to remove this node if the indicator is not valid anymore */
@@ -48,7 +48,7 @@ void BaseNode::handleStack(std::stack<float> &stack) {
 
 }
 
-void BaseNode::initStyle() {
+void IndicatorBaseNode::initStyle() {
     auto shared = getIndicator();
     if(!shared) {
         INode::initStyle();
@@ -66,7 +66,7 @@ void BaseNode::initStyle() {
     ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
 }
 
-void BaseNode::finishStyle() {
+void IndicatorBaseNode::finishStyle() {
     ImGui::PopStyleColor();
     ImNodes::PopColorStyle();
     ImNodes::PopColorStyle();
