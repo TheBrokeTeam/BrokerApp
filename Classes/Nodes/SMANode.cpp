@@ -7,9 +7,11 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 
-SMANode::SMANode(std::shared_ptr<Indicator> sma,StrategyEditor* nodeEditor):INode(nodeEditor){
+SMANode::SMANode(std::shared_ptr<Indicator> sma,StrategyEditor* nodeEditor):INode(nodeEditor) {
     setNodeName("SMA Indicator");
     setType(UiNodeType::SMA);
     setIndicator(sma);

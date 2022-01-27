@@ -14,18 +14,14 @@ public:
     void calculate(BarHistory* barHistory) override;
     void setAverageSize(int size);
     int getAverageSize() const;
-    void setSmothingSize(int size);
-    int getSmothingSize() const;
 
     void onRender() override;
     void onPopupRender() override;
     void resetPlot() override;
-    const ImVec4& getColor();
 
 private:
     int _smothingSize = 2; // must be <= 1 + _averageSize... it's almost always 2.
     int _averageSize = 14; // must be >= 1
-    ImVec4 _color{1, 1, 1, 1};
     float _lineWidth = 2.0f;
 };
 

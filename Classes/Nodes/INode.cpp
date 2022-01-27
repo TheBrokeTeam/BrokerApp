@@ -7,6 +7,7 @@
 #include <imnodes.h>
 #include "../Editor.h"
 #include "../Widgets/StrategyEditor.h"
+#include "UiNodeType.h"
 
 
 INode::INode(StrategyEditor* strategyEditor):_nodeEditor(strategyEditor)

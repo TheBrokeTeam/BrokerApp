@@ -64,7 +64,8 @@ int Bollinger::getAverageSize() {
     return _averageSize;
 }
 
-const ImVec4 &Bollinger::getColor() {
-    return _color;
-}
+//
+//const ImVec4 &Bollinger::getColor() {
+//    return _color;
+//}
 

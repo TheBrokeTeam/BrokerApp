@@ -67,10 +67,6 @@ int EMA::getAverageSize() const {
 }
 
 
-const ImVec4 &EMA::getColor() {
-    return _color;
-}
-
 EMA::~EMA() {
 
 }

@@ -21,11 +21,10 @@ public:
     void resetPlot() override;
     void onRender() override;
     int getAverageSize();
-    const ImVec4& getColor();
 
 private:
-    int _averageSize = 20; //very commmon
-    ImVec4 _color = ImVec4(0.5,0.5,1,0.25);
+    int _averageSize = 20;
+//    ImVec4 _color = ImVec4(0.5,0.5,1,0.25);
 
 };
 

@@ -126,7 +126,11 @@ add_executable(BrokerApp
         Classes/Networking/Services/SymbolService.h
         Classes/Networking/Services/UserService.cpp
         Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
-		Classes/Nodes/PSARNode.h)
+		Classes/Nodes/PSARNode.h
+		Classes/Nodes/PSARNode.h 
+		Classes/Nodes/IndicatorBaseNode.cpp 
+		Classes/Nodes/IndicatorBaseNode.h
+)
 
 ###############################################################################
 # FETCH CONTENT LIBS

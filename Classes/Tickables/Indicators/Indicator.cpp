@@ -35,11 +35,14 @@ void Indicator::resetPlot() {
     PlotItem::resetPlot();
 }
 
+const ImVec4 &Indicator::getColor() {
+    return _color;
+}
+
 Indicator::~Indicator() {}
 
 void Indicator::reset() {
     Tickable::reset();
     resetPlot();
 }
-
 

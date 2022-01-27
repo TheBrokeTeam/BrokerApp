@@ -6,6 +6,7 @@
 #define BROKERAPP_BACKTESTINGCONTEXT_H
 
 #include "Context.h"
+#include "../Nodes/UiNodeType.h"
 #include <map>
 #include <set>
 #include <rapidjson/document.h>

@@ -10,6 +10,7 @@
 #include "../Tickable.h"
 #include "../../Widgets/PlotItem/PlotItem.h"
 
+
 class Indicator : public Tickable, public PlotItem {
 public:
     explicit Indicator(Ticker* ticker);
@@ -22,8 +23,14 @@ public:
     void onLoad(BarHistory* barHistory) override;
     void resetPlot() override;
     void reset() override;
+    const ImVec4& getColor();
+
+protected:
+    ImVec4 _color{1, 1, 1, 1};
 
 private:
+
+
 
 };
 
