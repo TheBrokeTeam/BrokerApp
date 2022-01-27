@@ -38,9 +38,22 @@ void VWAP::calculate(BarHistory* barHistory)
 }
 
 void VWAP::onRender() {
+    auto renderInfo = getRenderInfo(_ticker);
     for(int i = 0 ; i < _lineIndexes.size(); i+= 2) {
         ImPlot::SetNextLineStyle(_color, _lineWidth);
-        ImPlot::PlotLine(_plotName.c_str(), &_time[_lineIndexes[i]], &getData()[_lineIndexes[i]], _lineIndexes[i+1] - _lineIndexes[i] + 1);
+        int startIdx, endIdx;
+
+        if(_lineIndexes[i] < renderInfo.startIndex)
+            startIdx = renderInfo.startIndex;
+        else
+            startIdx =_lineIndexes[i] ;
+
+        if(_lineIndexes[i+1] > renderInfo.startIndex + renderInfo.size)
+            endIdx = renderInfo.startIndex + renderInfo.size;
+        else
+            endIdx =_lineIndexes[i+1] ;
+
+        ImPlot::PlotLine(_plotName.c_str(), &_time[startIdx], &getData()[startIdx], endIdx - startIdx + 1);
     }
 }
 
