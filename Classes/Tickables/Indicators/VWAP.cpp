@@ -137,7 +137,7 @@ bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
 
     if (newPeriod) {
         _lastTimestamp = time;
-        if(_time.size() > 0) {
+        if(!_time.empty()) {
             _lineIndexes.push_back(_time.size());
         }
         return true;

@@ -114,7 +114,8 @@ void TRIX::render() {
     }
 
     ImPlot::SetNextLineStyle(_color, _lineWidth);
-    ImPlot::PlotLine(_plotName.c_str(), _time.data(), getData().data(), _time.size());
+    auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
 
 }
 
