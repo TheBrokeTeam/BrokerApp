@@ -69,20 +69,18 @@ long Symbol::getEndTime() const {
 }
 
 std::string Symbol::getStartDate() {
-    return this->msToStringDate(_range.start);
+    return this->timestampToStringDate(_range.start);
 }
 
 std::string Symbol::getEndDate() {
-    return this->msToStringDate(_range.end);
+    return this->timestampToStringDate(_range.end);
 }
 
-std::string Symbol::msToStringDate(long ms) {
+std::string Symbol::timestampToStringDate(long ms) {
     long inSecs = ms / 1000;
     auto tm = *std::localtime(&inSecs);
     long year = tm.tm_year + 1900;
     long month = tm.tm_mon + 1;
-
-
     return fmt::format("{:04}-{:02}", year, month);
 }
 
@@ -234,38 +232,43 @@ std::vector<TickData> Symbol::fetchData() {
 }
 
 std::vector<TickData> Symbol::fetchCSVData() {
-    std::string startDate = this->getStartDate();
-    std::cout << startDate << "\n";
-
-    std::string endDate = this->getEndDate();
-    std::cout << endDate << "\n";
+    long currentTime = this->getStartTime();
+    long endTime = this->getEndTime();
 
     KLineService service;
 
-    rapidcsv::Document csvData = service.fetchCSVData(this->getName(),
-                                                      this->getInterval(),
-                                                      startDate,
-                                                      this->getSymbolFilePath(startDate, "zip"));
-
     std::vector<TickData> data;
 
-    data = loadCSV(csvData, this->getStartDate());
+    while(currentTime < endTime) {
+        std::thread t1(sleeping, 50);
+        std::string date = this->timestampToStringDate(currentTime);
 
-//    int i = 0;
-//    while (currentTime < endTime){
-//        std::thread t1(sleeping, 50);
-//
-//        long newEndTime = currentTime + (this->getStepHourFromInterval() * (60 * 60 * 1000));
-//
-//        rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime - (60 * 1000), 1000);
-//
-//        std::vector<TickData> d = loadJson(jsonData);
-//
-//        data.insert(std::end(data), std::begin(d), std::end(d));
-//        currentTime = newEndTime;
-//
-//        t1.join();
-//    }
+        rapidcsv::Document csvData = service.fetchCSVData(this->getName(),
+                                                          this->getInterval(),
+                                                          date,
+                                                          this->getSymbolFilePath(date, "zip"));
+
+        std::vector<TickData> d = loadCSV(csvData, this->getStartDate());
+
+        if(!d.empty()) {
+            data.insert(std::end(data), std::begin(d), std::end(d));
+        }
+        currentTime = Symbol::getNextTimestampMonth(currentTime);
+        t1.join();
+    }
+
+    std::cout << "Data: " << data.size() << " values." << std::endl;
 
     return data;
+}
+
+bool Symbol::dataAlreadyExists(const std::string& date) {
+    return std::filesystem::exists(this->getSymbolFilePath(date, "csv"));
+}
+
+long Symbol::getNextTimestampMonth(long ts) {
+    long inSecs = ts / 1000;
+    std::tm* now = std::localtime(&inSecs);
+    now->tm_mon += 1;
+    return timelocal(now) * 1000;;
 }

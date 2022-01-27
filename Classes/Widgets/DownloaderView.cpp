@@ -131,6 +131,8 @@ void DownloaderView::updateVisible(float dt)
 
     if(getContext()->startFetching) {
         getContext()->startSpinner = true;
+
+        getContext()->setShouldRender(false);
         std::thread t(fetchingSymbol, _info, getContext());
         t.detach();
     }

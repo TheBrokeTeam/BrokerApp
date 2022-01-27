@@ -81,10 +81,11 @@ public:
     std::vector<TickData> fetchData();
     std::vector<TickData> fetchCSVData();
 
-    std::vector<TickData> loadJson(const rapidjson::Document& json);
-    std::vector<TickData> loadCSV(const rapidcsv::Document& csv, const std::string&);
+    std::vector<TickData> loadJson(const rapidjson::Document&);
+    std::vector<TickData> loadCSV(const rapidcsv::Document&, const std::string&);
     std::string getStartDate();
     std::string getEndDate();
+    bool dataAlreadyExists(const std::string&);
 
 private:
     std::string _code;
@@ -97,7 +98,8 @@ private:
     std::string getSymbolFilePath(const std::string&, const std::string&);
 
     static void sleeping(const int&);
-    std::string msToStringDate(long ms);
+    static std::string timestampToStringDate(long ms);
+    static long getNextTimestampMonth(long);
 };
 
 

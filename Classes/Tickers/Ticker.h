@@ -46,6 +46,7 @@ public:
     BarHistory* getBarHistory();
     TickerId getTickerId();
 
+
 private:
     void open(const TickData &tickData);
     void close(const TickData &tickData);
@@ -60,6 +61,8 @@ private:
     Symbol _symbol{""};
 
     std::string _id;
+
+    bool _shouldRender = false;
 };
 
 

@@ -45,7 +45,7 @@ std::vector<float> CandleChart::calculateRatios() {
 
 void CandleChart::render(float dt)
 {
-    if(_ticker->getBarHistory() == nullptr || dataHist.size() <= 0) return;
+    if(!getContext()->getShouldRender()) return;
 
     static ImVec4 bull_color(0.5,1,0,1);
     static ImVec4 bear_color(1,0,0.5,1);

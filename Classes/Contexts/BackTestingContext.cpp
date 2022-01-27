@@ -522,18 +522,20 @@ void BackTestingContext::plotSubplotIndicators() {
 }
 
 Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
-
     _ticker->reset();
     _ticker->setSymbol(symbol);
 
     _data.clear();
 
     _data = symbol.fetchCSVData();
+
 //    _data = symbol.fetchData();
 
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
     loadTicker();
+
+    setShouldRender(true);
 
     return _ticker.get();
 }

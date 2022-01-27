@@ -304,14 +304,13 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
             curl = NULL;
 
             std::cout << std::filesystem::file_size(filename) << "\n";
-            if(std::filesystem::file_size(filename) > 328) {
+            // TODO: arrumar essa lógica
+            if(std::filesystem::file_size(filename) > 400) {
                 std::cout << "File not Empty" << std::endl;
                 miniz_cpp::zip_file file(filename);
                 file.extractall("./");
 
-                namespace fs = std::filesystem;
-
-                fs::remove(filename);
+                std::filesystem::remove(filename);
 
                 rapidcsv::Document doc(file.getinfo(0).filename, rapidcsv::LabelParams(-1, -1));
                 std::vector<float> close = doc.GetColumn<float>(5);
@@ -320,6 +319,7 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
                 documentResponse = doc;
             } else {
                 std::cout << "File is Empty" << std::endl;
+                std::filesystem::remove(filename);
             }
 
             return documentResponse;
