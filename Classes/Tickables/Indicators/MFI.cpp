@@ -18,74 +18,33 @@ void MFI::calculate(BarHistory* barHistory)
                                                 (*barHistory)(0,BarDataType::HIGH),
                                                 (*barHistory)(0,BarDataType::CLOSE));
 
-    if (lastTypicalPrice >= _typicalPrice[0]) {
-        _negativeMoneyFlow.insert(_negativeMoneyFlow.begin(), 0);
-        _positiveMoneyFlow.insert(_positiveMoneyFlow.begin(), lastTypicalPrice * (*barHistory)(0,BarDataType::VOLUME));
+    if(_typicalPrice.size() == 0) {
+        _typicalPrice.push(lastTypicalPrice);
+        return;
+    }
+
+    if (lastTypicalPrice >= _typicalPrice(0)) {
+        _negativeMoneyFlow.push(0);
+        _positiveMoneyFlow.push(0,BarDataType::VOLUME);
     } else {
-        _negativeMoneyFlow.insert(_negativeMoneyFlow.begin(), lastTypicalPrice * (*barHistory)(0,BarDataType::VOLUME));
-        _positiveMoneyFlow.insert(_positiveMoneyFlow.begin(), 0);
+        _negativeMoneyFlow.push(BarDataType::VOLUME);
+        _positiveMoneyFlow.push(0);
     };
-    _typicalPrice.insert(_typicalPrice.begin(), lastTypicalPrice);
+    _typicalPrice.push(lastTypicalPrice);
 
     if (_typicalPrice.size() >= _averageSize) {
         double totalPositive = 0, totalNegative = 0;
         for(int i = 0 ; i < _averageSize; i++) {
-            totalPositive += _positiveMoneyFlow[i];
-            totalNegative += _negativeMoneyFlow[i];
+            totalPositive += _positiveMoneyFlow(i);
+            totalNegative += _negativeMoneyFlow(i);
         }
 
         double ratio = totalPositive/totalNegative;
         double mfi = 100 - (100/(1+ratio));
 
-        // starting period indexes logic
-//        if (_typicalPrice.size() == _averageSize) {
-//
-//            if (mfi >= _upperBand) {
-//                _periodType == 1;
-//                _startUpperLineIndexes.push_back(0);
-//            } else if (mfi < _lowerBand) {
-//                _periodType == -1;
-//                _startLowerLineIndexes.push_back(0);
-//            } else {
-//                _periodType == 0;
-//                _startCenterLineIndexes.push_back(0);
-//            }
-//        }
-//
-//        //this period type
-//        int lastPeriodType = 0;
-//
-//        if (mfi >= _upperBand) {
-//            lastPeriodType == 1;
-//        } else if (mfi < _lowerBand) {
-//            lastPeriodType == -1;
-//        } else {
-//            lastPeriodType == 0;
-//        }
-//
-//        if (_periodType != lastPeriodType) {
-//            if (_periodType == 1) {
-//                _endUpperLineIndexes.push_back(0);
-//            } else if (_periodType == -1) {
-//                _endLowerLineIndexes.push_back(0);
-//            } else {
-//                _endCenterLineIndexes.push_back(0);
-//            }
-//
-//            if (lastPeriodType == 1) {
-//                _startUpperLineIndexes.push_back(0);
-//            } else if (lastPeriodType == -1) {
-//                _startLowerLineIndexes.push_back(0);
-//            } else {
-//                _startCenterLineIndexes.push_back(0);
-//            }
-//        }
-
         push(mfi);
         _time.push_back((*barHistory)(0,BarDataType::TIME));
-
     }
-
 
 }
 
@@ -112,13 +71,13 @@ void MFI::onPopupRender() {
         onLoad(_ticker->getBarHistory());
     }
     ImGui::Separator();
-    if(ImGui::SliderFloat("Center Threshold", &_lowerBand, 0.01, 1)){
-        _upperBand = 1 - _lowerBand;
-
-        reset();
-        onLoad(_ticker->getBarHistory());
-    }
-    ImGui::Separator();
+//    if(ImGui::SliderFloat("Center Threshold", &_lowerBand, 0.01, 1)){
+//        _upperBand = 1 - _lowerBand;
+//
+//        reset();
+//        onLoad(_ticker->getBarHistory());
+//    }
+//    ImGui::Separator();
 
     ImGui::ColorEdit4("ColorTop",{&_colorTop.x});
     ImGui::ColorEdit4("ColorBottom",{&_colorBottom.x});
@@ -129,8 +88,6 @@ void MFI::onPopupRender() {
 void MFI::reset() {
     Indicator::reset();
     clear();
-    //reset time on parent class Plot Item
-    resetPlot();
 }
 
 const ImVec4 &MFI::getColor() {

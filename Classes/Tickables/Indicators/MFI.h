@@ -27,19 +27,12 @@ private:
     float _upperBand = 0.8;
     float _lowerBand = 0.2;
 
-    double calculateTypicalPrice(double low, double high, double close);
-    std::vector<int> _startUpperLineIndexes;
-    std::vector<int> _startLowerLineIndexes;
-    std::vector<int> _startCenterLineIndexes;
-    std::vector<int> _endUpperLineIndexes;
-    std::vector<int> _endLowerLineIndexes;
-    std::vector<int> _endCenterLineIndexes;
+    static double calculateTypicalPrice(double low, double high, double close);
 
-    std::vector<double> _typicalPrice;
-    std::vector<double> _positiveMoneyFlow;
-    std::vector<double> _negativeMoneyFlow;
+    ReversedData<double> _typicalPrice;
+    ReversedData<double> _positiveMoneyFlow;
+    ReversedData<double> _negativeMoneyFlow;
     int _averageSize = 14;
-    int _periodType = 0;
 
 
 };
