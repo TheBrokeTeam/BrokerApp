@@ -33,7 +33,7 @@ void VWAP::calculate(BarHistory* barHistory)
 
     double vwap = _accTypicalPriceWeighted/_accVolume;
 
-    insert(vwap);
+    push(vwap);
     _time.push_back((*barHistory)(0,BarDataType::TIME));
 }
 

@@ -6,12 +6,12 @@
 #include "BarHistory.h"
 
 void BarHistory::append(const BarData &data) {
-    insert(data.time,BarDataType::TIME);
-    insert(data.open,BarDataType::OPEN);
-    insert(data.high,BarDataType::HIGH);
-    insert(data.low,BarDataType::LOW);
-    insert(data.close,BarDataType::CLOSE);
-    insert(data.volume,BarDataType::VOLUME);
+    push(data.time, BarDataType::TIME);
+    push(data.open, BarDataType::OPEN);
+    push(data.high, BarDataType::HIGH);
+    push(data.low, BarDataType::LOW);
+    push(data.close, BarDataType::CLOSE);
+    push(data.volume, BarDataType::VOLUME);
 }
 
 void BarHistory::updateLastBar(const BarData &barData) {

@@ -32,9 +32,9 @@ void Bollinger::calculate(BarHistory* barHistory)
         double mid = mean;
         double top = mean + 2 * stdv;
 
-        insert(bottom,BollingerDataType::BOTTOM);
-        insert(mid,BollingerDataType::MID);
-        insert(top,BollingerDataType::TOP);
+        push(bottom, BollingerDataType::BOTTOM);
+        push(mid, BollingerDataType::MID);
+        push(top, BollingerDataType::TOP);
 
         _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
