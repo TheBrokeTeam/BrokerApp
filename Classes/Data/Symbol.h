@@ -72,7 +72,7 @@ private:
     Interval _interval;
     TimeRange _range{0,0};
 
-    static Interval stringToInterval(const std::string &);
+    static Interval stringToInterval(const std::string&);
     std::string intervalToString();
     long getStepHourFromInterval();
     static std::string timestampToStringDate(long ms);

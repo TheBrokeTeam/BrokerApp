@@ -32,6 +32,7 @@ Symbol::Interval Symbol::stringToInterval(const std::string& value) {
     if ( value == "3d" ) return Interval::Interval_3Days;
     if ( value == "1w" ) return Interval::Interval_1Week;
     if ( value == "1mo" ) return Interval::Interval_1Month;
+    else return Interval::Interval_Unknown;
 }
 
 std::string Symbol::intervalToString() {
