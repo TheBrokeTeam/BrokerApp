@@ -11,6 +11,7 @@
 #include <zip_file.hpp>
 #include <filesystem>
 #include <iomanip>
+#include <filesystem>
 
 
 APIRouter::APIRouter(RequestMethod method, std::string path) {
@@ -265,7 +266,7 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
         std::cout << endpoint << std::endl;
         CURL *curl;
         FILE *fp;
-        CURLcode error;
+        CURLcode resp;
 
         rapidcsv::Document documentResponse;
         std::string readBuffer;
@@ -277,7 +278,6 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
         curl = curl_easy_init();
 
         if(curl) {
-            fp = fopen(filename.c_str(), "wb");
             curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str());
 
             struct curl_slist *hs = NULL;
@@ -290,6 +290,7 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
 
             curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
+            fp = fopen(filename.c_str(), "wb");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 
@@ -297,34 +298,36 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
             curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &elapsed);
             curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &effective_url);
 
-            error = curl_easy_perform(curl);
+            resp = curl_easy_perform(curl);
             curl_easy_cleanup(curl);
             fclose(fp);
-
             curl = NULL;
 
-            std::cout << std::filesystem::file_size(filename) << "\n";
-            // TODO: arrumar essa lógica
-            if(std::filesystem::file_size(filename) > 400) {
-                std::cout << "File not Empty" << std::endl;
-                miniz_cpp::zip_file file(filename);
-                file.extractall("./");
+            if(resp == CURLE_OK && response_code == 0) {
+                std::cout << "Tudo certo por aqui.." << std::endl;
+                try {
+                    miniz_cpp::zip_file file(filename);
+                    file.extractall("./");
+                    std::cout << "File is not Empty" << std::endl;
 
-                std::filesystem::remove(filename);
-
-                rapidcsv::Document doc(file.getinfo(0).filename, rapidcsv::LabelParams(-1, -1));
-                std::vector<float> close = doc.GetColumn<float>(5);
-                std::cout << "Read " << close.size() << " values." << std::endl;
-
-                documentResponse = doc;
+                    std::filesystem::remove(filename);
+                    rapidcsv::Document doc(file.getinfo(0).filename, rapidcsv::LabelParams(-1, -1));
+                    std::vector<float> close = doc.GetColumn<float>(5);
+                    std::cout << "Read " << close.size() << " values." << std::endl;
+                    documentResponse = doc;
+                    return documentResponse;
+                } catch( std::exception exception){
+                    std::cout << exception.what() << std::endl;
+                    std::cout << "File is Empty" << std::endl;
+                    std::filesystem::remove(filename);
+                    return documentResponse;
+                }
             } else {
-                std::cout << "File is Empty" << std::endl;
-                std::filesystem::remove(filename);
+                std::cout << "Problema com a requisição do ZIP" << std::endl;
+                return documentResponse;
             }
-
-            return documentResponse;
         }
-;
+
         return documentResponse;
 }
 

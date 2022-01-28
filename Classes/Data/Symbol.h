@@ -17,6 +17,9 @@
 class Symbol {
 public:
 
+//    Symbol() = default;
+    explicit Symbol(std::string code) : _code(std::move(code)) { _interval = Interval::Interval_Unknown; _range = TimeRange();}
+    explicit Symbol(const std::string& code, const std::string& interval, long startTime, long endTime);
 
     enum class Interval {
         Interval_1Minute,
@@ -36,72 +39,40 @@ public:
         Interval_1Month,
         Interval_Unknown
     };
-
     struct TimeRange {
         long start;
         long end;
     };
 
-    inline const char * ToString(Interval v) const {
-        switch (v) {
-            case Interval::Interval_1Minute: return "1m";
-            case Interval::Interval_3Minutes: return "3m";
-            case Interval::Interval_5Minutes: return "5m";
-            case Interval::Interval_15Minutes: return "15m";
-            case Interval::Interval_30Minutes: return "30m";
-            case Interval::Interval_1Hour: return "1h";
-            case Interval::Interval_2Hour: return "2h";
-            case Interval::Interval_4Hour: return "4h";
-            case Interval::Interval_6Hour: return "6h";
-            case Interval::Interval_8Hour: return "8h";
-            case Interval::Interval_12Hour: return "12h";
-            case Interval::Interval_1Day: return "1d";
-            case Interval::Interval_3Days: return "3d";
-            case Interval::Interval_1Week: return "1w";
-            case Interval::Interval_1Month: return "1M";
-            default:      return "[Unknown Interval]";
-        }
-    }
+    const std::string& getCode();
+    [[nodiscard]] long getStartTime() const;
+    [[nodiscard]] long getEndTime() const;
+    [[nodiscard]] std::string getStartDate() const;
+    [[nodiscard]] std::string getEndDate() const;
 
-    void setName(const std::string&);
-    void setTimeInterval(Interval);
-    const std::string& getName();
-    std::string getInterval();
-    long getStartTime() const;
-    long getEndTime() const;
     long getTimeIntervalInMinutes();
-    static int getMinutesFromTimeInterval(Interval interval);
-
-    Symbol() = default;
-    explicit Symbol(std::string code) : _code(std::move(code)) {}
-    explicit Symbol(const std::string& code, const std::string& interval, long startTime, long endTime);
 
     bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
 
     std::vector<TickData> fetchData();
     std::vector<TickData> fetchCSVData();
-
     std::vector<TickData> loadJson(const rapidjson::Document&);
     std::vector<TickData> loadCSV(const rapidcsv::Document&, const std::string&);
-    std::string getStartDate();
-    std::string getEndDate();
-    bool dataAlreadyExists(const std::string&);
+
+//    bool dataAlreadyExists(const std::string&);
 
 private:
     std::string _code;
     Interval _interval;
     TimeRange _range{0,0};
 
-    Interval resolveInterval(const std::string&);
-
+    static Interval stringToInterval(const std::string &);
+    std::string intervalToString();
     long getStepHourFromInterval();
-    std::string getSymbolFilePath(const std::string&, const std::string&);
-
-    static void sleeping(const int&);
     static std::string timestampToStringDate(long ms);
     static long getNextTimestampMonth(long);
+    std::string getSymbolFilePath(const std::string&, const std::string&);
+    static void sleeping(const int&);
 };
-
-
 
 #endif //BROKERAPP_SYMBOL_H

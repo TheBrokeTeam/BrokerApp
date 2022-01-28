@@ -78,7 +78,7 @@ void BackTestingContext::initialize() {
 //void BackTestingContext::loadSymbol(Symbol symbol) {
 //
 //    std::string filename = "data.zip";
-//    auto url = build_url(symbol.getName(),symbol.year,symbol.month,symbol.getInterval());
+//    auto url = build_url(symbol.getCode(),symbol.year,symbol.month,symbol.getInterval());
 //
 //    if(!dataAlreadyExists(symbol))
 //        auto resp = download_file(url,filename);

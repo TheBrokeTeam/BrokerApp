@@ -54,7 +54,7 @@ void CandleChart::render(float dt)
 
     const double candleWidth = _ticker->getSymbol()->getTimeIntervalInMinutes() * 60;
 
-//    if (ImGui::BeginTabItem(_ticker->getSymbol()->getName().c_str())) {
+//    if (ImGui::BeginTabItem(_ticker->getSymbol()->getCode().c_str())) {
 
     std::vector<float> ratios = calculateRatios();
 
