@@ -16,98 +16,98 @@ void PSAR::save(bool signal, double sar, double time) {
     data.value = sar;
     data.signal = signal;
 
-    insert(data);
+    push(data);
     _time.push_back(time);
 }
 
 void PSAR::calculate(BarHistory* barHistory)
 {
     if(barHistory->size() != 0) {
-        _low.insert(_low.begin(), (*barHistory)(0,BarDataType::LOW));
-        _high.insert(_high.begin(), (*barHistory)(0,BarDataType::HIGH));
+        _low.push((*barHistory)(0, BarDataType::LOW));
+        _high.push((*barHistory)(0, BarDataType::HIGH));
     }
 
     if (getData().empty()) {
-        _ep = _high[0];
+        _ep = _high(0);
         _signal = true;
-        _sar = _low[0];
+        _sar = _low(0);
 
         PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
 
     } else {
         if (_signal) { // se é long...
-            if (_low[0] <= _sar) { // se low é menor que sar, inverte. _sar = _ep
+            if (_low(0) <= _sar) { // se low é menor que sar, inverte. _sar = _ep
                 _signal = false;
                 _sar = _ep;
-                if (_sar < _high[1]) {
-                    _sar = _high[1];
+                if (_sar < _high(1)) {
+                    _sar = _high(1);
                 }
 
-                if (_sar < _high[0]) {
-                    _sar = _high[0];
+                if (_sar < _high(0)) {
+                    _sar = _high(0);
                 }
 
                 PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
 
                 _af = _af_step;
-                _ep = _low[0];
+                _ep = _low(0);
 
                 _sar = _sar + _af * (_ep - _sar);
 
-                if (_sar < _high[1]) {
-                    _sar = _high[1];
+                if (_sar < _high(1)) {
+                    _sar = _high(1);
                 }
-                if (_sar < _high[0]) {
-                    _sar = _high[0];
+                if (_sar < _high(0)) {
+                    _sar = _high(0);
                 }
 
             } else {
                 PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
 
-                if (_high[0] > _ep) {
-                    _ep = _high[0];
+                if (_high(0) > _ep) {
+                    _ep = _high(0);
                     _af += _af_step;
                     if (_af > _amax) {
                         _af = _amax;
                     }
                 }
                 _sar = _sar + _af * (_ep - _sar);
-                if (_sar > _low[1]){
-                    _sar = _low[1];
+                if (_sar > _low(1)){
+                    _sar = _low(1);
                 }
 
-                if (_sar > _low[0]) {
-                    _sar = _low[0];
+                if (_sar > _low(0)) {
+                    _sar = _low(0);
                 }
             }
         } else {
-            if (_high[0] >= _sar) {
+            if (_high(0) >= _sar) {
                 _signal = true;
                 _sar = _ep;
-                if (_sar > _low[1]){
-                    _sar = _low[1];
+                if (_sar > _low(1)){
+                    _sar = _low(1);
                 }
-                if (_sar > _low[0]) {
-                    _sar = _low[0];
+                if (_sar > _low(0)) {
+                    _sar = _low(0);
                 }
 
                 PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
 
                 _af = _af_step;
-                _ep = _high[0];
+                _ep = _high(0);
                 _sar = _sar + _af * (_ep - _sar);
-                if (_sar > _low[1]){
-                    _sar = _low[1];
+                if (_sar > _low(1)){
+                    _sar = _low(1);
                 }
-                if (_sar > _low[0]){
-                    _sar = _low[0];
+                if (_sar > _low(0)){
+                    _sar = _low(0);
                 }
 
             } else {
                 PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
 
-                if (_low[0] < _ep) {
-                    _ep = _low[0];
+                if (_low(0) < _ep) {
+                    _ep = _low(0);
                     _af += _af_step;
                     if (_af > _amax) {
                         _af = _amax;
@@ -115,11 +115,11 @@ void PSAR::calculate(BarHistory* barHistory)
                 }
                 _sar = _sar + _af * (_ep - _sar);
 
-                if (_sar < _high[1]) {
-                    _sar = _high[1];
+                if (_sar < _high(1)) {
+                    _sar = _high(1);
                 }
-                if (_sar < _high[0]){
-                    _sar = _high[0];
+                if (_sar < _high(0)){
+                    _sar = _high(0);
                 }
             }
         }

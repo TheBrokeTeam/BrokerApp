@@ -26,7 +26,7 @@ void EMA::calculate(BarHistory* barHistory)
             value = (getData().back() * (1.0 - factor)) + ((*barHistory)(0,BarDataType::CLOSE) * factor); //data[0] é o EMA de ontem (ultimo disponivel).
         }
 
-        insert(value);
+        push(value);
         _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 }
