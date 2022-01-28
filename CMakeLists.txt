@@ -130,7 +130,7 @@ add_executable(BrokerApp
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
-)
+        Classes/Widgets/ConnectView.cpp Classes/Widgets/ConnectView.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

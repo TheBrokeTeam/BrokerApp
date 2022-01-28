@@ -12,6 +12,7 @@
 #include "ProfitAndLossesView.h"
 #include "StockList.h"
 #include "StrategyEditor.h"
+#include "ConnectView.h"
 #include <fmt/format.h>
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
@@ -49,7 +50,7 @@ void MainMenuBar::updateAlways(float dt)
 
             if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
             if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
-
+            if (ImGui::MenuItem("Connect View", "",&(getContext()->getWidget<ConnectView>()->GetVisible()))){}
 
             ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);
             ImGui::MenuItem("ImGui Style",   nullptr, &_imgui_style);

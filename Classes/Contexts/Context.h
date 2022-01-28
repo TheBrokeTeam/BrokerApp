@@ -99,7 +99,7 @@ public:
     //developer phase
     virtual void showTabBars(bool show) = 0;
 
-    bool getShouldRender();
+    bool getShouldRender() const;
     void setShouldRender(bool);
 
 protected:
