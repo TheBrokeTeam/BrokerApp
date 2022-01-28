@@ -88,6 +88,10 @@ const std::vector<double> &PlotItem::getTime() {
     return _time;
 }
 
+const int PlotItem::getSize() {
+    return _time.size();
+}
+
 PlotItem::~PlotItem() {
     _name = "";
     _time.clear();

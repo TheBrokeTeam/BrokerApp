@@ -41,7 +41,7 @@ public:
         return _data[n];
     }
 
-    void insert(T val, int n = 0){
+    void push(T val, int n = 0){
         return _data[n].push_back(val);
     }
 

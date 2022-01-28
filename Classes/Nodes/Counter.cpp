@@ -5,6 +5,8 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 Counter::Counter(StrategyEditor* nodeEditor): INode(nodeEditor)
 {

@@ -14,44 +14,10 @@
 #include <stack>
 #include "../Helpers/graph.h"
 #include "../Tickables/Indicators/Indicator.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 class StrategyEditor;
-//Internal Nodes inside th graph
-enum class NodeType
-{
-    SMA,
-    EMA,
-    WMA,
-    TRIX,
-    PSAR,
-    BOLL,
-    VWAP,
-    CROSS,
-    COUNTER,
-    BAR_SEQ_DOWN,
-    BAR_SEQ_UP,
-    TREND,
-    TRADE,
-    VALUE
-};
-
-//all types of possible nodes rendered on editor (indicators + other nodes)
-enum class UiNodeType
-{
-    SMA,
-    EMA,
-    WMA,
-    TRIX,
-    PSAR,
-    BOLL,
-    VWAP,
-    CROSS,
-    COUNTER,
-    BAR_SEQ_DOWN,
-    BAR_SEQ_UP,
-    TREND,
-    TRADE
-};
 
 
 class GraphNode;

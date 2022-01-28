@@ -17,6 +17,7 @@ void Strategy::onClose(BarHistory* barHistory) {
 }
 
 void Strategy::onRender() {
+
     std::vector<double> time;
     std::vector<double> y;
 
@@ -33,8 +34,13 @@ void Strategy::onRender() {
         y.push_back(c.inPrice);
         y.push_back(c.outPrice);
 
-        ImPlot::SetNextLineStyle(c.profit > 0 ? _colorPositive : _colorNegative, _lineWidth);
-        ImPlot::PlotLine("##Trade", time.data(), y.data(), time.size());
+        double startTime = _ticker->getRenderRange().startTime;
+        double endTime = _ticker->getRenderRange().endTime;
+
+        if(c.inTime >= startTime && c.outTime <= endTime){
+            ImPlot::SetNextLineStyle(c.profit > 0 ? _colorPositive : _colorNegative, _lineWidth);
+            ImPlot::PlotLine("##Trade", time.data(), y.data(), time.size());
+        }
 
         time.clear();
         y.clear();

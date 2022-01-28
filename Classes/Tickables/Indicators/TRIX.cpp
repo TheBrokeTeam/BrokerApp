@@ -58,7 +58,7 @@ void TRIX::calculate(BarHistory* barHistory)
 
     if (EMA3.size() >= 2) {
         double trix = (EMA3[0] - EMA3[1])/EMA3[1];
-        insert(trix * 100); // todo: remover * 100. apenas para ajudar no teste até finalizar o TRIXNode.
+        push(trix * 100); // todo: remover * 100. apenas para ajudar no teste até finalizar o TRIXNode.
         _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 

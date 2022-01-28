@@ -6,6 +6,8 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "NodeType.h"
+#include "UiNodeType.h"
 
 
 TRIXNode::TRIXNode(std::shared_ptr<Indicator> trix,StrategyEditor* nodeEditor):INode(nodeEditor){

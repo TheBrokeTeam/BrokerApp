@@ -6,6 +6,8 @@
 #include "../Editor.h"
 #include <imnodes.h>
 #include "../Nodes/Add.h"
+#include "../Nodes/NodeType.h"
+#include "../Nodes/UiNodeType.h"
 
 // User callback
 void mini_map_node_hovering_callback(int node_id, void* user_data)
