@@ -154,51 +154,55 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
     return output;
 }
 
-std::vector<TickData> Symbol::loadCSV(const rapidcsv::Document& doc, const std::string& date){
+std::vector<TickData> Symbol::loadCSV(Path filepath){
 
     std::vector<TickData> output;
-    auto filePath = this->getSymbolFilePath(date, "csv");
 
-    std::cout << "Start Loading file: " << filePath << std::endl;
+    try {
+        rapidcsv::Document doc(filepath.csv_filename, rapidcsv::LabelParams(-1, -1));
 
-    for(int i = 0; i < doc.GetRowCount(); i++)
-    {
-        TickData data_open;
-        TickData data_high;
-        TickData data_low;
-        TickData data_close;
+        for(int i = 0; i < doc.GetRowCount(); i++)
+        {
+            TickData data_open;
+            TickData data_high;
+            TickData data_low;
+            TickData data_close;
 
-        //converting ms to sec and add simulated time for the sub tick on the bars
-        double timeInSec = doc.GetCell<long>(0,i)/1000.0;
-        data_open.time  = timeInSec;
-        data_high.time  = timeInSec + this->getTimeIntervalInMinutes()*0.25 * 60;
-        data_low.time  = timeInSec + this->getTimeIntervalInMinutes()*0.5* 60;
-        data_close.time  = timeInSec + this->getTimeIntervalInMinutes()*60 - 1;
+            //converting ms to sec and add simulated time for the sub tick on the bars
+            double timeInSec = doc.GetCell<long>(0,i)/1000.0;
+            data_open.time  = timeInSec;
+            data_high.time  = timeInSec + this->getTimeIntervalInMinutes()*0.25 * 60;
+            data_low.time  = timeInSec + this->getTimeIntervalInMinutes()*0.5* 60;
+            data_close.time  = timeInSec + this->getTimeIntervalInMinutes()*60 - 1;
 
-        data_open.price = doc.GetCell<double>(1,i);
-        data_high.price = doc.GetCell<double>(2,i);
-        data_low.price = doc.GetCell<double>(3,i);
-        data_close.price = doc.GetCell<double>(4,i);
+            data_open.price = doc.GetCell<double>(1,i);
+            data_high.price = doc.GetCell<double>(2,i);
+            data_low.price = doc.GetCell<double>(3,i);
+            data_close.price = doc.GetCell<double>(4,i);
 
-        //0.25 volume for each tick
-        double volume = doc.GetCell<double>(5,i)*0.25;
-        data_open.volume = volume;
-        data_high.volume = volume;
-        data_low.volume = volume;
-        data_close.volume = volume;
+            //0.25 volume for each tick
+            double volume = doc.GetCell<double>(5,i)*0.25;
+            data_open.volume = volume;
+            data_high.volume = volume;
+            data_low.volume = volume;
+            data_close.volume = volume;
 
-        output.push_back(data_open);
-        output.push_back(data_high);
-        output.push_back(data_low);
-        output.push_back(data_close);
+            output.push_back(data_open);
+            output.push_back(data_high);
+            output.push_back(data_low);
+            output.push_back(data_close);
+        }
+
+    } catch(std::exception exception) {
+        std::cout << "Problema em carregar o CSV" << std::endl;
     }
-
     return output;
 }
 
 std::string Symbol::getSymbolFilePath(const std::string& date, const std::string& extension) {
 
-    std::string out = fmt::format("{}-{}-{}.{}",
+    std::string out = fmt::format("./Data/{}/{}-{}-{}.{}",
+                                  getCode(),
                                   getCode(),
                                   (intervalToString() == "1M") ? "1mo" : intervalToString(),
                                   date,
@@ -238,29 +242,45 @@ std::vector<TickData> Symbol::fetchCSVData() {
     long currentTime = this->getStartTime();
     long endTime = this->getEndTime();
 
-    KLineService service;
+    if(!std::filesystem::exists("./Data"))
+        std::filesystem::create_directory("./Data");
 
+    if(!std::filesystem::exists(fmt::format("./Data/{}", getCode())))
+        std::filesystem::create_directory(fmt::format("./Data/{}", getCode()));
+
+    KLineService service;
     std::vector<TickData> data;
 
     while(currentTime < endTime) {
         std::string date = timestampToStringDate(currentTime);
 
-        rapidcsv::Document csvData = service.fetchCSVData(getCode(),
-                                                          (intervalToString() == "1M") ? "1mo" : intervalToString(),
-                                                          date,
-                                                          getSymbolFilePath(date, "zip"));
+        Path filepath = Path{fmt::format("./Data/{}", getCode()),
+                             getSymbolFilePath(date, "zip"),
+                             getSymbolFilePath(date, "csv")};
 
-        std::vector<TickData> d = loadCSV(csvData, getStartDate());
+        if(!std::filesystem::exists(filepath.csv_filename))
+            service.downloadData(getCode(),
+                                 (intervalToString() == "1M") ? "1mo" : intervalToString(),
+                                 date,
+                                 filepath);
 
-        if(!d.empty()) {
+        std::vector<TickData> d = loadCSV(filepath);
+
+        if(!d.empty())
             data.insert(std::end(data), std::begin(d), std::end(d));
-        }
+
         currentTime = Symbol::getNextTimestampMonth(currentTime);
     }
 
-    std::cout << "Data: " << data.size() << " values." << std::endl;
+    std::vector<TickData> matched;
+    for (TickData &ref: data)
+        if (ref.time >= (getStartTime()/1000) && ref.time <= (getEndTime()/1000))
+            matched.push_back(ref);
 
-    return data;
+    std::cout << "Data: " << data.size() << " values." << std::endl;
+    std::cout << "Matched: " << matched.size() << " values." << std::endl;
+
+    return matched;
 }
 
 //bool Symbol::dataAlreadyExists(const std::string& date) {

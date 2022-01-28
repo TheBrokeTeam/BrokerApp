@@ -260,15 +260,15 @@ rapidjson::Document APIRouter::request(const std::string& baseURL) {
     }
 }
 
-rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::string& filename) {
+void APIRouter::download(const std::string &baseURL, const Symbol::Path& filepath) {
         std::string endpoint = baseURL + this->getPath();
 
         std::cout << endpoint << std::endl;
         CURL *curl;
         FILE *fp;
-        CURLcode resp;
+        CURLcode res_code;
 
-        rapidcsv::Document documentResponse;
+        std::string response;
         std::string readBuffer;
         std::string readHeader;
         long response_code;
@@ -290,7 +290,7 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
 
             curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
-            fp = fopen(filename.c_str(), "wb");
+            fp = fopen(filepath.zip_filename.c_str(), "wb");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 
@@ -298,37 +298,32 @@ rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::st
             curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &elapsed);
             curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &effective_url);
 
-            resp = curl_easy_perform(curl);
+            res_code = curl_easy_perform(curl);
             curl_easy_cleanup(curl);
             fclose(fp);
             curl = NULL;
 
-            if(resp == CURLE_OK && response_code == 0) {
+            if(res_code == CURLE_OK && response_code == 0) {
                 std::cout << "Tudo certo por aqui.." << std::endl;
                 try {
-                    miniz_cpp::zip_file file(filename);
-                    file.extractall("./");
-                    std::cout << "File is not Empty" << std::endl;
+                    miniz_cpp::zip_file file(filepath.zip_filename);
+                    file.extractall(filepath.dirname);
 
-                    std::filesystem::remove(filename);
-                    rapidcsv::Document doc(file.getinfo(0).filename, rapidcsv::LabelParams(-1, -1));
-                    std::vector<float> close = doc.GetColumn<float>(5);
-                    std::cout << "Read " << close.size() << " values." << std::endl;
-                    documentResponse = doc;
-                    return documentResponse;
-                } catch( std::exception exception){
+                    std::filesystem::remove(filepath.zip_filename);
+//                    rapidcsv::Document doc(file.getinfo(0).filename, rapidcsv::LabelParams(-1, -1));
+
+                    //std::vector<float> close = doc.GetColumn<float>(5);
+                    //std::cout << "Read " << close.size() << " values." << std::endl;
+
+                } catch(std::exception exception){
                     std::cout << exception.what() << std::endl;
                     std::cout << "File is Empty" << std::endl;
-                    std::filesystem::remove(filename);
-                    return documentResponse;
+                    std::filesystem::remove(filepath.zip_filename);
                 }
             } else {
                 std::cout << "Problema com a requisição do ZIP" << std::endl;
-                return documentResponse;
             }
         }
-
-        return documentResponse;
 }
 
 static size_t WriteCallback(void *ptr, size_t size, size_t nmemb, std::string* data) {

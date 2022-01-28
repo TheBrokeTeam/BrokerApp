@@ -44,6 +44,12 @@ public:
         long end;
     };
 
+    struct Path {
+        std::string dirname;
+        std::string zip_filename;
+        std::string csv_filename;
+    };
+
     const std::string& getCode();
     [[nodiscard]] long getStartTime() const;
     [[nodiscard]] long getEndTime() const;
@@ -57,7 +63,7 @@ public:
     std::vector<TickData> fetchData();
     std::vector<TickData> fetchCSVData();
     std::vector<TickData> loadJson(const rapidjson::Document&);
-    std::vector<TickData> loadCSV(const rapidcsv::Document&, const std::string&);
+    std::vector<TickData> loadCSV(Path);
 
 //    bool dataAlreadyExists(const std::string&);
 

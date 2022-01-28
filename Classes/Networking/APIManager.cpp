@@ -11,6 +11,6 @@ rapidjson::Document APIManager::Request(APIRouter router) {
     return router.request(this->baseURL);
 }
 
-rapidcsv::Document APIManager::Download(APIRouter router, const std::string& filename) {
-    return router.download(this->csvURL, filename);
+void APIManager::Download(APIRouter router, Symbol::Path path) {
+    return router.download(this->csvURL, path);
 }
