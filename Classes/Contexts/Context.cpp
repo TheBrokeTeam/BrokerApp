@@ -61,7 +61,7 @@ Indicator *Context::getIndicatorByName(const std::string &name) {
 //Strategy *Context::getStrategyByName(const std::string &name) {
 //    for (const auto& strategy : _strategies)
 //    {
-//        if (strategy->getName() == name)
+//        if (strategy->getCode() == name)
 //        {
 //            return strategy.get();
 //        }

@@ -11,6 +11,6 @@ rapidjson::Document KLineService::fetchData(const std::string& symbol, const std
     return this->apiManager.Request(KLineRouter().getData(symbol, interval, startTime, endTime, limit));
 }
 
-rapidcsv::Document KLineService::fetchCSVData(const std::string& symbol, const std::string& interval, const std::string& date, const std::string& filename) {
-    return this->apiManager.Download(KLineRouter().getCSVData(symbol, interval, date), filename);
+void KLineService::downloadData(const std::string& symbol, const std::string& interval, const std::string& date, Symbol::Path path) {
+    return this->apiManager.Download(KLineRouter().getCSVData(symbol, interval, date), path);
 }

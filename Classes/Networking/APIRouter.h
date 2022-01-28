@@ -11,6 +11,7 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidcsv.h>
+#include "../Data/Symbol.h"
 
 enum RequestMethod {
     get,
@@ -36,7 +37,7 @@ public:
     std::string getBody();
     void setBody(std::string);
     rapidjson::Document request(const std::string&);
-    rapidcsv::Document download(const std::string&, const std::string&);
+    void download(const std::string&, const Symbol::Path&);
 };
 
 static size_t WriteCallback(void *ptr, size_t size, size_t nmemb, std::string* data);

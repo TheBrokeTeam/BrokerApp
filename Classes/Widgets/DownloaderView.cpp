@@ -129,14 +129,6 @@ void DownloaderView::updateVisible(float dt)
     ImGui::Dummy(ImVec2(200,10));
 
 
-    if(getContext()->startFetching) {
-        getContext()->startSpinner = true;
-
-        getContext()->setShouldRender(false);
-        std::thread t(fetchingSymbol, _info, getContext());
-        t.detach();
-    }
-
     if(getContext()->startSpinner) {
         ImGui::SetCursorPosX(100);
         ImGui::LoadingIndicatorCircle("Waiting", 10, bg, col, 12, 10);
@@ -149,8 +141,15 @@ void DownloaderView::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
     if (ImGui::Button("Download",ImVec2(200,50))) {
-        puts("Clicou no botão fetch!!!");
+        puts("Clicou no botão download!!!");
         getContext()->startFetching = true;
+    }
+
+    if(getContext()->startFetching) {
+        getContext()->startSpinner = true;
+        getContext()->setShouldRender(false);
+        std::thread t(fetchingSymbol, _info, getContext());
+        t.detach();
     }
 }
 

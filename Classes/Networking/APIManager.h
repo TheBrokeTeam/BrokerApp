@@ -6,6 +6,7 @@
 #define UNTITLED1_APIMANAGER_H
 
 #include "APIRouter.h"
+#include "../Data/Symbol.h"
 #include <string>
 
 class APIManager {
@@ -16,7 +17,7 @@ protected:
 public:
     APIManager();
     rapidjson::Document Request(APIRouter);
-    rapidcsv::Document Download(APIRouter, const std::string&);
+    void Download(APIRouter, Symbol::Path);
 
 };
 

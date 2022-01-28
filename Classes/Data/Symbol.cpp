@@ -12,12 +12,11 @@
 
 Symbol::Symbol(const std::string &code, const std::string &interval, long startTime, long endTime) {
     _code = code;
-    _interval = resolveInterval(interval);
+    _interval = stringToInterval(interval);
     _range = {startTime,endTime};
 }
 
-
-Symbol::Interval Symbol::resolveInterval(const std::string& value) {
+Symbol::Interval Symbol::stringToInterval(const std::string& value) {
     if ( value == "1m" ) return Interval::Interval_1Minute;
     if ( value == "3m" ) return Interval::Interval_3Minutes;
     if ( value == "5m" ) return Interval::Interval_5Minutes;
@@ -35,29 +34,55 @@ Symbol::Interval Symbol::resolveInterval(const std::string& value) {
     if ( value == "1mo" ) return Interval::Interval_1Month;
 }
 
-void Symbol::setName(const std::string& symbol){
-    _code = symbol;
+std::string Symbol::intervalToString() {
+    switch (_interval) {
+        case Interval::Interval_1Minute:    return "1m";
+        case Interval::Interval_3Minutes:   return "3m";
+        case Interval::Interval_5Minutes:   return "5m";
+        case Interval::Interval_15Minutes:  return "15m";
+        case Interval::Interval_30Minutes:  return "30m";
+        case Interval::Interval_1Hour:      return "1h";
+        case Interval::Interval_2Hour:      return "2h";
+        case Interval::Interval_4Hour:      return "4h";
+        case Interval::Interval_6Hour:      return "6h";
+        case Interval::Interval_8Hour:      return "8h";
+        case Interval::Interval_12Hour:     return "12h";
+        case Interval::Interval_1Day:       return "1d";
+        case Interval::Interval_3Days:      return "3d";
+        case Interval::Interval_1Week:      return "1w";
+        case Interval::Interval_1Month:     return "1M";
+        default:                            return "[Unknown Interval]";
+    }
 }
 
-void Symbol::setTimeInterval(Interval timeInterval){
-    _interval = timeInterval;
+long Symbol::getStepHourFromInterval() {
+    switch (_interval) {
+        case Interval::Interval_1Minute:    return 16;
+        case Interval::Interval_3Minutes:   return 50;
+        case Interval::Interval_5Minutes:   return 83;
+        case Interval::Interval_15Minutes:  return 250;
+        case Interval::Interval_30Minutes:  return 500;
+        case Interval::Interval_1Hour:      return 1000;
+        case Interval::Interval_2Hour:      return 2000;
+        case Interval::Interval_4Hour:      return 4000;
+        case Interval::Interval_6Hour:      return 6000;
+        case Interval::Interval_8Hour:      return 8000;
+        case Interval::Interval_12Hour:     return 12000;
+        case Interval::Interval_1Day:       return 24000;
+        case Interval::Interval_3Days:      return 72000;
+        case Interval::Interval_1Week:      return 168000;
+        case Interval::Interval_1Month:     return 720000;
+        default:                            return 16;
+    }
 }
 
-const std::string& Symbol::getName(){
+const std::string& Symbol::getCode(){
     return _code;
 }
 
-std::string Symbol::getInterval() {
-    return ToString(_interval);
-}
-
 long Symbol::getTimeIntervalInMinutes() {
-    return getMinutesFromTimeInterval(_interval);
-}
-
-int Symbol::getMinutesFromTimeInterval(Interval interval) {
     std::vector<int> intArr = {1,3,5,15,39,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
-    return intArr[int(interval)];
+    return intArr[int(_interval)];
 }
 
 long Symbol::getStartTime() const {
@@ -68,12 +93,12 @@ long Symbol::getEndTime() const {
     return _range.end;
 }
 
-std::string Symbol::getStartDate() {
-    return this->timestampToStringDate(_range.start);
+std::string Symbol::getStartDate() const {
+    return timestampToStringDate(_range.start);
 }
 
-std::string Symbol::getEndDate() {
-    return this->timestampToStringDate(_range.end);
+std::string Symbol::getEndDate() const {
+    return timestampToStringDate(_range.end);
 }
 
 std::string Symbol::timestampToStringDate(long ms) {
@@ -129,75 +154,57 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
     return output;
 }
 
-std::vector<TickData> Symbol::loadCSV(const rapidcsv::Document& doc, const std::string& date){
+std::vector<TickData> Symbol::loadCSV(Path filepath){
 
     std::vector<TickData> output;
-    auto filePath = this->getSymbolFilePath(date, "csv");
 
-    std::cout << "Start Loading file: " << filePath << std::endl;
+    try {
+        rapidcsv::Document doc(filepath.csv_filename, rapidcsv::LabelParams(-1, -1));
 
-    for(int i = 0; i < doc.GetRowCount(); i++)
-    {
-        TickData data_open;
-        TickData data_high;
-        TickData data_low;
-        TickData data_close;
+        for(int i = 0; i < doc.GetRowCount(); i++)
+        {
+            TickData data_open;
+            TickData data_high;
+            TickData data_low;
+            TickData data_close;
 
-        //converting ms to sec and add simulated time for the sub tick on the bars
-        double timeInSec = doc.GetCell<long>(0,i)/1000.0;
-        data_open.time  = timeInSec;
-        data_high.time  = timeInSec + this->getTimeIntervalInMinutes()*0.25 * 60;
-        data_low.time  = timeInSec + this->getTimeIntervalInMinutes()*0.5* 60;
-        data_close.time  = timeInSec + this->getTimeIntervalInMinutes()*60 - 1;
+            //converting ms to sec and add simulated time for the sub tick on the bars
+            double timeInSec = doc.GetCell<long>(0,i)/1000.0;
+            data_open.time  = timeInSec;
+            data_high.time  = timeInSec + this->getTimeIntervalInMinutes()*0.25 * 60;
+            data_low.time  = timeInSec + this->getTimeIntervalInMinutes()*0.5* 60;
+            data_close.time  = timeInSec + this->getTimeIntervalInMinutes()*60 - 1;
 
-        data_open.price = doc.GetCell<double>(1,i);
-        data_high.price = doc.GetCell<double>(2,i);
-        data_low.price = doc.GetCell<double>(3,i);
-        data_close.price = doc.GetCell<double>(4,i);
+            data_open.price = doc.GetCell<double>(1,i);
+            data_high.price = doc.GetCell<double>(2,i);
+            data_low.price = doc.GetCell<double>(3,i);
+            data_close.price = doc.GetCell<double>(4,i);
 
-        //0.25 volume for each tick
-        double volume = doc.GetCell<double>(5,i)*0.25;
-        data_open.volume = volume;
-        data_high.volume = volume;
-        data_low.volume = volume;
-        data_close.volume = volume;
+            //0.25 volume for each tick
+            double volume = doc.GetCell<double>(5,i)*0.25;
+            data_open.volume = volume;
+            data_high.volume = volume;
+            data_low.volume = volume;
+            data_close.volume = volume;
 
-        output.push_back(data_open);
-        output.push_back(data_high);
-        output.push_back(data_low);
-        output.push_back(data_close);
+            output.push_back(data_open);
+            output.push_back(data_high);
+            output.push_back(data_low);
+            output.push_back(data_close);
+        }
+
+    } catch(std::exception exception) {
+        std::cout << "Problema em carregar o CSV" << std::endl;
     }
-
     return output;
-}
-
-
-long Symbol::getStepHourFromInterval() {
-    switch (_interval) {
-        case Interval::Interval_1Minute: return 16;
-        case Interval::Interval_3Minutes: return 50;
-        case Interval::Interval_5Minutes: return 83;
-        case Interval::Interval_15Minutes: return 250;
-        case Interval::Interval_30Minutes: return 500;
-        case Interval::Interval_1Hour: return 1000;
-        case Interval::Interval_2Hour: return 2000;
-        case Interval::Interval_4Hour: return 4000;
-        case Interval::Interval_6Hour: return 6000;
-        case Interval::Interval_8Hour: return 8000;
-        case Interval::Interval_12Hour: return 12000;
-        case Interval::Interval_1Day: return 24000;
-        case Interval::Interval_3Days: return 72000;
-        case Interval::Interval_1Week: return 168000;
-        case Interval::Interval_1Month: return 720000;
-        default: return 16;
-    }
 }
 
 std::string Symbol::getSymbolFilePath(const std::string& date, const std::string& extension) {
 
-    std::string out = fmt::format("{}-{}-{}.{}",
-                                  this->getName(),
-                                  this->getInterval(),
+    std::string out = fmt::format("./Data/{}/{}-{}-{}.{}",
+                                  getCode(),
+                                  getCode(),
+                                  (intervalToString() == "1M") ? "1mo" : intervalToString(),
                                   date,
                                   extension);
 
@@ -216,9 +223,9 @@ std::vector<TickData> Symbol::fetchData() {
     while (currentTime < endTime){
         std::thread t1(sleeping, 50);
 
-        long newEndTime = currentTime + (this->getStepHourFromInterval() * (60 * 60 * 1000));
+        long newEndTime = currentTime + (getStepHourFromInterval() * (60 * 60 * 1000));
 
-        rapidjson::Document jsonData = service.fetchData(this->getName(), this->getInterval(), currentTime, newEndTime - (60 * 1000), 1000);
+        rapidjson::Document jsonData = service.fetchData(getCode(), intervalToString(), currentTime, newEndTime - (60 * 1000), 1000);
 
         std::vector<TickData> d = loadJson(jsonData);
 
@@ -235,36 +242,50 @@ std::vector<TickData> Symbol::fetchCSVData() {
     long currentTime = this->getStartTime();
     long endTime = this->getEndTime();
 
-    KLineService service;
+    if(!std::filesystem::exists("./Data"))
+        std::filesystem::create_directory("./Data");
 
+    if(!std::filesystem::exists(fmt::format("./Data/{}", getCode())))
+        std::filesystem::create_directory(fmt::format("./Data/{}", getCode()));
+
+    KLineService service;
     std::vector<TickData> data;
 
     while(currentTime < endTime) {
-        std::thread t1(sleeping, 50);
-        std::string date = this->timestampToStringDate(currentTime);
+        std::string date = timestampToStringDate(currentTime);
 
-        rapidcsv::Document csvData = service.fetchCSVData(this->getName(),
-                                                          this->getInterval(),
-                                                          date,
-                                                          this->getSymbolFilePath(date, "zip"));
+        Path filepath = Path{fmt::format("./Data/{}", getCode()),
+                             getSymbolFilePath(date, "zip"),
+                             getSymbolFilePath(date, "csv")};
 
-        std::vector<TickData> d = loadCSV(csvData, this->getStartDate());
+        if(!std::filesystem::exists(filepath.csv_filename))
+            service.downloadData(getCode(),
+                                 (intervalToString() == "1M") ? "1mo" : intervalToString(),
+                                 date,
+                                 filepath);
 
-        if(!d.empty()) {
+        std::vector<TickData> d = loadCSV(filepath);
+
+        if(!d.empty())
             data.insert(std::end(data), std::begin(d), std::end(d));
-        }
+
         currentTime = Symbol::getNextTimestampMonth(currentTime);
-        t1.join();
     }
 
+    std::vector<TickData> matched;
+    for (TickData &ref: data)
+        if (ref.time >= (getStartTime()/1000) && ref.time <= (getEndTime()/1000))
+            matched.push_back(ref);
+
     std::cout << "Data: " << data.size() << " values." << std::endl;
+    std::cout << "Matched: " << matched.size() << " values." << std::endl;
 
-    return data;
+    return matched;
 }
 
-bool Symbol::dataAlreadyExists(const std::string& date) {
-    return std::filesystem::exists(this->getSymbolFilePath(date, "csv"));
-}
+//bool Symbol::dataAlreadyExists(const std::string& date) {
+//    return std::filesystem::exists(getSymbolFilePath(date, "csv"));
+//}
 
 long Symbol::getNextTimestampMonth(long ts) {
     long inSecs = ts / 1000;
