@@ -83,6 +83,8 @@ private:
     Symbol _symbol{""};
 
     std::string _id;
+
+    bool _shouldRender = false;
 };
 
 

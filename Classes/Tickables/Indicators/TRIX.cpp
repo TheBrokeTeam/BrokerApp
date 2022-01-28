@@ -12,21 +12,21 @@ TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
     setPlotName("TRIX");
 }
 
-double TRIX::calculateEMA(std::vector<double> origin,std::vector<double> destination, int averageSize) {
+double TRIX::calculateEMA( ReversedData<double>& origin, ReversedData<double>&  destination, int averageSize) {
 
     if(origin.size() >= averageSize)
     {
         double value = 0;
 
-        if (destination.empty()) {
+        if (destination.getData().empty()) {
             for(int i = 0; i < averageSize; i++) {
-                value += origin[i];
+                value += origin(i);
             }
             value /= averageSize;
 
         } else {
             double factor = (2.0)/(1.0 * (1+averageSize));
-            value = (destination[0] * (1 - factor)) + (origin[0] * factor); // (lv) destination[0] é equivalente ao valor do periodo anterior da sequencia de destino (que está sendo atualizada agora).
+            value = (destination(0) * (1 - factor)) + (origin(0) * factor); // (lv) destination[0] é equivalente ao valor do periodo anterior da sequencia de destino (que está sendo atualizada agora).
         }
         return value;
     }
@@ -35,29 +35,29 @@ double TRIX::calculateEMA(std::vector<double> origin,std::vector<double> destina
 void TRIX::calculate(BarHistory* barHistory)
 {
     if(barHistory->size() != 0) {
-        priceSequence.insert(priceSequence.begin(), (*barHistory)(0,BarDataType::CLOSE));
+        priceSequence.push((*barHistory)(0,BarDataType::CLOSE));
 
         double e1, e2, e3;
 
         if (priceSequence.size() >= _averageSize) {
             e1 = calculateEMA(priceSequence, EMA1, _averageSize);
-            EMA1.insert(EMA1.begin(), e1);
+            EMA1.push(e1);
         }
 
         if (EMA1.size() >= _averageSize) {
             e2 = calculateEMA(EMA1, EMA2, _averageSize);
-            EMA2.insert(EMA2.begin(), e2);
+            EMA2.push(e2);
         }
 
         if (EMA2.size() >= _averageSize) {
             e3 = calculateEMA(EMA2, EMA3, _averageSize);
-            EMA3.insert(EMA3.begin(), e3);
+            EMA3.push(e3);
         }
 
     }
 
     if (EMA3.size() >= 2) {
-        double trix = (EMA3[0] - EMA3[1])/EMA3[1];
+        double trix = (EMA3(0) - EMA3(1)/EMA3(1));
         push(trix * 100); // todo: remover * 100. apenas para ajudar no teste até finalizar o TRIXNode.
         _time.push_back((*barHistory)(0,BarDataType::TIME));
     }

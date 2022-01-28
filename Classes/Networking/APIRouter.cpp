@@ -8,8 +8,10 @@
 #include "curl/easy.h"
 #include <iostream>
 #include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
+#include <zip_file.hpp>
+#include <filesystem>
+#include <iomanip>
+
 
 APIRouter::APIRouter(RequestMethod method, std::string path) {
     this->method = method;
@@ -255,6 +257,75 @@ rapidjson::Document APIRouter::request(const std::string& baseURL) {
             std::cout << "I'm here DEL" << std::endl;
             return this->del(baseURL);
     }
+}
+
+rapidcsv::Document APIRouter::download(const std::string &baseURL, const std::string& filename) {
+        std::string endpoint = baseURL + this->getPath();
+
+        std::cout << endpoint << std::endl;
+        CURL *curl;
+        FILE *fp;
+        CURLcode error;
+
+        rapidcsv::Document documentResponse;
+        std::string readBuffer;
+        std::string readHeader;
+        long response_code;
+        double elapsed;
+        char* effective_url;
+
+        curl = curl_easy_init();
+
+        if(curl) {
+            fp = fopen(filename.c_str(), "wb");
+            curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str());
+
+            struct curl_slist *hs = NULL;
+            hs = curl_slist_append(hs, "Content-Type: application/zip");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hs);
+
+            curl_easy_setopt(curl, CURLOPT_CAINFO, "./ca-bundle.crt");
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+
+            curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+
+            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+            curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &elapsed);
+            curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &effective_url);
+
+            error = curl_easy_perform(curl);
+            curl_easy_cleanup(curl);
+            fclose(fp);
+
+            curl = NULL;
+
+            std::cout << std::filesystem::file_size(filename) << "\n";
+            // TODO: arrumar essa lógica
+            if(std::filesystem::file_size(filename) > 400) {
+                std::cout << "File not Empty" << std::endl;
+                miniz_cpp::zip_file file(filename);
+                file.extractall("./");
+
+                std::filesystem::remove(filename);
+
+                rapidcsv::Document doc(file.getinfo(0).filename, rapidcsv::LabelParams(-1, -1));
+                std::vector<float> close = doc.GetColumn<float>(5);
+                std::cout << "Read " << close.size() << " values." << std::endl;
+
+                documentResponse = doc;
+            } else {
+                std::cout << "File is Empty" << std::endl;
+                std::filesystem::remove(filename);
+            }
+
+            return documentResponse;
+        }
+;
+        return documentResponse;
 }
 
 static size_t WriteCallback(void *ptr, size_t size, size_t nmemb, std::string* data) {

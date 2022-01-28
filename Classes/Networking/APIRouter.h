@@ -10,6 +10,7 @@
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
+#include <rapidcsv.h>
 
 enum RequestMethod {
     get,
@@ -24,17 +25,18 @@ private:
     std::string path;
     std::string body;
 protected:
-    rapidjson::Document get(const std::string& endpoint);
-    rapidjson::Document post(const std::string& endpoint);
-    rapidjson::Document patch(const std::string& endpoint);
-    rapidjson::Document del(const std::string& endpoint);
+    rapidjson::Document get(const std::string&);
+    rapidjson::Document post(const std::string&);
+    rapidjson::Document patch(const std::string&);
+    rapidjson::Document del(const std::string&);
 public:
-    APIRouter(RequestMethod method, std::string path);
+    APIRouter(RequestMethod, std::string);
     RequestMethod getMethod();
     std::string getPath();
     std::string getBody();
-    void setBody(std::string newBody);
-    rapidjson::Document request(const std::string& endpoint);
+    void setBody(std::string);
+    rapidjson::Document request(const std::string&);
+    rapidcsv::Document download(const std::string&, const std::string&);
 };
 
 static size_t WriteCallback(void *ptr, size_t size, size_t nmemb, std::string* data);

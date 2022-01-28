@@ -15,6 +15,7 @@ protected:
 public:
     KLineRouter();
     [[nodiscard]] APIRouter getData(const std::string&, const std::string&, long, long, int) const;
+    [[nodiscard]] APIRouter getCSVData(const std::string& symbol, const std::string& interval, const std::string& date) const;
 };
 
 

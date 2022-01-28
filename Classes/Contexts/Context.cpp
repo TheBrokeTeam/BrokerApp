@@ -68,3 +68,12 @@ Indicator *Context::getIndicatorByName(const std::string &name) {
 //    }
 //    return nullptr;
 //}
+
+
+void Context::setShouldRender(bool value) {
+    _shouldRender = value;
+}
+
+bool Context::getShouldRender() {
+    return _shouldRender;
+}

@@ -15,6 +15,7 @@ private:
 public:
     KLineService();
     rapidjson::Document fetchData(const std::string&, const std::string&, long, long, int);
+    rapidcsv::Document fetchCSVData(const std::string&, const std::string&, const std::string&, const std::string&);
 };
 
 
