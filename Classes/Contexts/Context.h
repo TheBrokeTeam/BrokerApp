@@ -98,6 +98,10 @@ public:
 
     //developer phase
     virtual void showTabBars(bool show) = 0;
+
+    bool getShouldRender();
+    void setShouldRender(bool);
+
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
@@ -107,6 +111,8 @@ protected:
     std::vector<std::shared_ptr<INode>> _nodes;
 
     Editor *_editor{nullptr};
+
+    bool _shouldRender = false;
 };
 
 #endif //BROKERAPP_CONTEXT_H

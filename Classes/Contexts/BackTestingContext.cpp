@@ -5,15 +5,6 @@
 #include "BackTestingContext.h"
 
 #include <curl/curl.h>
-#include <ctime>
-#include <iomanip>
-#include <sstream>
-#include <iostream>
-#include <filesystem>
-#include <fmt/format.h>
-#include <zip_file.hpp>
-#include <rapidcsv.h>
-#include "../Helpers/JsonUtils.h"
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 #include "../Tickables/Indicators/EMA.h"
@@ -21,7 +12,6 @@
 #include "../Tickables/Indicators/WMA.h"
 #include "../Tickables/Indicators/PSAR.h"
 #include "../Tickables/Indicators/VWAP.h"
-
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
 #include "../Widgets/SimulationController.h"
@@ -29,11 +19,9 @@
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
 #include "../Widgets/StockList.h"
-#include "../Tickables/Strategies/IndicatorToChartExample.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/PSARNode.h"
 #include "../Nodes/BollingerNode.h"
-
 #include "../Nodes/CrossNode.h"
 #include "../Nodes/Counter.h"
 #include "../Nodes/TradeNode.h"
@@ -44,10 +32,6 @@
 #include "../Nodes/EMANode.h"
 #include "../Nodes/WMANode.h"
 #include "../Nodes/TRIXNode.h"
-
-
-//Network
-#include "../Networking/Services/KLineService.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -110,125 +94,71 @@ void BackTestingContext::initialize() {
 //    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
 //}
 
-BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {
-    bool success = false;
-    CURL *curl;
-    FILE *fp;
-    CURLcode res;
-    curl = curl_easy_init();
-    DownloadResponse response;
-    if (curl) {
-        fp = fopen(filename.c_str(), "wb");
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+//BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {
+//    bool success = false;
+//    CURL *curl;
+//    FILE *fp;
+//    CURLcode res;
+//    curl = curl_easy_init();
+//    DownloadResponse response;
+//    if (curl) {
+//        fp = fopen(filename.c_str(), "wb");
+//        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+//
+//        //TODO:: I dont know if this is ok based on these comments:
+//        //https://stackoverflow.com/questions/25540547/how-to-download-a-zip-file-from-server-using-curl-in-c
+//
+//        curl_easy_setopt(curl, CURLOPT_CAINFO, "./ca-bundle.crt");
+//        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+//        //###########################################################
+//
+//        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+//        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+//        res = curl_easy_perform(curl);
+//        if (res == 0)
+//            success = true;
+//        curl_easy_cleanup(curl);
+//        fclose(fp);
+//
+//        response.success = success;
+//
+//        if(!response.success)
+//            return response;
+//
+////        //TODO::remove the unzip from here
+////        miniz_cpp::zip_file file(filename);
+////        file.extractall("./");
+////
+////        namespace fs = std::filesystem;
+////
+////        fs::remove(filename);
+////
+////        response.extractedFileName = file.getinfo(0).filename;
+//    }
+//    return response;
+//}
 
-        //TODO:: I dont know if this is ok based on these comments:
-        //https://stackoverflow.com/questions/25540547/how-to-download-a-zip-file-from-server-using-curl-in-c
+//// TODO:
+//std::string BackTestingContext::build_url(std::string symbol, std::string year, std::string month, std::string interval) {
+//
+//    return fmt::format("https://data.binance.vision/data/spot/monthly/klines/{}/{}/{}-{}-{}-{}.zip",
+//                       symbol,
+//                       interval,
+//                       symbol,
+//                       interval,
+//                       year,
+//                       month
+//    );
+//}
 
-        curl_easy_setopt(curl, CURLOPT_CAINFO, "./ca-bundle.crt");
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
-        //###########################################################
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-        res = curl_easy_perform(curl);
-        if (res == 0)
-            success = true;
-        curl_easy_cleanup(curl);
-        fclose(fp);
-
-        response.success = success;
-
-        if(!response.success)
-            return response;
-
-        //TODO::remove the unzip from here
-        miniz_cpp::zip_file file(filename);
-        file.extractall("./");
-
-        namespace fs = std::filesystem;
-
-        fs::remove(filename);
-
-        response.extractedFileName = file.getinfo(0).filename;
-    }
-    return response;
-}
-
-std::string BackTestingContext::build_url(std::string symbol, std::string year, std::string month, std::string interval) {
-
-    return fmt::format("https://data.binance.vision/data/spot/monthly/klines/{}/{}/{}-{}-{}-{}.zip",
-                       symbol,
-                       interval,
-                       symbol,
-                       interval,
-                       year,
-                       month
-    );
-}
-
-bool BackTestingContext::dataAlreadyExists(const Symbol &symbol) {
-    return std::filesystem::exists(getFilePathFromSymbol(symbol));
-}
-
-
-std::vector<TickData> BackTestingContext::loadCsv(Symbol symbol){
-
-    std::vector<TickData> output;
-    auto filePath = getFilePathFromSymbol(symbol);
-
-    std::cout << "Start Loading file: " << filePath << std::endl;
-
-    rapidcsv::Document doc(filePath, rapidcsv::LabelParams(-1,-1));
-
-    for(int i = 0; i < doc.GetRowCount(); i++)
-    {
-        TickData data_open;
-        TickData data_high;
-        TickData data_low;
-        TickData data_close;
-
-        //converting ms to sec and add simulated time for the sub tick on the bars
-        double timeInSec = doc.GetCell<long>(0,i)/1000.0;
-        data_open.time  = timeInSec;
-        data_high.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.25 * 60;
-        data_low.time  = timeInSec + symbol.getTimeIntervalInMinutes()*0.5* 60;
-        data_close.time  = timeInSec + symbol.getTimeIntervalInMinutes()*60 - 1;
-
-        data_open.price = doc.GetCell<double>(1,i);
-        data_high.price = doc.GetCell<double>(2,i);
-        data_low.price = doc.GetCell<double>(3,i);
-        data_close.price = doc.GetCell<double>(4,i);
-
-        //0.25 volume for each tick
-        double volume = doc.GetCell<double>(5,i)*0.25;
-        data_open.volume = volume;
-        data_high.volume = volume;
-        data_low.volume = volume;
-        data_close.volume = volume;
-
-        output.push_back(data_open);
-        output.push_back(data_high);
-        output.push_back(data_low);
-        output.push_back(data_close);
-    }
-
-    return output;
-}
+//// TODO:
+//bool BackTestingContext::dataAlreadyExists(const Symbol &symbol) {
+//    return std::filesystem::exists(getSymbolFilePath(symbol));
+//}
 
 bool BackTestingContext::isSimulating() {
     return _simulating;
-}
-
-std::string BackTestingContext::getFilePathFromSymbol(Symbol symbol) {
-
-    std::string out = fmt::format("./{}-{}-{}-{}.csv",
-            symbol.getName(),
-            symbol.getInterval(),
-            symbol.year,
-            symbol.month);
-
-    return out;
 }
 
 void BackTestingContext::loadTicker() {
@@ -592,17 +522,20 @@ void BackTestingContext::plotSubplotIndicators() {
 }
 
 Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
-
-    _ticker->setSymbol(symbol);
     _ticker->reset();
     _ticker->setSymbol(symbol);
+
     _data.clear();
 
-    _data = symbol.fetchData();
+    _data = symbol.fetchCSVData();
+
+//    _data = symbol.fetchData();
 
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
     loadTicker();
+
+    setShouldRender(true);
 
     return _ticker.get();
 }

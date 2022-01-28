@@ -48,15 +48,15 @@ public:
 
 private:
 
-    bool dataAlreadyExists(const Symbol& symbol);
+//    bool dataAlreadyExists(const Symbol& symbol);
 
-    std::vector<TickData> loadCsv(Symbol symbol);
+//    std::vector<TickData> loadCsv(Symbol symbol);
 
-    std::string getFilePathFromSymbol(Symbol symbol);
+//    std::string getSymbolFilePath(Symbol symbol);
 
-    std::string build_url(std::string symbol, std::string year, std::string month, std::string interval);
+//    std::string build_url(std::string symbol, std::string year, std::string month, std::string interval);
 
-    DownloadResponse download_file(std::string url, std::string filename);
+//    DownloadResponse download_file(std::string url, std::string filename);
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
