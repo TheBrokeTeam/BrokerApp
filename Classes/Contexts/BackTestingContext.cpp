@@ -20,6 +20,7 @@
 #include "../Tickables/Indicators/TRIX.h"
 #include "../Tickables/Indicators/WMA.h"
 #include "../Tickables/Indicators/PSAR.h"
+#include "../Tickables/Indicators/MFI.h"
 #include "../Tickables/Indicators/VWAP.h"
 
 #include "../Widgets/MainMenuBar.h"
@@ -357,7 +358,18 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
                 createIndicatorNode(UiNodeType::PSAR,_indicators.back());
 
         }
-            break;
+        case IndicatorsView::CandleIndicatorsTypes::MFI :
+        {
+            std::shared_ptr<MFI> mfi = std::make_shared<MFI>(_ticker.get());
+            mfi->setPriority(1);
+            _subplotIndicators.push_back(std::move(mfi));
+            indicator = _subplotIndicators.back();
+            _ticker->addTickable(_subplotIndicators.back().get());
+            //if(shouldCreateNode)
+              //  createIndicatorNode(UiNodeType::MFI,_indicators.back());
+
+        }
+        break;
         default:
             break;
     }
@@ -461,6 +473,12 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
             _strategyEditor->addNode(node);
         }
         break;
+//        case UiNodeType::MFI:
+//        {
+//            node = std::make_shared<MFINode>(indicator,_strategyEditor);
+//            _strategyEditor->addNode(node);
+//        }
+//            break;
         default:
             break;
     }

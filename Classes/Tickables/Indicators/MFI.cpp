@@ -38,50 +38,50 @@ void MFI::calculate(BarHistory* barHistory)
         double mfi = 100 - (100/(1+ratio));
 
         // starting period indexes logic
-        if (_typicalPrice.size() == _averageSize) {
+//        if (_typicalPrice.size() == _averageSize) {
+//
+//            if (mfi >= _upperBand) {
+//                _periodType == 1;
+//                _startUpperLineIndexes.push_back(0);
+//            } else if (mfi < _lowerBand) {
+//                _periodType == -1;
+//                _startLowerLineIndexes.push_back(0);
+//            } else {
+//                _periodType == 0;
+//                _startCenterLineIndexes.push_back(0);
+//            }
+//        }
+//
+//        //this period type
+//        int lastPeriodType = 0;
+//
+//        if (mfi >= _upperBand) {
+//            lastPeriodType == 1;
+//        } else if (mfi < _lowerBand) {
+//            lastPeriodType == -1;
+//        } else {
+//            lastPeriodType == 0;
+//        }
+//
+//        if (_periodType != lastPeriodType) {
+//            if (_periodType == 1) {
+//                _endUpperLineIndexes.push_back(0);
+//            } else if (_periodType == -1) {
+//                _endLowerLineIndexes.push_back(0);
+//            } else {
+//                _endCenterLineIndexes.push_back(0);
+//            }
+//
+//            if (lastPeriodType == 1) {
+//                _startUpperLineIndexes.push_back(0);
+//            } else if (lastPeriodType == -1) {
+//                _startLowerLineIndexes.push_back(0);
+//            } else {
+//                _startCenterLineIndexes.push_back(0);
+//            }
+//        }
 
-            if (mfi >= _upperBand) {
-                _periodType == 1;
-                _startUpperLineIndexes.push_back(0);
-            } else if (mfi < _lowerBand) {
-                _periodType == -1;
-                _startLowerLineIndexes.push_back(0);
-            } else {
-                _periodType == 0;
-                _startCenterLineIndexes.push_back(0);
-            }
-        }
-
-        //this period type
-        int lastPeriodType = 0;
-
-        if (mfi >= _upperBand) {
-            lastPeriodType == 1;
-        } else if (mfi < _lowerBand) {
-            lastPeriodType == -1;
-        } else {
-            lastPeriodType == 0;
-        }
-
-        if (_periodType != lastPeriodType) {
-            if (_periodType == 1) {
-                _endUpperLineIndexes.push_back(0);
-            } else if (_periodType == -1) {
-                _endLowerLineIndexes.push_back(0);
-            } else {
-                _endCenterLineIndexes.push_back(0);
-            }
-
-            if (lastPeriodType == 1) {
-                _startUpperLineIndexes.push_back(0);
-            } else if (lastPeriodType == -1) {
-                _startLowerLineIndexes.push_back(0);
-            } else {
-                _startCenterLineIndexes.push_back(0);
-            }
-        }
-
-        insert(mfi);
+        push(mfi);
         _time.push_back((*barHistory)(0,BarDataType::TIME));
 
     }
@@ -96,24 +96,9 @@ double MFI::calculateTypicalPrice(double low, double high, double close) {
 void MFI::onRender() {
 
     auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::SetNextLineStyle(_colorTop, _lineWidth);
+    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
 
-    
-    for(int i = 0 ; i < _startUpperLineIndexes.size(); i+= 2) {
-        ImPlot::SetNextLineStyle(_colorTop, _lineWidth);
-        int startIdx, endIdx;
-
-        if(_lineIndexes[i] < renderInfo.startIndex)
-            startIdx = renderInfo.startIndex;
-        else
-            startIdx =_lineIndexes[i] ;
-
-        if(_lineIndexes[i+1] > renderInfo.startIndex + renderInfo.size)
-            endIdx = renderInfo.startIndex + renderInfo.size;
-        else
-            endIdx =_lineIndexes[i+1] ;
-
-        ImPlot::PlotLine(_plotName.c_str(), &_time[startIdx], &getData()[startIdx], endIdx - startIdx + 1);
-    }
 }
 
 void MFI::onPopupRender() {
