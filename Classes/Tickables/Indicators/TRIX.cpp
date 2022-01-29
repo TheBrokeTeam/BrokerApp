@@ -57,14 +57,18 @@ void TRIX::calculate(BarHistory* barHistory)
     }
 
     if (EMA3.size() >= 2) {
-        double trix = (EMA3(0) - EMA3(1)/EMA3(1));
-        push(trix * 100); // todo: remover * 100. apenas para ajudar no teste até finalizar o TRIXNode.
+        double trix = (EMA3(0) - EMA3(1))/EMA3(1);
+        push(trix * 100);
         _time.push_back((*barHistory)(0,BarDataType::TIME));
     }
 
 }
 
-void TRIX::onRender() {}
+void TRIX::onRender() {
+    ImPlot::SetNextLineStyle(_color, _lineWidth);
+    auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
+}
 
 void TRIX::onPopupRender() {
     if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
@@ -72,11 +76,6 @@ void TRIX::onPopupRender() {
         onLoad(_ticker->getBarHistory());
     }
     ImGui::Separator();
-
-//    if(ImGui::SliderInt("Smothing size", &_smothingSize, 1, 2)){
-//        reset();
-//        onLoad(_ticker->getBarHistory());
-//    }
 
     ImGui::ColorEdit4("Color",{&_color.x});
     ImGui::Separator();
@@ -96,8 +95,7 @@ int TRIX::getAverageSize() const {
     return _averageSize;
 }
 
-void TRIX::render() {
-
+void TRIX::onSetupPlot() {
     int xFlags = ImPlotAxisFlags_Time;
     xFlags |= ImPlotAxisFlags_NoTickLabels;
 
@@ -108,21 +106,9 @@ void TRIX::render() {
     ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
 
-    // fit data on screen even when zooming
-    if (ImPlot::FitThisFrame()) {
-        for (int i = 0; i < size(); ++i) {
-            ImPlot::FitPoint(ImPlotPoint(_time[i], getData()[i]));
-        }
-    }
 
-    ImPlot::SetNextLineStyle(_color, _lineWidth);
-    auto renderInfo = getRenderInfo(_ticker);
-    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
 
-}
 
-const ImVec4 &TRIX::getColor() {
-    return _color;
 }
 
 
