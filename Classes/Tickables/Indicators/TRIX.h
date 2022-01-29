@@ -17,10 +17,10 @@ public:
     int getAverageSize() const;
 
     void onRender() override;
-    void render() override;
 
     void onPopupRender() override;
     void reset() override;
+    void onSetupPlot() override;
 
 private:
     int _averageSize = 14; // must be >= 1

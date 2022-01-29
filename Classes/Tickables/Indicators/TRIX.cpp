@@ -64,7 +64,11 @@ void TRIX::calculate(BarHistory* barHistory)
 
 }
 
-void TRIX::onRender() {}
+void TRIX::onRender() {
+    ImPlot::SetNextLineStyle(_color, _lineWidth);
+    auto renderInfo = getRenderInfo(_ticker);
+    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
+}
 
 void TRIX::onPopupRender() {
     if(ImGui::SliderInt("Average size", &_averageSize, 1, 200)){
@@ -91,8 +95,7 @@ int TRIX::getAverageSize() const {
     return _averageSize;
 }
 
-void TRIX::render() {
-
+void TRIX::onSetupPlot() {
     int xFlags = ImPlotAxisFlags_Time;
     xFlags |= ImPlotAxisFlags_NoTickLabels;
 
@@ -103,21 +106,9 @@ void TRIX::render() {
     ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
 
-    // fit data on screen even when zooming
-    if (ImPlot::FitThisFrame()) {
-        for (int i = 0; i < size(); ++i) {
-            ImPlot::FitPoint(ImPlotPoint(_time[i], getData()[i]));
-        }
-    }
 
-    ImPlot::SetNextLineStyle(_color, _lineWidth);
-    auto renderInfo = getRenderInfo(_ticker);
-    ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);
 
-}
 
-const ImVec4 &TRIX::getColor() {
-    return _color;
 }
 
 
