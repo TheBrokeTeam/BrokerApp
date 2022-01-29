@@ -130,6 +130,8 @@ add_executable(BrokerApp
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
+		Classes/Tickables/Indicators/MFI.cpp 
+		Classes/Tickables/Indicators/MFI.h
 )
 
 ###############################################################################
