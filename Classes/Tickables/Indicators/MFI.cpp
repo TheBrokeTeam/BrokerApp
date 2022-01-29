@@ -5,7 +5,6 @@
 #include "MFI.h"
 #include <iostream>
 #include "../../Tickers/Ticker.h"
-#include <cstdio>
 
 
 MFI::MFI(Ticker *ticker): Indicator(ticker) {
