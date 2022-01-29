@@ -73,11 +73,6 @@ void TRIX::onPopupRender() {
     }
     ImGui::Separator();
 
-//    if(ImGui::SliderInt("Smothing size", &_smothingSize, 1, 2)){
-//        reset();
-//        onLoad(_ticker->getBarHistory());
-//    }
-
     ImGui::ColorEdit4("Color",{&_color.x});
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
