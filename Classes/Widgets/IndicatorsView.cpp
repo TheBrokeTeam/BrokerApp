@@ -21,7 +21,6 @@ void IndicatorsView::updateVisible(float dt) {
     Widget::updateVisible(dt);
     drawView();
 }
-
 void IndicatorsView::drawView() {
     PushStyleColor(ImGuiCol_Button, Editor::broker_black);
     PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_light_grey);

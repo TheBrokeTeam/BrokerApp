@@ -26,6 +26,7 @@ const std::string &PlotItem::getId() {
 }
 
 void PlotItem::render() {
+    onSetupPlot();
     if (ImPlot::BeginItem(_plotName.c_str())) {
         onRender();
         popupRender();
@@ -34,6 +35,8 @@ void PlotItem::render() {
 }
 
 void PlotItem::onRender(){}
+
+void PlotItem::onSetupPlot(){}
 
 void PlotItem::setPlotName(const std::string& name) {
     _plotName = name + "##" + _plotId;
