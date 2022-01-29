@@ -33,6 +33,8 @@ public:
     const std::vector<double>& getTime();
 
     virtual void render();
+    virtual void onSetupPlot();
+
 protected:
 
     PlotItemInfo getRenderInfo(Ticker* ticker);
@@ -45,6 +47,7 @@ private:
     int getRenderStartIndex(double time);
     int getRenderEndIndex(double time);
     void popupRender();
+
 };
 
 
