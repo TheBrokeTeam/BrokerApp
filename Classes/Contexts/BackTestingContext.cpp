@@ -530,12 +530,12 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     _data = symbol.fetchCSVData();
 
 //    _data = symbol.fetchData();
-
-    auto chart = getWidget<ChartView>();
-    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
     loadTicker();
 
     setShouldRender(true);
+    auto chart = getWidget<ChartView>();
+    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
+
 
     return _ticker.get();
 }
