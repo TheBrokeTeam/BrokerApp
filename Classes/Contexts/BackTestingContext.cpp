@@ -288,6 +288,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
                 createIndicatorNode(UiNodeType::PSAR,_indicators.back());
 
         }
+        break;
         case IndicatorsView::CandleIndicatorsTypes::MFI :
         {
             std::shared_ptr<MFI> mfi = std::make_shared<MFI>(_ticker.get());
@@ -297,7 +298,6 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             _ticker->addTickable(_subplotIndicators.back().get());
             //if(shouldCreateNode)
               //  createIndicatorNode(UiNodeType::MFI,_indicators.back());
-
         }
         break;
         default:
