@@ -45,6 +45,7 @@ public:
     virtual void plotIndicators() = 0;
     virtual void plotSubplotIndicators() = 0;
     virtual void plotStrategy() = 0;
+    virtual void handleDragDrop(PlotItem *plotItem) = 0;
 
     int getSubplotIndicatorsCount(){
         return _subplotIndicators.size();

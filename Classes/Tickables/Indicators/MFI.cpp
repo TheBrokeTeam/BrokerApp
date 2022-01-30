@@ -9,6 +9,7 @@
 
 MFI::MFI(Ticker *ticker): Indicator(ticker) {
     setPlotName("MFI");
+    setIsSubplot(true);
 }
 
 

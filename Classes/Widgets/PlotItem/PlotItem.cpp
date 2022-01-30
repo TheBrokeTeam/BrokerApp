@@ -6,11 +6,14 @@
 #include "../../Helpers/Utils.h"
 #include "../../Helpers/PlotHelper.h"
 #include "../../Tickers/Ticker.h"
+#include "../IndicatorsView.h"
+#include "../../Contexts/Context.h"
 
 
-PlotItem::PlotItem() {
+PlotItem::PlotItem(Context *context) {
     _plotId = uuid::generate_uuid_v4();
     _plotName = "##" + _plotId;
+    _context = context;
 }
 
 const std::string& PlotItem::getName() {
@@ -25,13 +28,29 @@ const std::string &PlotItem::getId() {
     return _plotId;
 }
 
+
+
+
 void PlotItem::render() {
-    onSetupPlot();
-    if (ImPlot::BeginItem(_plotName.c_str())) {
-        onRender();
-        popupRender();
-        ImPlot::EndItem();
+    if (_isSubplot) {
+        if (ImPlot::BeginPlot(("##"+getPlotName()).c_str())) {
+            onSetupPlot();
+
+            onRender();
+            popupRender();
+            _context->handleDragDrop(this);
+            ImPlot::EndPlot();
+        }
+    } else {
+        if (ImPlot::BeginItem(_plotName.c_str())) {
+            onRender();
+            popupRender();
+            _context->handleDragDrop(this);
+            ImPlot::EndItem();
+        }
     }
+
+
 }
 
 void PlotItem::onRender(){}
@@ -125,5 +144,13 @@ PlotItemInfo PlotItem::getRenderInfo(Ticker *ticker) {
     info.size = endIndex - info.startIndex + 1;
     assert(info.size > 0 && "Info size should not be negative!");
     return  info;
+}
+
+bool PlotItem::getIsSubplot() {
+    return _isSubplot;
+}
+
+void PlotItem::setIsSubplot(bool isSubplot) {
+    _isSubplot = isSubplot;
 }
 

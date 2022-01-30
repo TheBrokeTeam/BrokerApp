@@ -8,7 +8,7 @@
 #include "../Tickable.h"
 #include "../../Widgets/PlotItem/PlotItem.h"
 
-class Strategy: public Tickable, public PlotItem{
+class Strategy: public Tickable, public PlotItem {
 public:
     struct Position {
         std::string id;
