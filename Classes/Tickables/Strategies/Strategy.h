@@ -60,6 +60,8 @@ protected:
     double _profit = 0;
 
 private:
+    int BinarySearchPositions(const Position* arr, int l, int r, double time, bool isStart, int maxSize);
+
     void checkTarget();
     void removeOpenedPosition(const Position& pos);
     void openPosition(const Position& pos);

@@ -10,6 +10,30 @@
 Strategy::Strategy(Ticker *ticker) : Tickable(ticker), PlotItem(ticker->getContext()) {
 }
 
+int Strategy::BinarySearchPositions(const Position* arr, int l, int r, double time, bool isStart, int maxSize) {
+    if (r >= l) {
+        int mid = l + (r - l) / 2;
+        if(isStart){
+            if(mid - 1 < 0)
+                return -1;
+
+            if (arr[mid-1].inTime <= time && arr[mid].inTime >= time)
+                return mid;
+        }
+        else{
+            if(mid + 1 >= maxSize)
+                return -1;
+
+            if (arr[mid].outTime <= time && arr[mid + 1].outTime >= time )
+                return mid;
+        }
+        if (arr[mid].inTime > time)
+            return BinarySearchPositions(arr, l, mid - 1, time, isStart,maxSize);
+        return BinarySearchPositions(arr, mid + 1, r, time, isStart,maxSize);
+    }
+    return -1;
+}
+
 void Strategy::onClose(BarHistory* barHistory) {
     Tickable::onClose(barHistory);
     rule();
@@ -17,6 +41,8 @@ void Strategy::onClose(BarHistory* barHistory) {
 }
 
 void Strategy::onRender() {
+
+    if(_closedPositions.size() <= 1) return;
 
     std::vector<double> time;
     std::vector<double> y;
@@ -26,21 +52,36 @@ void Strategy::onRender() {
         onFinish();
     }
 
-    //draw the closed trades
-    for(auto &c : _closedPositions) {
+    int startIdx =  BinarySearchPositions(_closedPositions.data(),
+                                          1,
+                                          _closedPositions.size() - 1,
+                                          _ticker->getRenderRange().startTime,
+                                          true,
+                                          _closedPositions.size());
+
+    int endIdx =  BinarySearchPositions(_closedPositions.data(),
+                                        1,
+                                        _closedPositions.size() - 1,
+                                        _ticker->getRenderRange().endTime,
+                                        false,
+                                        _closedPositions.size());
+
+    if(startIdx == -1)
+        startIdx = 0;
+
+    if(endIdx == -1)
+        endIdx = _closedPositions.size() - 1;
+
+    for(int i = startIdx; i <= endIdx; i++){
+        auto c = _closedPositions.at(i);
         time.push_back(c.inTime);
         time.push_back(c.outTime);
 
         y.push_back(c.inPrice);
         y.push_back(c.outPrice);
 
-        double startTime = _ticker->getRenderRange().startTime;
-        double endTime = _ticker->getRenderRange().endTime;
-
-        if(c.inTime >= startTime && c.outTime <= endTime){
-            ImPlot::SetNextLineStyle(c.profit > 0 ? _colorPositive : _colorNegative, _lineWidth);
-            ImPlot::PlotLine("##Trade", time.data(), y.data(), time.size());
-        }
+        ImPlot::SetNextLineStyle(c.profit > 0 ? _colorPositive : _colorNegative, _lineWidth);
+        ImPlot::PlotLine("##Trade", time.data(), y.data(), time.size());
 
         time.clear();
         y.clear();
