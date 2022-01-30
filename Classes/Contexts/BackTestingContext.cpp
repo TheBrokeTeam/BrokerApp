@@ -63,13 +63,6 @@ void BackTestingContext::initialize() {
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         removeAllIndicators();
-//        //create test strategy for tests
-//        _ticker->removeTickable(_strategy.get());
-//
-//        _strategy.reset();
-//        _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
-//        _ticker->addStrategy(_strategy.get());
-//        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
     });
 
     _strategyEditor->setPriority(2);
@@ -195,6 +188,7 @@ void BackTestingContext::updateData(float dt) {
 void BackTestingContext::startSimulation(Ticker* ticker) {
     //just for tests
     //TODO:: use the ticker parameter
+    getWidget<ProfitAndLossesView>()->clear();
     _ticker->reset();
     _currentIndex = 0;
     _simulating = true;
@@ -446,12 +440,17 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
                 }
 
                 _strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
+
+                _strategy->setClosePositionCallback([this](const Strategy::Position& position){
+                   getWidget<ProfitAndLossesView>()->onClosePosition(position);
+                });
+                getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
+
                 auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategy.get());
 
                 strategyPtr->setPriority(3);
                 _ticker->addTickable(strategyPtr);
 
-                getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
                 _strategyEditor->addRootId(node->getId());
              }

@@ -13,12 +13,13 @@ public:
     ProfitAndLossesView(Context* context);
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
-
     void setStrategyTest(std::weak_ptr<Strategy> strategy);
+    void onClosePosition(const Strategy::Position& pos);
+    void clear();
 
 private:
     std::weak_ptr<Strategy> _strategy;
-
+    std::vector<Strategy::Position> _closedPositions;
 };
 
 

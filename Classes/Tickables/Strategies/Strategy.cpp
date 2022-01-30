@@ -117,6 +117,8 @@ bool Strategy::closePosition(const std::string &posId) {
     for(auto & pos : _openedPositions){
         if(posId == pos.id) {
             closePosition(pos);
+            if(_closePositionCallback)
+                _closePositionCallback(pos);
             return true;
         }
     }
@@ -153,10 +155,16 @@ const std::vector<Strategy::Position> &Strategy::getClosedPositions() {
     return _closedPositions;
 }
 
-Strategy::~Strategy() {}
+Strategy::~Strategy() {
+    _closePositionCallback = nullptr;
+}
 
 void Strategy::reset() {
     Tickable::reset();
     resetPlot();
+}
+
+void Strategy::setClosePositionCallback(Strategy::ClosePositionCallback callback) {
+    _closePositionCallback = callback;
 }
 

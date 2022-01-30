@@ -20,6 +20,9 @@ public:
         bool isShorting;
     };
 
+    typedef std::function<void(const Position& position)> ClosePositionCallback;
+
+
     Strategy(Ticker* ticker);
     virtual ~Strategy();
     void onClose(BarHistory* barHistory) override;
@@ -49,6 +52,8 @@ public:
 
     virtual void onRender() override;
 
+    void setClosePositionCallback(ClosePositionCallback callback);
+
 protected:
     std::vector<Position> _openedPositions;
     std::vector<Position> _closedPositions;
@@ -62,6 +67,7 @@ private:
     ImVec4 _colorPositive{0, 0, 1, 1};
     ImVec4 _colorNegative{1, 0, 0, 1};
     float _lineWidth = 1.0f;
+    ClosePositionCallback _closePositionCallback{nullptr};
 };
 
 #endif //BROKERAPP_STRATEGY_H

@@ -16,8 +16,7 @@ void ProfitAndLossesView::updateVisible(float dt) {
     Widget::updateVisible(dt);
 
     //now draw the pnl chart
-    if(!_strategy.lock()) return;
-    if(_strategy.lock()->getClosedPositions().empty()) return;
+    if(_closedPositions.empty()) return;
 
     static float ratios[] = {1};
 
@@ -75,9 +74,9 @@ void ProfitAndLossesView::updateVisible(float dt) {
         std::vector<double> plotProfit;
         std::vector<double> plotLosses;
 
-        for(int i = 0; i <= _strategy.lock()->getClosedPositions().size() - 1; i++)
+        for(int i = 0; i <= _closedPositions.size() - 1; i++)
         {
-            auto& p = _strategy.lock()->getClosedPositions().at(i);
+            auto& p = _closedPositions.at(i);
 
             bool isInProfit = cumulatedProfit >= baseLine;
 
@@ -206,4 +205,12 @@ void ProfitAndLossesView::onPushStyleVar() {
 
 void ProfitAndLossesView::setStrategyTest(std::weak_ptr<Strategy> strategy) {
     _strategy = strategy;
+}
+
+void ProfitAndLossesView::onClosePosition(const Strategy::Position &pos) {
+    _closedPositions.push_back(pos);
+}
+
+void ProfitAndLossesView::clear() {
+    _closedPositions.clear();
 }
