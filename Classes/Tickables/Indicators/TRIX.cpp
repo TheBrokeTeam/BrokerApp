@@ -103,11 +103,8 @@ void TRIX::onSetupPlot() {
 
     ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 
-    ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
+    ImPlot::SetupAxisLimits(ImAxis_X1, _ticker->getRenderRange().startTime,_ticker->getRenderRange().endTime);
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
-
-
-
 
 }
 
