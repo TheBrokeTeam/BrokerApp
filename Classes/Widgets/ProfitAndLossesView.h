@@ -20,6 +20,13 @@ public:
 private:
     std::weak_ptr<Strategy> _strategy;
     std::vector<Strategy::Position> _closedPositions;
+    std::vector<double> _plotTime;
+    std::vector<double> _plotProfit;
+    std::vector<double> _plotLosses;
+    double _baseLine = 0;
+    double _cumulatedProfit;
+    double _lastTime;
+
 };
 
 
