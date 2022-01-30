@@ -6,6 +6,12 @@
 #define BROKERAPP_PLOTHELPER_H
 
 #include <implot_internal.h>
+#include "../Tickers/Ticker.h"
+
+struct PlotInfo{
+    int startIndex;
+    int size;
+};
 
 class PlotHelper {
 public:
@@ -65,6 +71,34 @@ public:
         col.z = RandomRange(0.0f,1.0f);
         col.w = 1.0f;
         return col;
+    }
+
+    static int getRenderStartIndex(double time,const std::vector<double>& timeArr) {
+        int startIdx = PlotHelper::BinarySearch(timeArr.data(), 0, timeArr.size(),time);
+
+        if(startIdx == -1)
+            startIdx = 0;
+
+        return startIdx;
+    }
+
+    static int getRenderEndIndex(double time,const std::vector<double>& timeArr) {
+        int endIdx = PlotHelper::BinarySearch(timeArr.data(), 0, timeArr.size(),time);
+
+        if(endIdx == -1)
+            endIdx = timeArr.size() - 1;
+
+        return endIdx;
+    }
+
+    static PlotInfo getRenderInfo(Ticker *ticker,const std::vector<double>& timeArr) {
+        PlotInfo info;
+        info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime,timeArr);
+        auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime,timeArr);
+        info.size = endIndex - info.startIndex + 1;
+        if( info.size < 0)
+            info.size = 0;
+        return  info;
     }
 
 
