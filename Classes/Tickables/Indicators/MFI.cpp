@@ -88,17 +88,17 @@ void MFI::onRender() {
 
 
     if (_doubleBands) {
-        ImPlot::SetNextLineStyle(_colorTop, _lineWidth);
+        ImPlot::SetNextLineStyle(_colorTop, 1.5);
         double upperBand[] = {_upperBand};
         std::string upperBandLegend = std::string("Upper Band (") + upperStr + std::string(")");
         ImPlot::PlotHLines(upperBandLegend.c_str(), upperBand, 1);
 
-        ImPlot::SetNextLineStyle(_colorBottom, _lineWidth);
+        ImPlot::SetNextLineStyle(_colorBottom, 1.5);
         double lowerBand[] = {_lowerBand};
         std::string lowerBandLegend = std::string("Lower Band (") + lowerStr + std::string(")");
         ImPlot::PlotHLines(lowerBandLegend.c_str(), lowerBand, 1);
     } else {
-        ImPlot::SetNextLineStyle(_colorCenter, _lineWidth);
+        ImPlot::SetNextLineStyle(_colorCenter, 1.5);
         double centerBand[] = {_centerBand};
         std::string centerBandLegend = std::string("Threshold (") + centerStr + std::string(")");
         ImPlot::PlotHLines(centerBandLegend.c_str(), centerBand, 1);
@@ -114,38 +114,21 @@ void MFI::onPopupRender() {
     }
 
     if (_doubleBands) {
-        if (ImGui::SliderFloat("Upper Band", &_upperBand, 1, 99)) {
-//            reset();
-        }
+        if (ImGui::SliderFloat("Upper Band", &_upperBand, _lowerBand, 99, "%.1f", ImGuiSliderFlags_ClampOnInput)) {}
         ImGui::ColorEdit4("Upper Color",&_colorTop.x);
 //
-        ImGui::Separator();
 //
-        if(ImGui::SliderFloat("Lower Band", &_lowerBand, 1.0, 99)){
-            //reset();
-        }
+        if(ImGui::SliderFloat("Lower Band", &_lowerBand, 1.0, _upperBand, "%.1f", ImGuiSliderFlags_ClampOnInput)) {}
         ImGui::ColorEdit4("Lower Color",&_colorBottom.x);
     } else {
-        if(ImGui::SliderFloat("Threshold", &_centerBand, 1.0, 99)){
-            reset();
-            onLoad(_ticker->getBarHistory());
-        }
+        if(ImGui::SliderFloat("Threshold", &_centerBand, 1.0, 99, "%.1f", ImGuiSliderFlags_ClampOnInput)) {}
         ImGui::ColorEdit4("Threshold Color",&_colorCenter.x);
     }
     ImGui::Separator();
 
-
-//    if(ImGui::SliderFloat("Center Threshold", &_lowerBand, 0.01, 1)){
-//        _upperBand = 1 - _lowerBand;
-//
-//        reset();
-//        onLoad(_ticker->getBarHistory());
-//    }
-//    ImGui::Separator();
-
     ImGui::ColorEdit4("Color",&_color.x);
     ImGui::Separator();
-    ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
+    ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5, "%.1f", ImGuiSliderFlags_ClampOnInput);
 }
 
 void MFI::reset() {
