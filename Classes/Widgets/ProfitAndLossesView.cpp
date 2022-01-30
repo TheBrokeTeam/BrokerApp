@@ -74,18 +74,11 @@ void ProfitAndLossesView::updateVisible(float dt) {
 
 
         //plot ticker range over plot
-
         auto drawList = ImPlot::GetPlotDrawList();
-//        ImVec2 openPos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME)[i] - candleWidth / 2, dataHist.getData(BarDataType::OPEN)[i]);
-
         auto colorSquare = ImGui::GetColorU32(ImVec4(Editor::broker_yellow_active.x,Editor::broker_yellow_active.y,Editor::broker_yellow_active.z,0.2f));
-
         ImVec2 minPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().startTime,_strategy.lock()->drawDownMax*1.2);
         ImVec2 maxPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().endTime,_strategy.lock()->profitMax*1.2);
-
         drawList->AddRectFilled(minPoint,maxPoint,colorSquare);
-
-
 
         if(!shouldLinkPlots)
             ImPlot::EndItem();
