@@ -25,7 +25,8 @@ public:
 private:
     ImVec4 _colorTop{175.0/250.0, 50.0/255.0, 50.0/255.0, 1};
     ImVec4 _colorBottom{75.0/255.0, 200.0/255, 75.0/255.0, 1};
-    ImVec4 _colorCenter{75.0/255.0, 200.0/255, 75.0/255.0, 1};
+    ImVec4 _colorCenter{255.0f/255, 191.0f/255,64.0f/255, 1};
+
     float _lineWidth = 1.5f;
     float _upperBand = 80;
     float _lowerBand = 20;
