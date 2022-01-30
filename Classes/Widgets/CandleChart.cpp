@@ -50,6 +50,7 @@ void CandleChart::render(float dt)
     if(!getContext()->getShouldRender()) return;
     if(_ticker->getBarHistory()->size() <= 0) return;
 
+
     static ImVec4 bull_color(0.5,1,0,1);
     static ImVec4 bear_color(1,0,0.5,1);
 

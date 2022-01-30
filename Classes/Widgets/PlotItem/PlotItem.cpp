@@ -142,7 +142,8 @@ PlotItemInfo PlotItem::getRenderInfo(Ticker *ticker) {
     info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime);
     auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime);
     info.size = endIndex - info.startIndex + 1;
-    assert(info.size > 0 && "Info size should not be negative!");
+    if( info.size < 0)
+        info.size = 0;
     return  info;
 }
 
