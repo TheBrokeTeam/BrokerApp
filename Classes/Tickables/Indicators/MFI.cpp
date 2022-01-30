@@ -9,6 +9,7 @@
 
 MFI::MFI(Ticker *ticker): Indicator(ticker) {
     setPlotName("MFI");
+    setIsSubplot(true);
 }
 
 
@@ -62,7 +63,7 @@ void MFI::onSetupPlot() {
 
     ImPlot::SetupAxisLimits(ImAxis_Y1, 0,100.0);
 
-    ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
+    ImPlot::SetupAxisLimits(ImAxis_X1, _ticker->getRenderRange().startTime,_ticker->getRenderRange().endTime);
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f");
 }
 

@@ -310,10 +310,6 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
 void BackTestingContext::plotIndicators() {
     for(auto& i : _indicators) {
         i->render();
-        if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
-            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
-            ImPlot::EndDragDropSource();
-        }
     }
 
     if(_shouldShowLuizPopup){
@@ -528,15 +524,33 @@ void BackTestingContext::removeAllIndicators() {
 
 void BackTestingContext::plotSubplotIndicators() {
     for(auto& i : _subplotIndicators) {
-        if (ImPlot::BeginPlot(("##"+i->getPlotName()).c_str())) {
             i->render();
-            if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
-                ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
-                ImPlot::EndDragDropSource();
-            }
-            ImPlot::EndPlot();
+    }
+}
+
+void BackTestingContext::handleDragDrop(PlotItem *plotItem) {
+    std::shared_ptr<Indicator> ind{nullptr};
+
+    for(auto& i : _subplotIndicators) {
+        if (i.get() == plotItem) {
+            ind = i;
         }
     }
+
+    for(auto& i : _indicators) {
+        if (i.get() == plotItem) {
+            ind = i;
+        }
+    }
+
+    if (ind != nullptr) {
+        if (ImPlot::BeginDragDropSourceItem(ind->getPlotName().c_str())) {
+            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &ind,
+                                      sizeof(std::shared_ptr<Indicator>));
+            ImPlot::EndDragDropSource();
+        }
+    }
+
 }
 
 Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {

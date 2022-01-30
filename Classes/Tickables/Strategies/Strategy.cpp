@@ -7,7 +7,7 @@
 #include <implot.h>
 #include "../../Contexts/Context.h"
 
-Strategy::Strategy(Ticker *ticker) : Tickable(ticker) {
+Strategy::Strategy(Ticker *ticker) : Tickable(ticker), PlotItem(ticker->getContext()) {
 }
 
 void Strategy::onClose(BarHistory* barHistory) {

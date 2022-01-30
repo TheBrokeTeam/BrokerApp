@@ -10,7 +10,7 @@
 #include "../../Tickers/Ticker.h"
 
 
-Indicator::Indicator(Ticker *ticker) : Tickable(ticker) {
+Indicator::Indicator(Ticker *ticker) : Tickable(ticker), PlotItem(ticker->getContext()) {
     _plotId = uuid::generate_uuid_v4();
     _name = "##" + _plotId;
 }

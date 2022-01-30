@@ -10,6 +10,7 @@
 
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
     setPlotName("TRIX");
+    setIsSubplot(true);
 }
 
 double TRIX::calculateEMA( ReversedData<double>& origin, ReversedData<double>&  destination, int averageSize) {
@@ -77,7 +78,7 @@ void TRIX::onPopupRender() {
     }
     ImGui::Separator();
 
-    ImGui::ColorEdit4("Color",{&_color.x});
+    ImGui::ColorEdit4("Color",&_color.x);
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
@@ -103,11 +104,8 @@ void TRIX::onSetupPlot() {
 
     ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 
-    ImPlot::SetupAxisLimits(ImAxis_X1, _time.front(),_time.back());
+    ImPlot::SetupAxisLimits(ImAxis_X1, _ticker->getRenderRange().startTime,_ticker->getRenderRange().endTime);
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
-
-
-
 
 }
 

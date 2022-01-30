@@ -13,11 +13,13 @@
 
 DownloaderView::DownloaderView(Context* context) : Widget(context)
 {
-    _title                  = "Downloader";
-    _is_window              = true;
+    _title = "Downloader";
+    _is_window = true;
+
     ImGui::SetDateToday(&endDate);
     startDate = endDate;
-    startDate.tm_mday -= 4;
+    startDate.tm_mon = 11;
+    startDate.tm_year = 121;
 
     _info.fetchStartTime = ImGui::GetTimestamp(startDate, true);
     _info.fetchEndTime = ImGui::GetTimestamp(endDate, true);
