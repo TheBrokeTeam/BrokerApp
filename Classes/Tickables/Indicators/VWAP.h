@@ -11,7 +11,8 @@ enum PeriodType {
     Day,
     Week,
     Month,
-    Year
+    Year,
+    Custom
 };
 
 
@@ -28,17 +29,18 @@ public:
 
 private:
     void resetVwap();
-    double _accVolume;
-    double _accTypicalPriceWeighted;
+    double _accVolume = 0;
+    double _accTypicalPriceWeighted = 0;
     PeriodType _periodType = Day;
     time_t _lastTimestamp = 0;
 
     void setupNewPeriod();
     bool isNewPeriod(double timestamp, PeriodType period);
-    double calculateTypicalPrice(double low, double high, double close);
+    static double calculateTypicalPrice(double low, double high, double close);
     std::vector<int> _lineIndexes;
 
     float _lineWidth = 2.0f;
+    int _resetPeriod = 10;
     int _weekDayToReset = 0;
     double _weekTimeInSec = 24*60*60*7;
 
