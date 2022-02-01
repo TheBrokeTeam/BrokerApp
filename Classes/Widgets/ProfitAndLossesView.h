@@ -26,7 +26,7 @@ private:
     double _baseLine = 0;
     double _cumulatedProfit;
     double _lastTime;
-
+    int _maxPositionsToRender = 1000;
 };
 
 
