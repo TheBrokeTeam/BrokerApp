@@ -20,7 +20,7 @@ public:
     void resetPlot() override;
 
 private:
-    int _smothingSize = 2; // must be <= 1 + _averageSize... it's almost always 2.
+    int _smoothingSize = 2; // must be <= 1 + _averageSize... it's almost always 2.
     int _averageSize = 14; // must be >= 1
     float _lineWidth = 2.0f;
 };

@@ -22,7 +22,7 @@ void EMA::calculate(BarHistory* barHistory)
             value /= _averageSize;
 
         } else {
-            double factor = (1.0 * _smothingSize)/(1.0 * (1+_averageSize));
+            double factor = (1.0 * _smoothingSize) / (1.0 * (1 + _averageSize));
             value = (getData().back() * (1.0 - factor)) + ((*barHistory)(0,BarDataType::CLOSE) * factor); //data[0] é o EMA de ontem (ultimo disponivel).
         }
 
@@ -43,12 +43,12 @@ void EMA::onPopupRender() {
     }
     ImGui::Separator();
 
-//    if(ImGui::SliderInt("Smothing size", &_smothingSize, 1, 2)){
+//    if(ImGui::SliderInt("Smothing size", &_smoothingSize, 1, 2)){
 //        reset();
 //        onLoad(_ticker->getBarHistory());
 //    }
 
-    ImGui::ColorEdit4("Color",{&_color.x});
+    ImGui::ColorEdit4("Color",&_color.x);
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }

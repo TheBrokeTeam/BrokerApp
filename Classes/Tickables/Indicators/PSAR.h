@@ -23,7 +23,6 @@ public:
     void onPopupRender() override;
     void reset() override;
     void save(bool signal, double sar, double time);
-    const ImVec4& getColor();
 
 private:
     ImVec4 _colorTop{175.0/250.0, 50.0/255.0, 50.0/255.0, 1};
@@ -37,7 +36,6 @@ private:
     double _ep;
     double _sar;
     bool _signal = true;
-
 
 };
 

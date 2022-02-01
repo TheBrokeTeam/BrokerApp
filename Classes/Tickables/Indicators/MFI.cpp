@@ -136,11 +136,4 @@ void MFI::reset() {
     clear();
 }
 
-
-const ImVec4 &MFI::getColor() {
-    return _color;
-}
-
-MFI::~MFI() {
-
-}
+MFI::~MFI() {}

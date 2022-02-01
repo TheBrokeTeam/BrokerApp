@@ -166,8 +166,8 @@ void PSAR::onPopupRender() {
     }
     ImGui::Separator();
 
-    ImGui::ColorEdit4("ColorTop",{&_colorTop.x});
-    ImGui::ColorEdit4("ColorBottom",{&_colorBottom.x});
+    ImGui::ColorEdit4("ColorTop",&_colorTop.x);
+    ImGui::ColorEdit4("ColorBottom",&_colorBottom.x);
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
@@ -182,10 +182,4 @@ void PSAR::reset() {
     resetPlot();
 }
 
-const ImVec4 &PSAR::getColor() {
-    return _colorBottom;
-}
-
-PSAR::~PSAR() {
-
-}
+PSAR::~PSAR() {}

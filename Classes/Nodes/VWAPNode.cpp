@@ -3,20 +3,13 @@
 //
 
 #include "VWAPNode.h"
-#include "../Tickables/Indicators/VWAP.h"
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
-#include "NodeType.h"
-#include "UiNodeType.h"
 
-VWAPNode::VWAPNode(std::shared_ptr<Indicator> vwap,StrategyEditor* nodeEditor):INode(nodeEditor){
-    setNodeName("VWAP Indicator");
+VWAPNode::VWAPNode(std::shared_ptr<Indicator> vwap, StrategyEditor* nodeEditor):IndicatorBaseNode(vwap, nodeEditor){
     setType(UiNodeType::VWAP);
-    setIndicator(vwap);
-
-    const GraphNode op(NodeType::VWAP, this);
-    _id = addNode(op);
+    setGraphNode(NodeType::VWAP);
 }
 
 void VWAPNode::onRender(float dt) {
@@ -45,33 +38,4 @@ void VWAPNode::handleStack(std::stack<float> &stack) {
         stack.push(vwap(0));
     else
         stack.push(0.0f);
-
-}
-
-void VWAPNode::initStyle() {
-    //safe check
-    auto vwapShared = getIndicator();
-    if(!vwapShared) {
-        INode::initStyle();
-        return;
-    }
-
-    auto &vwap = *dynamic_cast<VWAP*>(vwapShared.get());
-
-    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(vwap.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(vwap.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(vwap.getColor()));
-
-    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(vwap.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(vwap.getColor()));
-    ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
-}
-
-void VWAPNode::finishStyle() {
-    ImGui::PopStyleColor();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
 }

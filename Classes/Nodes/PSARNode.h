@@ -7,17 +7,15 @@
 
 
 #include "../Widgets/IndicatorsView.h"
-#include "../Nodes/INode.h"
+#include "IndicatorBaseNode.h"
 #include "../Tickables/Indicators/PSAR.h"
 #include "../Helpers/graph.h"
 
-class PSARNode: public INode {
+class PSARNode: public IndicatorBaseNode {
 public:
-    PSARNode(std::shared_ptr<Indicator> psar,StrategyEditor* nodeEditor);
+    PSARNode(std::shared_ptr<Indicator> psar, StrategyEditor* nodeEditor);
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
-    void initStyle() override;
-    void finishStyle() override;
 private:
 };
 

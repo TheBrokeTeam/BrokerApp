@@ -60,12 +60,8 @@ void Bollinger::onRender() {
                        renderInfo.size);
 }
 
-int Bollinger::getAverageSize() {
+int Bollinger::getAverageSize() const {
     return _averageSize;
 }
 
-//
-//const ImVec4 &Bollinger::getColor() {
-//    return _color;
-//}
 
