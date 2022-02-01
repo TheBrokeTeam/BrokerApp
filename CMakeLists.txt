@@ -130,7 +130,7 @@ add_executable(BrokerApp
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
-        Classes/Widgets/ConnectView.cpp Classes/Widgets/ConnectView.h)
+        Classes/Widgets/ConnectView.cpp Classes/Widgets/ConnectView.h Classes/Networking/NetCommon.h Classes/Networking/NetMessage.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -157,6 +157,7 @@ add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
 add_subdirectory(external/rapidjson)
+add_subdirectory(external/beast)
 
 #--CURL STUFF -------------------------------------------------------------
 include(FindCURL)
@@ -169,6 +170,20 @@ else()
     message(FATAL_ERROR "Could not find CURL")
 endif()
 #--END CURL----------------------------------------------------------------
+
+#--ASIO STUFF--------------------------------------------------------------
+#find_package(Boost::asio boost_asio)
+
+set(Asio_INCLUDE_DIR external/asio-1.21.0/include)
+set(Beast_INCLUDE_DIR external/beast/include)
+
+#add_library(asio INTERFACE external/asio)
+##target_compile_options(asio INTERFACE ASIO_STANDALONE)
+#target_compile_definitions(asio INTERFACE ASIO_STANDALONE)
+#target_include_directories(asio INTERFACE ${Asio_INCLUDE_DIR})
+#target_link_libraries(asio INTERFACE pthread) # Using ASIO requires you link your final executable/library with your system's threading library (e.g. pthread on linux)
+
+#--END ASIO----------------------------------------------------------------
 
 set(IMGUI_SOURCE
         external/imgui/imgui.h
@@ -288,7 +303,9 @@ set(INCLUDES
         external/rapidcsv/src
         external/rapidjson/include
         ${CURL_INCLUDE_DIR}
-        )
+		${Asio_INCLUDE_DIR}
+		${Beast_INCLUDE_DIR}
+		)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${INCLUDES}
@@ -306,6 +323,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         imnodes
         rapidcsv
         ${CURL_LIBRARIES}
-        )
+		)
 #-APPLICATION-LIBRARIES-END-------------------
 
+
+
+#git clone --recurse-submodules[https://github.com/boostorg/asio.git] https://github.com/boostorg/boost.git boost
