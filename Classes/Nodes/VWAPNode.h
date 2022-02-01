@@ -7,17 +7,15 @@
 
 
 #include "../Widgets/IndicatorsView.h"
-#include "../Nodes/INode.h"
-#include "../Tickables/Indicators/SMA.h"
+#include "IndicatorBaseNode.h"
+#include "../Tickables/Indicators/VWAP.h"
 #include "../Helpers/graph.h"
 
-class VWAPNode: public INode {
+class VWAPNode: public IndicatorBaseNode {
 public:
     VWAPNode(std::shared_ptr<Indicator> vwap,StrategyEditor* nodeEditor);
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
-    void initStyle() override;
-    void finishStyle()override ;
 private:
 };
 

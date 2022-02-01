@@ -24,6 +24,7 @@ public:
     void resetPlot() override;
     void reset() override;
     const ImVec4& getColor();
+    void setColor(ImVec4& color);
 
 protected:
     ImVec4 _color{1, 1, 1, 1};

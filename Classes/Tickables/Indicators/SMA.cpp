@@ -35,7 +35,7 @@ void SMA::onPopupRender() {
         resetPlot();
         onLoad(_ticker->getBarHistory());
     }
-    ImGui::ColorEdit4("Color",{&_color.x});
+    ImGui::ColorEdit4("Color",&_color.x);
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
@@ -53,9 +53,6 @@ int SMA::getAverageSize() const {
     return _averageSize;
 }
 
-const ImVec4 &SMA::getColor() {
-    return _color;
-}
 
 SMA::~SMA() {}
 

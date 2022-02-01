@@ -3,11 +3,7 @@
 //
 
 #include "VWAP.h"
-#include <chrono>
 #include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
 #include "../../Tickers/Ticker.h"
 
 using namespace std;
@@ -94,13 +90,7 @@ void VWAP::setupNewPeriod() {
     _accVolume = 0;
 }
 
-const ImVec4 &VWAP::getColor() {
-    return _color;
-}
-
-VWAP::~VWAP() {
-
-}
+VWAP::~VWAP() {}
 
 double VWAP::calculateTypicalPrice(double low, double high, double close) {
     return (low + high + close) / 3;

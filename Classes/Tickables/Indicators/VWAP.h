@@ -25,7 +25,6 @@ public:
     void onRender() override;
     void onPopupRender() override;
     void resetPlot() override;
-    const ImVec4& getColor();
 
 private:
     void resetVwap();
@@ -39,7 +38,6 @@ private:
     double calculateTypicalPrice(double low, double high, double close);
     std::vector<int> _lineIndexes;
 
-    ImVec4 _color{1, 1, 1, 1};
     float _lineWidth = 2.0f;
     int _weekDayToReset = 0;
     double _weekTimeInSec = 24*60*60*7;

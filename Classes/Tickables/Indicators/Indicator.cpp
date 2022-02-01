@@ -39,10 +39,15 @@ const ImVec4 &Indicator::getColor() {
     return _color;
 }
 
-Indicator::~Indicator() {}
+Indicator::~Indicator() = default;
 
 void Indicator::reset() {
     Tickable::reset();
     resetPlot();
 }
+
+void Indicator::setColor(ImVec4 &color) {
+    _color = color;
+}
+
 

@@ -17,8 +17,6 @@ public:
     void onRender() override;
     void onPopupRender() override;
     void reset() override;
-    void save(bool signal, double sar, double time);
-    const ImVec4& getColor();
     void onSetupPlot() override;
 
 

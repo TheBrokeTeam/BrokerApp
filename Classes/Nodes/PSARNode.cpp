@@ -6,17 +6,11 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
-#include "NodeType.h"
-#include "UiNodeType.h"
 
 
-PSARNode::PSARNode(std::shared_ptr<Indicator> psar,StrategyEditor* nodeEditor):INode(nodeEditor){
-    setNodeName("PSAR Indicator");
+PSARNode::PSARNode(std::shared_ptr<Indicator> psar,StrategyEditor* nodeEditor): IndicatorBaseNode(psar, nodeEditor){
     setType(UiNodeType::PSAR);
-    setIndicator(psar);
-
-    const GraphNode op(NodeType::PSAR, this);
-    _id = addNode(op);
+    setGraphNode(NodeType::PSAR);
 }
 
 void PSARNode::onRender(float dt) {
@@ -47,31 +41,4 @@ void PSARNode::handleStack(std::stack<float> &stack) {
 //    else
         stack.push(0.0f);
 
-}
-
-void PSARNode::initStyle() {
-    auto psarShared = getIndicator();
-    if(!psarShared) {
-        INode::initStyle();
-        return;
-    }
-
-    auto &psar = *dynamic_cast<PSAR*>(psarShared.get());
-
-    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(psar.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(psar.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(psar.getColor()));
-
-    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(psar.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(psar.getColor()));
-    ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
-}
-
-void PSARNode::finishStyle() {
-    ImGui::PopStyleColor();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
 }
