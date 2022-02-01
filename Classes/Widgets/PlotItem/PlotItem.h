@@ -9,6 +9,7 @@
 #include <vector>
 #include <implot.h>
 #include <implot_internal.h>
+#include "../../Contexts/Contextualizable.h"
 
 struct PlotItemInfo{
     int startIndex;
@@ -18,7 +19,7 @@ struct PlotItemInfo{
 class Ticker;
 class Context;
 
-class PlotItem {
+class PlotItem : public Contextualizable {
 public:
     PlotItem(Context *context);
     virtual ~PlotItem();
@@ -51,8 +52,6 @@ private:
     int getRenderEndIndex(double time);
     void popupRender();
     bool _isSubplot = false;
-    Context *_context = nullptr;
-
 };
 
 

@@ -19,6 +19,12 @@
 
 class Context {
 public:
+
+    struct RenderRange {
+        double startTime;
+        double endTime;
+    };
+
     Context(Editor* editor);
 
 //    virtual void loadSymbol(Symbol symbol) = 0;
@@ -47,7 +53,23 @@ public:
     virtual void plotStrategy() = 0;
     virtual void handleDragDrop(PlotItem *plotItem) = 0;
 
-    int getSubplotIndicatorsCount(){
+    RenderRange getRenderRange(){
+        return _range;
+    }
+
+    //called from chart
+    void updateRenderRange(double start, double end){
+        _range.startTime = start;
+        _range.endTime = end;
+    }
+
+    double getZoomOutMax();
+    int getMaxBarsToRender();
+    void setZoomOutMax(double zoomMax);
+    void setMaxBarsToRender(int maxBarsToRender);
+
+
+        int getSubplotIndicatorsCount() {
         return _subplotIndicators.size();
     }
 
@@ -113,7 +135,11 @@ protected:
 
     Editor *_editor{nullptr};
 
+private:
     bool _shouldRender = false;
+    RenderRange _range{0, 0};
+    double _zoomOutMax = 1000000000;
+    int _maxBarsToRender = 1000;
 };
 
 #endif //BROKERAPP_CONTEXT_H

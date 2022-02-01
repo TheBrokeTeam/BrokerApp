@@ -77,3 +77,20 @@ void Context::setShouldRender(bool value) {
 bool Context::getShouldRender() {
     return _shouldRender;
 }
+
+
+void Context::setZoomOutMax(double zoomMax) {
+    _zoomOutMax = zoomMax;
+}
+
+double Context::getZoomOutMax() {
+    return _zoomOutMax;
+}
+
+int Context::getMaxBarsToRender() {
+    return _maxBarsToRender;
+}
+
+void Context::setMaxBarsToRender(int maxBarsToRender) {
+    _maxBarsToRender = maxBarsToRender;
+}

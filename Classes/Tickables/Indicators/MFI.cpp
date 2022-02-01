@@ -5,6 +5,7 @@
 #include "MFI.h"
 #include <iostream>
 #include "../../Tickers/Ticker.h"
+#include "../../Contexts/Context.h"
 
 
 MFI::MFI(Ticker *ticker): Indicator(ticker) {
@@ -59,11 +60,11 @@ void MFI::onSetupPlot() {
 
     ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_LockMax|ImPlotAxisFlags_LockMin|ImPlotAxisFlags_Opposite);
 
-    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
+    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = getContext()->getZoomOutMax();
 
     ImPlot::SetupAxisLimits(ImAxis_Y1, 0,100.0);
 
-    ImPlot::SetupAxisLimits(ImAxis_X1, _ticker->getRenderRange().startTime,_ticker->getRenderRange().endTime);
+    ImPlot::SetupAxisLimits(ImAxis_X1, getContext()->getRenderRange().startTime,getContext()->getRenderRange().endTime);
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.0f");
 }
 

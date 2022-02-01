@@ -55,14 +55,14 @@ void Strategy::onRender() {
     int startIdx =  BinarySearchPositions(_closedPositions.data(),
                                           1,
                                           _closedPositions.size() - 1,
-                                          _ticker->getRenderRange().startTime,
+                                          getContext()->getRenderRange().startTime,
                                           true,
                                           _closedPositions.size());
 
     int endIdx =  BinarySearchPositions(_closedPositions.data(),
                                         1,
                                         _closedPositions.size() - 1,
-                                        _ticker->getRenderRange().endTime,
+                                        getContext()->getRenderRange().endTime,
                                         false,
                                         _closedPositions.size());
 

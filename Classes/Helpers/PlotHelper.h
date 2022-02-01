@@ -6,7 +6,7 @@
 #define BROKERAPP_PLOTHELPER_H
 
 #include <implot_internal.h>
-#include "../Tickers/Ticker.h"
+//#include "../Contexts/Context.h"
 
 struct PlotInfo{
     int startIndex;
@@ -91,17 +91,15 @@ public:
         return endIdx;
     }
 
-    static PlotInfo getRenderInfo(Ticker *ticker,const std::vector<double>& timeArr) {
-        PlotInfo info;
-        info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime,timeArr);
-        auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime,timeArr);
-        info.size = endIndex - info.startIndex + 1;
-        if( info.size < 0)
-            info.size = 0;
-        return  info;
-    }
-
-
+//    static PlotInfo getRenderInfo(Context* context,const std::vector<double>& timeArr) {
+//        PlotInfo info;
+//        info.startIndex = getRenderStartIndex(context->getRenderRange().startTime,timeArr);
+//        auto endIndex = getRenderEndIndex(context->getRenderRange().endTime,timeArr);
+//        info.size = endIndex - info.startIndex + 1;
+//        if( info.size < 0)
+//            info.size = 0;
+//        return  info;
+//    }
 };
 
 #endif //BROKERAPP_PLOTHELPER_H

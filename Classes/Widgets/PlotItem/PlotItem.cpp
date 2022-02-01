@@ -13,7 +13,7 @@
 PlotItem::PlotItem(Context *context) {
     _plotId = uuid::generate_uuid_v4();
     _plotName = "##" + _plotId;
-    _context = context;
+    setContext(context);
 }
 
 const std::string& PlotItem::getName() {
@@ -38,14 +38,14 @@ void PlotItem::render() {
 
             onRender();
             popupRender();
-            _context->handleDragDrop(this);
+            getContext()->handleDragDrop(this);
             ImPlot::EndPlot();
         }
     } else {
         if (ImPlot::BeginItem(_plotName.c_str())) {
             onRender();
             popupRender();
-            _context->handleDragDrop(this);
+            getContext()->handleDragDrop(this);
             ImPlot::EndItem();
         }
     }
@@ -139,8 +139,8 @@ int PlotItem::getRenderEndIndex(double time) {
 
 PlotItemInfo PlotItem::getRenderInfo(Ticker *ticker) {
     PlotItemInfo info;
-    info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime);
-    auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime);
+    info.startIndex = getRenderStartIndex(getContext()->getRenderRange().startTime);
+    auto endIndex = getRenderEndIndex(getContext()->getRenderRange().endTime);
     info.size = endIndex - info.startIndex + 1;
     if( info.size < 0)
         info.size = 0;

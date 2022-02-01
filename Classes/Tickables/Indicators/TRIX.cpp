@@ -6,7 +6,7 @@
 #include "../../Widgets/IndicatorsView.h"
 #include <iostream>
 #include "../../Tickers/Ticker.h"
-
+#include "../../Contexts/Context.h"
 
 TRIX::TRIX(Ticker *ticker): Indicator(ticker) {
     setPlotName("TRIX");
@@ -102,9 +102,9 @@ void TRIX::onSetupPlot() {
 
     ImPlot::SetupAxes(nullptr, nullptr, xFlags ,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
 
-    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
+    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = getContext()->getZoomOutMax();
 
-    ImPlot::SetupAxisLimits(ImAxis_X1, _ticker->getRenderRange().startTime,_ticker->getRenderRange().endTime);
+    ImPlot::SetupAxisLimits(ImAxis_X1, getContext()->getRenderRange().startTime,getContext()->getRenderRange().endTime);
     ImPlot::SetupAxisFormat(ImAxis_Y1, "%.2f%%");
 
 }

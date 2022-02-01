@@ -556,6 +556,8 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     _ticker->reset();
     _ticker->setSymbol(symbol);
 
+    setZoomOutMax(symbol.getTimeIntervalInMinutes()*getMaxBarsToRender()*60);
+
     _data.clear();
 
     _data = symbol.fetchCSVData();

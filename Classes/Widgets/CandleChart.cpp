@@ -73,7 +73,7 @@ void CandleChart::render(float dt)
     if(ImGui::SliderFloat("##Positioner",&_positionerValue,0.000f,1.000f,"%.3f")){
 
         int posIdxMax = int((dataHist.size() - 1)*_positionerValue);
-        int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
+        int posIdxMin = posIdxMax - getContext()->getMaxBarsToRender() < 0 ? 0 : posIdxMax - getContext()->getMaxBarsToRender();
 
         movedMin = dataHist.getData(BarDataType::TIME)[posIdxMin];
         movedMax= dataHist.getData(BarDataType::TIME)[posIdxMax];
@@ -96,7 +96,7 @@ void CandleChart::render(float dt)
 //            flagsOHLC |= ImPlotFlags_NoInputs;
 
 
-        int numberOfBarsToRender = _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
+        int numberOfBarsToRender = _ticker->getBarHistory()->size() > getContext()->getMaxBarsToRender() ? getContext()->getMaxBarsToRender() : _ticker->getBarHistory()->size();
         int lastIdxToPlot = _lastIdxX - numberOfBarsToRender  < 0  ? 0 :  _lastIdxX - numberOfBarsToRender ;
 
 
@@ -108,7 +108,7 @@ void CandleChart::render(float dt)
             ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[lastIdxToPlot],
                                     dataHist.getData(BarDataType::TIME)[_lastIdxX],BarDataType::TIME);
             ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = getContext()->getZoomOutMax();
 
             if(forceChangeMax) {
                 ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetMin(movedMin);
@@ -117,7 +117,7 @@ void CandleChart::render(float dt)
 
 //            if simulating move the x axis
             if(getContext()->isSimulating()) {
-                 _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
+                 _ticker->getBarHistory()->size() > getContext()->getMaxBarsToRender() ? getContext()->getMaxBarsToRender() : _ticker->getBarHistory()->size();
                 double barsInTime = numberOfBarsToRender * 60 * _ticker->getSymbol()->getTimeIntervalInMinutes();
                 double currentTime = dataHist(0,BarDataType::TIME);
                 ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(currentTime - barsInTime, currentTime);
@@ -171,7 +171,7 @@ void CandleChart::render(float dt)
                 if (startTime >  dataHist.getData(BarDataType::TIME).back()) startTime = dataHist.getData(BarDataType::TIME).front();
                 if (endTime <  dataHist.getData(BarDataType::TIME).front()) endTime = dataHist.getData(BarDataType::TIME).back();
 
-                _ticker->updateRenderRange(startTime,endTime);
+                getContext()->updateRenderRange(startTime,endTime);
                 //######################################
 
 
@@ -251,7 +251,7 @@ void CandleChart::render(float dt)
             ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
             ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[lastIdxToPlot], dataHist.getData(BarDataType::TIME)[_lastIdxX],BarDataType::TIME);
             ImPlot::SetupAxisFormat(ImAxis_Y1, PlotHelper::VolumeFormatter);
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
+            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = getContext()->getZoomOutMax();
 
 
             auto color = ImVec4(1.f,0.75f,0.25f,1);
