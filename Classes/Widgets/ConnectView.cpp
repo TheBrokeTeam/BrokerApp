@@ -30,36 +30,32 @@ void ConnectView::updateVisible(float dt) {
 
     if(ImGui::Button(_is_connected ? "Disconnect" : "Connect", ImVec2(200,50))){
         _is_connected = !_is_connected;
-        if(_is_connected) {
+        client.Connect("localhost", 3200);
+//        olc::net::message<CustomMsgTypes> msg;
+//        client.Send()
+    }
 
-            WebSocketManager c;
-            c.Connect("localhost", 3200);
+    if(ImGui::Button("Ping", ImVec2(200,50))){
+        client.PingServer();
+    }
 
-            if (c.IsConnected()){
-                auto msg = c.Incoming().pop_front().msg;
+    if(_is_connected) {
 
-                std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
-                std::chrono::system_clock::time_point timeThen;
-                msg >> timeThen;
-                std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count() << "\n";
-//                if (!c.Incoming().empty()) {
-//
-//                    auto msg = c.Incoming().pop_front().msg;
-//
-//                    std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
-//                    std::chrono::system_clock::time_point timeThen;
-//                    msg >> timeThen;
-//                    std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count() << "\n";
-//                }
+        if (client.IsConnected()) {
+            std::cout << "Conected" << std::endl;
+
+            if (!client.Incoming().empty()) {
+
+                std::cout << "Not empty" << std::endl;
             }
-            else {
-                std::cout << "Server Down\n";
-            }
-
-            ////
-        } else {
-//            ws.Disconnect();
         }
+        else {
+            std::cout << "Server Down\n";
+        }
+
+        ////
+    } else {
+//            ws.Disconnect();
     }
 
 
