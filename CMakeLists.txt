@@ -114,23 +114,36 @@ add_executable(BrokerApp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
-        Classes/Networking/APIManager.cpp
-        Classes/Networking/APIManager.h
-        Classes/Networking/APIRouter.cpp
-        Classes/Networking/APIRouter.h
-        Classes/Networking/Routes/SymbolRouter.cpp
-        Classes/Networking/Routes/SymbolRouter.h
-        Classes/Networking/Routes/UserRouter.cpp
-        Classes/Networking/Routes/UserRouter.h
-        Classes/Networking/Services/SymbolService.cpp
-        Classes/Networking/Services/SymbolService.h
-        Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
+		Classes/Networking/API/APIManager.cpp
+		Classes/Networking/API/APIManager.h
+		Classes/Networking/API/APIRouter.cpp
+		Classes/Networking/API/APIRouter.h
+		Classes/Networking/API/Routes/SymbolRouter.cpp
+		Classes/Networking/API/Routes/SymbolRouter.h
+		Classes/Networking/API/Routes/UserRouter.cpp
+		Classes/Networking/API/Routes/UserRouter.h
+		Classes/Networking/API/Services/SymbolService.cpp
+		Classes/Networking/API/Services/SymbolService.h
+		Classes/Networking/API/Services/UserService.cpp
+		Classes/Networking/API/Services/UserService.h
+		Classes/Helpers/JsonUtils.h
+		Classes/Networking/API/Services/KLineService.cpp
+		Classes/Networking/API/Services/KLineService.h
+		Classes/Networking/API/Routes/KLineRouter.cpp
+		Classes/Networking/API/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
-        Classes/Widgets/ConnectView.cpp Classes/Widgets/ConnectView.h Classes/Networking/NetCommon.h Classes/Networking/NetMessage.h)
+        Classes/Widgets/ConnectView.cpp
+		Classes/Widgets/ConnectView.h
+		Classes/Networking/WS/WSCommon.h
+		Classes/Networking/WS/WSMessage.h
+		Classes/Networking/WebSocketManager.cpp
+		Classes/Networking/WebSocketManager.h
+		Classes/Networking/WS/WSQueue.h
+		Classes/Networking/WS/WSConnection.h
+		Classes/Networking/WS/WSClient.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -157,7 +170,6 @@ add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
 add_subdirectory(external/rapidjson)
-add_subdirectory(external/beast)
 
 #--CURL STUFF -------------------------------------------------------------
 include(FindCURL)
@@ -172,18 +184,14 @@ endif()
 #--END CURL----------------------------------------------------------------
 
 #--ASIO STUFF--------------------------------------------------------------
-#find_package(Boost::asio boost_asio)
-
-set(Asio_INCLUDE_DIR external/asio-1.21.0/include)
-set(Beast_INCLUDE_DIR external/beast/include)
-
-#add_library(asio INTERFACE external/asio)
-##target_compile_options(asio INTERFACE ASIO_STANDALONE)
-#target_compile_definitions(asio INTERFACE ASIO_STANDALONE)
-#target_include_directories(asio INTERFACE ${Asio_INCLUDE_DIR})
-#target_link_libraries(asio INTERFACE pthread) # Using ASIO requires you link your final executable/library with your system's threading library (e.g. pthread on linux)
+set(Asio_INCLUDE_DIR external/asio-1.20.0/include)
 
 #--END ASIO----------------------------------------------------------------
+
+#-OpenSSL STUFF -----------------------------------------------------
+find_package(OpenSSL REQUIRED)
+
+#-END OpenSSL -------------------------------------------------------
 
 set(IMGUI_SOURCE
         external/imgui/imgui.h
@@ -205,7 +213,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h)
+        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h Classes/Networking/WS/OLCNet.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -253,7 +261,6 @@ target_include_directories(imnodes
         )
 
 target_link_libraries(imnodes PUBLIC glfw imgui)
-
 
 #-EXTERNAL--END---------------
 
@@ -304,7 +311,6 @@ set(INCLUDES
         external/rapidjson/include
         ${CURL_INCLUDE_DIR}
 		${Asio_INCLUDE_DIR}
-		${Beast_INCLUDE_DIR}
 		)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -323,6 +329,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         imnodes
         rapidcsv
         ${CURL_LIBRARIES}
+		OpenSSL::SSL
 		)
 #-APPLICATION-LIBRARIES-END-------------------
 

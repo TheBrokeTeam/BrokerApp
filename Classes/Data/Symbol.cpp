@@ -3,7 +3,7 @@
 //
 
 #include "Symbol.h"
-#include "../Networking/Services/KLineService.h"
+#include "../Networking/API/Services/KLineService.h"
 #include <iostream>
 #include <fmt/format.h>
 #include "../Helpers/JsonUtils.h"

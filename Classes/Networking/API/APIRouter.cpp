@@ -7,8 +7,8 @@
 #include "curl//curl.h"
 #include "curl/easy.h"
 #include <iostream>
-#include <rapidjson/document.h>
-#include <zip_file.hpp>
+#include "rapidjson/include/rapidjson/document.h"
+#include "miniz-cpp/zip_file.hpp"
 #include <filesystem>
 #include <iomanip>
 #include <filesystem>

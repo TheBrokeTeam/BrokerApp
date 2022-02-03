@@ -7,7 +7,7 @@
 
 
 #include "../APIManager.h"
-#include "../../Data/Symbol.h"
+#include "../../../Data/Symbol.h"
 
 class KLineService {
 private:

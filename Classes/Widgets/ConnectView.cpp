@@ -4,28 +4,10 @@
 
 #include "ConnectView.h"
 #include "../Editor.h"
-#include "../Helpers/JsonUtils.h"
 
 ConnectView::ConnectView(Context *context) : Widget(context) {
     _title                  = "Connect View";
     _is_window              = true;
-}
-
-std::vector<char> vBuffer(20 * 1024);
-
-void ConnectView::grabSomeData(asio::ip::tcp::socket& socket) {
-    socket.async_read_some(asio::buffer(vBuffer.data(), vBuffer.size()),
-                           [&](std::error_code ec, size_t length){
-        if(!ec) {
-            std::cout << "Read" << length << "bytes" << std::endl;
-            for (int i=0; i<length; i++){
-                std::cout << vBuffer[i];
-            }
-            grabSomeData(socket);
-        }
-
-    });
-
 }
 
 void ConnectView::updateVisible(float dt) {
@@ -46,70 +28,42 @@ void ConnectView::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    if(ImGui::Button("Connect", ImVec2(200,50))){
-        asio::error_code ec;
-        asio::io_context context;
-        asio::io_context::work idleWork(context);
-        std::thread thrContext = std::thread([&](){ context.run(); });
+    if(ImGui::Button(_is_connected ? "Disconnect" : "Connect", ImVec2(200,50))){
+        _is_connected = !_is_connected;
+        if(_is_connected) {
 
-        asio::io_service io_service;
-        std::string const address = "stream.binance.com";
+            WebSocketManager c;
+            c.Connect("localhost", 3200);
 
-        asio::ip::tcp::resolver resolver(io_service);
-        asio::ip::tcp::resolver::query query(address, "9443", asio::ip::resolver_query_base::numeric_service);
-        asio::ip::tcp::resolver::iterator iter = resolver.resolve(query, ec);
+            if (c.IsConnected()){
+                auto msg = c.Incoming().pop_front().msg;
 
-        asio::ip::tcp::endpoint endpoint = iter->endpoint();
-//        asio::ip::tcp::endpoint endpoint(asio::ip::make_address("18.176.240.156", ec), 9443);
+                std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
+                std::chrono::system_clock::time_point timeThen;
+                msg >> timeThen;
+                std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count() << "\n";
+//                if (!c.Incoming().empty()) {
+//
+//                    auto msg = c.Incoming().pop_front().msg;
+//
+//                    std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
+//                    std::chrono::system_clock::time_point timeThen;
+//                    msg >> timeThen;
+//                    std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count() << "\n";
+//                }
+            }
+            else {
+                std::cout << "Server Down\n";
+            }
 
-        asio::ip::tcp::socket socket(context);
-        socket.connect(endpoint, ec);
-
-        if(!ec) {
-            std::cout << "Connected" << std::endl;
+            ////
         } else {
-            std::cout << "Failed to connect to address. " << ec.message() << "Error code: " << ec.value() << std::endl;
-            context.stop();
-            if (thrContext.joinable())
-                thrContext.join();
+//            ws.Disconnect();
         }
-
-        if(socket.is_open()){
-            grabSomeData(socket);
-
-            rapidjson::Document doc;
-            doc.SetObject();
-            rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-            doc.AddMember("method", "SUBSCRIBE", allocator);
-            rapidjson::Value params;
-            params.SetArray();
-            params.PushBack("btcusdt@kline_1m", allocator);
-            doc.AddMember("params", params, allocator);
-            doc.AddMember("id", 1, allocator);
-
-//            std::string sRequest =
-//                    "GET /ws/btcusdt@kline_1m HTTP/1.1\r\n"
-//                    "Host: " + address +"\r\n"
-//                    "Accept: */*\r\n\n"
-//                    + json::Stringfy(doc) + "\r\n\n"
-//                    "Connection: close\r\n\r\n";
-
-//                    "GET /index.html HTTP/1.1\r\n"
-//                    "Host: stream.binance.com\r\n"
-//                    "Connection: close\r\n\r\n";
-
-
-            std::string sRequest = json::Stringfy(doc);
-            socket.write_some(asio::buffer(sRequest.data(), sRequest.size()), ec);
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(20000));
-
-            context.stop();
-            if (thrContext.joinable())
-                thrContext.join();
-        }
-
     }
+
+
+
 }
 
 void ConnectView::onPushStyleVar() {
