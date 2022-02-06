@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include "Contexts/BackTestingContext.h"
+#include "Contexts/LiveContext.h"
 #include "Helpers/ImageLoader.h"
 
 void Editor::start() {
@@ -31,7 +32,7 @@ void Editor::start() {
     loadImage(Icons::node_trend_black,"../Resources/Icons/node_trend.png");
     loadImage(Icons::node_trade_black,"../Resources/Icons/node_trade.png");
 
-    _context = std::make_shared<BackTestingContext>(this);
+    _context = std::make_shared<LiveContext>(this);
 
     _context->initialize();
 

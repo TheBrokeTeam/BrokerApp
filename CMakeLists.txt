@@ -132,7 +132,7 @@ add_executable(BrokerApp
 		Classes/Nodes/IndicatorBaseNode.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h)
+		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h Classes/Contexts/LiveContext.cpp Classes/Contexts/LiveContext.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
