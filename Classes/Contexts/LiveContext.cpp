@@ -153,7 +153,7 @@ void LiveContext::showTabBars(bool show) {
     for(auto& w : getWidgets()){
         w->showTabBar(show);
     }
-    MainMenuBar::_show_tabbars = show;
+    Editor::show_tabbars = show;
 }
 
 

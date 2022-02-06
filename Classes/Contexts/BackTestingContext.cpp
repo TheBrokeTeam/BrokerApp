@@ -343,7 +343,7 @@ void BackTestingContext::showTabBars(bool show) {
     for(auto& w : getWidgets()){
         w->showTabBar(show);
     }
-    MainMenuBar::_show_tabbars = show;
+    Editor::show_tabbars = show;
 }
 
 std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator)

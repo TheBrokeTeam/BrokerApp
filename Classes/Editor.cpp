@@ -32,9 +32,12 @@ void Editor::start() {
     loadImage(Icons::node_trend_black,"../Resources/Icons/node_trend.png");
     loadImage(Icons::node_trade_black,"../Resources/Icons/node_trade.png");
 
-    _context = std::make_shared<LiveContext>(this);
-
-    _context->initialize();
+    //----------------------------------------------
+    //this way is the logic to change the context now
+    // and not at the begining of the next frame
+    _nextContextType = Editor::ContextType::LiveTrade;
+    internalLoadContext();
+    //----------------------------------------------
 
     //enable the docking on this application
     ImGuiIO &io = ImGui::GetIO();
@@ -53,6 +56,10 @@ void Editor::start() {
 }
 
 void Editor::update() {
+    //check if the context should change
+    if(shouldReloadContext)
+        internalLoadContext();
+
     //calculate deltime
     auto dt = getDeltaTime();
 
@@ -103,7 +110,43 @@ void Editor::showDockSpace()
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 }
 
+void Editor::loadContext(Editor::ContextType type)
+{
+    if(type == _contextType) return;
+    _nextContextType = type;
+    shouldReloadContext = true;
+}
+
+void Editor::internalLoadContext()
+{
+    _contextType = _nextContextType;
+    _nextContextType = ContextType::None;
+
+    _context.reset();
+    switch (_contextType) {
+        case  Editor::ContextType::LiveTrade:
+            _context = std::make_shared<LiveContext>(this);
+            break;
+        case  Editor::ContextType::BackTesting:
+            _context = std::make_shared<BackTestingContext>(this);
+            break;
+        case Editor::ContextType::None:
+        default:
+            assert(false && "Broker app context not set!");
+            break;
+    }
+    _context->initialize();
+    shouldReloadContext = false;
+}
+
+
+
+const Editor::ContextType& Editor::getContextType() {
+    return _contextType;
+}
+
 Editor::~Editor() {}
+
 
 //APPLICATION ENTRY POINT
 int main(int argc, char const* argv[]){
