@@ -15,22 +15,13 @@ binance::SocketManager::SocketManager() {
             ,"stream.binance.com"
             ,"9443"
    );
-
-
 }
 
 
-binance::SocketManager::~SocketManager() {
+binance::SocketManager::~SocketManager() {}
 
-}
-
-void binance::SocketManager::openStream() {
-
-//    if(!_ioctx->stopped()){
-//        closeStream();
-//    }
-
-    _handler = _ws->trade("ETHUSDT",
+void binance::SocketManager::openStream(const Symbol& symbol) {
+    _handler = _ws->trade(symbol.getCode().c_str(),
                                     [](const char *fl, int ec, std::string emsg, auto trades) {
                                         if ( ec ) {
                                             std::cerr << "subscribe trades error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
@@ -48,7 +39,7 @@ void binance::SocketManager::openStream() {
     worker.detach();
 }
 
-void binance::SocketManager::closeStream() {
+void binance::SocketManager::closeStream(const Symbol& symbol) {
     _ioctx->stop();
     _ws->unsubscribe(_handler);
 }

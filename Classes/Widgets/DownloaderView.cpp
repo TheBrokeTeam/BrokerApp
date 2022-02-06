@@ -10,6 +10,7 @@
 #include "SubWidgets/Spinner.h"
 #include "SubWidgets/BufferingBar.h"
 #include <iostream>
+#include <thread>
 
 DownloaderView::DownloaderView(Context* context) : Widget(context)
 {
@@ -146,18 +147,6 @@ void DownloaderView::updateVisible(float dt)
         puts("Clicou no botão download!!!");
         getContext()->startFetching = true;
     }
-
-    if (ImGui::Button("Open Stream",ImVec2(200,50))) {
-        puts("Clicou no botão open stream!!!");
-        getContext()->openSymbolStream();
-    }
-
-    if (ImGui::Button("Close Stream",ImVec2(200,50))) {
-        puts("Clicou no botão close stream!!!");
-        getContext()->closeSymbolStream();
-    }
-
-
 
     if(getContext()->startFetching) {
         getContext()->startSpinner = true;

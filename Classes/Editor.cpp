@@ -139,8 +139,6 @@ void Editor::internalLoadContext()
     shouldReloadContext = false;
 }
 
-
-
 const Editor::ContextType& Editor::getContextType() {
     return _contextType;
 }

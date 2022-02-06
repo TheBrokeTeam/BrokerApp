@@ -12,7 +12,7 @@
 #include "../Tickables/Indicators/MFI.h"
 #include "../Tickables/Indicators/VWAP.h"
 #include "../Widgets/MainMenuBar.h"
-#include "../Widgets/DownloaderView.h"
+#include "../Widgets/SocketStreamController.h"
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
 
@@ -30,6 +30,7 @@ void LiveContext::initialize() {
     _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<ChartView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
+    _widgets.emplace_back(std::make_shared<SocketStreamController>(this));
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         removeAllIndicators();
@@ -254,10 +255,10 @@ Ticker *LiveContext::fetchDataSymbol(Symbol symbol) {
     return _ticker.get();
 }
 
-void LiveContext::openSymbolStream() {
-    _socket_manager.openStream();
+void LiveContext::openSymbolStream(const Symbol& symbol) {
+    _socket_manager.openStream(symbol);
 }
 
-void LiveContext::closeSymbolStream() {
-    _socket_manager.closeStream();
+void LiveContext::closeSymbolStream(const Symbol& symbol) {
+    _socket_manager.closeStream(symbol);
 }

@@ -50,7 +50,7 @@ public:
         std::string csv_filename;
     };
 
-    const std::string& getCode();
+    const std::string& getCode() const;
     [[nodiscard]] long getStartTime() const;
     [[nodiscard]] long getEndTime() const;
     [[nodiscard]] std::string getStartDate() const;

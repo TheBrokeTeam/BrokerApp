@@ -106,8 +106,8 @@ public:
 
     bool getShouldRender();
     void setShouldRender(bool);
-    virtual void openSymbolStream() = 0;
-    virtual void closeSymbolStream() = 0;
+    virtual void openSymbolStream(const Symbol& symbol){};
+    virtual void closeSymbolStream(const Symbol& symbol){};
 
 
 protected:

@@ -32,9 +32,6 @@ public:
     void setSimulationSpeed(float speed) override;
     bool isSimulating() override;
     void handleDragDrop(PlotItem *plotItem) override;
-    void openSymbolStream() override;
-    void closeSymbolStream() override;
-
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false) override;
     std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) override;
@@ -83,7 +80,6 @@ private:
 
     //joke time
     bool _shouldShowLuizPopup = false;
-    binance::SocketManager _socket_manager;
 };
 
 #endif //BROKERAPP_BACKTESTINGCONTEXT_H

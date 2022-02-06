@@ -8,14 +8,15 @@
 #include <memory>
 #include <binapi/api.hpp>
 #include <binapi/websocket.hpp>
+#include "../../Data/Symbol.h"
 
 namespace binance {
     class SocketManager {
         public:
         SocketManager();
         ~SocketManager();
-        void openStream();
-        void closeStream();
+        void openStream(const Symbol& symbol);
+        void closeStream(const Symbol& symbol);
 
         void startStreamAsync();
 

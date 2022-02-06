@@ -77,7 +77,7 @@ long Symbol::getStepHourFromInterval() {
     }
 }
 
-const std::string& Symbol::getCode(){
+const std::string& Symbol::getCode() const{
     return _code;
 }
 

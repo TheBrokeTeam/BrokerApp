@@ -20,8 +20,8 @@ public:
     Ticker* fetchDataSymbol(Symbol symbol) override;
     void loadTicker() override;
     void handleDragDrop(PlotItem *plotItem) override;
-    void openSymbolStream() override;
-    void closeSymbolStream() override;
+    void openSymbolStream(const Symbol& symbol) override;
+    void closeSymbolStream(const Symbol& symbol) override;
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode) override;
 

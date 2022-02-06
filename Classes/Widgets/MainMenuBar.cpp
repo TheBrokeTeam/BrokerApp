@@ -12,6 +12,7 @@
 #include "ProfitAndLossesView.h"
 #include "StockList.h"
 #include "StrategyEditor.h"
+#include "SocketStreamController.h"
 #include <fmt/format.h>
 #include "../Contexts/BackTestingContext.h"
 #include "../Contexts/LiveContext.h"
@@ -67,12 +68,6 @@ void MainMenuBar::updateAlways(float dt)
                     break;
             }
 
-            static int ui_num = 1;
-            if(ImGui::Button("Save UI")){
-                std::string _filePath = fmt::format("ui_num_{}",ui_num);
-                ImGui::SaveIniSettingsToDisk(_filePath.c_str());
-            }
-
             ImGui::EndMenu();
         }
 
@@ -92,6 +87,19 @@ void MainMenuBar::updateAlways(float dt)
         if (ImGui::BeginMenu("Help"))
         {
             ImGui::MenuItem("About", nullptr, &Editor::showAboutWindow);
+
+            ImGui::MenuItem("ImGui Metrics", nullptr,       &Editor::imgui_metrics);
+            ImGui::MenuItem("ImGui Style",   nullptr,       &Editor::imgui_style);
+            ImGui::MenuItem("ImGui Demo",    nullptr,       &Editor::imgui_demo);
+            ImGui::MenuItem("ImPlot Demo",    nullptr,      &Editor::implot_demo);
+            ImGui::MenuItem("Show tabbars on views", "",    &Editor::show_tabbars);
+
+            static int ui_num = 1;
+            if(ImGui::Button("Save UI")){
+                std::string _filePath = fmt::format("ui_num_{}",ui_num);
+                ImGui::SaveIniSettingsToDisk(_filePath.c_str());
+            }
+
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
@@ -146,27 +154,12 @@ void MainMenuBar::showBacktestContextViews()
 
     if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
     if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
-
-
-    ImGui::MenuItem("ImGui Metrics", nullptr,       &Editor::imgui_metrics);
-    ImGui::MenuItem("ImGui Style",   nullptr,       &Editor::imgui_style);
-    ImGui::MenuItem("ImGui Demo",    nullptr,       &Editor::imgui_demo);
-    ImGui::MenuItem("ImPlot Demo",    nullptr,      &Editor::implot_demo);
-    ImGui::MenuItem("Show tabbars on views", "",    &Editor::show_tabbars);
 }
 
 void MainMenuBar::showLiveContextViews() {
 
+    if (ImGui::MenuItem("Stream controller", "CTRL+D",&(getContext()->getWidget<SocketStreamController>()->GetVisible()))){}
     if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
     if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
-
-    ImGui::MenuItem("ImGui Metrics", nullptr,       &Editor::imgui_metrics);
-    ImGui::MenuItem("ImGui Style",   nullptr,       &Editor::imgui_style);
-    ImGui::MenuItem("ImGui Demo",    nullptr,       &Editor::imgui_demo);
-    ImGui::MenuItem("ImPlot Demo",    nullptr,      &Editor::implot_demo);
-    ImGui::MenuItem("Show tabbars on views", "",    &Editor::show_tabbars);
-
-
-
 }
 
