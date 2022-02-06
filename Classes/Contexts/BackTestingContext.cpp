@@ -570,3 +570,7 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
 
     return _ticker.get();
 }
+
+void BackTestingContext::openSymbolStream() {
+    _socket_manager.openStream();
+}

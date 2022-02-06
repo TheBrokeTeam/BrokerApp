@@ -102,6 +102,7 @@ public:
 
     bool getShouldRender();
     void setShouldRender(bool);
+    virtual void openSymbolStream() = 0;
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
