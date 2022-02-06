@@ -574,3 +574,7 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
 void BackTestingContext::openSymbolStream() {
     _socket_manager.openStream();
 }
+
+void BackTestingContext::closeSymbolStream() {
+    _socket_manager.closeStream();
+}

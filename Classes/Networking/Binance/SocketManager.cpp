@@ -4,48 +4,64 @@
 
 #include "SocketManager.h"
 #include <iostream>
-#include <binapi/api.hpp>
-#include <binapi/websocket.hpp>
-
 #include <boost/asio/io_context.hpp>
-#include <boost/asio/steady_timer.hpp>
+#include <thread>
 
 binance::SocketManager::SocketManager() {
 
+    _ioctx = std::make_unique<boost::asio::io_context>();
+   _ws = std::make_unique<binapi::ws::websockets>(
+            *_ioctx
+            ,"stream.binance.com"
+            ,"9443"
+   );
+
+
 }
+
 
 binance::SocketManager::~SocketManager() {
 
 }
 
 void binance::SocketManager::openStream() {
-    boost::asio::io_context ioctx;
 
-    binapi::ws::websockets ws{
-            ioctx
-            ,"stream.binance.com"
-            ,"9443"
-    };
+//    if(!_ioctx->stopped()){
+//        closeStream();
+//    }
 
-    auto trade_handler = ws.trade("ETHUSDT",
-                                  [](const char *fl, int ec, std::string emsg, auto trades) {
-                                      if ( ec ) {
-                                          std::cerr << "subscribe trades error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
+    _handler = _ws->trade("ETHUSDT",
+                                    [](const char *fl, int ec, std::string emsg, auto trades) {
+                                        if ( ec ) {
+                                            std::cerr << "subscribe trades error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
 
-                                          return false;
-                                      }
+                                            return false;
+                                        }
 
-                                      std::cout << "trades: " << trades << std::endl;
+                                        std::cout << "trades: " << trades << std::endl;
 
-                                      return true;
-                                  }
+                                        return true;
+                                    }
     );
 
-    boost::asio::steady_timer timer0{ioctx, std::chrono::steady_clock::now() + std::chrono::seconds(10)};
-    timer0.async_wait([&ws, trade_handler](const auto &/*ec*/){
-        std::cout << "unsubscribing trade_handler: " << trade_handler << std::endl;
-        ws.unsubscribe(trade_handler);
-    });
-
-    ioctx.run();
+    std::thread worker(&binance::SocketManager::startStreamAsync, this);
+    worker.detach();
 }
+
+void binance::SocketManager::closeStream() {
+    _ioctx->stop();
+    _ws->unsubscribe(_handler);
+}
+
+void binance::SocketManager::startStreamAsync() {
+    std::cout << "Before run" << std::endl;
+    _ioctx->restart();
+    _ioctx->run();
+    std::cout << "After run" << std::endl;
+}
+
+
+
+
+
+
