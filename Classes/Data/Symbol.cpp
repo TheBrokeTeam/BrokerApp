@@ -17,6 +17,11 @@ Symbol::Symbol(const std::string &code, const std::string &interval, long startT
 }
 
 Symbol::Interval Symbol::stringToInterval(const std::string& value) {
+    if ( value == "1s" ) return Interval::Interval_1second;
+    if ( value == "5s" ) return Interval::Interval_5seconds;
+    if ( value == "10s" ) return Interval::Interval_10seconds;
+    if ( value == "15s" ) return Interval::Interval_15seconds;
+    if ( value == "30s" ) return Interval::Interval_30seconds;
     if ( value == "1m" ) return Interval::Interval_1Minute;
     if ( value == "3m" ) return Interval::Interval_3Minutes;
     if ( value == "5m" ) return Interval::Interval_5Minutes;
@@ -37,6 +42,11 @@ Symbol::Interval Symbol::stringToInterval(const std::string& value) {
 
 std::string Symbol::intervalToString() {
     switch (_interval) {
+        case Interval::Interval_1second:   return "1s";
+        case Interval::Interval_5seconds:   return "5s";
+        case Interval::Interval_10seconds:  return "10s";
+        case Interval::Interval_15seconds:  return "15s";
+        case Interval::Interval_30seconds:  return "30s";
         case Interval::Interval_1Minute:    return "1m";
         case Interval::Interval_3Minutes:   return "3m";
         case Interval::Interval_5Minutes:   return "5m";
@@ -293,4 +303,55 @@ long Symbol::getNextTimestampMonth(long ts) {
     std::tm* now = std::localtime(&inSecs);
     now->tm_mon += 1;
     return timelocal(now) * 1000;;
+}
+
+long Symbol::getTimeIntervalInSeconds() {
+    std::vector<long> intArr = {
+              1,
+              5,
+              10,
+              15,
+              30,
+              60*1,
+              60*3,
+              60*5,
+              60*15,
+              60*30,
+              60*60,
+              60*60*2,
+              60*60*4,
+              60*60*6,
+              60*60*8,
+              60*60*12,
+              60*60*24,
+              60*60*24*3,
+              60*60*24*7,
+              60*60*24*30
+    };
+    return intArr[int(_interval)];
+}
+long Symbol::getTimeIntervalInMiliSeconds() {
+    std::vector<long> intArr = {
+            1000*1,
+            1000*5,
+            1000*10,
+            1000*15,
+            1000*30,
+            1000*60*1,
+            1000*60*3,
+            1000*60*5,
+            1000*60*15,
+            1000*60*30,
+            1000*60*60,
+            1000*60*60*2,
+            1000*60*60*4,
+            1000*60*60*6,
+            1000*60*60*8,
+            1000*60*60*12,
+            1000*60*60*24,
+            1000*60*60*24*3,
+            1000*60*60*24*7,
+            1000*60*60*24*30
+    };
+    return intArr[int(_interval)];
 }

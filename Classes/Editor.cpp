@@ -148,6 +148,6 @@ Editor::~Editor() {}
 
 //APPLICATION ENTRY POINT
 int main(int argc, char const* argv[]){
-    Editor app("",1000,800,argc,argv);
+    Editor app("",600,400,argc,argv);
     app.run();
 }

@@ -567,7 +567,6 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
 
-
     return _ticker.get();
 }
 

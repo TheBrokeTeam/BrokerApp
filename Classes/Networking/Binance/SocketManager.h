@@ -10,22 +10,21 @@
 #include <binapi/websocket.hpp>
 #include "../../Data/Symbol.h"
 
-namespace binance {
-    class SocketManager {
-        public:
-        SocketManager();
-        ~SocketManager();
-        void openStream(const Symbol& symbol);
-        void closeStream(const Symbol& symbol);
+class SocketManager {
+    public:
+    typedef std::function<void(const TickData& data)> StreamCallback;
 
-        void startStreamAsync();
+    SocketManager();
+    ~SocketManager();
+    void openStream(const Symbol& symbol, const StreamCallback& callback);
+    void closeStream(const Symbol& symbol);
 
-    private:
-        std::unique_ptr<boost::asio::io_context> _ioctx{nullptr};
-        std::unique_ptr<binapi::ws::websockets> _ws{nullptr};
-        binapi::ws::websockets::handle _handler{nullptr};
-    };
-}
+    void startStreamAsync();
 
+private:
+    std::unique_ptr<boost::asio::io_context> _ioctx{nullptr};
+    std::unique_ptr<binapi::ws::websockets> _ws{nullptr};
+    binapi::ws::websockets::handle _handler{nullptr};
+};
 
 #endif //BROKERAPP_SOCKETMANAGER_H

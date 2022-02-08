@@ -6,6 +6,7 @@
 #define BROKERAPP_SOCKETSTREAMCONTROLLER_H
 
 #include "Widget.h"
+#include "../Data/Symbol.h"
 
 class SocketStreamController : public Widget
 {
@@ -16,7 +17,8 @@ public:
     void onPushStyleVar() override;
 
 private:
-    std::string _symbolName{""};
+    Symbol _symbol{"ETHUSDT","10s",0,0};
+    std::string _symbolName{"ETHUSDT"};
 };
 
 #endif //BROKERAPP_SOCKETSTREAMCONTROLLER_H

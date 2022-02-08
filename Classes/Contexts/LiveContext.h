@@ -12,10 +12,13 @@
 #include <rapidjson/document.h>
 #include "../Networking/Binance/SocketManager.h"
 
+
 class LiveContext : public Context {
 public:
+
     LiveContext(Editor* editor);
     void initialize() override;
+    void updateData(float dt) override;
 
     Ticker* fetchDataSymbol(Symbol symbol) override;
     void loadTicker() override;
@@ -32,9 +35,14 @@ public:
     void plotSubplotIndicators() override;
     void showTabBars(bool show) override;
 private:
+    std::vector<SocketManager::StreamCallback> _streams;
     std::shared_ptr<Ticker> _ticker{nullptr};
+
+    //On live context - data should be used just to load some history data
+    //and call loadticker
     std::vector<TickData> _data;
-    binance::SocketManager _socket_manager;
+
+    SocketManager _socket_manager;
 };
 
 #endif //BROKERAPP_LIVECONTEXT_H

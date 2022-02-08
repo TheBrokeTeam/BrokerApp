@@ -15,6 +15,9 @@ void ChartView::updateVisible(float dt) {
 
     if(_chart != nullptr)
         _chart->updateVisible(dt);
+
+    if(_liveChart != nullptr)
+        _liveChart->updateVisible(dt);
 }
 
 void ChartView::addChart(std::shared_ptr<CandleChart> candleChart){
@@ -24,4 +27,9 @@ void ChartView::addChart(std::shared_ptr<CandleChart> candleChart){
 
 void ChartView::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+}
+
+void ChartView::addLiveChart(std::shared_ptr<LiveCandleChart> candleChart) {
+    _liveChart.reset();
+    _liveChart = std::move(candleChart);
 }

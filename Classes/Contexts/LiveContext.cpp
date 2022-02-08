@@ -37,6 +37,11 @@ void LiveContext::initialize() {
     });
 }
 
+void LiveContext::updateData(float dt) {
+    Context::updateData(dt);
+
+}
+
 void LiveContext::loadTicker() {
     for(auto& d : _data)
         _ticker->tick(d);
@@ -256,9 +261,30 @@ Ticker *LiveContext::fetchDataSymbol(Symbol symbol) {
 }
 
 void LiveContext::openSymbolStream(const Symbol& symbol) {
-    _socket_manager.openStream(symbol);
+
+    _ticker->reset();
+    _ticker->setSymbol(symbol);
+//    TODO:: load some history data
+//  1) _data.clear();
+
+//  open socket -----------------------------------
+//Todo:: handle errors
+    SocketManager::StreamCallback callback  = [this](const TickData& data){
+       _ticker->tick(data);
+    };
+
+    _streams.push_back(callback);
+
+    _socket_manager.openStream(symbol,callback);
+//    ---------------------------------------------
+
+//  add chart to render
+    auto chart = getWidget<ChartView>();
+    chart->addLiveChart(std::make_shared<LiveCandleChart>(this,_ticker.get()));
+    setShouldRender(true);
 }
 
 void LiveContext::closeSymbolStream(const Symbol& symbol) {
     _socket_manager.closeStream(symbol);
 }
+
