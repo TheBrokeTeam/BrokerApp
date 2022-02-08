@@ -115,6 +115,7 @@ add_executable(BrokerApp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
 		Classes/Networking/API/APIManager.h
+		Classes/Networking/API/APIManager.cpp
 		Classes/Networking/API/APIRouter.cpp
 		Classes/Networking/API/APIRouter.h
 		Classes/Networking/API/Routes/SymbolRouter.cpp
@@ -144,7 +145,8 @@ add_executable(BrokerApp
 		Classes/Networking/WS/WSQueue.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/WS/WSClient.h)
+		Classes/Networking/WS/WSClient.h
+		)
 
 ###############################################################################
 # FETCH CONTENT LIBS
