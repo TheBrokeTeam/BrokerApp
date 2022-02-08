@@ -16,11 +16,9 @@ public:
     void onRender() override;
     void onPopupRender() override;
     void reset() override;
-    const ImVec4& getColor();
 
 private:
     int _averageSize = 5; // must be >= 1
-    ImVec4 _color{1, 1, 1, 1};
     float _lineWidth = 2.0f;
     int sumNfirst(int number);
 

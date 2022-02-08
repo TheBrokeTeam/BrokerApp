@@ -55,7 +55,7 @@ void IndicatorBaseNode::initStyle() {
         return;
     }
 
-    auto &indicator = *shared.get();
+    auto &indicator = *shared;
 
     ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(indicator.getColor()));
     ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(indicator.getColor()));

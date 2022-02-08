@@ -6,16 +6,10 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
-#include "NodeType.h"
-#include "UiNodeType.h"
 
-WMANode::WMANode(std::shared_ptr<Indicator> wma, StrategyEditor* nodeEditor):INode(nodeEditor){
-    setNodeName("WMA Indicator");
+WMANode::WMANode(std::shared_ptr<Indicator> wma, StrategyEditor* nodeEditor):IndicatorBaseNode(wma, nodeEditor){
     setType(UiNodeType::WMA);
-    setIndicator(wma);
-
-    const GraphNode op(NodeType::WMA, this);
-    _id = addNode(op);
+    setGraphNode(NodeType::WMA);
 }
 
 void WMANode::onRender(float dt) {
@@ -45,31 +39,4 @@ void WMANode::handleStack(std::stack<float> &stack) {
     else
         stack.push(0.0f);
 
-}
-
-void WMANode::initStyle() {
-    auto wmaShared = getIndicator();
-    if(!wmaShared) {
-        INode::initStyle();
-        return;
-    }
-
-    auto &wma = *dynamic_cast<WMA*>(wmaShared.get());
-
-    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(wma.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered,ImGui::ColorConvertFloat4ToU32(wma.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(wma.getColor()));
-
-    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(wma.getColor()));
-    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(wma.getColor()));
-    ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
-}
-
-void WMANode::finishStyle() {
-    ImGui::PopStyleColor();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
-    ImNodes::PopColorStyle();
 }

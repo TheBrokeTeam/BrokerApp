@@ -7,17 +7,15 @@
 
 
 #include "../Widgets/IndicatorsView.h"
-#include "../Nodes/INode.h"
+#include "IndicatorBaseNode.h"
 #include "../Tickables/Indicators/WMA.h"
 #include "../Helpers/graph.h"
 
-class WMANode: public INode {
+class WMANode: public IndicatorBaseNode {
 public:
     WMANode(std::shared_ptr<Indicator> wma,StrategyEditor* nodeEditor);
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
-    void initStyle() override;
-    void finishStyle() override;
 private:
 };
 

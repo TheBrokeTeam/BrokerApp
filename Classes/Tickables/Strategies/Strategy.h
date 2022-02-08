@@ -8,7 +8,7 @@
 #include "../Tickable.h"
 #include "../../Widgets/PlotItem/PlotItem.h"
 
-class Strategy: public Tickable, public PlotItem{
+class Strategy: public Tickable, public PlotItem {
 public:
     struct Position {
         std::string id;
@@ -19,6 +19,9 @@ public:
         double profit;
         bool isShorting;
     };
+
+    typedef std::function<void(const Position& position)> ClosePositionCallback;
+
 
     Strategy(Ticker* ticker);
     virtual ~Strategy();
@@ -49,12 +52,16 @@ public:
 
     virtual void onRender() override;
 
+    void setClosePositionCallback(ClosePositionCallback callback);
+
 protected:
     std::vector<Position> _openedPositions;
     std::vector<Position> _closedPositions;
     double _profit = 0;
 
 private:
+    int BinarySearchPositions(const Position* arr, int l, int r, double time, bool isStart, int maxSize);
+
     void checkTarget();
     void removeOpenedPosition(const Position& pos);
     void openPosition(const Position& pos);
@@ -62,6 +69,7 @@ private:
     ImVec4 _colorPositive{0, 0, 1, 1};
     ImVec4 _colorNegative{1, 0, 0, 1};
     float _lineWidth = 1.0f;
+    ClosePositionCallback _closePositionCallback{nullptr};
 };
 
 #endif //BROKERAPP_STRATEGY_H

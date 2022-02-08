@@ -3,11 +3,7 @@
 //
 
 #include "VWAP.h"
-#include <chrono>
 #include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
 #include "../../Tickers/Ticker.h"
 
 using namespace std;
@@ -58,7 +54,7 @@ void VWAP::onRender() {
 }
 
 void VWAP::onPopupRender() {
-    const char* items[] = { "Day","Week", "Month", "Year"  };
+    const char* items[] = { "Day","Week", "Month", "Year", "Custom" };
     static int item_current = 0;
     if (ImGui::Combo("Period", &item_current, items, IM_ARRAYSIZE(items))) {
         _periodType = static_cast<PeriodType>(item_current);
@@ -68,6 +64,12 @@ void VWAP::onPopupRender() {
     if(_periodType == Week){
         const char* weekdays[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         if (ImGui::Combo("Week day to reset", &_weekDayToReset, weekdays, IM_ARRAYSIZE(weekdays))) {
+            resetVwap();
+        }
+    }
+
+    if(_periodType == Custom) {
+        if (ImGui::SliderInt("ResetPeriod", &_resetPeriod, 0, 120)) {
             resetVwap();
         }
     }
@@ -94,13 +96,7 @@ void VWAP::setupNewPeriod() {
     _accVolume = 0;
 }
 
-const ImVec4 &VWAP::getColor() {
-    return _color;
-}
-
-VWAP::~VWAP() {
-
-}
+VWAP::~VWAP() = default;
 
 double VWAP::calculateTypicalPrice(double low, double high, double close) {
     return (low + high + close) / 3;
@@ -143,6 +139,12 @@ bool VWAP::isNewPeriod(double timestamp, PeriodType period) {
             double deltaTime = time - _lastTimestamp;
             if(t.tm_wday == _weekDayToReset && deltaTime >= _weekTimeInSec)
                 newPeriod = true;
+        }
+            break;
+        case Custom: {
+            if(getData().size() % _resetPeriod == 0) {
+                newPeriod = true;
+            }
         }
             break;
         default:

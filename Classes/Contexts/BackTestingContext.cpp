@@ -11,6 +11,7 @@
 #include "../Tickables/Indicators/TRIX.h"
 #include "../Tickables/Indicators/WMA.h"
 #include "../Tickables/Indicators/PSAR.h"
+#include "../Tickables/Indicators/MFI.h"
 #include "../Tickables/Indicators/VWAP.h"
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
@@ -64,13 +65,6 @@ void BackTestingContext::initialize() {
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         removeAllIndicators();
-//        //create test strategy for tests
-//        _ticker->removeTickable(_strategy.get());
-//
-//        _strategy.reset();
-//        _strategy = std::make_shared<IndicatorToChartExample>(_ticker.get());
-//        _ticker->addStrategy(_strategy.get());
-//        getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
     });
 
     _strategyEditor->setPriority(2);
@@ -196,6 +190,7 @@ void BackTestingContext::updateData(float dt) {
 void BackTestingContext::startSimulation(Ticker* ticker) {
     //just for tests
     //TODO:: use the ticker parameter
+    getWidget<ProfitAndLossesView>()->clear();
     _ticker->reset();
     _currentIndex = 0;
     _simulating = true;
@@ -289,7 +284,18 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
                 createIndicatorNode(UiNodeType::PSAR,_indicators.back());
 
         }
-            break;
+        break;
+        case IndicatorsView::CandleIndicatorsTypes::MFI :
+        {
+            std::shared_ptr<MFI> mfi = std::make_shared<MFI>(_ticker.get());
+            mfi->setPriority(1);
+            _subplotIndicators.push_back(std::move(mfi));
+            indicator = _subplotIndicators.back();
+            _ticker->addTickable(_subplotIndicators.back().get());
+            //if(shouldCreateNode)
+              //  createIndicatorNode(UiNodeType::MFI,_indicators.back());
+        }
+        break;
         default:
             break;
     }
@@ -300,10 +306,6 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
 void BackTestingContext::plotIndicators() {
     for(auto& i : _indicators) {
         i->render();
-        if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
-            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
-            ImPlot::EndDragDropSource();
-        }
     }
 
     if(_shouldShowLuizPopup){
@@ -393,6 +395,12 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
             _strategyEditor->addNode(node);
         }
         break;
+//        case UiNodeType::MFI:
+//        {
+//            node = std::make_shared<MFINode>(indicator,_strategyEditor);
+//            _strategyEditor->addNode(node);
+//        }
+//            break;
         default:
             break;
     }
@@ -434,12 +442,17 @@ std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Gra
                 }
 
                 _strategy = std::make_shared<TradeNodeStrategy>(_ticker.get());
+
+                _strategy->setClosePositionCallback([this](const Strategy::Position& position){
+                   getWidget<ProfitAndLossesView>()->onClosePosition(position);
+                });
+                getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
+
                 auto strategyPtr = dynamic_cast<TradeNodeStrategy *>(_strategy.get());
 
                 strategyPtr->setPriority(3);
                 _ticker->addTickable(strategyPtr);
 
-                getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
                 node = std::make_shared<TradeNode>(_strategyEditor,strategyPtr);
                 _strategyEditor->addRootId(node->getId());
              }
@@ -512,15 +525,33 @@ void BackTestingContext::removeAllIndicators() {
 
 void BackTestingContext::plotSubplotIndicators() {
     for(auto& i : _subplotIndicators) {
-        if (ImPlot::BeginPlot(("##"+i->getPlotName()).c_str())) {
             i->render();
-            if (ImPlot::BeginDragDropSourceItem(i->getPlotName().c_str())) {
-                ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &i, sizeof(std::shared_ptr<Indicator>));
-                ImPlot::EndDragDropSource();
-            }
-            ImPlot::EndPlot();
+    }
+}
+
+void BackTestingContext::handleDragDrop(PlotItem *plotItem) {
+    std::shared_ptr<Indicator> ind{nullptr};
+
+    for(auto& i : _subplotIndicators) {
+        if (i.get() == plotItem) {
+            ind = i;
         }
     }
+
+    for(auto& i : _indicators) {
+        if (i.get() == plotItem) {
+            ind = i;
+        }
+    }
+
+    if (ind != nullptr) {
+        if (ImPlot::BeginDragDropSourceItem(ind->getPlotName().c_str())) {
+            ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING, &ind,
+                                      sizeof(std::shared_ptr<Indicator>));
+            ImPlot::EndDragDropSource();
+        }
+    }
+
 }
 
 Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
@@ -532,12 +563,12 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     _data = symbol.fetchCSVData();
 
 //    _data = symbol.fetchData();
-
-    auto chart = getWidget<ChartView>();
-    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
     loadTicker();
 
     setShouldRender(true);
+    auto chart = getWidget<ChartView>();
+    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
+
 
     return _ticker.get();
 }

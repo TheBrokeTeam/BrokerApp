@@ -16,10 +16,11 @@ struct PlotItemInfo{
 };
 
 class Ticker;
+class Context;
 
 class PlotItem {
 public:
-    PlotItem();
+    PlotItem(Context *context);
     virtual ~PlotItem();
     virtual void onRender() = 0;
     virtual void resetPlot();
@@ -33,6 +34,10 @@ public:
     const std::vector<double>& getTime();
 
     virtual void render();
+    virtual void onSetupPlot();
+    bool getIsSubplot();
+    void setIsSubplot(bool isSubplot);
+
 protected:
 
     PlotItemInfo getRenderInfo(Ticker* ticker);
@@ -45,6 +50,9 @@ private:
     int getRenderStartIndex(double time);
     int getRenderEndIndex(double time);
     void popupRender();
+    bool _isSubplot = false;
+    Context *_context = nullptr;
+
 };
 
 

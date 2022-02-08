@@ -20,11 +20,10 @@ public:
     void calculate(BarHistory* barHistory) override;
     void resetPlot() override;
     void onRender() override;
-    int getAverageSize();
+    int getAverageSize() const;
 
 private:
     int _averageSize = 20;
-//    ImVec4 _color = ImVec4(0.5,0.5,1,0.25);
 
 };
 

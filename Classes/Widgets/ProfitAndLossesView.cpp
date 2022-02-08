@@ -10,14 +10,14 @@
 ProfitAndLossesView::ProfitAndLossesView(Context* context) : Widget(context) {
     _title                  = "Profit & Losses";
     _is_window              = true;
+    clear();
 }
 
 void ProfitAndLossesView::updateVisible(float dt) {
     Widget::updateVisible(dt);
 
     //now draw the pnl chart
-    if(!_strategy.lock()) return;
-    if(_strategy.lock()->getClosedPositions().empty()) return;
+    if(_closedPositions.empty()) return;
 
     static float ratios[] = {1};
 
@@ -59,135 +59,26 @@ void ProfitAndLossesView::updateVisible(float dt) {
             ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy.lock()->drawDownMax*1.2, _strategy.lock()->profitMax*1.2);
         }
 
-
-        //TODO:: use a baseline value as start from context
-        double baseLine = 0;
-        double cumulatedProfit = baseLine;
-
-        double lastTime;
-        double lastCumulatedProfit;
-
-
         if(!shouldLinkPlots)
             ImPlot::BeginItem("##PnL");
 
-        std::vector<double> plotTime;
-        std::vector<double> plotProfit;
-        std::vector<double> plotLosses;
-
-        for(int i = 0; i <= _strategy.lock()->getClosedPositions().size() - 1; i++)
-        {
-            auto& p = _strategy.lock()->getClosedPositions().at(i);
-
-            bool isInProfit = cumulatedProfit >= baseLine;
-
-            //added info about not trading time
-            if(i > 0){
-                plotTime.push_back(lastTime);
-                plotTime.push_back(p.inTime);
-                if(isInProfit){
-                    plotProfit.push_back(cumulatedProfit);
-                    plotProfit.push_back(cumulatedProfit);
-                    plotLosses.push_back(baseLine);
-                    plotLosses.push_back(baseLine);
-                }
-                else{
-                    plotProfit.push_back(baseLine);
-                    plotProfit.push_back(baseLine);
-                    plotLosses.push_back(cumulatedProfit);
-                    plotLosses.push_back(cumulatedProfit);
-                }
-            }
-
-            double startX = p.inTime;
-            double startY = cumulatedProfit;
-
-            cumulatedProfit += p.profit;
-
-            double endX = p.outTime;
-            double endY = cumulatedProfit ;
-
-            lastTime = endX;
-
-            isInProfit = cumulatedProfit >= baseLine;
-
-            //cross the baseline profit to down or up
-            if( (startY >= baseLine && endY < baseLine ) ||
-                    startY < baseLine && endY >= baseLine) {
-
-                double deltaY = endY - startY;
-                double deltaX = endX - startX;
-
-                //find the X intersection with the baseline
-                double m = deltaY/deltaX;
-                double n = startY - m*startX;
-
-                double intersectionX = (baseLine - n)/m;
-                double intersectionY = baseLine;
-
-                plotTime.push_back(startX);
-                plotTime.push_back(intersectionX);
-                plotTime.push_back(intersectionX);
-                plotTime.push_back(endX);
-
-                //cross up
-                if(isInProfit){
-                    plotProfit.push_back(baseLine);
-                    plotProfit.push_back(baseLine);
-                    plotProfit.push_back(intersectionY);
-                    plotProfit.push_back(endY);
-
-                    plotLosses.push_back(startY);
-                    plotLosses.push_back(intersectionY);
-                    plotLosses.push_back(baseLine);
-                    plotLosses.push_back(baseLine);
-
-                }//corss down
-                else{
-                    plotProfit.push_back(startY);
-                    plotProfit.push_back(intersectionY);
-                    plotProfit.push_back(baseLine);
-                    plotProfit.push_back(baseLine);
-
-                    plotLosses.push_back(baseLine);
-                    plotLosses.push_back(baseLine);
-                    plotLosses.push_back(intersectionY);
-                    plotLosses.push_back(endY);
-                }
-            }
-            //not cross the baseline
-            else{
-
-                plotTime.push_back(startX);
-                plotTime.push_back(endX);
-
-                if(isInProfit){
-                    plotProfit.push_back(startY);
-                    plotProfit.push_back(endY);
-
-                    plotLosses.push_back(baseLine);
-                    plotLosses.push_back(baseLine);
-                }
-                else{
-                    plotProfit.push_back(baseLine);
-                    plotProfit.push_back(baseLine);
-
-                    plotLosses.push_back(startY);
-                    plotLosses.push_back(endY);
-                }
-            }
-        }
-
         //now plot the data
         ImPlot::SetNextLineStyle(Editor::broker_pnl_profit,2.0);
-        ImPlot::PlotLine("##profitline", plotTime.data(), plotProfit.data(), plotTime.size());
+        ImPlot::PlotLine("##profitline", _plotTime.data(), _plotProfit.data(), _plotTime.size());
         ImPlot::SetNextFillStyle(Editor::broker_pnl_profit, 0.35);
-        ImPlot::PlotShaded("profit",plotTime.data(),plotProfit.data(),plotTime.size(),baseLine);
+        ImPlot::PlotShaded("profit", _plotTime.data(), _plotProfit.data(), _plotTime.size(), _baseLine);
         ImPlot::SetNextLineStyle(Editor::broker_pnl_loss,2.0);
-        ImPlot::PlotLine("##profitline", plotTime.data(), plotLosses.data(), plotTime.size());
+        ImPlot::PlotLine("##profitline", _plotTime.data(), _plotLosses.data(), _plotTime.size());
         ImPlot::SetNextFillStyle(Editor::broker_pnl_loss,0.35);
-        ImPlot::PlotShaded("losses",plotTime.data(),plotLosses.data(),plotTime.size(),baseLine);
+        ImPlot::PlotShaded("losses", _plotTime.data(), _plotLosses.data(), _plotTime.size(), _baseLine);
 
+
+        //plot ticker range over plot
+        auto drawList = ImPlot::GetPlotDrawList();
+        auto colorSquare = ImGui::GetColorU32(ImVec4(Editor::broker_yellow_active.x,Editor::broker_yellow_active.y,Editor::broker_yellow_active.z,0.2f));
+        ImVec2 minPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().startTime,_strategy.lock()->drawDownMax*1.2);
+        ImVec2 maxPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().endTime,_strategy.lock()->profitMax*1.2);
+        drawList->AddRectFilled(minPoint,maxPoint,colorSquare);
 
         if(!shouldLinkPlots)
             ImPlot::EndItem();
@@ -206,4 +97,116 @@ void ProfitAndLossesView::onPushStyleVar() {
 
 void ProfitAndLossesView::setStrategyTest(std::weak_ptr<Strategy> strategy) {
     _strategy = strategy;
+}
+
+void ProfitAndLossesView::onClosePosition(const Strategy::Position &p) {
+    _closedPositions.push_back(p);
+
+    //TODO:: use a baseline value as start from context
+
+    bool isInProfit = _cumulatedProfit >= _baseLine;
+
+    //added info about not trading time
+    if(_closedPositions.size() > 0){
+        _plotTime.push_back(_lastTime);
+        _plotTime.push_back(p.inTime);
+        if(isInProfit){
+            _plotProfit.push_back(_cumulatedProfit);
+            _plotProfit.push_back(_cumulatedProfit);
+            _plotLosses.push_back(_baseLine);
+            _plotLosses.push_back(_baseLine);
+        }
+        else{
+            _plotProfit.push_back(_baseLine);
+            _plotProfit.push_back(_baseLine);
+            _plotLosses.push_back(_cumulatedProfit);
+            _plotLosses.push_back(_cumulatedProfit);
+        }
+    }
+
+    double startX = p.inTime;
+    double startY = _cumulatedProfit;
+
+    _cumulatedProfit += p.profit;
+
+    double endX = p.outTime;
+    double endY = _cumulatedProfit ;
+
+    _lastTime = endX;
+
+    isInProfit = _cumulatedProfit >= _baseLine;
+
+    //cross the baseline profit to down or up
+    if( (startY >= _baseLine && endY < _baseLine ) ||
+        startY < _baseLine && endY >= _baseLine) {
+
+        double deltaY = endY - startY;
+        double deltaX = endX - startX;
+
+        //find the X intersection with the baseline
+        double m = deltaY/deltaX;
+        double n = startY - m*startX;
+
+        double intersectionX = (_baseLine - n)/m;
+        double intersectionY = _baseLine;
+
+        _plotTime.push_back(startX);
+        _plotTime.push_back(intersectionX);
+        _plotTime.push_back(intersectionX);
+        _plotTime.push_back(endX);
+
+        //cross up
+        if(isInProfit){
+            _plotProfit.push_back(_baseLine);
+            _plotProfit.push_back(_baseLine);
+            _plotProfit.push_back(intersectionY);
+            _plotProfit.push_back(endY);
+
+            _plotLosses.push_back(startY);
+            _plotLosses.push_back(intersectionY);
+            _plotLosses.push_back(_baseLine);
+            _plotLosses.push_back(_baseLine);
+
+        }//corss down
+        else{
+            _plotProfit.push_back(startY);
+            _plotProfit.push_back(intersectionY);
+            _plotProfit.push_back(_baseLine);
+            _plotProfit.push_back(_baseLine);
+
+            _plotLosses.push_back(_baseLine);
+            _plotLosses.push_back(_baseLine);
+            _plotLosses.push_back(intersectionY);
+            _plotLosses.push_back(endY);
+        }
+    }
+        //not cross the baseline
+    else{
+
+        _plotTime.push_back(startX);
+        _plotTime.push_back(endX);
+
+        if(isInProfit){
+            _plotProfit.push_back(startY);
+            _plotProfit.push_back(endY);
+
+            _plotLosses.push_back(_baseLine);
+            _plotLosses.push_back(_baseLine);
+        }
+        else{
+            _plotProfit.push_back(_baseLine);
+            _plotProfit.push_back(_baseLine);
+
+            _plotLosses.push_back(startY);
+            _plotLosses.push_back(endY);
+        }
+    }
+}
+
+void ProfitAndLossesView::clear() {
+    _closedPositions.clear();
+    _plotTime.clear();
+    _plotProfit.clear();
+    _plotLosses.clear();
+    _cumulatedProfit = _baseLine;
 }

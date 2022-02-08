@@ -114,7 +114,6 @@ add_executable(BrokerApp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
-		Classes/Networking/API/APIManager.cpp
 		Classes/Networking/API/APIManager.h
 		Classes/Networking/API/APIRouter.cpp
 		Classes/Networking/API/APIRouter.h
@@ -141,8 +140,10 @@ add_executable(BrokerApp
 		Classes/Networking/WS/WSMessage.h
         Classes/Networking/WebSocketClient.cpp
         Classes/Networking/WebSocketClient.h
-		Classes/Networking/WS/WSQueue.h
 		Classes/Networking/WS/WSConnection.h
+		Classes/Networking/WS/WSQueue.h
+		Classes/Tickables/Indicators/MFI.cpp 
+		Classes/Tickables/Indicators/MFI.h
 		Classes/Networking/WS/WSClient.h)
 
 ###############################################################################

@@ -26,7 +26,7 @@ public:
         WMA,
         BOLL,
         VWAP,
-        AVL,
+        MFI,
         TRIX,
         PSAR
     };
@@ -35,7 +35,7 @@ public:
             CandleIndicatorsTypes type;
             std::string      label{""};
             DragAndDropIndicatorItem(CandleIndicatorsTypes type): type(type){
-                static std::string names[8]{"SMA","EMA","WMA","BOLL","VWAP","AVL","TRIX","PSAR"};
+                static std::string names[8]{"SMA","EMA","WMA","BOLL","VWAP","MFI","TRIX","PSAR"};
                 label = names[int(type)];
         }
     };

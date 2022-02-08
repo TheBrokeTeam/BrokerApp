@@ -6,17 +6,15 @@
 #define BROKERAPP_TRIXNODE_H
 
 #include "../Widgets/IndicatorsView.h"
-#include "../Nodes/INode.h"
+#include "IndicatorBaseNode.h"
 #include "../Tickables/Indicators/TRIX.h"
 #include "../Helpers/graph.h"
 
-class TRIXNode: public INode {
+class TRIXNode: public IndicatorBaseNode {
 public:
-    TRIXNode(std::shared_ptr<Indicator> trix,StrategyEditor* nodeEditor);
+    TRIXNode(std::shared_ptr<Indicator> trix, StrategyEditor* nodeEditor);
     void onRender(float dt) override;
     void handleStack(std::stack<float>& stack) override;
-    void initStyle() override;
-    void finishStyle() override;
 private:
 };
 

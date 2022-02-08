@@ -43,7 +43,7 @@ void WMA::onPopupRender() {
     }
     ImGui::Separator();
 
-    ImGui::ColorEdit4("Color",{&_color.x});
+    ImGui::ColorEdit4("Color",&_color.x);
     ImGui::Separator();
     ImGui::SliderFloat("Thickness", &_lineWidth, 0, 5);
 }
@@ -51,10 +51,6 @@ void WMA::onPopupRender() {
 void WMA::reset() {
     Indicator::reset();
     clear();
-}
-
-const ImVec4 &WMA::getColor() {
-    return _color;
 }
 
 WMA::~WMA() {}
