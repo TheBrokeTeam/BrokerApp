@@ -18,13 +18,16 @@ namespace olc::net {
         }
 
     public:
-        bool Connect(const std::string& host, const uint16_t port) {
+        void Connect(const std::string& host, const uint16_t port) {
             try {
                 asio::ip::tcp::resolver resolver(m_context);
                 asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(host, std::to_string(port));
 
                 // Create connection
-                m_connection = std::make_unique<connection<T>>(connection<T>::owner::client, m_context, asio::ip::tcp::socket(m_context), m_qMessagesIn);
+                m_connection = std::make_unique<connection<T>>(
+                        connection<T>::owner::client,
+                        m_context,
+                        asio::ip::tcp::socket(m_context), m_qMessagesIn);
 
                 // Tell the connection object to connect to server
                 m_connection->ConnectToServer(endpoints);
@@ -34,9 +37,9 @@ namespace olc::net {
 
             } catch(std::exception& e) {
                 std::cerr << "Client Exception: " << e.what() << "\n";
-                return false;
+//                return false;
             }
-            return true;
+//            return true;
         }
 
         void Disconnect(){
@@ -48,7 +51,7 @@ namespace olc::net {
             if(thrContext.joinable())
                 thrContext.join();
 
-            m_connection.release();
+            m_connection.reset();
         }
 
         bool IsConnected() {

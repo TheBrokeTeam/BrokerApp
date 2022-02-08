@@ -11,7 +11,6 @@ namespace olc::net {
     template <typename T>
     struct message_header {
         T id{};
-        //TODO: In the future identifier 32, 64 bytes (For now, x86 compatibles systems was working..)
         uint32_t size = 0;
     };
 

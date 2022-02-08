@@ -139,8 +139,8 @@ add_executable(BrokerApp
 		Classes/Widgets/ConnectView.h
 		Classes/Networking/WS/WSCommon.h
 		Classes/Networking/WS/WSMessage.h
-		Classes/Networking/WebSocketManager.cpp
-		Classes/Networking/WebSocketManager.h
+        Classes/Networking/WebSocketClient.cpp
+        Classes/Networking/WebSocketClient.h
 		Classes/Networking/WS/WSQueue.h
 		Classes/Networking/WS/WSConnection.h
 		Classes/Networking/WS/WSClient.h)

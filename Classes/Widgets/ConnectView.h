@@ -7,16 +7,17 @@
 
 
 #include "Widget.h"
-#include "../Networking/WebSocketManager.h"
+#include "../Networking/WebSocketClient.h"
 #include "../Networking/WS/WSMessage.h"
 
 class ConnectView : public Widget {
 public:
-    explicit ConnectView(Context* context);
+    explicit ConnectView(Context *context);
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 private:
-    WebSocketManager client;
+    WebSocketClient client;
+    void GrabSomeData(asio::ip::tcp::socket& socket);
     bool _is_connected = false;
 };
 
