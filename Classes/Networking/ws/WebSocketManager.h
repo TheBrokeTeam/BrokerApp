@@ -2,8 +2,8 @@
 // Created by Maykon Meneghel on 02/02/22.
 //
 
-#ifndef BROKERAPP_WEBSOCKETCLIENT_H
-#define BROKERAPP_WEBSOCKETCLIENT_H
+#ifndef BROKERAPP_WEBSOCKETMANAGER_H
+#define BROKERAPP_WEBSOCKETMANAGER_H
 
 //#define ASIO_STANDALONE
 //#include <asio.hpp>
@@ -11,7 +11,7 @@
 //#include <asio/ts/internet.hpp>
 //
 #include <iostream>
-#include "WS/OLCNet.h"
+#include "OLCNet.h"
 
 //enum class CustomMsgTypes : uint32_t {
 //    ServerAccept,
@@ -22,7 +22,7 @@
 //    Hi
 //};
 
-class WebSocketClient : public olc::net::client_interface<CustomMsgTypes>{
+class WebSocketManager : public olc::net::client_interface<CustomMsgTypes>{
 public:
 
     void PingServer()
@@ -49,16 +49,10 @@ public:
         olc::net::message<CustomMsgTypes> msg;
         msg.header.id = CustomMsgTypes::Hi;
 
-        msg << "GET /chat HTTP/1.1\r\n"
-            << "Host: localhost:3200\r\n"
-            << "Upgrade: websocket\r\n"
-            << "Connection: Upgrade\r\n"
-            << "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n"
-            << "Sec-WebSocket-Version: 13\r\n"
-            << "\r\n";
+        msg << "Hello World\r\n";
 
         Send(msg);
     }
 };
 
-#endif //BROKERAPP_WEBSOCKETCLIENT_H
+#endif //BROKERAPP_WEBSOCKETMANAGER_H

@@ -2,7 +2,7 @@
 // Created by Maykon Meneghel on 02/02/22.
 //
 
-#include "WebSocketClient.h"
+#include "WebSocketManager.h"
 
 
 //            rapidjson::Document doc;

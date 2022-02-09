@@ -8,6 +8,7 @@
 #include "WSCommon.h"
 #include "WSMessage.h"
 #include "WSQueue.h"
+#include <fmt/format.h>
 
 enum class CustomMsgTypes : uint32_t {
     ServerAccept,
@@ -19,21 +20,23 @@ enum class CustomMsgTypes : uint32_t {
 };
 
 namespace olc::net {
+
+    template<typename T>
+    class server_interface;
+
     template<typename T>
     class connection: public std::enable_shared_from_this<connection<T>>{
-    public:
-        // A connection is "owned" by either a server or a client, and its
-        // behaviour is slightly different bewteen the two.
-        enum class owner
-        {
-            server,
-            client
-        };
 
     public:
-        connection(owner parent, asio::io_context& asioContext, asio::ip::tcp::socket socket, WSQueue<owned_message<T>>& qIn)
+        connection(asio::io_context& asioContext, asio::ip::tcp::socket socket, WSQueue<owned_message<T>>& qIn)
             : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn) {
-                m_nOwnerType = parent;
+//                if(m_nOwnerType == owner::client){
+//                    m_handShakeOut = uint64_t(std::chrono::system_clock::now().time_since_epoch().count());
+//                    m_handShakeCheck = scramble(m_handShakeOut);
+//                } else {
+//                    m_handShakeIn = 0;
+//                    m_handShakeOut = 0;
+//                }
         }
 
         virtual ~connection() {};
@@ -43,29 +46,31 @@ namespace olc::net {
         }
 
     public:
-        void ConnectToClient(uint32_t uid = 0) {
-            if (m_nOwnerType == owner::server) {
-                if (m_socket.is_open()) {
-                    id = uid;
-                    ReadHeader();
-                }
-            }
-        }
 
-        void ConnectToServer(const asio::ip::tcp::resolver::results_type& endpoints) {
-            if (m_nOwnerType == owner::client) {
-                asio::async_connect(m_socket, endpoints, [this](std::error_code ec, asio::ip::tcp::endpoint endpoint)
-                {
-                    if (!ec) {
-                        ReadHeader();
-                    }
-                });
-            }
+        void ConnectToServer(const asio::ip::tcp::resolver::results_type& endpoints)
+        {
+            asio::async_connect(m_socket, endpoints, [this](std::error_code ec, const asio::ip::tcp::endpoint& endpoint)
+            {
+                if (!ec) {
+                    std::cout << "Connected to the Server " << endpoint.address().to_string() << " : " << endpoint.port() << std::endl;
+                    WriteValidation();
+                }
+            });
         }
 
         void Disconnect() {
-            if (IsConnected())
-                asio::post(m_asioContext, [this]() { m_socket.close(); });
+            if (IsConnected()) {
+                asio::error_code ec;
+                m_socket.close(ec);
+                if(!ec)
+                {
+                    std::cout << "Closed WebSocket" << std::endl;
+                } else
+                {
+                    std::cout << "Error: " << ec.message() << std::endl;
+                }
+            }
+
         }
 
         bool IsConnected() const {
@@ -132,7 +137,8 @@ namespace olc::net {
         }
 
         // ASYNC - Prime context to write a message body
-        void WriteBody() {
+        void WriteBody()
+        {
             // If this function is called, a header has just been sent, and that header
             // indicated a body existed for this message. Fill a transmission buffer
             // with the body data, and send it!
@@ -157,7 +163,8 @@ namespace olc::net {
         }
 
         // ASYNC - Prime context ready to read a message header
-        void ReadHeader() {
+        void ReadHeader()
+        {
             // If this function is called, we are expecting asio to wait until it receives
             // enough bytes to form a header of a message. We know the headers are a fixed
             // size, so allocate a transmission buffer large enough to store it. In fact,
@@ -169,6 +176,8 @@ namespace olc::net {
                     // A complete message header has been read, check if this message
                     // has a body to follow...
                     if (m_msgTemporaryIn.header.size > 0) {
+                        std::cout << "Reading the header message" << std::endl;
+
                         // ...it does, so allocate enough space in the messages' body
                         // vector, and issue asio with the task to read the body.
                         m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size);
@@ -188,13 +197,15 @@ namespace olc::net {
         }
 
         // ASYNC - Prime context ready to read a message body
-        void ReadBody() {
+        void ReadBody()
+        {
             // If this function is called, a header has already been read, and that header
             // request we read a body, The space for that body has already been allocated
             // in the temporary message object, so just wait for the bytes to arrive...
             asio::async_read(m_socket, asio::buffer(m_msgTemporaryIn.body.data(), m_msgTemporaryIn.body.size()),
                              [this](std::error_code ec, std::size_t length) {
                 if (!ec) {
+                    std::cout << "Reading the body message" << std::endl;
                     // ...and they have! The message is now complete, so add
                     // the whole message to incoming queue
                     AddToIncomingMessageQueue();
@@ -207,19 +218,104 @@ namespace olc::net {
         }
 
         // Once a full message is received, add it to the incoming queue
-        void AddToIncomingMessageQueue() {
+        void AddToIncomingMessageQueue()
+        {
             // Shove it in queue, converting it to an "owned message", by initialising
             // with the a shared pointer from this connection object
-            if(m_nOwnerType == owner::server)
-                m_qMessagesIn.push_back({ this->shared_from_this(), m_msgTemporaryIn });
-            else
-                m_qMessagesIn.push_back({ nullptr, m_msgTemporaryIn });
+
+            m_qMessagesIn.push_back({ this->shared_from_this(), m_msgTemporaryIn });
+//            m_qMessagesIn.push_back({ nullptr, m_msgTemporaryIn });
 
             // We must now prime the asio context to receive the next message. It
             // wil just sit and wait for bytes to arrive, and the message construction
             // process repeats itself. Clever huh?
+
             ReadHeader();
         }
+
+        uint64_t scramble(uint64_t nInput)
+        {
+            uint64_t value;
+            std::istringstream iss("dGhlIHNhbXBsZSBub25jZQ==");
+//            std::istringstream iss("258EAFA5-E914–47DA-95CA-C5AB0DC85B11");
+            iss >> value;
+            uint64_t out = nInput - value;
+            return out;
+//            uint64_t out = nInput ^ 0xDEADBEEFC0DECAFE;
+//            out = (out & 0xF0F0F0F0F0F0F0F0) >> 4 | (out & 0xF0F0F0F0F0F0F0F0) << 4;
+//            return out ^ 0xC0DEFACE12345678;
+        }
+
+//        static std::string uint64_to_string(uint64_t value ) {
+//            std::ostringstream os;
+//            os << value;
+//            return os.str();
+//        }
+
+        void WriteValidation()
+        {
+            std::string sRequest =
+                    "GET /chat HTTP/1.1\r\n"
+                    "Upgrade: websocket\r\n"
+                    "Connection: Upgrade\r\n"
+                    "Sec-WebSocket-Key:" + m_secKey + "\r\n"
+                    "Sec-WebSocket-Version: 13\r\n\r\n";
+
+            asio::async_write(m_socket, asio::buffer(sRequest.data(), sRequest.size()),
+                [this](std::error_code ec, std::size_t length)
+                {
+                    if(!ec)
+                    {
+                        std::cout << "Wrote the validation" << std::endl;
+
+                        //                            m_socket.wait(m_socket.wait_read);
+
+//                            m_socket.async_read_some(asio::buffer(vBuffer.data(), vBuffer.size()), [&](std::error_code ec, std::size_t length)
+//                            {
+//                                if(!ec)
+//                                {
+//                                    std::cout << "Read" << length << "bytes" << std::endl;
+//                                    for(int i=0; i< length; i++){
+//                                        std::cout << vBuffer[i];
+//                                    }
+//
+//                                }
+//                            });
+                        ReadHeader();
+                    }
+                    else
+                    {
+                        asio::post(m_asioContext, [this]() { m_socket.close(); });
+                    }
+                });
+        }
+
+//        void ReadValidation(olc::net::server_interface<T>* server = nullptr)
+//        {
+//            asio::async_read(m_socket, asio::buffer(&m_handShakeIn, sizeof(uint64_t)),
+//                [this, server](std::error_code ec, std::size_t length)
+//                {
+//                    if(!ec)
+//                    {
+//                        if(m_nOwnerType == owner::server)
+//                        {
+//                            if(m_handShakeIn == m_handShakeCheck) {
+//                                std::cout << "Client Validated" << std::endl;
+//                                server->onClientValidated(this->shared_from_this());
+//                                ReadHeader();
+//                            }
+//                        } else
+//                        {
+//                            m_handShakeOut = scramble(m_handShakeIn);
+//                            WriteValidation();
+//                        }
+//                    } else
+//                    {
+//                        std::cout << "Client Disconnected." << std::endl;
+//                        m_socket.close();
+//                    }
+//                });
+//        }
 
 
 
@@ -229,9 +325,17 @@ namespace olc::net {
         WSQueue<message<T>> m_qMessagesOut;
         WSQueue<owned_message<T>> m_qMessagesIn;
         message<T> m_msgTemporaryIn;
-        owner m_nOwnerType = owner::server;
         uint32_t id = 0;
+
+        uint64_t m_handShakeOut = 0;
+        uint64_t m_handShakeIn = 0;
+        uint64_t m_handShakeCheck = 0;
+        std::string m_secKey = "dGhlIHNhbXBsZSBub25jZQ==";
+
+        std::vector<char> vBuffer = std::vector<char>(20*1024);
     };
+
+
 }
 
 #endif //BROKERAPP_WSCONNECTION_H

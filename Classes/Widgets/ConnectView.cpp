@@ -46,7 +46,6 @@ void ConnectView::updateVisible(float dt) {
 
     if(ImGui::Button(_is_connected ? "Disconnect" : "Connect", ImVec2(200,50))){
         _is_connected = !_is_connected;
-
         if(_is_connected) {
             client.Connect("localhost", 3200);
         } else {
@@ -64,7 +63,7 @@ void ConnectView::updateVisible(float dt) {
         std::thread thrContext = std::thread([&](){ asioContext.run(); });
 
         asio::io_service io_service;
-        std::string const address = "stream.binance.com";
+        std::string const address = "wss://stream.binance.com";
         int const port = 9443;
 
         asio::ip::tcp::resolver resolver(io_service);
@@ -95,10 +94,8 @@ void ConnectView::updateVisible(float dt) {
                     "Origin: wss://" + address + ":" + std::to_string(port) + "\r\n"
                     "Upgrade: websocket\r\n"
                     "Connection: Upgrade\r\n"
-//                    "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n"
-                    "Sec-WebSocket-Key: FlEcEGYsEywYwimYg2mwoUeDqPiApcVoiSgwVBMXXiZf5NhT9pfJeFP3WzlUjhGu\r\n"
+                    "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n"
                     "Sec-WebSocket-Version: 13\r\n\r\n";
-//                    "Sec-WebSocket-Protocol: json\r\n\r\n";
 
             socket.write_some(asio::buffer(sRequest.data(), sRequest.size()), ec);
 
@@ -123,7 +120,7 @@ void ConnectView::updateVisible(float dt) {
 
     if(ImGui::Button("Ping", ImVec2(200,50))) {
         if (client.IsConnected()) {
-            client.PingServer();
+            client.Hi();
         }
     }
 

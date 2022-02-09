@@ -25,7 +25,6 @@ namespace olc::net {
 
                 // Create connection
                 m_connection = std::make_unique<connection<T>>(
-                        connection<T>::owner::client,
                         m_context,
                         asio::ip::tcp::socket(m_context), m_qMessagesIn);
 
