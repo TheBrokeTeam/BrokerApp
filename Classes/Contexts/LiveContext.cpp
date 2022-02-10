@@ -15,6 +15,7 @@
 #include "../Widgets/SocketStreamController.h"
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
+#include "../Helpers/Utils.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -39,7 +40,10 @@ void LiveContext::initialize() {
 
 void LiveContext::updateData(float dt) {
     Context::updateData(dt);
+}
 
+double LiveContext::getCurrentTimeStamp() {
+    return TimeUtils::timeSinceEpochMillisec();
 }
 
 void LiveContext::loadTicker() {

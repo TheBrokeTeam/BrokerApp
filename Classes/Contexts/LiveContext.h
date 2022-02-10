@@ -19,6 +19,8 @@ public:
     LiveContext(Editor* editor);
     void initialize() override;
     void updateData(float dt) override;
+    double getCurrentTimeStamp() override;
+
 
     Ticker* fetchDataSymbol(Symbol symbol) override;
     void loadTicker() override;
@@ -43,6 +45,8 @@ private:
     std::vector<TickData> _data;
 
     SocketManager _socket_manager;
+    double _currentTimeStamp = 0;
+
 };
 
 #endif //BROKERAPP_LIVECONTEXT_H

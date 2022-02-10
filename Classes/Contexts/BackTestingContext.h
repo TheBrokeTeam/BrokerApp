@@ -27,6 +27,8 @@ public:
 //    void loadSymbol(Symbol symbol) override;
     void loadTicker() override;
     void updateData(float dt) override;
+    double getCurrentTimeStamp() override;
+
 
     void startSimulation(Ticker* ticker) override;
     void setSimulationSpeed(float speed) override;
@@ -75,6 +77,7 @@ private:
     int _currentIndex = 0;
     float _timeToTick = 0.5f; //sec
     float _currentTime = 0;
+    double _currentTimeStamp = 0;
     float _speed = 1.0f;
     float _speedLimit = 1000.0f;
 

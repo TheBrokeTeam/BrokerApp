@@ -65,11 +65,9 @@ public:
 
     //used in live context
     long getTimeIntervalInSeconds();
-    long getTimeIntervalInMiliSeconds();
+    double getTimeIntervalInMiliSeconds();
 
-
-
-        bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
+    bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
 
     std::vector<TickData> fetchData();
     std::vector<TickData> fetchCSVData();

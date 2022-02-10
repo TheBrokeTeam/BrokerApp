@@ -180,9 +180,14 @@ void BackTestingContext::updateData(float dt) {
             }
 
             auto& tickData = _data[_currentIndex++];
+            _currentTimeStamp = tickData.time;
             _ticker->tick(tickData);
         }
     }
+}
+
+double BackTestingContext::getCurrentTimeStamp() {
+    return _currentTimeStamp;
 }
 
 void BackTestingContext::startSimulation(Ticker* ticker) {

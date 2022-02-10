@@ -31,6 +31,8 @@ public:
     virtual void setSimulationSpeed(float speed){};
     virtual bool isSimulating(){return false;};
 
+    virtual double getCurrentTimeStamp() = 0 ;
+
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 

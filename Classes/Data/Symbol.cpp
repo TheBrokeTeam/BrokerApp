@@ -330,7 +330,7 @@ long Symbol::getTimeIntervalInSeconds() {
     };
     return intArr[int(_interval)];
 }
-long Symbol::getTimeIntervalInMiliSeconds() {
+double Symbol::getTimeIntervalInMiliSeconds() {
     std::vector<long> intArr = {
             1000*1,
             1000*5,

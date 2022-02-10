@@ -52,7 +52,7 @@ void SocketStreamController::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
     if (ImGui::Button("Open Stream",ImVec2(200,50))) {
-        _symbol =   Symbol(_symbolName,"1s",0,0);
+        _symbol =   Symbol(_symbolName,"5s",0,0);
         getContext()->openSymbolStream(_symbol);
     }
 
