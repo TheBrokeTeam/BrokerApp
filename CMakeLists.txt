@@ -132,7 +132,7 @@ add_executable(BrokerApp
 		Classes/Nodes/IndicatorBaseNode.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-)
+        Classes/Widgets/LoginView.cpp Classes/Widgets/LoginView.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
