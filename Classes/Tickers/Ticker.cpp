@@ -143,3 +143,23 @@ double Ticker::getZoomOutMax() {
 int Ticker::getMaxBarsToRender() {
     return _maxBarsToRender;
 }
+
+void Ticker::liveTick(const TickData &tickData)
+{
+    //normal tick update
+    BarData data;
+
+    data.time = _barHistory(0,BarDataType::TIME);
+    data.open = _barHistory(0,BarDataType::OPEN);
+    data.high = _barHistory(0,BarDataType::HIGH);
+    data.low = _barHistory(0,BarDataType::LOW);
+    data.close = _barHistory(0,BarDataType::CLOSE);
+    data.volume = _barHistory(0,BarDataType::VOLUME);
+
+    data.volume += tickData.volume;
+    data.high = tickData.price > data.high ? tickData.price : data.high;
+    data.low = tickData.price < data.low ? tickData.price : data.low;
+    data.close = tickData.price;
+
+    _barHistory.updateLastBar(data);
+}

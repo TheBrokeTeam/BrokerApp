@@ -45,6 +45,7 @@ public:
     bool removeTickable(Tickable *tickable);
 
     void tick(const TickData &tickData);
+    void liveTick(const TickData &tickData);
 
     void setSymbol(const Symbol& symbol);
     Symbol* getSymbol();

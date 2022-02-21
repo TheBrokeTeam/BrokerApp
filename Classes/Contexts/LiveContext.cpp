@@ -270,12 +270,15 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
     _ticker->setSymbol(symbol);
 
 //    TODO:: load some history data
-   _data.clear();
-    RestApiManager::CandlesCallback candlesCallback  = [this](std::vector<TickData>& data){
+//   _data.clear();
+    RestApiManager::CandlesCallback candlesCallback  = [this,symbol](std::vector<TickData>& data){
        std::cout << data.size() << std::endl;
-       _data.swap(data);
-        for(auto &d : _data)
+//       _data.swap(data);
+        for(auto &d : data)
             _ticker->tick(d);
+
+        openSymbolTradeSocket(symbol);
+        openSymbolCandleSocket(symbol);
     };
 
     _apiManager.getCandles(symbol,candlesCallback);
@@ -291,7 +294,15 @@ void LiveContext::closeSymbolStream(const Symbol& symbol) {
 }
 
 void LiveContext::openSymbolCandleSocket(const Symbol &symbol) {
+//  open candle socket -----------------------------------
+//Todo:: handle errors
+    SocketManager::CandlesCallback candleCallback  = [this](std::vector<TickData>& data){
+        for(auto &d : data)
+            _ticker->tick(d);
+    };
 
+    _socket_manager.openCandleStream(symbol,candleCallback);
+//    ---------------------------------------------
 
 }
 
@@ -300,7 +311,7 @@ void LiveContext::openSymbolTradeSocket(const Symbol &symbol) {
 //  open socket -----------------------------------
 //Todo:: handle errors
     SocketManager::StreamCallback streamCallback  = [this](const TickData& data){
-        _ticker->tick(data);
+        _ticker->liveTick(data);
     };
 
     _streams.push_back(streamCallback);

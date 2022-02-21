@@ -43,8 +43,8 @@ void RestApiManager::getCandles(const Symbol &symbol,const CandlesCallback& call
                          double duration = static_cast<double>(k.end_time - k.start_time);
 
                          data_open.time  = timeMs;
-                         data_high.time  = timeMs + duration*0.25;
-                         data_low.time  = timeMs + duration*0.5;
+                         data_high.time  = timeMs + duration*0.33;
+                         data_low.time  = timeMs + duration*0.66;
                          data_close.time  = timeMs + duration - 1;
 
                          data_open.price = static_cast<double>(k.open);
