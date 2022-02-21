@@ -11,7 +11,7 @@
 #include <set>
 #include <rapidjson/document.h>
 #include "../Networking/Binance/SocketManager.h"
-
+#include "../Networking/Binance/RestApiManager.h"
 
 class LiveContext : public Context {
 public:
@@ -37,6 +37,9 @@ public:
     void plotSubplotIndicators() override;
     void showTabBars(bool show) override;
 private:
+    void openSymbolCandleSocket(const Symbol& symbol);
+    void openSymbolTradeSocket(const Symbol& symbol);
+
     std::vector<SocketManager::StreamCallback> _streams;
     std::shared_ptr<Ticker> _ticker{nullptr};
 
@@ -45,6 +48,7 @@ private:
     std::vector<TickData> _data;
 
     SocketManager _socket_manager;
+    RestApiManager _apiManager;
     double _currentTimeStamp = 0;
 
 };

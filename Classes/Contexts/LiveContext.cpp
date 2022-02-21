@@ -268,19 +268,17 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
 
     _ticker->reset();
     _ticker->setSymbol(symbol);
-//    TODO:: load some history data
-//  1) _data.clear();
 
-//  open socket -----------------------------------
-//Todo:: handle errors
-    SocketManager::StreamCallback callback  = [this](const TickData& data){
-       _ticker->tick(data);
+//    TODO:: load some history data
+   _data.clear();
+    RestApiManager::CandlesCallback candlesCallback  = [this](std::vector<TickData>& data){
+       std::cout << data.size() << std::endl;
+       _data.swap(data);
+        for(auto &d : _data)
+            _ticker->tick(d);
     };
 
-    _streams.push_back(callback);
-
-    _socket_manager.openStream(symbol,callback);
-//    ---------------------------------------------
+    _apiManager.getCandles(symbol,candlesCallback);
 
 //  add chart to render
     auto chart = getWidget<ChartView>();
@@ -290,5 +288,24 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
 
 void LiveContext::closeSymbolStream(const Symbol& symbol) {
     _socket_manager.closeStream(symbol);
+}
+
+void LiveContext::openSymbolCandleSocket(const Symbol &symbol) {
+
+
+}
+
+void LiveContext::openSymbolTradeSocket(const Symbol &symbol) {
+
+//  open socket -----------------------------------
+//Todo:: handle errors
+    SocketManager::StreamCallback streamCallback  = [this](const TickData& data){
+        _ticker->tick(data);
+    };
+
+    _streams.push_back(streamCallback);
+
+    _socket_manager.openStream(symbol,streamCallback);
+//    ---------------------------------------------
 }
 
