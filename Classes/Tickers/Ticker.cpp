@@ -49,11 +49,9 @@ void Ticker::tick(const TickData& tickData) {
         return;
     }
 
-    //check if it is the close moment based on symbol interval
-    double lastOpenTime = _barHistory(0,BarDataType::OPEN);
-    double m = std::fmod(getContext()->getCurrentTimeStamp(),_symbol.getTimeIntervalInMiliSeconds());
-    long lastMsOfCurrentBar = _barHistory(0,BarDataType::OPEN) + _symbol.getTimeIntervalInMiliSeconds() - 1;
-    if(lastMsOfCurrentBar <= (tickData.time)){
+    //check if it is the close moment based on symbol interval (open time + bar's duration)
+    long lastSecondOfCurrentBar = _barHistory(0,BarDataType::TIME) + _symbol.getTimeIntervalInMiliSeconds() - 1;
+    if(lastSecondOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
         return;
@@ -71,12 +69,13 @@ void Ticker::tick(const TickData& tickData) {
 
     data.volume += tickData.volume;
     data.high = tickData.price > data.high ? tickData.price : data.high;
-    data.low = tickData.price < data.low ? tickData.price : data.low;;
+    data.low = tickData.price < data.low ? tickData.price : data.low;
+    data.close = tickData.price;
 
     _barHistory.updateLastBar(data);
 
     for(auto& t : _tickables){
-            t->onTick(&_barHistory);
+        t->onTick(&_barHistory);
     }
 }
 
