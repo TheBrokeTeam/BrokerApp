@@ -14,6 +14,10 @@
 #include "../Editor.h"
 #include "../Widgets/IndicatorsView.h"
 #include "../Tickables/Strategies/Strategy.h"
+#include "../BrokerLib/PlotRenderer.h"
+#include "../BrokerLib/IndicatorData.h"
+
+
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
 
@@ -35,7 +39,9 @@ public:
     virtual void updateUI(float dt);
 
     virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false) = 0;
-    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) = 0;
+    virtual std::shared_ptr<IndicatorData> loadNewIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false) = 0;
+
+        virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) = 0;
     virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) = 0;
 
     virtual void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) = 0;
@@ -106,6 +112,8 @@ public:
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
+    std::vector<std::shared_ptr<IndicatorData>> _indicatorsD;
+    std::vector<std::shared_ptr<PlotRenderer>> _indicatorsR;
     std::vector<std::shared_ptr<Indicator>> _subplotIndicators;
 
     //    std::vector<std::shared_ptr<Strategy>> _strategies;

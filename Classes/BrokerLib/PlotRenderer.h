@@ -26,30 +26,24 @@ public:
     virtual void onPostRender() = 0;
     virtual void onPopupRender() = 0;
     virtual void onSetupPlot();
-    virtual void resetPlot();
 
     void setPlotName(const std::string& name);
     const std::string& getName();
     const std::string& getPlotName();
-    const int getSize();
     const std::string& getId();
-    const std::vector<double>& getTime();
 
     void render();
     bool getIsSubplot();
     void setIsSubplot(bool isSubplot);
 
 protected:
-    IndicatorRendererInfo getRenderInfo(Ticker* ticker);
+    IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);
     std::string _name{""};
     std::string _plotName{""};
     std::string _plotId{""};
-    std::vector<double> _time;
-
 private:
-    int getRenderStartIndex(double time);
-    int getRenderEndIndex(double time);
-    void popupRender();
+    int getRenderStartIndex(double time,const std::vector<double>& timeArr);
+    int getRenderEndIndex(double time,const std::vector<double>& timeArr);
     bool _isSubplot = false;
     Context *_context = nullptr;
 };

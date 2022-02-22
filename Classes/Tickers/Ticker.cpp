@@ -4,13 +4,10 @@
 
 #include "Ticker.h"
 #include "../Contexts/Context.h"
-#include <IndicatorData.h>
-
 
 Ticker::Ticker(Context *context){
     setContext(context);
     _id = uuid::generate_uuid_v4();
-    IndicatorData::printTato();
 }
 
 bool Ticker::removeTickable(Tickable *tickable)

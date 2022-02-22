@@ -233,7 +233,7 @@ void CandleChart::render(float dt)
                     int i = *(int*)payload->Data;
 
                     puts("AGORA é a hora de plotar!!!");
-                    getContext()->loadIndicator(IndicatorsView::CandleIndicatorsTypes(i), true);
+                    getContext()->loadNewIndicator(IndicatorsView::CandleIndicatorsTypes(i), true);
                 }
                 ImPlot::EndDragDropTarget();
             }

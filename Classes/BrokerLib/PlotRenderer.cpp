@@ -4,7 +4,7 @@
 
 #include "PlotRenderer.h"
 #include "../Helpers/Utils.h"
-#include "../Helpers/PlotHelper.h"
+//#include "../Helpers/PlotHelper.h"
 #include "../Widgets/IndicatorsView.h"
 #include "../Contexts/Context.h"
 
@@ -33,7 +33,7 @@ void PlotRenderer::render() {
             onSetupPlot();
 
         onRender();
-        popupRender();
+        onPopupRender();
         onPostRender();
     }
 }
@@ -47,29 +47,14 @@ void PlotRenderer::setPlotName(const std::string& name) {
     _name = name;
 }
 
-
-
 void PlotRenderer::onPopupRender() {}
-
-void PlotRenderer::resetPlot() {
-    _time.clear();
-}
-
-const std::vector<double> &PlotRenderer::getTime() {
-    return _time;
-}
-
-const int PlotRenderer::getSize() {
-    return _time.size();
-}
 
 PlotRenderer::~PlotRenderer() {
     _name = "";
-    _time.clear();
 }
 
-int PlotRenderer::getRenderStartIndex(double time) {
-    int startIdx = PlotHelper::BinarySearch(_time.data(), 0, _time.size(),time);
+int PlotRenderer::getRenderStartIndex(double time,const std::vector<double>& timeArr) {
+    int startIdx = PlotHelper::BinarySearch(timeArr.data(), 0, timeArr.size(),time);
 
     if(startIdx == -1)
         startIdx = 0;
@@ -77,19 +62,19 @@ int PlotRenderer::getRenderStartIndex(double time) {
     return startIdx;
 }
 
-int PlotRenderer::getRenderEndIndex(double time) {
-    int endIdx = PlotHelper::BinarySearch(_time.data(), 0, _time.size(),time);
+int PlotRenderer::getRenderEndIndex(double time,const std::vector<double>& timeArr) {
+    int endIdx = PlotHelper::BinarySearch(timeArr.data(), 0, timeArr.size(),time);
 
     if(endIdx == -1)
-        endIdx = _time.size() - 1;
+        endIdx = timeArr.size() - 1;
 
     return endIdx;
 }
 
-IndicatorRendererInfo PlotRenderer::getRenderInfo(Ticker *ticker) {
+IndicatorRendererInfo PlotRenderer::getRenderInfo(Ticker *ticker,const std::vector<double>& timeArr) {
     IndicatorRendererInfo info;
-    info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime);
-    auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime);
+    info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime,timeArr);
+    auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime,timeArr);
     info.size = endIndex - info.startIndex + 1;
     if( info.size < 0)
         info.size = 0;

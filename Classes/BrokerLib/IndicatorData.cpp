@@ -29,6 +29,7 @@ void IndicatorData::onLoad(BarHistory *barHistory)
 void IndicatorData::reset()
 {
     Tickable::reset();
+    _time.clear();
 }
 
 Ticker *IndicatorData::getTicker() {

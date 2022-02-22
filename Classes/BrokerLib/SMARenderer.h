@@ -9,6 +9,7 @@
 #include "PlotRenderer.h"
 #include <implot.h>
 #include <implot_internal.h>
+
 class SMARenderer : public PlotRenderer {
 public:
     SMARenderer(Context* context,SMAData* data);
@@ -19,7 +20,6 @@ public:
     void onPostRender() override;
     void onPopupRender() override;
 //    void onSetupPlot() override;
-    void resetPlot() override;
     const ImVec4& getColor();
     void setColor(ImVec4& color);
 

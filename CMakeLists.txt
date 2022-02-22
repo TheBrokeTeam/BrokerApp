@@ -132,7 +132,15 @@ add_executable(BrokerApp
 		Classes/Nodes/IndicatorBaseNode.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-)
+		Classes/BrokerLib/IndicatorData.h
+		Classes/BrokerLib/IndicatorData.cpp
+		Classes/BrokerLib/PlotRenderer.h
+		Classes/BrokerLib/PlotRenderer.cpp
+		Classes/BrokerLib/SMAData.h
+		Classes/BrokerLib/SMAData.cpp
+		Classes/BrokerLib/SMARenderer.h
+		Classes/BrokerLib/SMARenderer.cpp
+		)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -151,9 +159,6 @@ add_executable(BrokerApp
 #add_library(CURL::libcurl ALIAS curl_int)
 
 #-END---FETCH CONTENT LIBS----------------------------
-
-
-add_subdirectory(Classes/BrokerLib)
 
 #--EXTERNAL ------------------
 add_subdirectory(external/fmt)
@@ -300,19 +305,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         )
 #-APPLICATION-HEADERS-END---------
 
-target_include_directories(BrokerLib PUBLIC
-		external/imgui
-		external/imgui/misc/cpp
-		external/imgui/backends
-		external/implot
-		external/node_editor
-		)
-
-target_link_libraries(BrokerLib PUBLIC
-		imgui
-		implot
-		imnodes)
-
 #-APPLICATION-LIBRARIES-----------------------
 target_link_libraries(${PROJECT_NAME} PUBLIC
         app
@@ -324,7 +316,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         imnodes
         rapidcsv
         ${CURL_LIBRARIES}
-		BrokerLib
         )
 #-APPLICATION-LIBRARIES-END-------------------
 

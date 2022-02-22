@@ -21,6 +21,9 @@ public:
     void onLoad(BarHistory* barHistory) override;
     void reset() override;
     Ticker* getTicker();
+    const std::vector<double>& getTime(){
+        return _time;
+    }
 protected:
     std::vector<double> _time;
 private:

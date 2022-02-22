@@ -33,6 +33,9 @@
 #include "../Nodes/EMANode.h"
 #include "../Nodes/WMANode.h"
 #include "../Nodes/TRIXNode.h"
+#include "../BrokerLib/SMARenderer.h"
+#include "../BrokerLib/SMAData.h"
+
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -197,6 +200,34 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
+std::shared_ptr<IndicatorData> BackTestingContext::loadNewIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
+
+    if(_ticker == nullptr)
+        return nullptr;
+
+    std::shared_ptr<IndicatorData> indicator{nullptr};
+
+    switch (type) {
+        case IndicatorsView::CandleIndicatorsTypes::SMA: {
+            std::shared_ptr<SMAData> sma = std::make_unique<SMAData>(_ticker.get());
+            sma->setPriority(1);
+            std::shared_ptr<SMARenderer> smaR = std::make_unique<SMARenderer>(this,sma.get());
+
+            _indicatorsD.push_back(sma);
+            _indicatorsR.push_back(std::move(smaR));
+            indicator = _indicatorsD.back();
+            _ticker->addTickable(_indicatorsD.back().get());
+//            if(shouldCreateNode)
+//                createIndicatorNode(UiNodeType::SMA,_indicators.back());
+
+        }
+            break;
+        default:
+            break;
+    }
+
+    return indicator;
+}
 
 std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
 
@@ -306,31 +337,35 @@ void BackTestingContext::plotIndicators() {
         i->render();
     }
 
-    if(_shouldShowLuizPopup){
-        {
-            ImGui::OpenPopup("Indicator missing!");
-            // Always center this window when appearing
-            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-            if (ImGui::BeginPopupModal("Indicator missing!", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                ImGui::Text("Hey Luiz, it seems like you are not working too hard.. \nWhat about work on this right now?\n\n");
-                ImGui::Separator();
-
-                ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_light_grey);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_dark_grey);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow);
-
-                if (ImGui::Button("OK", ImVec2(120, 0))) {
-                    _shouldShowLuizPopup = false;
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::PopStyleColor(3);
-                ImGui::SetItemDefaultFocus();
-                ImGui::EndPopup();
-            }
-        }
+    for(auto& r : _indicatorsR) {
+        r->render();
     }
+
+//    if(_shouldShowLuizPopup){
+//        {
+//            ImGui::OpenPopup("Indicator missing!");
+//            // Always center this window when appearing
+//            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+//            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+//
+//            if (ImGui::BeginPopupModal("Indicator missing!", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+//                ImGui::Text("Hey Luiz, it seems like you are not working too hard.. \nWhat about work on this right now?\n\n");
+//                ImGui::Separator();
+//
+//                ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_light_grey);
+//                ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_dark_grey);
+//                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow);
+//
+//                if (ImGui::Button("OK", ImVec2(120, 0))) {
+//                    _shouldShowLuizPopup = false;
+//                    ImGui::CloseCurrentPopup();
+//                }
+//                ImGui::PopStyleColor(3);
+//                ImGui::SetItemDefaultFocus();
+//                ImGui::EndPopup();
+//            }
+//        }
+//    }
 }
 
 void BackTestingContext::plotStrategy() {
