@@ -4,10 +4,13 @@
 
 #include "Ticker.h"
 #include "../Contexts/Context.h"
+#include <IndicatorData.h>
+
 
 Ticker::Ticker(Context *context){
     setContext(context);
     _id = uuid::generate_uuid_v4();
+    IndicatorData::printTato();
 }
 
 bool Ticker::removeTickable(Tickable *tickable)
@@ -36,7 +39,7 @@ void Ticker::open(const TickData& tickData) {
     _barHistory.append(data);
 
     for(auto& t : _tickables){
-        t->onTick(&_barHistory);
+        t->onOpen(&_barHistory);
     }
 }
 
@@ -96,9 +99,8 @@ void Ticker::close(const TickData& tickData) {
     _barHistory.updateLastBar(data);
 
     for(auto& t : _tickables){
-            t->onClose(&_barHistory);
+        t->onClose(&_barHistory);
     }
-
 }
 
 void Ticker::reset() {

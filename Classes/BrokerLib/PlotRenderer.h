@@ -1,16 +1,14 @@
 //
-// Created by Arthur Abel Motelevicz on 31/12/21.
+// Created by Arthur Abel Motelevicz on 21/02/22.
 //
 
-#ifndef BROKERAPP_PLOTITEM_H
-#define BROKERAPP_PLOTITEM_H
+#ifndef BROKERAPP_PLOTRENDERER_H
+#define BROKERAPP_PLOTRENDERER_H
 
 #include <string>
 #include <vector>
-#include <implot.h>
-#include <implot_internal.h>
 
-struct PlotItemInfo{
+struct IndicatorRendererInfo{
     int startIndex;
     int size;
 };
@@ -18,13 +16,17 @@ struct PlotItemInfo{
 class Ticker;
 class Context;
 
-class PlotItem {
+class PlotRenderer {
 public:
-    PlotItem(Context *context);
-    virtual ~PlotItem();
+    PlotRenderer(Context *context);
+    virtual ~PlotRenderer();
+
+    virtual bool onPreRender() = 0;
     virtual void onRender() = 0;
+    virtual void onPostRender() = 0;
+    virtual void onPopupRender() = 0;
+    virtual void onSetupPlot();
     virtual void resetPlot();
-    virtual void onPopupRender();
 
     void setPlotName(const std::string& name);
     const std::string& getName();
@@ -33,13 +35,12 @@ public:
     const std::string& getId();
     const std::vector<double>& getTime();
 
-    virtual void render();
-    virtual void onSetupPlot();
+    void render();
     bool getIsSubplot();
     void setIsSubplot(bool isSubplot);
 
 protected:
-    PlotItemInfo getRenderInfo(Ticker* ticker);
+    IndicatorRendererInfo getRenderInfo(Ticker* ticker);
     std::string _name{""};
     std::string _plotName{""};
     std::string _plotId{""};
@@ -51,8 +52,7 @@ private:
     void popupRender();
     bool _isSubplot = false;
     Context *_context = nullptr;
-
 };
 
 
-#endif //BROKERAPP_PLOTITEM_H
+#endif //BROKERAPP_PLOTRENDERER_H

@@ -13,7 +13,6 @@ public:
     void append(const BarData& data);
     void updateLastBar(const BarData& barData);
     BarData getBarDataAt(int idx);
-
 };
 
 #endif //BROKERAPP_BARHISTORY_H

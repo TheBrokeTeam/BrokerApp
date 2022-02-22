@@ -153,6 +153,8 @@ add_executable(BrokerApp
 #-END---FETCH CONTENT LIBS----------------------------
 
 
+add_subdirectory(Classes/BrokerLib)
+
 #--EXTERNAL ------------------
 add_subdirectory(external/fmt)
 add_subdirectory(external/glfw)
@@ -290,12 +292,26 @@ set(INCLUDES
         external/rapidcsv/src
         external/rapidjson/include
         ${CURL_INCLUDE_DIR}
+		Classes/BrokerLib
         )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${INCLUDES}
         )
 #-APPLICATION-HEADERS-END---------
+
+target_include_directories(BrokerLib PUBLIC
+		external/imgui
+		external/imgui/misc/cpp
+		external/imgui/backends
+		external/implot
+		external/node_editor
+		)
+
+target_link_libraries(BrokerLib PUBLIC
+		imgui
+		implot
+		imnodes)
 
 #-APPLICATION-LIBRARIES-----------------------
 target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -308,6 +324,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         imnodes
         rapidcsv
         ${CURL_LIBRARIES}
+		BrokerLib
         )
 #-APPLICATION-LIBRARIES-END-------------------
 
