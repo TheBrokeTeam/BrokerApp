@@ -6,15 +6,14 @@
 #include "../Tickers/Ticker.h"
 #include "../Contexts/Context.h"
 
-SMARenderer::SMARenderer(Context* context,SMAData* data):PlotRenderer(context){
+SMARenderer::SMARenderer(Context *context, SMAData* data): PlotRendererImgui(context) {
     _data = data;
+    setPlotName("SMA");
 };
 
 SMARenderer::~SMARenderer() {}
 
-    bool SMARenderer::onPreRender() {
-    return ImPlot::BeginItem(_plotName.c_str());
-}
+
 
 void SMARenderer::onRender() {
     ImPlot::SetNextLineStyle(_color,_lineWidth);
@@ -64,18 +63,5 @@ void SMARenderer::onPopupRender()
 
         ImPlot::EndLegendPopup();
      }
-}
-
-
-void SMARenderer::onPostRender() {
-    ImPlot::EndItem();
-}
-
-const ImVec4 &SMARenderer::getColor() {
-    return _color;
-}
-
-void SMARenderer::setColor(ImVec4 &color) {
-    _color = color;
 }
 

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include "imgui.h"
 
 struct IndicatorRendererInfo{
     int startIndex;
@@ -18,19 +19,20 @@ class Context;
 
 class PlotRenderer {
 public:
-    PlotRenderer(Context *context);
-    virtual ~PlotRenderer();
+    explicit PlotRenderer(Context *context);
+    ~PlotRenderer();
 
     virtual bool onPreRender() = 0;
     virtual void onRender() = 0;
     virtual void onPostRender() = 0;
     virtual void onPopupRender() = 0;
-    virtual void onSetupPlot();
+    void onSetupPlot();
 
     void setPlotName(const std::string& name);
     const std::string& getName();
     const std::string& getPlotName();
     const std::string& getId();
+
 
     void render();
     bool getIsSubplot();
@@ -38,9 +40,10 @@ public:
 
 protected:
     IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);
-    std::string _name{""};
-    std::string _plotName{""};
-    std::string _plotId{""};
+    std::string _name;
+    std::string _plotName;
+    std::string _plotId;
+
 private:
     int getRenderStartIndex(double time,const std::vector<double>& timeArr);
     int getRenderEndIndex(double time,const std::vector<double>& timeArr);

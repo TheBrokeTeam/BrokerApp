@@ -89,3 +89,5 @@ void PlotRenderer::setIsSubplot(bool isSubplot) {
     _isSubplot = isSubplot;
 }
 
+
+

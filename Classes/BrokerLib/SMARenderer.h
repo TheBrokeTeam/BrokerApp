@@ -7,26 +7,21 @@
 
 #include "SMAData.h"
 #include "PlotRenderer.h"
+#include "PlotRendererImgui.h"
 #include <implot.h>
 #include <implot_internal.h>
 
-class SMARenderer : public PlotRenderer {
+class SMARenderer : public PlotRendererImgui {
 public:
-    SMARenderer(Context* context,SMAData* data);
+    SMARenderer(Context *context, SMAData* data);
     ~SMARenderer();
 
-    bool onPreRender() override;
     void onRender() override;
-    void onPostRender() override;
     void onPopupRender() override;
-//    void onSetupPlot() override;
-    const ImVec4& getColor();
-    void setColor(ImVec4& color);
 
 protected:
     float _lineWidth = 2.0f;
     SMAData* _data;
-    ImVec4 _color{1, 1, 1, 1};
 };
 
 

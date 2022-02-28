@@ -6,8 +6,6 @@
 #define BROKERLIB_INDICATOR_H
 
 #include <iostream>
-
-
 #include <vector>
 #include <string>
 #include "../Tickables/Tickable.h"
