@@ -7,7 +7,7 @@
 
 
 #include "PlotRenderer.h"
-#include "IndicatorData.h"
+#include "IndicatorTickable.h"
 #include <implot.h>
 #include <implot_internal.h>
 
@@ -18,6 +18,7 @@ public:
 
     bool onPreRender() override;
     void onPostRender() override;
+    void popupRender() override;
     virtual void onRender() = 0;
     virtual void onPopupRender() = 0;
 protected:

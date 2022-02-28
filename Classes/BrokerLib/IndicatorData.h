@@ -1,31 +1,28 @@
 //
-// Created by Arthur Abel Motelevicz on 21/02/22.
+// Created by Luiz Veloso on 28/02/22.
 //
 
-#ifndef BROKERLIB_INDICATOR_H
-#define BROKERLIB_INDICATOR_H
+#ifndef BROKERAPP_INDICATORDATA_H
+#define BROKERAPP_INDICATORDATA_H
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include "../Tickables/Tickable.h"
 
-class IndicatorData : public Tickable {
+#include "IndicatorTickable.h"
+
+template<typename M>
+class IndicatorData : public IndicatorTickable, public ReversedData<M> {
 public:
-    explicit IndicatorData(Ticker* ticker);
-    virtual ~IndicatorData();
-    virtual void calculate(BarHistory* barHistory) = 0;
-    void onClose(BarHistory* barHistory) override;
-    void onLoad(BarHistory* barHistory) override;
-    void reset() override;
-    Ticker* getTicker();
-    const std::vector<double>& getTime(){
-        return _time;
+    explicit IndicatorData(Ticker *ticker): IndicatorTickable(ticker) {};
+    ~IndicatorData() = default;
+
+    void resetData() {
+        IndicatorTickable::reset();//todo: renomear
+        ReversedData<M>::clear(); //todo: renomear
     }
-protected:
-    std::vector<double> _time;
-private:
+
+    void calculate(BarHistory *barHistory) override = 0;
+
 };
 
 
-#endif //BROKERLIB_INDICATOR_H
+
+#endif //BROKERAPP_INDICATORDATA_H

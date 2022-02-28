@@ -200,12 +200,12 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
-std::shared_ptr<IndicatorData> BackTestingContext::loadNewIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
+std::shared_ptr<IndicatorTickable> BackTestingContext::loadNewIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
 
     if(_ticker == nullptr)
         return nullptr;
 
-    std::shared_ptr<IndicatorData> indicator{nullptr};
+    std::shared_ptr<IndicatorTickable> indicator{nullptr};
 
     switch (type) {
         case IndicatorsView::CandleIndicatorsTypes::SMA: {

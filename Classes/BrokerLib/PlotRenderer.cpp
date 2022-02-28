@@ -33,7 +33,7 @@ void PlotRenderer::render() {
             onSetupPlot();
 
         onRender();
-        onPopupRender();
+        popupRender();
         onPostRender();
     }
 }

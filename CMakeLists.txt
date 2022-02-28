@@ -132,8 +132,8 @@ add_executable(BrokerApp
 		Classes/Nodes/IndicatorBaseNode.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/BrokerLib/IndicatorData.h
-		Classes/BrokerLib/IndicatorData.cpp
+        Classes/BrokerLib/IndicatorTickable.h
+        Classes/BrokerLib/IndicatorTickable.cpp
 		Classes/BrokerLib/PlotRenderer.h
 		Classes/BrokerLib/PlotRenderer.cpp
 		Classes/BrokerLib/SMAData.h
@@ -141,7 +141,11 @@ add_executable(BrokerApp
 		Classes/BrokerLib/SMARenderer.h
 		Classes/BrokerLib/SMARenderer.cpp
 		Classes/BrokerLib/PlotRendererImgui.cpp
-		Classes/BrokerLib/PlotRendererImgui.h)
+		Classes/BrokerLib/PlotRendererImgui.h
+		Classes/BrokerLib/IndicatorData.cpp
+		Classes/BrokerLib/IndicatorData.h)
+
+
 
 ###############################################################################
 # FETCH CONTENT LIBS

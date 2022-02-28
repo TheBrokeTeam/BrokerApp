@@ -35,6 +35,7 @@ public:
 
 
     void render();
+    virtual void popupRender() = 0;
     bool getIsSubplot();
     void setIsSubplot(bool isSubplot);
 

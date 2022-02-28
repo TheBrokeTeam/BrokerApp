@@ -7,7 +7,7 @@
 
 #include "IndicatorData.h"
 
-class SMAData : public IndicatorData,  public ReversedData<double>{
+class SMAData : public IndicatorData<double>{
 public:
     explicit SMAData(Ticker* ticker);
     ~SMAData() = default;
