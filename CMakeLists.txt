@@ -140,7 +140,8 @@ add_executable(BrokerApp
 		Classes/BrokerLib/SMAData.cpp
 		Classes/BrokerLib/SMARenderer.h
 		Classes/BrokerLib/SMARenderer.cpp
-		)
+		Classes/BrokerLib/PlotRendererImgui.cpp
+		Classes/BrokerLib/PlotRendererImgui.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
