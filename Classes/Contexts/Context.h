@@ -14,7 +14,7 @@
 #include "../Editor.h"
 #include "../Widgets/IndicatorsView.h"
 #include "../Tickables/Strategies/Strategy.h"
-#include "../BrokerLib/PlotRenderer.h"
+#include "../BrokerLib/DataSeriesRenderer.h"
 #include "../BrokerLib/IndicatorTickable.h"
 
 
@@ -113,7 +113,7 @@ protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
     std::vector<std::shared_ptr<IndicatorTickable>> _indicatorsD;
-    std::vector<std::shared_ptr<PlotRenderer>> _indicatorsR;
+    std::vector<std::shared_ptr<DataSeriesRenderer>> _indicatorsR;
     std::vector<std::shared_ptr<Indicator>> _subplotIndicators;
 
     //    std::vector<std::shared_ptr<Strategy>> _strategies;

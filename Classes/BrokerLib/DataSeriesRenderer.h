@@ -2,8 +2,8 @@
 // Created by Arthur Abel Motelevicz on 21/02/22.
 //
 
-#ifndef BROKERAPP_PLOTRENDERER_H
-#define BROKERAPP_PLOTRENDERER_H
+#ifndef BROKERAPP_DATASERIESRENDERER_H
+#define BROKERAPP_DATASERIESRENDERER_H
 
 #include <string>
 #include <vector>
@@ -17,10 +17,10 @@ struct IndicatorRendererInfo{
 class Ticker;
 class Context;
 
-class PlotRenderer {
+class DataSeriesRenderer {
 public:
-    explicit PlotRenderer(Context *context);
-    ~PlotRenderer();
+    explicit DataSeriesRenderer(Context *context);
+    ~DataSeriesRenderer();
 
     virtual bool onPreRender() = 0;
     virtual void onRender() = 0;
@@ -46,11 +46,11 @@ protected:
     std::string _plotId;
 
 private:
-    int getRenderStartIndex(double time,const std::vector<double>& timeArr);
-    int getRenderEndIndex(double time,const std::vector<double>& timeArr);
+    static int getRenderStartIndex(double time,const std::vector<double>& timeArr);
+    static int getRenderEndIndex(double time,const std::vector<double>& timeArr);
     bool _isSubplot = false;
     Context *_context = nullptr;
 };
 
 
-#endif //BROKERAPP_PLOTRENDERER_H
+#endif //BROKERAPP_DATASERIESRENDERER_H

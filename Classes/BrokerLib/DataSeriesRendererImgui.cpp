@@ -2,30 +2,30 @@
 // Created by Luiz Veloso on 27/02/22.
 //
 
-#include "PlotRendererImgui.h"
+#include "DataSeriesRendererImgui.h"
 #include "implot.h"
 
-PlotRendererImgui::PlotRendererImgui(Context *context): PlotRenderer(context) {}
+DataSeriesRendererImgui::DataSeriesRendererImgui(Context *context): DataSeriesRenderer(context) {}
 
 
 
-bool PlotRendererImgui::onPreRender() {
+bool DataSeriesRendererImgui::onPreRender() {
     return ImPlot::BeginItem(_plotName.c_str());
 }
 
-void PlotRendererImgui::onPostRender() {
+void DataSeriesRendererImgui::onPostRender() {
     ImPlot::EndItem();
 }
 
-const ImVec4 &PlotRendererImgui::getColor() {
+const ImVec4 &DataSeriesRendererImgui::getColor() {
     return _color;
 }
 
-void PlotRendererImgui::setColor(ImVec4 &color) {
+void DataSeriesRendererImgui::setColor(ImVec4 &color) {
     _color = color;
 }
 
-void PlotRendererImgui::popupRender() {
+void DataSeriesRendererImgui::popupRender() {
     if (ImPlot::BeginLegendPopup(_plotName.c_str())) {
 
         const int buffMaxSize = 50;
@@ -62,10 +62,10 @@ void PlotRendererImgui::popupRender() {
     }
 }
 
-//void PlotRendererImgui::onRender() {
+//void DataSeriesRendererImgui::onRender() {
 //
 //}
 //
-//void PlotRendererImgui::onPopupRender() {
+//void DataSeriesRendererImgui::onPopupRender() {
 //
 //}

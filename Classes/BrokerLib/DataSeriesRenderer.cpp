@@ -2,31 +2,31 @@
 // Created by Arthur Abel Motelevicz on 21/02/22.
 //
 
-#include "PlotRenderer.h"
+#include "DataSeriesRenderer.h"
 #include "../Helpers/Utils.h"
 //#include "../Helpers/PlotHelper.h"
 #include "../Widgets/IndicatorsView.h"
 #include "../Contexts/Context.h"
 
-PlotRenderer::PlotRenderer(Context *context) {
+DataSeriesRenderer::DataSeriesRenderer(Context *context) {
     _plotId = uuid::generate_uuid_v4();
     _plotName = "##" + _plotId;
     _context = context;
 }
 
-const std::string& PlotRenderer::getName() {
+const std::string& DataSeriesRenderer::getName() {
     return _name;
 }
 
-const std::string& PlotRenderer::getPlotName() {
+const std::string& DataSeriesRenderer::getPlotName() {
     return _plotName;
 }
 
-const std::string &PlotRenderer::getId() {
+const std::string &DataSeriesRenderer::getId() {
     return _plotId;
 }
 
-void PlotRenderer::render() {
+void DataSeriesRenderer::render() {
     if(onPreRender())
     {
         if (_isSubplot)
@@ -38,22 +38,22 @@ void PlotRenderer::render() {
     }
 }
 
-void PlotRenderer::onRender(){}
+void DataSeriesRenderer::onRender(){}
 
-void PlotRenderer::onSetupPlot(){}
+void DataSeriesRenderer::onSetupPlot(){}
 
-void PlotRenderer::setPlotName(const std::string& name) {
+void DataSeriesRenderer::setPlotName(const std::string& name) {
     _plotName = name + "##" + _plotId;
     _name = name;
 }
 
-void PlotRenderer::onPopupRender() {}
+void DataSeriesRenderer::onPopupRender() {}
 
-PlotRenderer::~PlotRenderer() {
+DataSeriesRenderer::~DataSeriesRenderer() {
     _name = "";
 }
 
-int PlotRenderer::getRenderStartIndex(double time,const std::vector<double>& timeArr) {
+int DataSeriesRenderer::getRenderStartIndex(double time, const std::vector<double>& timeArr) {
     int startIdx = PlotHelper::BinarySearch(timeArr.data(), 0, timeArr.size(),time);
 
     if(startIdx == -1)
@@ -62,7 +62,7 @@ int PlotRenderer::getRenderStartIndex(double time,const std::vector<double>& tim
     return startIdx;
 }
 
-int PlotRenderer::getRenderEndIndex(double time,const std::vector<double>& timeArr) {
+int DataSeriesRenderer::getRenderEndIndex(double time, const std::vector<double>& timeArr) {
     int endIdx = PlotHelper::BinarySearch(timeArr.data(), 0, timeArr.size(),time);
 
     if(endIdx == -1)
@@ -71,7 +71,7 @@ int PlotRenderer::getRenderEndIndex(double time,const std::vector<double>& timeA
     return endIdx;
 }
 
-IndicatorRendererInfo PlotRenderer::getRenderInfo(Ticker *ticker,const std::vector<double>& timeArr) {
+IndicatorRendererInfo DataSeriesRenderer::getRenderInfo(Ticker *ticker, const std::vector<double>& timeArr) {
     IndicatorRendererInfo info;
     info.startIndex = getRenderStartIndex(ticker->getRenderRange().startTime,timeArr);
     auto endIndex = getRenderEndIndex(ticker->getRenderRange().endTime,timeArr);
@@ -81,11 +81,11 @@ IndicatorRendererInfo PlotRenderer::getRenderInfo(Ticker *ticker,const std::vect
     return  info;
 }
 
-bool PlotRenderer::getIsSubplot() {
+bool DataSeriesRenderer::getIsSubplot() {
     return _isSubplot;
 }
 
-void PlotRenderer::setIsSubplot(bool isSubplot) {
+void DataSeriesRenderer::setIsSubplot(bool isSubplot) {
     _isSubplot = isSubplot;
 }
 

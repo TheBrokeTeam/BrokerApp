@@ -6,7 +6,7 @@
 #include "../Tickers/Ticker.h"
 #include "../Contexts/Context.h"
 
-SMARenderer::SMARenderer(Context *context, SMAData* data): PlotRendererImgui(context) {
+SMARenderer::SMARenderer(Context *context, SMAData* data): DataSeriesRendererImgui(context) {
     _data = data;
     setPlotName("SMA");
 };

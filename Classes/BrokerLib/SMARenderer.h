@@ -6,12 +6,12 @@
 #define BROKERAPP_SMARENDERER_H
 
 #include "SMAData.h"
-#include "PlotRenderer.h"
-#include "PlotRendererImgui.h"
+#include "DataSeriesRenderer.h"
+#include "DataSeriesRendererImgui.h"
 #include <implot.h>
 #include <implot_internal.h>
 
-class SMARenderer : public PlotRendererImgui {
+class SMARenderer : public DataSeriesRendererImgui {
 public:
     SMARenderer(Context *context, SMAData* data);
     ~SMARenderer();

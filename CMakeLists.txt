@@ -134,16 +134,23 @@ add_executable(BrokerApp
 		Classes/Tickables/Indicators/MFI.h
         Classes/BrokerLib/IndicatorTickable.h
         Classes/BrokerLib/IndicatorTickable.cpp
-		Classes/BrokerLib/PlotRenderer.h
-		Classes/BrokerLib/PlotRenderer.cpp
+		Classes/BrokerLib/DataSeriesRenderer.h
+		Classes/BrokerLib/DataSeriesRenderer.cpp
 		Classes/BrokerLib/SMAData.h
 		Classes/BrokerLib/SMAData.cpp
 		Classes/BrokerLib/SMARenderer.h
 		Classes/BrokerLib/SMARenderer.cpp
-		Classes/BrokerLib/PlotRendererImgui.cpp
-		Classes/BrokerLib/PlotRendererImgui.h
+		Classes/BrokerLib/DataSeriesRendererImgui.cpp
+		Classes/BrokerLib/DataSeriesRendererImgui.h
 		Classes/BrokerLib/IndicatorData.cpp
-		Classes/BrokerLib/IndicatorData.h)
+		Classes/BrokerLib/IndicatorData.h
+		Classes/Widgets/ChartRenderer.cpp
+		Classes/Widgets/ChartRenderer.h
+		Classes/Widgets/SubplotRenderer.cpp
+		Classes/Widgets/SubplotRenderer.h
+		Classes/Widgets/MainSubplotRenderer.cpp
+		Classes/Widgets/MainSubplotRenderer.h
+		)
 
 
 

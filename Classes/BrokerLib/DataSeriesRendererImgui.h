@@ -2,19 +2,19 @@
 // Created by Luiz Veloso on 27/02/22.
 //
 
-#ifndef BROKERAPP_PLOTRENDERERIMGUI_H
-#define BROKERAPP_PLOTRENDERERIMGUI_H
+#ifndef BROKERAPP_DATASERIESRENDERERIMGUI_H
+#define BROKERAPP_DATASERIESRENDERERIMGUI_H
 
 
-#include "PlotRenderer.h"
+#include "DataSeriesRenderer.h"
 #include "IndicatorTickable.h"
 #include <implot.h>
 #include <implot_internal.h>
 
-class PlotRendererImgui: public PlotRenderer {
+class DataSeriesRendererImgui: public DataSeriesRenderer {
 public:
-    explicit PlotRendererImgui(Context *context);
-    ~PlotRendererImgui() = default;
+    explicit DataSeriesRendererImgui(Context *context);
+    ~DataSeriesRendererImgui() = default;
 
     bool onPreRender() override;
     void onPostRender() override;
@@ -29,4 +29,4 @@ protected:
 };
 
 
-#endif //BROKERAPP_PLOTRENDERERIMGUI_H
+#endif //BROKERAPP_DATASERIESRENDERERIMGUI_H
