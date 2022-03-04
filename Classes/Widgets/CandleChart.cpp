@@ -76,7 +76,7 @@ void CandleChart::render(float dt)
         int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
 
         movedMin = dataHist.getData(BarDataType::TIME)[posIdxMin];
-        movedMax= dataHist.getData(BarDataType::TIME)[posIdxMax];
+        movedMax = dataHist.getData(BarDataType::TIME)[posIdxMax];
 
         forceChangeMax =  true;
     }

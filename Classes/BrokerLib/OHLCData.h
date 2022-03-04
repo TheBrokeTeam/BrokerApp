@@ -5,8 +5,15 @@
 #ifndef BROKERAPP_OHLCDATA_H
 #define BROKERAPP_OHLCDATA_H
 
+#include "IndicatorData.h"
 
-class OHLCData {
+class OHLCData : public IndicatorData<double> {
+public:
+    explicit OHLCData(Ticker *ticker);
+
+    ~OHLCData() = default;
+
+    void calculate(BarHistory *barHistory) override;
 
 };
 

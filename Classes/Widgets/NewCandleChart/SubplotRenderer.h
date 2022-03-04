@@ -7,15 +7,17 @@
 
 #include <vector>
 #include "DataSeriesRenderer.h"
-#include <implot.h>
-#include <implot_internal.h>
-#include "../Tickers/Ticker.h"
+#include "implot/implot.h"
+#include "implot/implot_internal.h"
+#include "../../Tickers/Ticker.h"
 
 class SubplotRenderer {
 public:
-    std::vector<DataSeriesRenderer> items;
+    std::vector<std::shared_ptr<DataSeriesRenderer>> items;
 
     explicit SubplotRenderer(Ticker* ticker);
+    void addItemToPlot(std::shared_ptr<DataSeriesRenderer> item);
+    void removeItemFromPlot(std::shared_ptr<DataSeriesRenderer> item);
 
     void render();
     const char* getTitle(std::string name) const;
@@ -46,6 +48,7 @@ protected:
 private:
     bool _showTitle = false;
     ImPlotSubplotFlags _flags = ImPlotSubplotFlags_None;
+
 
 };
 

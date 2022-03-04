@@ -64,5 +64,13 @@ int SubplotRenderer::getLastIdxToPlot() const {
 }
 
 
+void SubplotRenderer::addItemToPlot(std::shared_ptr<DataSeriesRenderer> item) {
+    items.push_back(item);
+}
+
+void SubplotRenderer::removeItemFromPlot(std::shared_ptr<DataSeriesRenderer> item) {
+    items.erase(std::remove(items.begin(), items.end(), item), items.end());
+}
+
 
 

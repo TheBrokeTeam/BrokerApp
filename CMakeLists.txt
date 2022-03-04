@@ -144,13 +144,13 @@ add_executable(BrokerApp
 		Classes/BrokerLib/DataSeriesRendererImgui.h
 		Classes/BrokerLib/IndicatorData.cpp
 		Classes/BrokerLib/IndicatorData.h
-		Classes/Widgets/ChartRenderer.cpp
-		Classes/Widgets/ChartRenderer.h
-		Classes/Widgets/SubplotRenderer.cpp
-		Classes/Widgets/SubplotRenderer.h
-		Classes/Widgets/MainSubplotRenderer.cpp
-		Classes/Widgets/MainSubplotRenderer.h
-		)
+		Classes/Widgets/NewCandleChart/ChartRenderer.cpp
+		Classes/Widgets/NewCandleChart/ChartRenderer.h
+		Classes/Widgets/NewCandleChart/SubplotRenderer.cpp
+		Classes/Widgets/NewCandleChart/SubplotRenderer.h
+		Classes/Widgets/NewCandleChart/MainSubplotRenderer.cpp
+		Classes/Widgets/NewCandleChart/MainSubplotRenderer.h
+		Classes/BrokerLib/OHLCData.cpp Classes/BrokerLib/OHLCData.h Classes/BrokerLib/OHLCRenderer.cpp Classes/BrokerLib/OHLCRenderer.h Classes/BrokerLib/BrokerColorsImgui.cpp Classes/BrokerLib/BrokerColorsImgui.h)
 
 
 

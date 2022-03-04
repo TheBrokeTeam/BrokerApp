@@ -3,13 +3,20 @@
 //
 
 #include "MainSubplotRenderer.h"
-#include "../Data/BarData.h"
+#include "OHLCData.h"
+#include "OHLCRenderer.h"
 
 #define dataHist (*_ticker->getBarHistory())
 
 MainSubplotRenderer::MainSubplotRenderer(Ticker* ticker) : SubplotRenderer(ticker) {
     _title = "OHLC";
     setFlags(ImPlotFlags_NoMenus);
+
+    //Add OHLC Item
+    std::shared_ptr<OHLCData> ohlc = std::make_unique<OHLCData>(ticker);
+    ohlc->setPriority(1);
+    std::shared_ptr<OHLCRenderer> ohlcR = std::make_unique<OHLCRenderer>(ticker->getContext(),ohlc.get());
+    items.push_back(ohlcR);
 }
 
 

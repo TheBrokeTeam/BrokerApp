@@ -40,7 +40,7 @@ public:
     void setIsSubplot(bool isSubplot);
 
 protected:
-    IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);
+    static IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);
     std::string _name;
     std::string _plotName;
     std::string _plotId;
