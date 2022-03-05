@@ -8,6 +8,7 @@
 
 #include "VolumeData.h"
 #include "DataSeriesRendererImgui.h"
+#include "../Tickers/Ticker.h"
 
 class VolumeRenderer : public DataSeriesRendererImgui {
 public:
