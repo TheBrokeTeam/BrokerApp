@@ -7,6 +7,7 @@
 #include <imgui.h>
 #include "Contexts/BackTestingContext.h"
 #include "Helpers/ImageLoader.h"
+#include "BrokerColorsImgui.h"
 
 void Editor::start() {
 
@@ -43,9 +44,9 @@ void Editor::start() {
 
     auto& style = ImGui::GetStyle();
 
-    style.Colors[ImGuiCol_Separator] = Editor::broker_black;
-    style.Colors[ImGuiCol_SeparatorHovered] = Editor::broker_yellow;
-    style.Colors[ImGuiCol_SeparatorActive] = Editor::broker_yellow;
+    style.Colors[ImGuiCol_Separator] = BrokerColorsImgui::broker_black;
+    style.Colors[ImGuiCol_SeparatorHovered] = BrokerColorsImgui::broker_yellow;
+    style.Colors[ImGuiCol_SeparatorActive] = BrokerColorsImgui::broker_yellow;
 
     //TODO:: make a way to change the layout configuration at run time
     ImGui::LoadIniSettingsFromDisk("ui_num_1");

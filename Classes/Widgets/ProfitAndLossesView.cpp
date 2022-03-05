@@ -4,6 +4,7 @@
 
 #include "ProfitAndLossesView.h"
 #include "../Editor.h"
+#include "BrokerColorsImgui.h"
 #include <implot.h>
 #include <implot_internal.h>
 
@@ -63,19 +64,19 @@ void ProfitAndLossesView::updateVisible(float dt) {
             ImPlot::BeginItem("##PnL");
 
         //now plot the data
-        ImPlot::SetNextLineStyle(Editor::broker_pnl_profit,2.0);
+        ImPlot::SetNextLineStyle(BrokerColorsImgui::broker_pnl_profit, 2.0);
         ImPlot::PlotLine("##profitline", _plotTime.data(), _plotProfit.data(), _plotTime.size());
-        ImPlot::SetNextFillStyle(Editor::broker_pnl_profit, 0.35);
+        ImPlot::SetNextFillStyle(BrokerColorsImgui::broker_pnl_profit, 0.35);
         ImPlot::PlotShaded("profit", _plotTime.data(), _plotProfit.data(), _plotTime.size(), _baseLine);
-        ImPlot::SetNextLineStyle(Editor::broker_pnl_loss,2.0);
+        ImPlot::SetNextLineStyle(BrokerColorsImgui::broker_pnl_loss, 2.0);
         ImPlot::PlotLine("##profitline", _plotTime.data(), _plotLosses.data(), _plotTime.size());
-        ImPlot::SetNextFillStyle(Editor::broker_pnl_loss,0.35);
+        ImPlot::SetNextFillStyle(BrokerColorsImgui::broker_pnl_loss, 0.35);
         ImPlot::PlotShaded("losses", _plotTime.data(), _plotLosses.data(), _plotTime.size(), _baseLine);
 
 
         //plot ticker range over plot
         auto drawList = ImPlot::GetPlotDrawList();
-        auto colorSquare = ImGui::GetColorU32(ImVec4(Editor::broker_yellow_active.x,Editor::broker_yellow_active.y,Editor::broker_yellow_active.z,0.2f));
+        auto colorSquare = ImGui::GetColorU32(ImVec4(BrokerColorsImgui::broker_yellow_active.x, BrokerColorsImgui::broker_yellow_active.y, BrokerColorsImgui::broker_yellow_active.z, 0.2f));
         ImVec2 minPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().startTime,_strategy.lock()->drawDownMax*1.2);
         ImVec2 maxPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().endTime,_strategy.lock()->profitMax*1.2);
         drawList->AddRectFilled(minPoint,maxPoint,colorSquare);
@@ -92,7 +93,7 @@ void ProfitAndLossesView::updateVisible(float dt) {
 }
 
 void ProfitAndLossesView::onPushStyleVar() {
-    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg, BrokerColorsImgui::broker_dark_grey);
 }
 
 void ProfitAndLossesView::setStrategyTest(std::weak_ptr<Strategy> strategy) {

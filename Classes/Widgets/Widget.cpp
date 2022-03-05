@@ -5,6 +5,7 @@
 #include "Widget.h"
 #include <imgui_internal.h>
 #include "../Editor.h"
+#include "BrokerColorsImgui.h"
 
 
 Widget::Widget(Context* context)
@@ -21,7 +22,7 @@ void Widget::updateAlways(float dt)
 
 void Widget::updateVisible(float dt)
 {
-    ImGui::TextColored(Editor::broker_white,_title.c_str());
+    ImGui::TextColored(BrokerColorsImgui::broker_white, _title.c_str());
 //    ImGui::SameLine();
 //
 //    //change the background of close button
@@ -54,7 +55,7 @@ void Widget::onHide()
 }
 
 void Widget::onPushStyleVar() {
-    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg, BrokerColorsImgui::broker_dark_grey);
 }
 
 void Widget::onPushStyleColor() {

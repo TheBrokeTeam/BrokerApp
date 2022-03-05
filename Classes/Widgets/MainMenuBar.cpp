@@ -12,6 +12,7 @@
 #include "ProfitAndLossesView.h"
 #include "StockList.h"
 #include "StrategyEditor.h"
+#include "BrokerColorsImgui.h"
 #include <fmt/format.h>
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
@@ -25,7 +26,7 @@ void MainMenuBar::updateAlways(float dt)
     PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(GetPadding(), GetPadding()));
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    PushStyleColor(ImGuiCol_MenuBarBg,Editor::broker_black);
+    PushStyleColor(ImGuiCol_MenuBarBg, BrokerColorsImgui::broker_black);
 
     if (ImGui::BeginMainMenuBar())
     {

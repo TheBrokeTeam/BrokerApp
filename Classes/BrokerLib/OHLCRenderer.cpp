@@ -14,7 +14,7 @@ void OHLCRenderer::onRender() {
     ImDrawList* drawList =  ImPlot::GetPlotDrawList();
 
     //todo: override legend icon color
-    ImPlot::GetCurrentItem()->Color = ImGui::GetColorU32(BrokerColorsImgui::bull_color());
+    ImPlot::GetCurrentItem()->Color = ImGui::GetColorU32(BrokerColorsImgui::bull_color);
 
     //todo: fit data on screen even when zooming
 //    if (ImPlot::FitThisFrame()) {
@@ -30,7 +30,7 @@ void OHLCRenderer::onRender() {
 
     for (int i = renderInfo.startIndex; i <= renderInfo.startIndex + renderInfo.size; i++) {
         ImU32 color = ImGui::GetColorU32(
-                _data->getData(BarDataType::OPEN)[i] > _data->getData(BarDataType::CLOSE)[i] ? BrokerColorsImgui::bear_color() : BrokerColorsImgui::bull_color());
+                _data->getData(BarDataType::OPEN)[i] > _data->getData(BarDataType::CLOSE)[i] ? BrokerColorsImgui::bear_color : BrokerColorsImgui::bull_color);
         ImVec2 openPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i] - candleWidth / 2,
                                               _data->getData(BarDataType::OPEN)[i]);
         ImVec2 closePos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i] + candleWidth / 2,

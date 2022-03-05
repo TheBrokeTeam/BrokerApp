@@ -16,7 +16,7 @@ void VolumeRenderer::onRender() {
     auto renderInfo = getRenderInfo(_data->getTicker(), _data->getTime());
     const double candleWidth = _data->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60;
 
-    ImPlot::SetNextFillStyle(BrokerColorsImgui::volumeColor());
+    ImPlot::SetNextFillStyle(BrokerColorsImgui::volume_color);
     ImPlot::PlotBars("Volume",&_data->getTime()[renderInfo.startIndex],&_data->getData()[renderInfo.startIndex],renderInfo.size, candleWidth*0.5);
 }
 

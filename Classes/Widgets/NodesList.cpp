@@ -5,6 +5,7 @@
 #include "NodesList.h"
 #include "../Editor.h"
 #include "../Nodes/UiNodeType.h"
+#include "BrokerColorsImgui.h"
 
 NodesList::NodesList(Context* context) : Widget(context) {
 
@@ -26,9 +27,9 @@ void NodesList::updateVisible(float dt) {
 
 void NodesList::drawView() {
     float nodeWidth = 60;
-    ImGui::PushStyleColor(ImGuiCol_Button, Editor::broker_black);
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_light_grey);
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_yellow);
+    ImGui::PushStyleColor(ImGuiCol_Button, BrokerColorsImgui::broker_black);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, BrokerColorsImgui::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, BrokerColorsImgui::broker_yellow);
 
     if(ImGui::BeginChild("NODES_ITEMS", ImVec2(nodeWidth, 400))) {
 
@@ -64,7 +65,7 @@ void NodesList::drawView() {
                 if (k == (_dragAndDropItems.size() - 1)) {
                     ImGui::Spacing();
                     //change the background of trash button
-                    ImGui::PushStyleColor(ImGuiCol_Button, Editor::broker_clear);
+                    ImGui::PushStyleColor(ImGuiCol_Button, BrokerColorsImgui::broker_clear);
 
                     ImGui::SetCursorPosX(nodeWidth / 2 - info.my_image_width/2 - 4);
 
@@ -109,7 +110,7 @@ void NodesList::setTrashCallback(TrashClickCallback callback) {
     _trashCallback = callback;
 }
 void NodesList::onPushStyleVar() {
-    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg, BrokerColorsImgui::broker_dark_grey);
 }
 
 

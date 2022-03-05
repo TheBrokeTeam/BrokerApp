@@ -4,6 +4,7 @@
 
 #include "ChartView.h"
 #include "../Editor.h"
+#include "BrokerColorsImgui.h"
 
 ChartView::ChartView(Context* context) : Widget(context) {
     _title                  = "Chart";
@@ -23,5 +24,5 @@ void ChartView::addChart(std::shared_ptr<CandleChart> candleChart){
 }
 
 void ChartView::onPushStyleVar() {
-    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg, BrokerColorsImgui::broker_dark_grey);
 }

@@ -7,6 +7,7 @@
 #include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
 #include "../Editor.h"
+#include "BrokerColorsImgui.h"
 
 StockList::StockList(Context *context) : Widget(context)
 {
@@ -17,12 +18,12 @@ StockList::StockList(Context *context) : Widget(context)
 void StockList::cell()
 { //StockInfo info){
 
-    ImGui::TextColored(Editor::broker_white,"ETHBTC");
-    ImGui::TextColored(Editor::broker_light_grey,"Etherium BTC");
+    ImGui::TextColored(BrokerColorsImgui::broker_white, "ETHBTC");
+    ImGui::TextColored(BrokerColorsImgui::broker_light_grey, "Etherium BTC");
     ImGui::TableNextColumn();
-    ImGui::TextColored(Editor::broker_white,"U$");
+    ImGui::TextColored(BrokerColorsImgui::broker_white, "U$");
     ImGui::SameLine();
-    ImGui::TextColored(Editor::broker_white,"4000");
+    ImGui::TextColored(BrokerColorsImgui::broker_white, "4000");
     double relative = -1.1;
 
     std::stringstream ss;
@@ -34,13 +35,13 @@ void StockList::cell()
 
     if (relative < 0)
     {
-        relativePriceColor = Editor::broker_red;
+        relativePriceColor = BrokerColorsImgui::broker_red;
         sign = "-";
     } else if (relative == 0) {
-        relativePriceColor = Editor::broker_yellow;
+        relativePriceColor = BrokerColorsImgui::broker_yellow;
         sign = "";
     } else {
-        relativePriceColor = Editor::broker_green;
+        relativePriceColor = BrokerColorsImgui::broker_green;
         sign = "+";
     }
     relative = relative * 100;
@@ -63,23 +64,23 @@ void StockList::buildHeader() {//change background of window
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
     //change color text
-    PushStyleColor(ImGuiCol_Text, Editor::broker_black);
+    PushStyleColor(ImGuiCol_Text, BrokerColorsImgui::broker_black);
 
     //change background of frames
-    PushStyleColor(ImGuiCol_FrameBg, Editor::broker_white);
-    PushStyleColor(ImGuiCol_FrameBgActive, Editor::broker_white);
-    PushStyleColor(ImGuiCol_FrameBgHovered, Editor::broker_white);
+    PushStyleColor(ImGuiCol_FrameBg, BrokerColorsImgui::broker_white);
+    PushStyleColor(ImGuiCol_FrameBgActive, BrokerColorsImgui::broker_white);
+    PushStyleColor(ImGuiCol_FrameBgHovered, BrokerColorsImgui::broker_white);
 
     //change background of items on combos
-    PushStyleColor(ImGuiCol_PopupBg, Editor::broker_white);
+    PushStyleColor(ImGuiCol_PopupBg, BrokerColorsImgui::broker_white);
 
-    ImGui::TextColored(Editor::broker_white,"Stock List");
+    ImGui::TextColored(BrokerColorsImgui::broker_white, "Stock List");
     ImGui::SameLine();
 
     //change the background of close button
-    PushStyleColor(ImGuiCol_Button, Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_clear);
-    PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_clear);
+    PushStyleColor(ImGuiCol_Button, BrokerColorsImgui::broker_clear);
+    PushStyleColor(ImGuiCol_ButtonActive, BrokerColorsImgui::broker_clear);
+    PushStyleColor(ImGuiCol_ButtonHovered, BrokerColorsImgui::broker_clear);
 
     //adding the close button
     auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
@@ -117,5 +118,5 @@ void StockList::buildStockList() {
 
 
 void StockList::onPushStyleVar() {
-    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg, BrokerColorsImgui::broker_dark_grey);
 }
