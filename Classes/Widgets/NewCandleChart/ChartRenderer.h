@@ -24,6 +24,9 @@ public:
 
     void onPreRender();
     bool onBeginRender();
+    void onRender();
+    static void onEndRender();
+    void onPostRender();
 
     bool shouldRender = true;
     int getLastIdxX() const;
@@ -56,7 +59,7 @@ private:
     ImPlotSubplotFlags getFlags() const;
     void setFlags(ImPlotSubplotFlags flags);
     bool _showTitle = false;
-    ImPlotSubplotFlags _flags = ImPlotSubplotFlags_None;
+    ImPlotSubplotFlags _flags = ImPlotSubplotFlags_LinkCols;
 
     const char* getTitle(std::string name) const;
 };

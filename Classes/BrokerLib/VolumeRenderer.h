@@ -6,8 +6,21 @@
 #define BROKERAPP_VOLUMERENDERER_H
 
 
-class VolumeRenderer {
+#include "VolumeData.h"
+#include "DataSeriesRendererImgui.h"
 
+class VolumeRenderer : public DataSeriesRendererImgui {
+public:
+    VolumeRenderer(Context *context, VolumeData *data);
+
+    ~VolumeRenderer();
+
+    void onRender() override;
+    void onPopupRender() override;
+
+protected:
+    float _lineWidth = 2.0f;
+    VolumeData* _data{};
 };
 
 

@@ -150,7 +150,19 @@ add_executable(BrokerApp
 		Classes/Widgets/NewCandleChart/SubplotRenderer.h
 		Classes/Widgets/NewCandleChart/MainSubplotRenderer.cpp
 		Classes/Widgets/NewCandleChart/MainSubplotRenderer.h
-		Classes/BrokerLib/OHLCData.cpp Classes/BrokerLib/OHLCData.h Classes/BrokerLib/OHLCRenderer.cpp Classes/BrokerLib/OHLCRenderer.h Classes/BrokerLib/BrokerColorsImgui.cpp Classes/BrokerLib/BrokerColorsImgui.h)
+		Classes/BrokerLib/OHLCData.cpp
+		Classes/BrokerLib/OHLCData.h
+		Classes/BrokerLib/OHLCRenderer.cpp
+		Classes/BrokerLib/OHLCRenderer.h
+		Classes/BrokerLib/BrokerColorsImgui.cpp
+		Classes/BrokerLib/BrokerColorsImgui.h
+		Classes/BrokerLib/VolumeData.cpp
+		Classes/BrokerLib/VolumeData.h
+		Classes/Widgets/NewCandleChart/VolumeSubplotRenderer.cpp
+		Classes/Widgets/NewCandleChart/VolumeSubplotRenderer.h
+		Classes/BrokerLib/VolumeRenderer.cpp Classes/BrokerLib/VolumeRenderer.h
+		Classes/Widgets/NewCandleChart/MainChartRenderer.cpp
+		Classes/Widgets/NewCandleChart/MainChartRenderer.h)
 
 
 

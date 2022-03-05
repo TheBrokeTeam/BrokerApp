@@ -95,3 +95,24 @@ ImPlotSubplotFlags ChartRenderer::getFlags() const {
 void ChartRenderer::setFlags(ImPlotSubplotFlags flags) {
     _flags = flags;
 }
+
+void ChartRenderer::onEndRender() {
+    ImPlot::EndSubplots();
+}
+
+void ChartRenderer::onRender() {
+    for (auto& i: subplots) {
+        i->render();
+    }
+}
+
+void ChartRenderer::render() {
+    onPreRender();
+    if (onBeginRender()) {
+        onRender();
+        onEndRender();
+    }
+    onPostRender();
+}
+
+void ChartRenderer::onPostRender() {}

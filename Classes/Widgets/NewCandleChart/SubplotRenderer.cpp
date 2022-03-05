@@ -53,15 +53,15 @@ ImPlotSubplotFlags SubplotRenderer::getFlags() const {
 void SubplotRenderer::setFlags(ImPlotSubplotFlags flags) {
     _flags = flags;
 }
-
-int SubplotRenderer::getLastIdxX() const {
-    return _ticker->getBarHistory()->size() - 1;
-}
-
-int SubplotRenderer::getLastIdxToPlot() const {
-    int numberOfBarsToRender = _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
-    return _lastIdxX - numberOfBarsToRender  < 0  ? 0 :  _lastIdxX - numberOfBarsToRender ;
-}
+//
+//int SubplotRenderer::getLastIdxX() const {
+//    return _ticker->getBarHistory()->size() - 1;
+//}
+//
+//int SubplotRenderer::getLastIdxToPlot() const {
+//    int numberOfBarsToRender = _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
+//    return _lastIdxX - numberOfBarsToRender  < 0  ? 0 :  _lastIdxX - numberOfBarsToRender ;
+//}
 
 
 void SubplotRenderer::addItemToPlot(std::shared_ptr<DataSeriesRenderer> item) {
@@ -70,6 +70,12 @@ void SubplotRenderer::addItemToPlot(std::shared_ptr<DataSeriesRenderer> item) {
 
 void SubplotRenderer::removeItemFromPlot(std::shared_ptr<DataSeriesRenderer> item) {
     items.erase(std::remove(items.begin(), items.end(), item), items.end());
+}
+
+void SubplotRenderer::onRender() {
+    for (auto& i: items) {
+        i->render();
+    }
 }
 
 

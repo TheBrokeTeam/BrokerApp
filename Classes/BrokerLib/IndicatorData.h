@@ -8,8 +8,8 @@
 
 #include "IndicatorTickable.h"
 
-template<typename M>
-class IndicatorData : public IndicatorTickable, public ReversedData<M> {
+template<typename M, int N = 1>
+class IndicatorData : public IndicatorTickable, public ReversedData<M, N> {
 public:
     explicit IndicatorData(Ticker *ticker): IndicatorTickable(ticker) {};
     ~IndicatorData() = default;
@@ -20,6 +20,8 @@ public:
     }
 
     void calculate(BarHistory *barHistory) override = 0;
+
+    //getContext() -> todos os indicadores teriam o getcontext
 
 };
 

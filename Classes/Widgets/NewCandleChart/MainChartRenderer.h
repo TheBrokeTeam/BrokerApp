@@ -6,11 +6,9 @@
 #define BROKERAPP_MAINCHARTRENDERER_H
 
 
-
 class MainChartRenderer {
 
 };
-
 
 
 #endif //BROKERAPP_MAINCHARTRENDERER_H

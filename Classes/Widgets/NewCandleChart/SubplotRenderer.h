@@ -21,8 +21,8 @@ public:
 
     void render();
     const char* getTitle(std::string name) const;
-    int getLastIdxX() const;
-    int getLastIdxToPlot() const;
+//    int getLastIdxX() const;
+//    int getLastIdxToPlot() const;
 
     ImPlotSubplotFlags getFlags() const;
     void setFlags(ImPlotSubplotFlags flags);
@@ -32,18 +32,18 @@ protected:
     virtual void onPreRender() = 0;
     bool onBeginRender();
     virtual void onSetupPlot() = 0;
-    virtual void onRender() = 0;
+    virtual void onRender();
     void onDragDropTarget();
     static void onEndRender();
     virtual void onPostRender() = 0;
     Ticker* _ticker;
 
     //Slider stuff
-    const int _lastIdxX = 0;
-    const int _lastIdxToPlot = 0;
-    float _positionerValue = 1.0f;
-    bool _forceChangeMax = false;
-    double _movedMin = 0, _movedMax = 0;
+//    const int _lastIdxX = 0;
+//    const int _lastIdxToPlot = 0;
+//    float _positionerValue = 1.0f;
+//    bool _forceChangeMax = false;
+//    double _movedMin = 0, _movedMax = 0;
 
 private:
     bool _showTitle = false;

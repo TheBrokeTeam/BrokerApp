@@ -19,8 +19,9 @@ private:
 
     void onPreRender() override;
     void onSetupPlot() override;
-    void onRender() override;
     void onPostRender() override;
+
+    void addOHLCItem();
 };
 
 

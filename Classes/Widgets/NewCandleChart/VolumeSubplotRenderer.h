@@ -5,9 +5,23 @@
 #ifndef BROKERAPP_VOLUMESUBPLOTRENDERER_H
 #define BROKERAPP_VOLUMESUBPLOTRENDERER_H
 
+#include "SubplotRenderer.h"
 
-class VolumeSubplotRenderer {
 
+//#define dataHist (*_ticker->getBarHistory())
+
+class VolumeSubplotRenderer: public SubplotRenderer {
+
+public:
+    explicit VolumeSubplotRenderer(Ticker *ticker);
+
+private:
+
+    void onPreRender() override;
+    void onSetupPlot() override;
+    void onPostRender() override;
+
+    void addVolumeItem();
 };
 
 

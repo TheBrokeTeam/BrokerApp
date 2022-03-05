@@ -6,8 +6,15 @@
 #define BROKERAPP_VOLUMEDATA_H
 
 
+#include "IndicatorData.h"
 
-class VolumeData {
+class VolumeData : public IndicatorData<double> {
+public:
+    explicit VolumeData(Ticker *ticker);
+
+    ~VolumeData() = default;
+
+    void calculate(BarHistory *barHistory) override;
 
 };
 
