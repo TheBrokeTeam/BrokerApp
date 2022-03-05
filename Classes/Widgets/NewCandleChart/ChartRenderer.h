@@ -15,18 +15,17 @@ class ChartRenderer {
 public:
     ChartRenderer(Ticker* ticker);
 
-
     std::vector<std::shared_ptr<SubplotRenderer>> subplots;
 
 
     void render();
 //    void updateVisible(float dt); //todo: nao precisa ser widget. precisa disso mesmo assim?
 
-    void onPreRender();
+    virtual void onPreRender();
     bool onBeginRender();
-    void onRender();
+    virtual void onRender();
     static void onEndRender();
-    void onPostRender();
+    virtual void onPostRender();
 
     bool shouldRender = true;
     int getLastIdxX() const;
@@ -34,13 +33,21 @@ public:
     void addPlotToChart(std::shared_ptr<SubplotRenderer> subplot);
     void removePlotFromChart(std::shared_ptr<SubplotRenderer> subplot);
 protected:
-    std::string _title;
+    std::string _name;
+public:
+    const std::string &getName() const;
+
+    void setName(const std::string &name);
+
+protected:
+    Ticker* _ticker{nullptr};
 
 private:
     char _t1_str[32];
     char _t2_str[32];
-    static   ImPlotTime _t1;
+    ImPlotTime _t1;
     ImPlotTime _t2;
+
     std::vector<float> calculateRatios();
     int _maxSubplots = 10;
 
@@ -52,7 +59,6 @@ private:
     float _positionerValue = 1.0f;
     bool _forceChangeMax = false;
     double _movedMin = 0, _movedMax = 0;
-    Ticker* _ticker{nullptr};
 
     void setupSlider();
 

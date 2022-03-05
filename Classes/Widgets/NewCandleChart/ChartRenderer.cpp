@@ -27,13 +27,6 @@ std::vector<float> ChartRenderer::calculateRatios() {
     return ratios;
 }
 
-void ChartRenderer::onPreRender() {
-//    ImPlot::FormatDate(_t1,_t1_str,32,ImPlotDateFmt_DayMoYr,true);
-//    ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
-//    _t1 = ImPlot::AddTime(_t2, ImPlotTimeUnit_Yr, -1);
-//
-//    setupSlider();
-}
 
 void ChartRenderer::setupSlider() {//SliderStuff
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 16);
@@ -61,9 +54,6 @@ void ChartRenderer::setupSlider() {//SliderStuff
     ImGui::PopStyleColor(5);
 }
 
-bool ChartRenderer::onBeginRender() {
-    return  ImPlot::BeginSubplots(getTitle(_title) ,_maxSubplots,1,ImVec2(-1,-1),_flags,calculateRatios().data());
-}
 
 
 int ChartRenderer::getLastIdxX() const {
@@ -84,6 +74,7 @@ void ChartRenderer::removePlotFromChart(std::shared_ptr<SubplotRenderer> subplot
     subplots.erase(std::remove(subplots.begin(), subplots.end(), subplot), subplots.end());
 }
 
+
 const char* ChartRenderer::getTitle(std::string name) const {
     return ((_showTitle ? "" : "##") + name).c_str();
 }
@@ -96,15 +87,7 @@ void ChartRenderer::setFlags(ImPlotSubplotFlags flags) {
     _flags = flags;
 }
 
-void ChartRenderer::onEndRender() {
-    ImPlot::EndSubplots();
-}
-
-void ChartRenderer::onRender() {
-    for (auto& i: subplots) {
-        i->render();
-    }
-}
+//MARK: lifecycle
 
 void ChartRenderer::render() {
     onPreRender();
@@ -115,4 +98,38 @@ void ChartRenderer::render() {
     onPostRender();
 }
 
+
+void ChartRenderer::onPreRender() {
+    ImPlot::FormatDate(_t1,_t1_str,32,ImPlotDateFmt_DayMoYr,true);
+    ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
+    _t1 = ImPlot::AddTime(_t2, ImPlotTimeUnit_Yr, -1);
+//
+//    setupSlider();
+}
+
+
+bool ChartRenderer::onBeginRender() {
+    return  ImPlot::BeginSubplots(getTitle(_name) , _maxSubplots, 1, ImVec2(-1, -1), _flags, calculateRatios().data());
+}
+
+void ChartRenderer::onRender() {
+    for (auto& i: subplots) {
+        i->render();
+    }
+}
+
+void ChartRenderer::onEndRender() {
+    ImPlot::EndSubplots();
+
+}
+
 void ChartRenderer::onPostRender() {}
+
+const std::string &ChartRenderer::getName() const {
+    return _name;
+}
+
+void ChartRenderer::setName(const std::string &name) {
+    _name = name;
+}
+

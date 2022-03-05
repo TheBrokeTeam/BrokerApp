@@ -5,9 +5,15 @@
 #ifndef BROKERAPP_MAINCHARTRENDERER_H
 #define BROKERAPP_MAINCHARTRENDERER_H
 
+#include "ChartRenderer.h"
 
-class MainChartRenderer {
+class MainChartRenderer: public ChartRenderer {
+public:
+    MainChartRenderer(Ticker* ticker);
 
+    std::shared_ptr<SubplotRenderer> createMainSubplot();
+
+    std::shared_ptr<SubplotRenderer> createVolumeSubplot();
 };
 
 

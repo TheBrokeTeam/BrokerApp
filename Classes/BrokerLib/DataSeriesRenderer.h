@@ -40,9 +40,9 @@ public:
     void setDragDropCallback(const DragDropCallback &dragDropCallback);
     bool getIsSubplot();
     void setIsSubplot(bool isSubplot);
+    static IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);
 
 protected:
-    static IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);
     std::string _name;
     std::string _plotName;
     std::string _plotId;

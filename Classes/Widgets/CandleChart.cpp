@@ -247,12 +247,13 @@ void CandleChart::render(float dt)
         if (ImPlot::BeginPlot("##Volume")) {
 
             ImDrawList* drawList =  ImPlot::GetPlotDrawList();
+//SetupPLot
 
             ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
             ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[lastIdxToPlot], dataHist.getData(BarDataType::TIME)[_lastIdxX],BarDataType::TIME);
             ImPlot::SetupAxisFormat(ImAxis_Y1, PlotHelper::VolumeFormatter);
             ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
-
+//MARK: Rendering
 
             auto color = ImVec4(1.f,0.75f,0.25f,1);
             ImPlot::SetNextFillStyle(color);

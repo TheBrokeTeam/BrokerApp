@@ -125,7 +125,12 @@ add_executable(BrokerApp
         Classes/Networking/Services/SymbolService.cpp
         Classes/Networking/Services/SymbolService.h
         Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
+        Classes/Networking/Services/UserService.h
+		Classes/Helpers/JsonUtils.h
+		Classes/Networking/Services/KLineService.cpp
+		Classes/Networking/Services/KLineService.h
+		Classes/Networking/Routes/KLineRouter.cpp
+		Classes/Networking/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
@@ -162,7 +167,9 @@ add_executable(BrokerApp
 		Classes/Widgets/NewCandleChart/VolumeSubplotRenderer.h
 		Classes/BrokerLib/VolumeRenderer.cpp Classes/BrokerLib/VolumeRenderer.h
 		Classes/Widgets/NewCandleChart/MainChartRenderer.cpp
-		Classes/Widgets/NewCandleChart/MainChartRenderer.h)
+		Classes/Widgets/NewCandleChart/MainChartRenderer.h
+		Classes/Widgets/NewCandleChart/NewChartView.cpp
+		Classes/Widgets/NewCandleChart/NewChartView.h)
 
 
 

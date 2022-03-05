@@ -20,8 +20,11 @@ private:
     void onPreRender() override;
     void onSetupPlot() override;
     void onPostRender() override;
+    void onRender() override;
 
     void addVolumeItem();
+
+    void onTooltipRender();
 };
 
 

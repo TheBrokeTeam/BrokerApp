@@ -21,7 +21,6 @@ void MainSubplotRenderer::addOHLCItem() {//Add OHLC Item
     items.push_back(ohlcR);
 }
 
-
 void MainSubplotRenderer::onPreRender() {}
 
 void MainSubplotRenderer::onSetupPlot() {

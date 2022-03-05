@@ -12,8 +12,9 @@
 class BrokerColorsImgui {
 public:
     BrokerColorsImgui();
-    static ImVec4 bull_color() { return {0.5,1,0,1}; };
-    static ImVec4 bear_color() { return {1,0,0.5,1}; };
+    static ImVec4 volumeColor() { return {1,0.75,0.25,1}; };
+    static ImVec4 bull_color()  { return {0.5,1,0,1}; };
+    static ImVec4 bear_color()  { return {1,0,0.5,1}; };
 };
 
 
