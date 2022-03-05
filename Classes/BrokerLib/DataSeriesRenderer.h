@@ -19,6 +19,7 @@ class Context;
 
 class DataSeriesRenderer {
 public:
+    typedef std::function<void(DataSeriesRenderer*)> DragDropCallback;
     explicit DataSeriesRenderer(Context *context);
     ~DataSeriesRenderer();
 
@@ -34,8 +35,9 @@ public:
     const std::string& getId();
 
 
-    void render();
     virtual void popupRender() = 0;
+    void render();
+    void setDragDropCallback(const DragDropCallback &dragDropCallback);
     bool getIsSubplot();
     void setIsSubplot(bool isSubplot);
 
@@ -50,6 +52,9 @@ private:
     static int getRenderEndIndex(double time,const std::vector<double>& timeArr);
     bool _isSubplot = false;
     Context *_context = nullptr;
+    DragDropCallback _dragDropCallback{nullptr};
+
+
 };
 
 

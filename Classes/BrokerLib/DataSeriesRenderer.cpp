@@ -34,6 +34,10 @@ void DataSeriesRenderer::render() {
 
         onRender();
         popupRender();
+
+        if(_dragDropCallback)
+            _dragDropCallback(this);
+
         onPostRender();
     }
 }
@@ -87,6 +91,10 @@ bool DataSeriesRenderer::getIsSubplot() {
 
 void DataSeriesRenderer::setIsSubplot(bool isSubplot) {
     _isSubplot = isSubplot;
+}
+
+void DataSeriesRenderer::setDragDropCallback(const DataSeriesRenderer::DragDropCallback &dragDropCallback) {
+    _dragDropCallback = dragDropCallback;
 }
 
 
