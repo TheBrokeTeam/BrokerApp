@@ -10,13 +10,19 @@
 #include "../../Contexts/Context.h"
 #include "SubplotRenderer.h"
 
+class ChartRendererDelegate {
+    virtual void chartDidScroll(int lastVisibleIndex) = 0;
+};
 
-class ChartRenderer {
+class ChartRenderer: SubplotRendererDelegate {
 public:
-    ChartRenderer(Ticker* ticker);
+    explicit ChartRenderer(Ticker *ticker);
 
     std::vector<std::shared_ptr<SubplotRenderer>> subplots;
 
+    void subplotDidScroll(int startIndex, int endIndex, SubplotRenderer *sender) override;
+
+    void setDelegate(ChartRendererDelegate *delegate);
 
     void render();
 //    void updateVisible(float dt); //todo: nao precisa ser widget. precisa disso mesmo assim?
@@ -32,35 +38,37 @@ public:
     int getLastIdxToPlot() const;
     void addPlotToChart(std::shared_ptr<SubplotRenderer> subplot);
     void removePlotFromChart(std::shared_ptr<SubplotRenderer> subplot);
-protected:
-    std::string _name;
-public:
     const std::string &getName() const;
 
     void setName(const std::string &name);
 
+    Ticker *_ticker{nullptr};
+    void updateRenderInterval(int startIndex, int endIndex);
+
 protected:
-    Ticker* _ticker{nullptr};
+    std::string _name;
+    RenderInterval _renderInterval = RenderInterval();
 
 private:
-    char _t1_str[32];
-    char _t2_str[32];
+    ChartRendererDelegate  *_delegate{};
+    char _t1_str[32]{};
+    char _t2_str[32]{};
     ImPlotTime _t1;
     ImPlotTime _t2;
 
     std::vector<float> calculateRatios();
     int _maxSubplots = 10;
 
-    //Slider stuff
+    //MARK: Slider stuff
     bool forceChangeMax = false;
-    double movedMin, movedMax;
+    double movedMin{}, movedMax{};
     const int _lastIdxX = 0;
     const int _lastIdxToPlot = 0;
     float _positionerValue = 1.0f;
     bool _forceChangeMax = false;
     double _movedMin = 0, _movedMax = 0;
-
     void setupSlider();
+
 
     ImPlotSubplotFlags getFlags() const;
     void setFlags(ImPlotSubplotFlags flags);

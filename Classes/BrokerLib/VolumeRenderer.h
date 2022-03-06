@@ -9,7 +9,7 @@
 #include "VolumeData.h"
 #include "DataSeriesRendererImgui.h"
 #include "../Tickers/Ticker.h"
-
+#include "../Contexts/Context.h"
 class VolumeRenderer : public DataSeriesRendererImgui {
 public:
     VolumeRenderer(Context *context, VolumeData *data);

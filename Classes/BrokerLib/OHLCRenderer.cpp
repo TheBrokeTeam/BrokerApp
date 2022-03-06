@@ -25,10 +25,11 @@ void OHLCRenderer::onRender() {
 //                    ImPlotPoint(dataHist.getData(BarDataType::TIME)[i], dataHist.getData(BarDataType::HIGH)[i]));
 //        }
 //    }
-    auto renderInfo = getRenderInfo(_data->getTicker(),_data->getTime());
+
+    //auto renderInfo = getRenderInfo(_data->getTicker(),_data->getTime());
     const double candleWidth = _data->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60;
 
-    for (int i = renderInfo.startIndex; i <= renderInfo.startIndex + renderInfo.size; i++) {
+    for (int i = _renderInterval.startIndex; i <= _renderInterval.startIndex + _renderInterval.size(); i++) {
         ImU32 color = ImGui::GetColorU32(
                 _data->getData(BarDataType::OPEN)[i] > _data->getData(BarDataType::CLOSE)[i] ? BrokerColorsImgui::bear_color : BrokerColorsImgui::bull_color);
         ImVec2 openPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i] - candleWidth / 2,

@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include "imgui.h"
+#include "../Widgets/NewCandleChart/RenderInterval.h"
 
 struct IndicatorRendererInfo{
     int startIndex;
@@ -42,16 +43,18 @@ public:
     void setIsSubplot(bool isSubplot);
     static IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);
 
+    void updateRenderInterval(int startIndex, int endIndex);
+
 protected:
     std::string _name;
     std::string _plotName;
     std::string _plotId;
-
+    RenderInterval _renderInterval = RenderInterval();
+    Context *_context = nullptr;
 private:
     static int getRenderStartIndex(double time,const std::vector<double>& timeArr);
     static int getRenderEndIndex(double time,const std::vector<double>& timeArr);
     bool _isSubplot = false;
-    Context *_context = nullptr;
     DragDropCallback _dragDropCallback{nullptr};
 
 

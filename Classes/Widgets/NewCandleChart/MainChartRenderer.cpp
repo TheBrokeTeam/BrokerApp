@@ -9,11 +9,12 @@
 MainChartRenderer::MainChartRenderer(Ticker *ticker): ChartRenderer(ticker) {
     setName("MainChart");
     addPlotToChart(createMainSubplot());
-    addPlotToChart(createVolumeSubplot());
+    //addPlotToChart(createVolumeSubplot());
 }
 
 std::shared_ptr<SubplotRenderer> MainChartRenderer::createMainSubplot() {
     std::shared_ptr<MainSubplotRenderer> subplotRenderer = std::make_unique<MainSubplotRenderer>(_ticker);
+
     return subplotRenderer;
 }
 

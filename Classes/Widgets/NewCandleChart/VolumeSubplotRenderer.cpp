@@ -11,7 +11,7 @@
 
 #define dataHist (*_ticker->getBarHistory())
 
-VolumeSubplotRenderer::VolumeSubplotRenderer(Ticker* ticker) : SubplotRenderer(ticker) {
+VolumeSubplotRenderer::VolumeSubplotRenderer(Ticker *ticker) : SubplotRenderer(ticker) {
     _title = "Volume";
     setFlags(ImPlotFlags_NoMenus);
     addVolumeItem();

@@ -29,33 +29,6 @@ std::vector<float> ChartRenderer::calculateRatios() {
 }
 
 
-void ChartRenderer::setupSlider() {//SliderStuff
-    ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 16);
-    ImGui::PushStyleColor(ImGuiCol_SliderGrab, BrokerColorsImgui::broker_yellow_active);
-    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, BrokerColorsImgui::broker_yellow);
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, BrokerColorsImgui::broker_light_grey);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, BrokerColorsImgui::broker_light_grey);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, BrokerColorsImgui::broker_light_grey);
-
-    if(ImGui::SliderFloat("##Positioner", &_positionerValue, 0.000f, 1.000f, "%.3f")){
-
-        int posIdxMax = int((dataHist.size() - 1) * _positionerValue);
-        int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
-
-        movedMin = dataHist.getData(TIME)[posIdxMin];
-        movedMax = dataHist.getData(TIME)[posIdxMax];
-        forceChangeMax =  true;
-    }
-    else{
-        //update postioner
-        float posPercent = float(_lastIdxX + 1) / dataHist.size();
-        _positionerValue = posPercent;
-    }
-
-    ImGui::PopStyleColor(5);
-}
-
-
 
 int ChartRenderer::getLastIdxX() const {
     return _ticker->getBarHistory()->size() - 1;
@@ -132,5 +105,29 @@ const std::string &ChartRenderer::getName() const {
 
 void ChartRenderer::setName(const std::string &name) {
     _name = name;
+}
+
+void ChartRenderer::setDelegate(ChartRendererDelegate *delegate) {
+    ChartRenderer::_delegate = delegate;
+}
+
+void ChartRenderer::updateRenderInterval(int startIndex, int endIndex) {
+    _renderInterval.startIndex = startIndex;
+    _renderInterval.endIndex = endIndex;
+
+    for (auto& i: subplots) {
+        i->updateRenderInterval( startIndex,  endIndex) ;
+    }
+}
+
+void ChartRenderer::subplotDidScroll(int startIndex, int endIndex, SubplotRenderer *sender) {
+
+    for (auto& i : subplots) {
+
+        //LV: Can't update the sender subplot
+        if (sender != i.get()) //LV: should be !==? How do I compare address?
+            i->updateRenderInterval(startIndex, endIndex);
+
+    }
 }
 

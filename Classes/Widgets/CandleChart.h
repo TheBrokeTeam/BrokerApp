@@ -20,6 +20,7 @@ class CandleChart : public Widget{
 public:
     CandleChart(Context* context, Ticker* ticker);
     void updateVisible(float dt) override;
+    void setPositionValue(float positionValue);
 
 protected:
 private:
@@ -35,8 +36,7 @@ private:
     std::vector<float> calculateRatios();
 
     int _lastIdxX = 0;
-
-    float _positionerValue = 1.0f;
+    float _positionValue = 1.0f;
 };
 
 

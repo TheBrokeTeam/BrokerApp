@@ -71,9 +71,9 @@ void CandleChart::render(float dt)
     ImGui::PushStyleColor(ImGuiCol_FrameBgActive, BrokerColorsImgui::broker_light_grey);
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, BrokerColorsImgui::broker_light_grey);
 
-    if(ImGui::SliderFloat("##Positioner",&_positionerValue,0.000f,1.000f,"%.3f")){
+    if(ImGui::SliderFloat("##Positioner", &_positionValue, 0.000f, 1.000f, "%.3f")){
 
-        int posIdxMax = int((dataHist.size() - 1)*_positionerValue);
+        int posIdxMax = int((dataHist.size() - 1) * _positionValue);
         int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
 
         movedMin = dataHist.getData(BarDataType::TIME)[posIdxMin];
@@ -84,7 +84,7 @@ void CandleChart::render(float dt)
     else{
         //update postioner
         float posPercent = float(_lastIdxX+1)/dataHist.size();
-        _positionerValue = posPercent;
+        _positionValue = posPercent;
     }
 
     ImGui::PopStyleColor(5);
@@ -298,4 +298,8 @@ void CandleChart::render(float dt)
 
         ImPlot::EndSubplots();
     }
+}
+
+void CandleChart::setPositionValue(float positionValue) {
+    _positionValue = positionValue;
 }

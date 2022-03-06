@@ -20,6 +20,7 @@
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
 #include "../Widgets/StockList.h"
+#include "../Widgets/NewCandleChart/NewChartView.h"
 #include "../Nodes/SMANode.h"
 #include "../Nodes/PSARNode.h"
 #include "../Nodes/BollingerNode.h"
@@ -35,6 +36,7 @@
 #include "../Nodes/TRIXNode.h"
 #include "../BrokerLib/SMARenderer.h"
 #include "../BrokerLib/SMAData.h"
+#include "../Widgets/NewCandleChart/MainChartRenderer.h"
 
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -57,8 +59,10 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<StrategyEditor>(_ticker.get(),this));
     _widgets.emplace_back(std::make_shared<StockList>(this));
+    _widgets.emplace_back(std::make_shared<NewChartView>(this));
 
     getWidget<StockList>()->SetVisible(false);
+//    getWidget<NewChartView>()->SetVisible(false);
 
     getWidget<ProfitAndLossesView>()->SetVisible(false);
 
@@ -599,9 +603,12 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     loadTicker();
 
     setShouldRender(true);
-    auto chart = getWidget<ChartView>();
-    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
 
+//    auto chart = getWidget<ChartView>();
+//    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
+
+    auto chart = getWidget<NewChartView>();
+    chart->addChart(std::make_shared<MainChartRenderer>(_ticker.get()));
 
     return _ticker.get();
 }

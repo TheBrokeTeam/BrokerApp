@@ -97,5 +97,8 @@ void DataSeriesRenderer::setDragDropCallback(const DataSeriesRenderer::DragDropC
     _dragDropCallback = dragDropCallback;
 }
 
-
+void DataSeriesRenderer::updateRenderInterval(int startIndex, int endIndex) {
+    _renderInterval.startIndex = startIndex;
+    _renderInterval.endIndex = endIndex;
+}
 

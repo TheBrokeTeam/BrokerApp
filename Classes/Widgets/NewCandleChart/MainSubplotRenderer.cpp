@@ -5,6 +5,8 @@
 #include "MainSubplotRenderer.h"
 #include "OHLCData.h"
 #include "OHLCRenderer.h"
+#include "../../Helpers/PlotHelper.h"
+#include "DataSeriesRenderer.h"
 
 #define dataHist (*_ticker->getBarHistory())
 
@@ -21,27 +23,35 @@ void MainSubplotRenderer::addOHLCItem() {//Add OHLC Item
     items.push_back(ohlcR);
 }
 
-void MainSubplotRenderer::onPreRender() {}
+void MainSubplotRenderer::onPreRender() {
+
+}
 
 void MainSubplotRenderer::onSetupPlot() {
+//    ImPlotRect bnds = ImPlot::GetPlotLimits();
+//    double minX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Min), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+//    double maxX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+//    double startTime = minX;
+//    double endTime = maxX;
+//
+//    if (startTime <  dataHist.getData(BarDataType::TIME).front()) startTime = dataHist.getData(BarDataType::TIME).front();
+//    if (endTime >  dataHist.getData(BarDataType::TIME).back()) endTime = dataHist.getData(BarDataType::TIME).back();
+//
+//    if (startTime >  dataHist.getData(BarDataType::TIME).back()) startTime = dataHist.getData(BarDataType::TIME).front();
+//    if (endTime <  dataHist.getData(BarDataType::TIME).front()) endTime = dataHist.getData(BarDataType::TIME).back();
+//
+//    _ticker->updateRenderRange(startTime,endTime);
+//    auto renderInfo = DataSeriesRenderer::getRenderInfo(_ticker,_ticker->getBarHistory()->getData(BarDataType::TIME));
 
-//    ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,
-//                      ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-//    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[_lastIdxToPlot],
-//                            dataHist.getData(BarDataType::TIME)[_lastIdxX],BarDataType::TIME);
-//    ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
-//    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
-//
-//    if(_forceChangeMax) {
-//        int posIdxMax = int((dataHist.size() - 1)*_positionerValue);
-//        int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
-//
-//        _movedMin = dataHist.getData(BarDataType::TIME)[posIdxMin];
-//        _movedMax = dataHist.getData(BarDataType::TIME)[posIdxMax];
-//
-//        ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetMin(_movedMin);
-//        ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetMax(_movedMax);
-//    }
+
+    ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,
+                      ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
+    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[0],
+                            dataHist.getData(BarDataType::TIME)[1000]);
+    ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
+    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
+//    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[renderInfo.startIndex],
+//                            dataHist.getData(BarDataType::TIME)[renderInfo.startIndex+renderInfo.size]);
 }
 
 void MainSubplotRenderer::onPostRender() {}

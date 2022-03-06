@@ -4,7 +4,9 @@
 
 #include "VolumeData.h"
 
-VolumeData::VolumeData(Ticker *ticker): IndicatorData(ticker) {}
+VolumeData::VolumeData(Ticker *ticker): IndicatorData(ticker) {
+
+}
 
 void VolumeData::calculate(BarHistory* barHistory)
 {

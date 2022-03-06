@@ -4,8 +4,9 @@
 
 #include "SubplotRenderer.h"
 
+class SubplotRenderer;
 
-SubplotRenderer::SubplotRenderer(Ticker* ticker)  {
+SubplotRenderer::SubplotRenderer(Ticker *ticker)  {
     _ticker = ticker;
 }
 
@@ -15,7 +16,7 @@ bool SubplotRenderer::onBeginRender() {
 }
 
 const char* SubplotRenderer::getTitle(std::string name) const {
-    return ((_showTitle ? "" : "##") + name).c_str();
+    return (_showTitle ? "" + name : "##" + name).c_str();
 }
 
 void SubplotRenderer::onEndRender() {
@@ -53,15 +54,6 @@ ImPlotSubplotFlags SubplotRenderer::getFlags() const {
 void SubplotRenderer::setFlags(ImPlotSubplotFlags flags) {
     _flags = flags;
 }
-//
-//int SubplotRenderer::getLastIdxX() const {
-//    return _ticker->getBarHistory()->size() - 1;
-//}
-//
-//int SubplotRenderer::getLastIdxToPlot() const {
-//    int numberOfBarsToRender = _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
-//    return _lastIdxX - numberOfBarsToRender  < 0  ? 0 :  _lastIdxX - numberOfBarsToRender ;
-//}
 
 
 void SubplotRenderer::addItemToPlot(std::shared_ptr<DataSeriesRenderer> item) {
@@ -78,5 +70,12 @@ void SubplotRenderer::onRender() {
     }
 }
 
+void SubplotRenderer::updateRenderInterval(int startIndex, int endIndex) {
+    _renderInterval.startIndex = startIndex;
+    _renderInterval.endIndex = endIndex;
 
+    for (auto& i : items) {
+        i->updateRenderInterval(startIndex, endIndex);
+    }
+}
 

@@ -13,6 +13,7 @@
 #include "StockList.h"
 #include "StrategyEditor.h"
 #include "BrokerColorsImgui.h"
+#include "NewCandleChart/NewChartView.h"
 #include <fmt/format.h>
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
@@ -45,6 +46,7 @@ void MainMenuBar::updateAlways(float dt)
             if (ImGui::MenuItem("Data downloader", "CTRL+D",&(getContext()->getWidget<DownloaderView>()->GetVisible()))){}
             if (ImGui::MenuItem("Simulator", "CTRL+S",&(getContext()->getWidget<SimulationController>()->GetVisible()))){}
             if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
+            if (ImGui::MenuItem("New Chart View", "CTRL+N",&(getContext()->getWidget<NewChartView>()->GetVisible()))){}
             if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
             if (ImGui::MenuItem("Strategy View", "",&(getContext()->getWidget<StrategyEditor>()->GetVisible()))){}
 
