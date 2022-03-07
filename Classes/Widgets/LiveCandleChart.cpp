@@ -106,7 +106,7 @@ void LiveCandleChart::render(float dt)
             ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,
                               ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
             ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot],
-                                    dataHist.getData(BarDataType::TIME_S)[_lastIdxX]);
+                                    dataHist.getData(BarDataType::TIME_S)[_lastIdxX],ImGuiCond_Once);
             ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
             ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 
