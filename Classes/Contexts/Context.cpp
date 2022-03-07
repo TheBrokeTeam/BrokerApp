@@ -4,8 +4,9 @@
 
 #include "Context.h"
 
-Context::Context(Editor* editor): _editor(editor) {
+#include <utility>
 
+Context::Context(Editor* editor): _editor(editor) {
 }
 
 void Context::updateData(float dt) {
@@ -77,3 +78,12 @@ void Context::setShouldRender(bool value) {
 bool Context::getShouldRender() {
     return _shouldRender;
 }
+
+void Context::setUserId(const std::string& id) {
+    this->_user = new User(id);
+}
+
+std::string Context::getUserId() {
+    return _user->id();
+}
+

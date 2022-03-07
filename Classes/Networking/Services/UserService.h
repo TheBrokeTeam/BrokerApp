@@ -8,15 +8,31 @@
 #include "../APIManager.h"
 #include <string>
 
+#ifdef _WIN32
+static int platform = 1;
+#elif _WIN64
+static int platform= 1;
+#elif __linux__
+static int platform = 2;
+#elif __APPLE__
+static int platform = 3;
+#else
+static int platform = 0;
+#endif
+
 class UserService {
 private:
     APIManager apiManager = APIManager();
+    static void openPlatform(const std::string&);
 public:
     UserService();
-    rapidjson::Document getAccessKey(const rapidjson::Document& body);
-    rapidjson::Document createNewUser(const rapidjson::Document& body);
+    rapidjson::Document authenticate(const rapidjson::Document& body);
+//    rapidjson::Document getGitHubToken();
+//    rapidjson::Document createNewUser();
     rapidjson::Document updateUser();
     rapidjson::Document deleteUser();
+
+    void openAuth(const std::string& provider);
 };
 
 

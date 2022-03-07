@@ -7,15 +7,15 @@
 
 UserRouter::UserRouter() = default;
 
-APIRouter UserRouter::createOne(const rapidjson::Document& body) const {
+APIRouter UserRouter::createOne() const {
     APIRouter apiRouter = APIRouter(post, this->endpoint);
-    apiRouter.setBody(json::Stringfy(body));
     return apiRouter;
 }
 
-APIRouter UserRouter::getAuthorization(const rapidjson::Document& body) const {
+APIRouter UserRouter::authenticate(const rapidjson::Document& body) const {
     APIRouter apiRouter = APIRouter(post, this->endpoint + "/auth");
     apiRouter.setBody(json::Stringfy(body));
+    std::cout << json::Stringfy(body) << std::endl;
     return apiRouter;
 }
 
@@ -25,4 +25,9 @@ APIRouter UserRouter::updateOne() const {
 
 APIRouter UserRouter::deleteOne() const {
     return {del, this->endpoint};
+}
+
+APIRouter UserRouter::getGitHubAuthorization() const {
+    APIRouter apiRouter = APIRouter(post, this->endpoint + "/auth/github");
+    return apiRouter;
 }

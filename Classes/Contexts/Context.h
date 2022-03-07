@@ -16,8 +16,10 @@
 #include "../Tickables/Strategies/Strategy.h"
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
+#include "../Data/User.h"
 
 class Context {
+
 public:
     Context(Editor* editor);
 
@@ -25,6 +27,7 @@ public:
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
     bool startFetching = false;
     bool startSpinner = false;
+    bool startLogin = false;
     virtual void loadTicker() = 0;
     virtual void updateData(float dt);
     virtual void startSimulation(Ticker* ticker) = 0;
@@ -103,6 +106,9 @@ public:
     bool getShouldRender();
     void setShouldRender(bool);
 
+    std::string getUserId();
+    void setUserId(const std::string&);
+
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
@@ -114,6 +120,8 @@ protected:
     Editor *_editor{nullptr};
 
     bool _shouldRender = false;
+
+    User *_user{nullptr};
 };
 
 #endif //BROKERAPP_CONTEXT_H

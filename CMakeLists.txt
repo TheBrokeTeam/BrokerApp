@@ -125,14 +125,21 @@ add_executable(BrokerApp
         Classes/Networking/Services/SymbolService.cpp
         Classes/Networking/Services/SymbolService.h
         Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
+        Classes/Networking/Services/UserService.h
+		Classes/Helpers/JsonUtils.h
+		Classes/Networking/Services/KLineService.cpp
+		Classes/Networking/Services/KLineService.h
+		Classes/Networking/Routes/KLineRouter.cpp
+		Classes/Networking/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-        Classes/Widgets/LoginView.cpp Classes/Widgets/LoginView.h)
+        Classes/Widgets/LoginView.cpp
+		Classes/Widgets/LoginView.h
+		Classes/Data/User.h Classes/Data/User.cpp)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -159,6 +166,7 @@ add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
 add_subdirectory(external/rapidjson)
+#add_subdirectory(external/boost_interprocess)
 
 #--CURL STUFF -------------------------------------------------------------
 include(FindCURL)
@@ -290,6 +298,7 @@ set(INCLUDES
         external/rapidcsv/src
         external/rapidjson/include
         ${CURL_INCLUDE_DIR}
+		external/boost_interprocess/include
         )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

@@ -17,6 +17,8 @@ public:
 
 private:
     bool _onLogin = false;
+
+    void openAuthProvider(const std::string&);
 };
 
 
