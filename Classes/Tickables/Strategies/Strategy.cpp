@@ -147,7 +147,7 @@ std::string Strategy::openPosition(bool shorting) {
     pos.outPrice = pos.inPrice;
     pos.id = uuid::generate_uuid_v4();
     pos.isShorting = shorting;
-    pos.inTime =  barHist(0,BarDataType::TIME);
+    pos.inTime =  barHist(0,BarDataType::TIME_S);
     pos.outTime =  pos.inTime;
     pos.profit = 0;
     openPosition(pos);
@@ -168,7 +168,7 @@ bool Strategy::closePosition(const std::string &posId) {
 
 void Strategy::checkTarget() {
     for(auto &pos : _openedPositions){
-        pos.outTime =  barHist(0,BarDataType::TIME);
+        pos.outTime =  barHist(0,BarDataType::TIME_S);
         pos.outPrice = barHist(0,BarDataType::CLOSE);
         pos.profit = pos.isShorting ? pos.inPrice - pos.outPrice : pos.outPrice - pos.inPrice;
 

@@ -75,8 +75,8 @@ void LiveCandleChart::render(float dt)
         int posIdxMax = int((dataHist.size() - 1)*_positionerValue);
         int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
 
-        movedMin = dataHist.getData(BarDataType::TIME)[posIdxMin]/1000;
-        movedMax= dataHist.getData(BarDataType::TIME)[posIdxMax]/1000;
+        movedMin = dataHist.getData(BarDataType::TIME_S)[posIdxMin];
+        movedMax= dataHist.getData(BarDataType::TIME_S)[posIdxMax];
 
         forceChangeMax =  true;
     }
@@ -105,8 +105,8 @@ void LiveCandleChart::render(float dt)
 
             ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,
                               ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-            ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[lastIdxToPlot]/1000,
-                                    dataHist.getData(BarDataType::TIME)[_lastIdxX]/1000);
+            ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot],
+                                    dataHist.getData(BarDataType::TIME_S)[_lastIdxX]);
             ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
             ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 
@@ -119,7 +119,7 @@ void LiveCandleChart::render(float dt)
             if(getContext()->isSimulating()) {
                 _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
                 double barsInTime = numberOfBarsToRender * _ticker->getSymbol()->getTimeIntervalInSeconds();
-                double currentTime = dataHist(0,BarDataType::TIME)/1000;
+                double currentTime = dataHist(0,BarDataType::TIME_S);
                 ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(currentTime - barsInTime, currentTime);
             }
 
@@ -132,19 +132,19 @@ void LiveCandleChart::render(float dt)
                 // fit data on screen even when zooming
                 if (ImPlot::FitThisFrame()) {
                     for (int i = lastIdxToPlot; i <= _lastIdxX; ++i) {
-                        ImPlot::FitPoint(ImPlotPoint(dataHist.getData(BarDataType::TIME)[i]/1000, dataHist.getData(BarDataType::LOW)[i]));
-                        ImPlot::FitPoint(ImPlotPoint(dataHist.getData(BarDataType::TIME)[i]/1000, dataHist.getData(BarDataType::HIGH)[i]));
+                        ImPlot::FitPoint(ImPlotPoint(dataHist.getData(BarDataType::TIME_S)[i], dataHist.getData(BarDataType::LOW)[i]));
+                        ImPlot::FitPoint(ImPlotPoint(dataHist.getData(BarDataType::TIME_S)[i], dataHist.getData(BarDataType::HIGH)[i]));
                     }
                 }
 
                 for (int i = lastIdxToPlot; i <= _lastIdxX; i++) {
                     ImU32 color = ImGui::GetColorU32(dataHist.getData(BarDataType::OPEN)[i] > dataHist.getData(BarDataType::CLOSE)[i] ? bear_color : bull_color);
-                    ImVec2 openPos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME)[i]/1000 - candleWidth / 2, dataHist.getData(BarDataType::OPEN)[i]);
-                    ImVec2 closePos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME)[i]/1000 + candleWidth / 2, dataHist.getData(BarDataType::CLOSE)[i]);
+                    ImVec2 openPos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME_S)[i] - candleWidth / 2, dataHist.getData(BarDataType::OPEN)[i]);
+                    ImVec2 closePos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME_S)[i] + candleWidth / 2, dataHist.getData(BarDataType::CLOSE)[i]);
                     drawList->AddRectFilled(openPos, closePos, color);
 
-                    ImVec2 lowPos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME)[i]/1000, dataHist.getData(BarDataType::LOW)[i]);
-                    ImVec2 highPos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME)[i]/1000, dataHist.getData(BarDataType::HIGH)[i]);
+                    ImVec2 lowPos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME_S)[i], dataHist.getData(BarDataType::LOW)[i]);
+                    ImVec2 highPos = ImPlot::PlotToPixels(dataHist.getData(BarDataType::TIME_S)[i], dataHist.getData(BarDataType::HIGH)[i]);
                     drawList->AddLine(lowPos, highPos, color, ImMax(1.0f, (closePos.x - openPos.x) / 10.0f));
                 }
 
@@ -157,7 +157,7 @@ void LiveCandleChart::render(float dt)
                 double maxX = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_S).ToDouble();
 
                 int lastIdx = dataHist.size() - 1;
-                int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME).data(), 0, lastIdx, maxX*1000);
+                int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME_S).data(), 0, lastIdx, maxX*1000);
                 if (maxX_idx == -1)
                     maxX_idx = lastIdx;
 
@@ -167,11 +167,11 @@ void LiveCandleChart::render(float dt)
                 double startTime = minX;
                 double endTime = maxX;
 
-                if (startTime <  dataHist.getData(BarDataType::TIME).front()/1000) startTime = dataHist.getData(BarDataType::TIME).front()/1000;
-                if (endTime >  dataHist.getData(BarDataType::TIME).back()/1000) endTime = dataHist.getData(BarDataType::TIME).back()/1000;
+                if (startTime <  dataHist.getData(BarDataType::TIME_S).front()) startTime = dataHist.getData(BarDataType::TIME_S).front();
+                if (endTime >  dataHist.getData(BarDataType::TIME_S).back()) endTime = dataHist.getData(BarDataType::TIME_S).back();
 
-                if (startTime >  dataHist.getData(BarDataType::TIME).back()/1000) startTime = dataHist.getData(BarDataType::TIME).front()/1000;
-                if (endTime <  dataHist.getData(BarDataType::TIME).front()/1000) endTime = dataHist.getData(BarDataType::TIME).back()/1000;
+                if (startTime >  dataHist.getData(BarDataType::TIME_S).back()) startTime = dataHist.getData(BarDataType::TIME_S).front();
+                if (endTime <  dataHist.getData(BarDataType::TIME_S).front()) endTime = dataHist.getData(BarDataType::TIME_S).back();
 
                 _ticker->updateRenderRange(startTime,endTime);
                 //######################################
@@ -254,7 +254,7 @@ void LiveCandleChart::render(float dt)
 //            ImDrawList* drawList =  ImPlot::GetPlotDrawList();
 //
 //            ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-//            ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[lastIdxToPlot], dataHist.getData(BarDataType::TIME)[_lastIdxX],BarDataType::TIME);
+//            ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot], dataHist.getData(BarDataType::TIME_S)[_lastIdxX],BarDataType::TIME_S);
 //            ImPlot::SetupAxisFormat(ImAxis_Y1, PlotHelper::VolumeFormatter);
 //            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 //
@@ -262,7 +262,7 @@ void LiveCandleChart::render(float dt)
 //            auto color = ImVec4(1.f,0.75f,0.25f,1);
 //            ImPlot::SetNextFillStyle(color);
 //            int plotSize = _lastIdxX - lastIdxToPlot + 1;
-//            ImPlot::PlotBars("Volume",&dataHist.getData(BarDataType::TIME)[lastIdxToPlot],&dataHist.getData(BarDataType::VOLUME)[lastIdxToPlot],plotSize, candleWidth*0.5);
+//            ImPlot::PlotBars("Volume",&dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot],&dataHist.getData(BarDataType::VOLUME)[lastIdxToPlot],plotSize, candleWidth*0.5);
 //
 ////            //TICKER TOOL TIP ##################
 ////            const bool hovered = ImPlot::IsSubplotsHovered();
@@ -279,13 +279,13 @@ void LiveCandleChart::render(float dt)
 ////                ImPlot::PopPlotClipRect();
 ////
 ////                // find mouse location index
-////                int idx = PlotHelper::BinarySearch(dataHist.getData(BarDataType::TIME).data(), 0, dataHist.size(), mouse.x);
+////                int idx = PlotHelper::BinarySearch(dataHist.getData(BarDataType::TIME_S).data(), 0, dataHist.size(), mouse.x);
 ////
 ////                // render tool tip (won't be affected by plot clip rect)
 ////                if (ImPlot::IsPlotHovered() && idx != -1) {
 ////                    ImGui::BeginTooltip();
 ////                    char buff[32];
-////                    ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist.getData(BarDataType::TIME)[idx]),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
+////                    ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist.getData(BarDataType::TIME_S)[idx]),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
 ////                    ImGui::Text("Date:");   ImGui::SameLine(60); ImGui::Text("%s",  buff);
 ////                    ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::OPEN)[idx]);
 ////                    ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::CLOSE)[idx]);

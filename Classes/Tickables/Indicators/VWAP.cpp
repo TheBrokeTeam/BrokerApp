@@ -19,7 +19,7 @@ VWAP::VWAP(Ticker *ticker): Indicator(ticker) {
 
 void VWAP::calculate(BarHistory* barHistory)
 {
-    if (isNewPeriod((*barHistory)(0,BarDataType::TIME), _periodType)) {
+    if (isNewPeriod((*barHistory)(0,BarDataType::TIME_S), _periodType)) {
         setupNewPeriod();
     }
 
@@ -34,7 +34,7 @@ void VWAP::calculate(BarHistory* barHistory)
     double vwap = _accTypicalPriceWeighted/_accVolume;
 
     push(vwap);
-    _time.push_back((*barHistory)(0,BarDataType::TIME));
+    _time.push_back((*barHistory)(0,BarDataType::TIME_S));
 }
 
 void VWAP::onRender() {

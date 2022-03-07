@@ -6,7 +6,8 @@
 #include "BarHistory.h"
 
 void BarHistory::append(const BarData &data) {
-    push(data.time, BarDataType::TIME);
+    push(data.time_ms, BarDataType::TIME_MS);
+    push(data.time_s, BarDataType::TIME_S);
     push(data.open, BarDataType::OPEN);
     push(data.high, BarDataType::HIGH);
     push(data.low, BarDataType::LOW);
@@ -16,7 +17,8 @@ void BarHistory::append(const BarData &data) {
 
 void BarHistory::updateLastBar(const BarData &barData) {
 
-    getData(BarDataType::TIME).back() = barData.time;
+    getData(BarDataType::TIME_MS).back() = barData.time_ms;
+    getData(BarDataType::TIME_S).back() = barData.time_s;
     getData(BarDataType::OPEN).back() = barData.open;
     getData(BarDataType::HIGH).back() = barData.high;
     getData(BarDataType::LOW).back() = barData.low;
@@ -26,7 +28,8 @@ void BarHistory::updateLastBar(const BarData &barData) {
 
 BarData BarHistory::getBarDataAt(int idx) {
     BarData d;
-    d.time = getData(BarDataType::TIME)[idx];
+    d.time_ms = getData(BarDataType::TIME_MS)[idx];
+    d.time_s = getData(BarDataType::TIME_S)[idx];
     d.open = getData(BarDataType::OPEN)[idx];
     d.high = getData(BarDataType::HIGH)[idx];
     d.low = getData(BarDataType::LOW)[idx];

@@ -26,7 +26,7 @@ void WMA::calculate(BarHistory* barHistory)
         value /= sumNfirst(_averageSize);
 
         push(value);
-        _time.push_back((*barHistory)(0,BarDataType::TIME));
+        _time.push_back((*barHistory)(0,BarDataType::TIME_S));
     }
 }
 

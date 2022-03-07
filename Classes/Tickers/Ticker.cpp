@@ -25,7 +25,9 @@ bool Ticker::removeTickable(Tickable *tickable)
 void Ticker::open(const TickData& tickData) {
     BarData data;
 
-    data.time = tickData.time;
+    data.time_ms = tickData.time;
+    data.time_s = tickData.time/1000;
+
     data.volume = tickData.volume;
 
     data.open = tickData.price;
@@ -50,7 +52,7 @@ void Ticker::tick(const TickData& tickData) {
     }
 
     //check if it is the close moment based on symbol interval (open time + bar's duration)
-    long lastSecondOfCurrentBar = _barHistory(0,BarDataType::TIME) + _symbol.getTimeIntervalInMiliSeconds() - 1;
+    long lastSecondOfCurrentBar = _barHistory(0,BarDataType::TIME_MS) + _symbol.getTimeIntervalInMiliSeconds() - 1;
     if(lastSecondOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
@@ -60,7 +62,8 @@ void Ticker::tick(const TickData& tickData) {
     //normal tick update
     BarData data;
 
-    data.time = _barHistory(0,BarDataType::TIME);
+    data.time_ms = _barHistory(0,BarDataType::TIME_MS);
+    data.time_s = _barHistory(0,BarDataType::TIME_S);
     data.open = _barHistory(0,BarDataType::OPEN);
     data.high = _barHistory(0,BarDataType::HIGH);
     data.low = _barHistory(0,BarDataType::LOW);
@@ -82,7 +85,8 @@ void Ticker::tick(const TickData& tickData) {
 void Ticker::close(const TickData& tickData) {
     BarData data;
 
-    data.time = _barHistory(0,BarDataType::TIME);
+    data.time_ms = _barHistory(0,BarDataType::TIME_MS);
+    data.time_s = _barHistory(0,BarDataType::TIME_S);
     data.open = _barHistory(0,BarDataType::OPEN);
     data.high = _barHistory(0,BarDataType::HIGH);
     data.low = _barHistory(0,BarDataType::LOW);
@@ -149,7 +153,8 @@ void Ticker::liveTick(const TickData &tickData)
     //normal tick update
     BarData data;
 
-    data.time = _barHistory(0,BarDataType::TIME);
+    data.time_ms = _barHistory(0,BarDataType::TIME_MS);
+    data.time_s = _barHistory(0,BarDataType::TIME_S);
     data.open = _barHistory(0,BarDataType::OPEN);
     data.high = _barHistory(0,BarDataType::HIGH);
     data.low = _barHistory(0,BarDataType::LOW);
