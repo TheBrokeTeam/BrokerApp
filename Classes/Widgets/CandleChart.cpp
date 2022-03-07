@@ -56,7 +56,7 @@ void CandleChart::render(float dt)
 
     _t1 = ImPlot::AddTime(_t2, ImPlotTimeUnit_Yr, -1);
 
-    const double candleWidth = _ticker->getSymbol()->getTimeIntervalInMinutes() * 60;
+    const double candleWidth = _ticker->getSymbol()->getTimeIntervalInSeconds();
 
     std::vector<float> ratios = calculateRatios();
 
@@ -106,7 +106,7 @@ void CandleChart::render(float dt)
             ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,
                               ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
             ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot],
-                                    dataHist.getData(BarDataType::TIME_S)[_lastIdxX],BarDataType::TIME_S);
+                                    dataHist.getData(BarDataType::TIME_S)[_lastIdxX], ImGuiCond_Once);
             ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
             ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 
@@ -118,7 +118,7 @@ void CandleChart::render(float dt)
 //            if simulating move the x axis
             if(getContext()->isSimulating()) {
                  _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
-                double barsInTime = numberOfBarsToRender * 60 * _ticker->getSymbol()->getTimeIntervalInMinutes();
+                double barsInTime = numberOfBarsToRender * _ticker->getSymbol()->getTimeIntervalInSeconds();
                 double currentTime = dataHist(0,BarDataType::TIME_S);
                 ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(currentTime - barsInTime, currentTime);
             }

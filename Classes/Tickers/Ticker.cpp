@@ -137,7 +137,7 @@ void Ticker::addTickable(Tickable *tickable) {
 
 void Ticker::setSymbol(const Symbol &symbol) {
     _symbol = symbol;
-    _zoomOutMax = _symbol.getTimeIntervalInMinutes()*_maxBarsToRender*60;
+    _zoomOutMax = _symbol.getTimeIntervalInSeconds()*_maxBarsToRender;
 }
 
 double Ticker::getZoomOutMax() {

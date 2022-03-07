@@ -17,11 +17,6 @@ Symbol::Symbol(const std::string &code, const std::string &interval, long startT
 }
 
 Symbol::Interval Symbol::stringToInterval(const std::string& value) {
-    if ( value == "1s" ) return Interval::Interval_1second;
-    if ( value == "5s" ) return Interval::Interval_5seconds;
-    if ( value == "10s" ) return Interval::Interval_10seconds;
-    if ( value == "15s" ) return Interval::Interval_15seconds;
-    if ( value == "30s" ) return Interval::Interval_30seconds;
     if ( value == "1m" ) return Interval::Interval_1Minute;
     if ( value == "3m" ) return Interval::Interval_3Minutes;
     if ( value == "5m" ) return Interval::Interval_5Minutes;
@@ -42,11 +37,6 @@ Symbol::Interval Symbol::stringToInterval(const std::string& value) {
 
 std::string Symbol::intervalToString() {
     switch (_interval) {
-        case Interval::Interval_1second:   return "1s";
-        case Interval::Interval_5seconds:   return "5s";
-        case Interval::Interval_10seconds:  return "10s";
-        case Interval::Interval_15seconds:  return "15s";
-        case Interval::Interval_30seconds:  return "30s";
         case Interval::Interval_1Minute:    return "1m";
         case Interval::Interval_3Minutes:   return "3m";
         case Interval::Interval_5Minutes:   return "5m";
@@ -92,7 +82,7 @@ const std::string& Symbol::getCode() const{
 }
 
 long Symbol::getTimeIntervalInMinutes() {
-    std::vector<int> intArr = {1,3,5,15,39,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
+    std::vector<int> intArr = {1,3,5,15,30,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
     return intArr[int(_interval)];
 }
 
@@ -136,11 +126,11 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
         TickData data_close;
 
         //converting ms to sec and add simulated time for the sub tick on the bars
-        double timeInSec = data_vec[rapidjson::SizeType(0)].GetDouble() / 1000.0;
+        double timeInSec = data_vec[rapidjson::SizeType(0)].GetDouble();
         data_open.time = timeInSec;
-        data_high.time = timeInSec + this->getTimeIntervalInMinutes() * 0.25 * 60;
-        data_low.time = timeInSec + this->getTimeIntervalInMinutes() * 0.5 * 60;
-        data_close.time = timeInSec + this->getTimeIntervalInMinutes() * 60 - 1;
+        data_high.time = timeInSec + this->getTimeIntervalInMiliSeconds() * 0.25;
+        data_low.time = timeInSec + this->getTimeIntervalInMiliSeconds() * 0.5;
+        data_close.time = timeInSec + this->getTimeIntervalInMiliSeconds() - 1;
 
         data_open.price = std::atof(data_vec[rapidjson::SizeType(1)].GetString());
         data_high.price = std::atof(data_vec[rapidjson::SizeType(2)].GetString());
@@ -180,7 +170,7 @@ std::vector<TickData> Symbol::loadCSV(Path filepath){
             TickData data_close;
 
             //converting ms to sec and add simulated time for the sub tick on the bars
-            double timeInSec = doc.GetCell<long>(0,i)/1000.0;
+            double timeInSec = doc.GetCell<long>(0,i);
             data_open.time  = timeInSec;
             data_high.time  = timeInSec + this->getTimeIntervalInMinutes()*0.25 * 60;
             data_low.time  = timeInSec + this->getTimeIntervalInMinutes()*0.5* 60;
@@ -285,7 +275,7 @@ std::vector<TickData> Symbol::fetchCSVData() {
 
     std::vector<TickData> matched;
     for (TickData &ref: data)
-        if (ref.time >= (getStartTime()/1000) && ref.time <= (getEndTime()/1000))
+        if (ref.time >= (getStartTime()) && ref.time <= (getEndTime()))
             matched.push_back(ref);
 
     std::cout << "Data: " << data.size() << " values." << std::endl;
@@ -307,12 +297,7 @@ long Symbol::getNextTimestampMonth(long ts) {
 
 long Symbol::getTimeIntervalInSeconds() {
     std::vector<long> intArr = {
-              1,
-              5,
-              10,
-              15,
-              30,
-              60*1,
+              60,
               60*3,
               60*5,
               60*15,
@@ -332,11 +317,6 @@ long Symbol::getTimeIntervalInSeconds() {
 }
 double Symbol::getTimeIntervalInMiliSeconds() {
     std::vector<long> intArr = {
-            1000*1,
-            1000*5,
-            1000*10,
-            1000*15,
-            1000*30,
             1000*60*1,
             1000*60*3,
             1000*60*5,

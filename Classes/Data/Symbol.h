@@ -22,11 +22,6 @@ public:
     explicit Symbol(const std::string& code, const std::string& interval, long startTime, long endTime);
 
     enum class Interval {
-        Interval_1second,
-        Interval_5seconds,
-        Interval_10seconds,
-        Interval_15seconds,
-        Interval_30seconds,
         Interval_1Minute,
         Interval_3Minutes,
         Interval_5Minutes,
