@@ -34,11 +34,10 @@ namespace olc::net {
                 // Start Context Thread
                 thrContext = std::thread([this]() { m_context.run(); });
 
-            } catch(std::exception& e) {
+            } catch(std::exception& e)
+            {
                 std::cerr << "Client Exception: " << e.what() << "\n";
-//                return false;
             }
-//            return true;
         }
 
         void Disconnect(){

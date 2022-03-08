@@ -9,6 +9,9 @@
 #include "WSMessage.h"
 #include "WSQueue.h"
 #include <fmt/format.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 enum class CustomMsgTypes : uint32_t {
     ServerAccept,
@@ -30,13 +33,10 @@ namespace olc::net {
     public:
         connection(asio::io_context& asioContext, asio::ip::tcp::socket socket, WSQueue<owned_message<T>>& qIn)
             : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn) {
-//                if(m_nOwnerType == owner::client){
-//                    m_handShakeOut = uint64_t(std::chrono::system_clock::now().time_since_epoch().count());
-//                    m_handShakeCheck = scramble(m_handShakeOut);
-//                } else {
-//                    m_handShakeIn = 0;
-//                    m_handShakeOut = 0;
-//                }
+
+            m_handShakeOut = uint64_t(std::chrono::system_clock::now().time_since_epoch().count());
+            m_handShakeCheck = scramble(m_handShakeOut);
+
         }
 
         virtual ~connection() {};
@@ -52,7 +52,7 @@ namespace olc::net {
             asio::async_connect(m_socket, endpoints, [this](std::error_code ec, const asio::ip::tcp::endpoint& endpoint)
             {
                 if (!ec) {
-                    std::cout << "Connected to the Server " << endpoint.address().to_string() << " : " << endpoint.port() << std::endl;
+                    std::cout << "Connected in Server on " << endpoint.port() << std::endl;
                     WriteValidation();
                 }
             });
@@ -236,8 +236,8 @@ namespace olc::net {
         uint64_t scramble(uint64_t nInput)
         {
             uint64_t value;
-            std::istringstream iss("dGhlIHNhbXBsZSBub25jZQ==");
-//            std::istringstream iss("258EAFA5-E914–47DA-95CA-C5AB0DC85B11");
+//            std::istringstream iss("dGhlIHNhbXBsZSBub25jZQ==");
+            std::istringstream iss("258EAFA5-E914–47DA-95CA-C5AB0DC85B11");
             iss >> value;
             uint64_t out = nInput - value;
             return out;
@@ -266,22 +266,19 @@ namespace olc::net {
                 {
                     if(!ec)
                     {
-                        std::cout << "Wrote the validation" << std::endl;
-
-                        //                            m_socket.wait(m_socket.wait_read);
-
-//                            m_socket.async_read_some(asio::buffer(vBuffer.data(), vBuffer.size()), [&](std::error_code ec, std::size_t length)
+                        m_socket.wait(m_socket.wait_read);
+//                        m_socket.async_read_some(asio::buffer(vBuffer.data(), vBuffer.size()), [&](std::error_code ec, std::size_t length)
+//                        {
+//                            if(!ec)
 //                            {
-//                                if(!ec)
-//                                {
-//                                    std::cout << "Read" << length << "bytes" << std::endl;
-//                                    for(int i=0; i< length; i++){
-//                                        std::cout << vBuffer[i];
-//                                    }
-//
+//                                std::cout << "Read" << length << "bytes" << std::endl;
+//                                for(int i=0; i< length; i++){
+//                                    std::cout << vBuffer[i];
 //                                }
-//                            });
-                        ReadHeader();
+//
+//                            }
+//                        });
+                        ReadValidation();
                     }
                     else
                     {
@@ -290,32 +287,23 @@ namespace olc::net {
                 });
         }
 
-//        void ReadValidation(olc::net::server_interface<T>* server = nullptr)
-//        {
-//            asio::async_read(m_socket, asio::buffer(&m_handShakeIn, sizeof(uint64_t)),
-//                [this, server](std::error_code ec, std::size_t length)
-//                {
-//                    if(!ec)
-//                    {
-//                        if(m_nOwnerType == owner::server)
-//                        {
-//                            if(m_handShakeIn == m_handShakeCheck) {
-//                                std::cout << "Client Validated" << std::endl;
-//                                server->onClientValidated(this->shared_from_this());
-//                                ReadHeader();
-//                            }
-//                        } else
-//                        {
-//                            m_handShakeOut = scramble(m_handShakeIn);
-//                            WriteValidation();
-//                        }
-//                    } else
-//                    {
-//                        std::cout << "Client Disconnected." << std::endl;
-//                        m_socket.close();
-//                    }
-//                });
-//        }
+        void ReadValidation(olc::net::server_interface<T>* server = nullptr)
+        {
+            asio::async_read(m_socket, asio::buffer(&m_handShakeIn, sizeof(uint64_t)),
+                [this, server](std::error_code ec, std::size_t length)
+                {
+                    if(!ec)
+                    {
+                        m_handShakeOut = scramble(m_handShakeIn);
+                        std::cout << "Client wait something." << std::endl;
+                        ReadHeader();
+                    } else
+                    {
+                        std::cout << "Client Disconnected." << std::endl;
+                        m_socket.close();
+                    }
+                });
+        }
 
 
 

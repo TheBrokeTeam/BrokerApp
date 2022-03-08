@@ -146,7 +146,7 @@ add_executable(BrokerApp
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
 		Classes/Networking/ws/WSClient.h
-		)
+        )
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -187,7 +187,7 @@ endif()
 #--END CURL----------------------------------------------------------------
 
 #--ASIO STUFF--------------------------------------------------------------
-set(Asio_INCLUDE_DIR external/asio-1.20.0/include)
+set(Asio_INCLUDE_DIR external/asio-1.22.0/include)
 
 #--END ASIO----------------------------------------------------------------
 

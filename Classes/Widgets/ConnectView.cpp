@@ -63,8 +63,8 @@ void ConnectView::updateVisible(float dt) {
         std::thread thrContext = std::thread([&](){ asioContext.run(); });
 
         asio::io_service io_service;
-        std::string const address = "wss://stream.binance.com";
-        int const port = 9443;
+        std::string const address = "localhost";
+        int const port = 3200;
 
         asio::ip::tcp::resolver resolver(io_service);
         asio::ip::tcp::resolver::query query(address, std::to_string(port), asio::ip::resolver_query_base::numeric_service);
@@ -112,7 +112,7 @@ void ConnectView::updateVisible(float dt) {
 //            using namespace std::chrono_literals;
 //            std::this_thread::sleep_for(30000ms);
 
-//            context.stop();
+//            thrContext.stop();
             if (thrContext.joinable())
                 thrContext.join();
         }
