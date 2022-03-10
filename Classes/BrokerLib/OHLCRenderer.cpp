@@ -29,7 +29,14 @@ void OHLCRenderer::onRender() {
     //auto renderInfo = getRenderInfo(_data->getTicker(),_data->getTime());
     const double candleWidth = _data->getTicker()->getSymbol()->getTimeIntervalInMinutes() * 60;
 
-    for (int i = _renderInterval.startIndex; i <= _renderInterval.startIndex + _renderInterval.size(); i++) {
+    if (ImPlot::FitThisFrame()) {
+        for (int i = _renderInterval.startIndex; i <= _renderInterval.endIndex; i++)  {
+            ImPlot::FitPoint(ImPlotPoint(_data->getData(BarDataType::TIME)[i], _data->getData(BarDataType::LOW)[i]));
+            ImPlot::FitPoint(ImPlotPoint(_data->getData(BarDataType::TIME)[i], _data->getData(BarDataType::HIGH)[i]));
+        }
+    }
+
+    for (int i = _renderInterval.startIndex; i <= _renderInterval.endIndex; i++) {
         ImU32 color = ImGui::GetColorU32(
                 _data->getData(BarDataType::OPEN)[i] > _data->getData(BarDataType::CLOSE)[i] ? BrokerColorsImgui::bear_color : BrokerColorsImgui::bull_color);
         ImVec2 openPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i] - candleWidth / 2,
@@ -53,7 +60,7 @@ void OHLCRenderer::onRender() {
 //    double maxX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max),
 //                                               _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
 //
-//    int lastIdx = dataHist.size() - 1;
+//    int lastIdx = _data->size() - 1;
 //    int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME).data(), 0, lastIdx, maxX);
 //    if (maxX_idx == -1)
 //        maxX_idx = lastIdx;

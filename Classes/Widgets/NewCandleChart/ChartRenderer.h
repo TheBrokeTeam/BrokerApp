@@ -38,8 +38,8 @@ public:
     int getLastIdxToPlot() const;
     void addPlotToChart(std::shared_ptr<SubplotRenderer> subplot);
     void removePlotFromChart(std::shared_ptr<SubplotRenderer> subplot);
-    const std::string &getName() const;
 
+    const char* getName() const;
     void setName(const std::string &name);
 
     Ticker *_ticker{nullptr};
@@ -75,7 +75,6 @@ private:
     bool _showTitle = false;
     ImPlotSubplotFlags _flags = ImPlotSubplotFlags_LinkCols;
 
-    const char* getTitle(std::string name) const;
 };
 
 

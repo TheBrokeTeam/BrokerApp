@@ -13,13 +13,12 @@
 MainSubplotRenderer::MainSubplotRenderer(Ticker* ticker) : SubplotRenderer(ticker) {
     _title = "OHLC";
     setFlags(ImPlotFlags_NoMenus);
-    addOHLCItem();
 }
 
-void MainSubplotRenderer::addOHLCItem() {//Add OHLC Item
-    std::__1::shared_ptr<OHLCData> ohlc = std::__1::make_unique<OHLCData>(_ticker);
-    ohlc->setPriority(1);
-    std::__1::shared_ptr<OHLCRenderer> ohlcR = std::__1::make_unique<OHLCRenderer>(_ticker->getContext(), ohlc.get());
+void MainSubplotRenderer::addOHLCItem(OHLCData* ohlcData) {//Add OHLC Item
+//    std::__1::shared_ptr<OHLCData> ohlc = std::__1::make_unique<OHLCData>(_ticker);
+//    ohlc->setPriority(1);
+    std::__1::shared_ptr<OHLCRenderer> ohlcR = std::__1::make_unique<OHLCRenderer>(_ticker->getContext(), ohlcData);
     items.push_back(ohlcR);
 }
 
@@ -44,10 +43,10 @@ void MainSubplotRenderer::onSetupPlot() {
 //    auto renderInfo = DataSeriesRenderer::getRenderInfo(_ticker,_ticker->getBarHistory()->getData(BarDataType::TIME));
 
 
-    ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,
+    ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,
                       ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[0],
-                            dataHist.getData(BarDataType::TIME)[1000]);
+    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[_renderInterval.startIndex],
+                            dataHist.getData(BarDataType::TIME)[_renderInterval.endIndex]);
     ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
     ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 //    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[renderInfo.startIndex],

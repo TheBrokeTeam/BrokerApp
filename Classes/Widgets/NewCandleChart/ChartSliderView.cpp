@@ -7,6 +7,7 @@
 
 ChartSliderView::ChartSliderView(Context *context) : Widget(context) {
     _title = "Chart Slider";
+    _is_window = false;
 }
 
 void ChartSliderView::updateVisible(float dt) {

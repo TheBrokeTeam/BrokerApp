@@ -8,5 +8,17 @@
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot_demos/build/_deps/fmt-src" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot_demos/build/_deps/glfw-src" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/DemoImplot/implot_demos/build/_deps/iir-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/eventBus" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/fmt" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/glad" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/glfw" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/imgui" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/implot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/miniz-cpp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/nativefiledialog-extended" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/node_editor" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/rapidcsv" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/rapidjson" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/stb" vcs="Git" />
   </component>
 </project>

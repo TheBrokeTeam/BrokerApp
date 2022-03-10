@@ -6,7 +6,7 @@
 #define BROKERAPP_MAINSUBPLOTRENDERER_H
 
 #include "SubplotRenderer.h"
-
+#include "OHLCData.h"
 
 //#define dataHist (*_ticker->getBarHistory())
 
@@ -14,6 +14,7 @@ class MainSubplotRenderer: public SubplotRenderer {
 
 public:
     explicit MainSubplotRenderer(Ticker *ticker);
+    void addOHLCItem(OHLCData* ohlcData);
 
 private:
 
@@ -21,7 +22,6 @@ private:
     void onSetupPlot() override;
     void onPostRender() override;
 
-    void addOHLCItem();
 };
 
 

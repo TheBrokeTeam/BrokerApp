@@ -24,7 +24,7 @@ public:
     void onPushStyleVar() override;
     void render();
 private:
-    ChartSliderDelegate *_delegate;
+    ChartSliderDelegate *_delegate{nullptr};
     float _positionValue = 1;
 };
 

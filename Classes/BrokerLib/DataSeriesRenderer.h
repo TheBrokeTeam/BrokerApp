@@ -38,7 +38,7 @@ public:
 
     virtual void popupRender() = 0;
     void render();
-    void setDragDropCallback(const DragDropCallback &dragDropCallback);
+    void setDragDropCallback(const DragDropCallback &dragDropCallback); //LV: ver isso aqui
     bool getIsSubplot();
     void setIsSubplot(bool isSubplot);
     static IndicatorRendererInfo getRenderInfo(Ticker* ticker, const std::vector<double>& timeArr);

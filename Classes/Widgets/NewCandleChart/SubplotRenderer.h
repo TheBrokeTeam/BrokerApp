@@ -17,13 +17,17 @@ class SubplotRendererDelegate;
 class SubplotRenderer {
 public:
     std::vector<std::shared_ptr<DataSeriesRenderer>> items;
+
     SubplotRendererDelegate *delegate;
     explicit SubplotRenderer(Ticker *ticker);
+
     void addItemToPlot(std::shared_ptr<DataSeriesRenderer> item);
     void removeItemFromPlot(std::shared_ptr<DataSeriesRenderer> item);
 
     void render();
     const char* getTitle(std::string name) const;
+
+    void setTitle(const std::string &name);
 
 
     ImPlotSubplotFlags getFlags() const;

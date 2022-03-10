@@ -12,5 +12,8 @@ void OHLCData::calculate(BarHistory* barHistory)
     push((*barHistory)(0,BarDataType::HIGH), BarDataType::HIGH);
     push((*barHistory)(0,BarDataType::LOW), BarDataType::LOW);
     push((*barHistory)(0,BarDataType::CLOSE), BarDataType::CLOSE);
-        _time.push_back((*barHistory)(0,BarDataType::TIME));
+    push((*barHistory)(0,BarDataType::TIME), BarDataType::TIME);
+    push((*barHistory)(0,BarDataType::VOLUME), BarDataType::VOLUME);
+
+    _time.push_back((*barHistory)(0,BarDataType::TIME));
 }

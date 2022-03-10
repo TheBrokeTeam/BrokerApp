@@ -9,12 +9,14 @@
 MainChartRenderer::MainChartRenderer(Ticker *ticker): ChartRenderer(ticker) {
     setName("MainChart");
     addPlotToChart(createMainSubplot());
-    //addPlotToChart(createVolumeSubplot());
+//    addPlotToChart(createVolumeSubplot());
 }
 
 std::shared_ptr<SubplotRenderer> MainChartRenderer::createMainSubplot() {
     std::shared_ptr<MainSubplotRenderer> subplotRenderer = std::make_unique<MainSubplotRenderer>(_ticker);
-
+    OHLCData* data = _ticker->getContext()->getDataManager()->createOLHCData(_ticker);
+    data->setPriority(1);
+    subplotRenderer->addOHLCItem(data);
     return subplotRenderer;
 }
 

@@ -7,7 +7,7 @@
 
 #include "IndicatorData.h"
 
-class OHLCData : public IndicatorData<double, 4> {
+class OHLCData : public IndicatorData<double, 6> {
 public:
     explicit OHLCData(Ticker *ticker);
 

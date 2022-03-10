@@ -16,7 +16,7 @@ bool SubplotRenderer::onBeginRender() {
 }
 
 const char* SubplotRenderer::getTitle(std::string name) const {
-    return (_showTitle ? "" + name : "##" + name).c_str();
+    return _title.c_str();
 }
 
 void SubplotRenderer::onEndRender() {
@@ -77,5 +77,9 @@ void SubplotRenderer::updateRenderInterval(int startIndex, int endIndex) {
     for (auto& i : items) {
         i->updateRenderInterval(startIndex, endIndex);
     }
+}
+
+void SubplotRenderer::setTitle(const std::string &name) {
+    _title = (_showTitle ? "" + name : "##" + name);
 }
 

@@ -26,7 +26,7 @@ public:
 
 protected:
     float _lineWidth = 2.0f;
-    OHLCData* _data{};
+    OHLCData* _data{nullptr};
 };
 
 

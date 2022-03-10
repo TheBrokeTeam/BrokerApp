@@ -10,7 +10,7 @@ NewChartView::NewChartView(Context *context) : Widget(context)
     _title                  = "New Chart View";
     _is_window              = true;
 
-    addSlider();
+//    addSlider();
 }
 
 void NewChartView::updateVisible(float dt) {

@@ -19,8 +19,8 @@ public:
     bool onPreRender() override;
     void onPostRender() override;
     void popupRender() override;
-    virtual void onRender() = 0;
-    virtual void onPopupRender() = 0;
+//    virtual void onRender() = 0;
+//    virtual void onPopupRender() = 0;
 protected:
     const ImVec4& getColor(); //imgui
     void setColor(ImVec4& color); //imgui

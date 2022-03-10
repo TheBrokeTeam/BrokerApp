@@ -49,10 +49,6 @@ void ChartRenderer::removePlotFromChart(std::shared_ptr<SubplotRenderer> subplot
 }
 
 
-const char* ChartRenderer::getTitle(std::string name) const {
-    return ((_showTitle ? "" : "##") + name).c_str();
-}
-
 ImPlotSubplotFlags ChartRenderer::getFlags() const {
     return _flags;
 }
@@ -83,7 +79,7 @@ void ChartRenderer::onPreRender() {
 
 
 bool ChartRenderer::onBeginRender() {
-    return  ImPlot::BeginSubplots(getTitle(_name) , _maxSubplots, 1, ImVec2(-1, -1), _flags, calculateRatios().data());
+    return  ImPlot::BeginSubplots(getName() , _maxSubplots, 1, ImVec2(-1, -1), _flags, calculateRatios().data());
 }
 
 void ChartRenderer::onRender() {
@@ -99,12 +95,12 @@ void ChartRenderer::onEndRender() {
 
 void ChartRenderer::onPostRender() {}
 
-const std::string &ChartRenderer::getName() const {
-    return _name;
+const char *ChartRenderer::getName() const {
+    return _name.c_str();
 }
 
 void ChartRenderer::setName(const std::string &name) {
-    _name = name;
+    _name = ((_showTitle ? "" : "##") + name);
 }
 
 void ChartRenderer::setDelegate(ChartRendererDelegate *delegate) {
@@ -130,4 +126,5 @@ void ChartRenderer::subplotDidScroll(int startIndex, int endIndex, SubplotRender
 
     }
 }
+
 
