@@ -82,7 +82,7 @@ const std::string& Symbol::getCode(){
 }
 
 long Symbol::getTimeIntervalInMinutes() {
-    std::vector<int> intArr = {1,3,5,15,39,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
+    std::vector<int> intArr = {1,3,5,15,30,60,60*2,60*4,60*6,60*8,60*12,60*24,60*24*3,60*24*7,60*24*30};
     return intArr[int(_interval)];
 }
 
