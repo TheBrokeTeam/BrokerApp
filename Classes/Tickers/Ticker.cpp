@@ -52,8 +52,8 @@ void Ticker::tick(const TickData& tickData) {
     }
 
     //check if it is the close moment based on symbol interval (open time + bar's duration)
-    long lastSecondOfCurrentBar = _barHistory(0,BarDataType::TIME_MS) + _symbol.getTimeIntervalInMiliSeconds() - 1;
-    if(lastSecondOfCurrentBar <= (tickData.time)){
+    long lastTimeOfCurrentBar = _barHistory(0,BarDataType::TIME_MS) + _symbol.getTimeIntervalInMiliSeconds() - 1;
+    if(lastTimeOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
         return;
