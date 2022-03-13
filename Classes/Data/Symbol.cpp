@@ -128,9 +128,9 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
         //converting ms to sec and add simulated time for the sub tick on the bars
         double timeInSec = data_vec[rapidjson::SizeType(0)].GetDouble();
         data_open.time = timeInSec;
-        data_high.time = timeInSec + this->getTimeIntervalInMiliSeconds() * 0.25;
-        data_low.time = timeInSec + this->getTimeIntervalInMiliSeconds() * 0.5;
-        data_close.time = timeInSec + this->getTimeIntervalInMiliSeconds() - 1;
+        data_high.time  = timeInSec + 20000;//simulate 20 sec after
+        data_low.time  = timeInSec + 40000;//simulate 40 sec after
+        data_close.time  = timeInSec + this->getTimeIntervalInMiliSeconds() - 1000;//simulate 59 sec before
 
         data_open.price = std::atof(data_vec[rapidjson::SizeType(1)].GetString());
         data_high.price = std::atof(data_vec[rapidjson::SizeType(2)].GetString());
@@ -170,11 +170,11 @@ std::vector<TickData> Symbol::loadCSV(Path filepath){
             TickData data_close;
 
             //converting ms to sec and add simulated time for the sub tick on the bars
-            double timeInSec = doc.GetCell<long>(0,i);
-            data_open.time  = timeInSec;
-            data_high.time  = timeInSec + this->getTimeIntervalInMinutes()*0.25 * 60;
-            data_low.time  = timeInSec + this->getTimeIntervalInMinutes()*0.5* 60;
-            data_close.time  = timeInSec + this->getTimeIntervalInMinutes()*60 - 1;
+            double timeInSec = doc.GetCell<double>(0,i);
+            data_open.time   = timeInSec;
+            data_high.time   = timeInSec + 20000;//simulate 20 sec after
+            data_low.time    = timeInSec + 40000;//simulate 40 sec after
+            data_close.time  = timeInSec + this->getTimeIntervalInMiliSeconds();//simulate 59 sec before
 
             data_open.price = doc.GetCell<double>(1,i);
             data_high.price = doc.GetCell<double>(2,i);

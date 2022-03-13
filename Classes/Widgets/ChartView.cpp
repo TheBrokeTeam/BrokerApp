@@ -16,8 +16,8 @@ void ChartView::updateVisible(float dt) {
     if(_chart != nullptr)
         _chart->updateVisible(dt);
 
-    if(_liveChart != nullptr)
-        _liveChart->updateVisible(dt);
+//    if(_liveChart != nullptr)
+//        _liveChart->updateVisible(dt);
 }
 
 void ChartView::addChart(std::shared_ptr<CandleChart> candleChart){
