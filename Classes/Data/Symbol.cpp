@@ -130,7 +130,7 @@ std::vector<TickData> Symbol::loadJson(const rapidjson::Document& json) {
         data_open.time = timeInSec;
         data_high.time  = timeInSec + 20000;//simulate 20 sec after
         data_low.time  = timeInSec + 40000;//simulate 40 sec after
-        data_close.time  = timeInSec + this->getTimeIntervalInMiliSeconds() - 1000;//simulate 59 sec before
+        data_close.time  = timeInSec + this->getTimeIntervalInMiliSeconds();//simulate 60 sec before
 
         data_open.price = std::atof(data_vec[rapidjson::SizeType(1)].GetString());
         data_high.price = std::atof(data_vec[rapidjson::SizeType(2)].GetString());
@@ -174,7 +174,7 @@ std::vector<TickData> Symbol::loadCSV(Path filepath){
             data_open.time   = timeInSec;
             data_high.time   = timeInSec + 20000;//simulate 20 sec after
             data_low.time    = timeInSec + 40000;//simulate 40 sec after
-            data_close.time  = timeInSec + this->getTimeIntervalInMiliSeconds();//simulate 59 sec before
+            data_close.time  = timeInSec + this->getTimeIntervalInMiliSeconds();//simulate 60 sec before
 
             data_open.price = doc.GetCell<double>(1,i);
             data_high.price = doc.GetCell<double>(2,i);
