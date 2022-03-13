@@ -36,7 +36,7 @@ void Bollinger::calculate(BarHistory* barHistory)
         push(mid, BollingerDataType::MID);
         push(top, BollingerDataType::TOP);
 
-        _time.push_back((*barHistory)(0,BarDataType::TIME));
+        _time.push_back((*barHistory)(0,BarDataType::TIME_S));
     }
 }
 

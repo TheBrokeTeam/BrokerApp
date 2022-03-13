@@ -10,6 +10,7 @@
 #include "SubWidgets/Spinner.h"
 #include "SubWidgets/BufferingBar.h"
 #include <iostream>
+#include <thread>
 
 DownloaderView::DownloaderView(Context* context) : Widget(context)
 {

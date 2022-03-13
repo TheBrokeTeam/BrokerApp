@@ -45,6 +45,7 @@ public:
     bool removeTickable(Tickable *tickable);
 
     void tick(const TickData &tickData);
+    void liveTick(const TickData &tickData);
 
     void setSymbol(const Symbol& symbol);
     Symbol* getSymbol();
@@ -67,7 +68,6 @@ public:
 private:
     double _zoomOutMax;
     int _maxBarsToRender = 1000;
-
 
     TickerRenderRange _range{0, 0};
     void open(const TickData &tickData);

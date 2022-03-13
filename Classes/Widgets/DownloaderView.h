@@ -4,10 +4,7 @@
 
 #ifndef BROKERAPP_DOWNLOADERVIEW_H
 #define BROKERAPP_DOWNLOADERVIEW_H
-
-
 #include "Widget.h"
-#include <thread>
 
 class DownloaderView : public Widget
 {

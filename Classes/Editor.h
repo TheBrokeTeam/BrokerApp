@@ -13,6 +13,18 @@
 class Ticker;
 class Editor : public App {
 public:
+    enum class ContextType{
+        None,
+        BackTesting,
+        LiveTrade
+    };
+
+    inline static bool showAboutWindow         = false;
+    inline static bool show_tabbars         = false;
+    inline static bool imgui_metrics         = false;
+    inline static bool imgui_style           = false;
+    inline static bool imgui_demo            = false;
+    inline static bool implot_demo            = false;
 
     inline static const ImVec4 broker_yellow = ImVec4(255.0f/255, 191.0f/255,64.0f/255, 1.00f);
     inline static const ImVec4 broker_yellow_active = ImVec4(153.0f/255, 102.0f/255,0.0f/255, 1.00f);
@@ -65,9 +77,17 @@ public:
     virtual ~Editor();
     void start() override;
     void update() override;
-
     void showDockSpace();
+
+    const Editor::ContextType& getContextType();
+    void loadContext(ContextType type);
+
 private:
+    void internalLoadContext();
+    bool shouldReloadContext = false;
+    ContextType _nextContextType;
+
+    ContextType _contextType;
     //delta time helpers
     float _lastTime = 0;
     float getDeltaTime();

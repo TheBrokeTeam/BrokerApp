@@ -27,16 +27,22 @@ public:
     bool startSpinner = false;
     virtual void loadTicker() = 0;
     virtual void updateData(float dt);
-    virtual void startSimulation(Ticker* ticker) = 0;
-    virtual void setSimulationSpeed(float speed) = 0;
-    virtual bool isSimulating()  = 0;
+    virtual void startSimulation(Ticker* ticker){};
+    virtual void setSimulationSpeed(float speed){};
+    virtual bool isSimulating(){return false;};
+
+    virtual double getCurrentTimeStamp() = 0 ;
 
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 
     virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false) = 0;
-    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) = 0;
-    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) = 0;
+    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator){
+        return nullptr;
+    };
+    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) {
+        return nullptr;
+    };
 
     virtual void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) = 0;
     virtual void removeAllIndicators() = 0;
@@ -44,7 +50,7 @@ public:
 
     virtual void plotIndicators() = 0;
     virtual void plotSubplotIndicators() = 0;
-    virtual void plotStrategy() = 0;
+    virtual void plotStrategy(){};
     virtual void handleDragDrop(PlotItem *plotItem) = 0;
 
     int getSubplotIndicatorsCount(){
@@ -102,6 +108,9 @@ public:
 
     bool getShouldRender();
     void setShouldRender(bool);
+    virtual void openSymbolStream(const Symbol& symbol){};
+    virtual void closeSymbolStream(const Symbol& symbol){};
+
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;

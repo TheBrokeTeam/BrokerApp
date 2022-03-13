@@ -12,12 +12,24 @@
 #include "ProfitAndLossesView.h"
 #include "StockList.h"
 #include "StrategyEditor.h"
+#include "SocketStreamController.h"
 #include <fmt/format.h>
+#include "../Contexts/BackTestingContext.h"
+#include "../Contexts/LiveContext.h"
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
 {
     _title                  = "MainMenuBar";
     _is_window              = false;
+
+    if (dynamic_cast<BackTestingContext*>(context) != nullptr)
+    {
+        std::cout << "Is backtest" << std::endl;
+    }
+    else if (dynamic_cast<LiveContext*>(context) != nullptr)
+    {
+        std::cout << "Is live" << std::endl;
+    }
 }
 
 void MainMenuBar::updateAlways(float dt)
@@ -41,21 +53,46 @@ void MainMenuBar::updateAlways(float dt)
 
         if (ImGui::BeginMenu("View"))
         {
-            if (ImGui::MenuItem("Data downloader", "CTRL+D",&(getContext()->getWidget<DownloaderView>()->GetVisible()))){}
-            if (ImGui::MenuItem("Simulator", "CTRL+S",&(getContext()->getWidget<SimulationController>()->GetVisible()))){}
-            if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
-            if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
-            if (ImGui::MenuItem("Strategy View", "",&(getContext()->getWidget<StrategyEditor>()->GetVisible()))){}
+            auto contextType = getContext()->getEditor()->getContextType();
 
-            if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
-            if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
+            switch (contextType) {
+                case  Editor::ContextType::LiveTrade:
+                    showLiveContextViews();
+                    break;
+                case  Editor::ContextType::BackTesting:
+                    showBacktestContextViews();
+                    break;
+                case Editor::ContextType::None:
+                default:
+                    assert(false && "Broker app context not set!");
+                    break;
+            }
 
+            ImGui::EndMenu();
+        }
 
-            ImGui::MenuItem("ImGui Metrics", nullptr, &_imgui_metrics);
-            ImGui::MenuItem("ImGui Style",   nullptr, &_imgui_style);
-            ImGui::MenuItem("ImGui Demo",    nullptr, &_imgui_demo);
-            ImGui::MenuItem("ImPlot Demo",    nullptr, &_implot_demo);
-            ImGui::MenuItem("Show tabbars on views", "", &_show_tabbars);
+        if (ImGui::BeginMenu("Context"))
+        {
+            if (ImGui::MenuItem("Live trade")) {
+                getContext()->getEditor()->loadContext(Editor::ContextType::LiveTrade);
+            }
+
+            if (ImGui::MenuItem("Backtesting")) {
+                getContext()->getEditor()->loadContext(Editor::ContextType::BackTesting);
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Help"))
+        {
+            ImGui::MenuItem("About", nullptr, &Editor::showAboutWindow);
+
+            ImGui::MenuItem("ImGui Metrics", nullptr,       &Editor::imgui_metrics);
+            ImGui::MenuItem("ImGui Style",   nullptr,       &Editor::imgui_style);
+            ImGui::MenuItem("ImGui Demo",    nullptr,       &Editor::imgui_demo);
+            ImGui::MenuItem("ImPlot Demo",    nullptr,      &Editor::implot_demo);
+            ImGui::MenuItem("Show tabbars on views", "",    &Editor::show_tabbars);
 
             static int ui_num = 1;
             if(ImGui::Button("Save UI")){
@@ -65,39 +102,33 @@ void MainMenuBar::updateAlways(float dt)
 
             ImGui::EndMenu();
         }
-
-        if (ImGui::BeginMenu("Help"))
-        {
-            ImGui::MenuItem("About", nullptr, &_showAboutWindow);
-            ImGui::EndMenu();
-        }
         ImGui::EndMainMenuBar();
     }
 
     //TODO:: remove this on release
     //update editor develop function
-    getContext()->showTabBars(_show_tabbars);
+    getContext()->showTabBars(Editor::show_tabbars);
 
-    if (_imgui_metrics)
+    if (Editor::imgui_metrics)
     {
         ImGui::ShowMetricsWindow();
     }
 
-    if (_imgui_style)
+    if (Editor::imgui_style)
     {
         ImGui::Begin("Style Editor", nullptr, ImGuiWindowFlags_NoDocking);
         ImGui::ShowStyleEditor();
         ImGui::End();
     }
 
-    if (_imgui_demo)
+    if (Editor::imgui_demo)
     {
-        ImGui::ShowDemoWindow(&_imgui_demo);
+        ImGui::ShowDemoWindow(&Editor::imgui_demo);
     }
 
-    if (_implot_demo)
+    if (Editor::implot_demo)
     {
-        ImPlot::ShowDemoWindow(&_implot_demo);
+        ImPlot::ShowDemoWindow(&Editor::implot_demo);
     }
 }
 
@@ -111,5 +142,24 @@ void MainMenuBar::onShow() {
 
 void MainMenuBar::onHide() {
     puts("onHide");
+}
+
+void MainMenuBar::showBacktestContextViews()
+{
+    if (ImGui::MenuItem("Data downloader", "CTRL+D",&(getContext()->getWidget<DownloaderView>()->GetVisible()))){}
+    if (ImGui::MenuItem("Simulator", "CTRL+S",&(getContext()->getWidget<SimulationController>()->GetVisible()))){}
+    if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
+    if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
+    if (ImGui::MenuItem("Strategy View", "",&(getContext()->getWidget<StrategyEditor>()->GetVisible()))){}
+
+    if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
+    if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
+}
+
+void MainMenuBar::showLiveContextViews() {
+
+    if (ImGui::MenuItem("Stream controller", "CTRL+D",&(getContext()->getWidget<SocketStreamController>()->GetVisible()))){}
+    if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
+    if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
 }
 

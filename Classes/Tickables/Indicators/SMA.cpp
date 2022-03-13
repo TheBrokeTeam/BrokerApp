@@ -20,7 +20,7 @@ void SMA::calculate(BarHistory* barHistory)
             value += (*barHistory)(i,BarDataType::CLOSE);
 
         push(value / _averageSize);
-        _time.push_back((*barHistory)(0,BarDataType::TIME));
+        _time.push_back((*barHistory)(0,BarDataType::TIME_S));
     }
 }
 

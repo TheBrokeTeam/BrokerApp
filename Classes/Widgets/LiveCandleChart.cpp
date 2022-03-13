@@ -1,15 +1,15 @@
 //
-// Created by Arthur Abel Motelevicz on 23/12/21.
+// Created by Arthur Abel Motelevicz on 06/02/22.
 //
 
-#include "CandleChart.h"
+#include "LiveCandleChart.h"
 #include "../Editor.h"
 #include <fmt/format.h>
 #include "iostream"
 
 #define dataHist (*_ticker->getBarHistory())
 
-CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
+LiveCandleChart::LiveCandleChart(Context* context, Ticker* ticker) : Widget(context)
 {
     _title                  = "Candle ChartView";
     _is_window              = false;
@@ -21,12 +21,12 @@ CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
     _lastIdxX = _ticker->getBarHistory()->size() - 1;
 }
 
-void CandleChart::updateVisible(float dt) {
+void LiveCandleChart::updateVisible(float dt) {
     Widget::updateVisible(dt);
     render(dt);
 }
 
-std::vector<float> CandleChart::calculateRatios() {
+std::vector<float> LiveCandleChart::calculateRatios() {
 
     std::vector<float> ratios;
 
@@ -45,7 +45,7 @@ std::vector<float> CandleChart::calculateRatios() {
     return ratios;
 }
 
-void CandleChart::render(float dt)
+void LiveCandleChart::render(float dt)
 {
     if(!getContext()->getShouldRender()) return;
     if(_ticker->getBarHistory()->size() <= 0) return;
@@ -106,7 +106,7 @@ void CandleChart::render(float dt)
             ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time|ImPlotAxisFlags_NoTickLabels,
                               ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
             ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot],
-                                    dataHist.getData(BarDataType::TIME_S)[_lastIdxX], 0);
+                                    dataHist.getData(BarDataType::TIME_S)[_lastIdxX],ImGuiCond_Once);
             ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
             ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 
@@ -117,7 +117,7 @@ void CandleChart::render(float dt)
 
 //            if simulating move the x axis
             if(getContext()->isSimulating()) {
-                 _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
+                _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
                 double barsInTime = numberOfBarsToRender * _ticker->getSymbol()->getTimeIntervalInSeconds();
                 double currentTime = dataHist(0,BarDataType::TIME_S);
                 ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(currentTime - barsInTime, currentTime);
@@ -151,11 +151,13 @@ void CandleChart::render(float dt)
                 //plot tag at the last candle on screen
                 ImPlotRect bnds = ImPlot::GetPlotLimits();
 //                        double x = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_Hr).ToDouble();
-                double minX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Min), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
-                double maxX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+//                double minX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Min), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+//                double maxX = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(bnds.X.Max), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+                double minX = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Min), ImPlotTimeUnit_S).ToDouble();
+                double maxX = ImPlot::RoundTime(ImPlotTime::FromDouble(bnds.X.Max), ImPlotTimeUnit_S).ToDouble();
 
                 int lastIdx = dataHist.size() - 1;
-                int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME_S).data(), 0, lastIdx, maxX);
+                int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME_S).data(), 0, lastIdx, maxX*1000);
                 if (maxX_idx == -1)
                     maxX_idx = lastIdx;
 
@@ -175,8 +177,11 @@ void CandleChart::render(float dt)
                 //######################################
 
 
-                double close_val = dataHist.getData(BarDataType::CLOSE)[maxX_idx];
-                double open_val =  dataHist.getData(BarDataType::OPEN)[maxX_idx];
+//                double close_val = dataHist.getData(BarDataType::CLOSE)[maxX_idx];
+//                double open_val =  dataHist.getData(BarDataType::OPEN)[maxX_idx];
+
+                double close_val = dataHist.getData(BarDataType::CLOSE).back();
+                double open_val =  dataHist.getData(BarDataType::OPEN).back();
 
                 ImPlot::TagY(close_val, open_val < close_val ? bull_color : bear_color);
 
@@ -244,55 +249,55 @@ void CandleChart::render(float dt)
         //plot different views indicators
         getContext()->plotSubplotIndicators();
 
-        if (ImPlot::BeginPlot("##Volume")) {
-
-            ImDrawList* drawList =  ImPlot::GetPlotDrawList();
-
-            ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-            ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot], dataHist.getData(BarDataType::TIME_S)[_lastIdxX],0);
-            ImPlot::SetupAxisFormat(ImAxis_Y1, PlotHelper::VolumeFormatter);
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
-
-
-            auto color = ImVec4(1.f,0.75f,0.25f,1);
-            ImPlot::SetNextFillStyle(color);
-            int plotSize = _lastIdxX - lastIdxToPlot + 1;
-            ImPlot::PlotBars("Volume",&dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot],&dataHist.getData(BarDataType::VOLUME)[lastIdxToPlot],plotSize, candleWidth*0.5);
-
-            //TICKER TOOL TIP ##################
-            const bool hovered = ImPlot::IsSubplotsHovered();
-            if (hovered) {
-                ImPlotPoint mouse   = ImPlot::GetPlotMousePos();
-                mouse.x             = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(mouse.x), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
-                //vertical line
-                float  tool_l       = ImPlot::PlotToPixels(mouse.x - candleWidth/2, mouse.y).x;
-                float  tool_r       = ImPlot::PlotToPixels(mouse.x + candleWidth/2, mouse.y).x;
-                float  tool_t       = ImPlot::GetPlotPos().y;
-                float  tool_b       = tool_t + ImPlot::GetPlotSize().y;
-                ImPlot::PushPlotClipRect();
-                drawList->AddRectFilled(ImVec2(tool_l, tool_t), ImVec2(tool_r, tool_b), IM_COL32(128,128,128,64));
-                ImPlot::PopPlotClipRect();
-
-                // find mouse location index
-                int idx = PlotHelper::BinarySearch(dataHist.getData(BarDataType::TIME_S).data(), 0, dataHist.size(), mouse.x);
-
-                // render tool tip (won't be affected by plot clip rect)
-                if (ImPlot::IsPlotHovered() && idx != -1) {
-                    ImGui::BeginTooltip();
-                    char buff[32];
-                    ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist.getData(BarDataType::TIME_S)[idx]),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
-                    ImGui::Text("Date:");   ImGui::SameLine(60); ImGui::Text("%s",  buff);
-                    ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::OPEN)[idx]);
-                    ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::CLOSE)[idx]);
-                    ImGui::Text("High:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::HIGH)[idx]);
-                    ImGui::Text("Low:");    ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::LOW)[idx]);
-                    ImGui::Text("Volume:"); ImGui::SameLine(60); ImGui::Text(fmt::format(std::locale("en_US.UTF-8"),"{:L}", (int)(dataHist.getData(BarDataType::VOLUME)[idx])).c_str());
-                    ImGui::EndTooltip();
-                }
-            }
-            //#################################
-            ImPlot::EndPlot();
-        }
+//        if (ImPlot::BeginPlot("##Volume")) {
+//
+//            ImDrawList* drawList =  ImPlot::GetPlotDrawList();
+//
+//            ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
+//            ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot], dataHist.getData(BarDataType::TIME_S)[_lastIdxX],BarDataType::TIME_S);
+//            ImPlot::SetupAxisFormat(ImAxis_Y1, PlotHelper::VolumeFormatter);
+//            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
+//
+//
+//            auto color = ImVec4(1.f,0.75f,0.25f,1);
+//            ImPlot::SetNextFillStyle(color);
+//            int plotSize = _lastIdxX - lastIdxToPlot + 1;
+//            ImPlot::PlotBars("Volume",&dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot],&dataHist.getData(BarDataType::VOLUME)[lastIdxToPlot],plotSize, candleWidth*0.5);
+//
+////            //TICKER TOOL TIP ##################
+////            const bool hovered = ImPlot::IsSubplotsHovered();
+////            if (hovered) {
+////                ImPlotPoint mouse   = ImPlot::GetPlotMousePos();
+////                mouse.x             = PlotHelper::RoundTimeMinutes(ImPlotTime::FromDouble(mouse.x), _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
+////                //vertical line
+////                float  tool_l       = ImPlot::PlotToPixels(mouse.x - candleWidth/2, mouse.y).x;
+////                float  tool_r       = ImPlot::PlotToPixels(mouse.x + candleWidth/2, mouse.y).x;
+////                float  tool_t       = ImPlot::GetPlotPos().y;
+////                float  tool_b       = tool_t + ImPlot::GetPlotSize().y;
+////                ImPlot::PushPlotClipRect();
+////                drawList->AddRectFilled(ImVec2(tool_l, tool_t), ImVec2(tool_r, tool_b), IM_COL32(128,128,128,64));
+////                ImPlot::PopPlotClipRect();
+////
+////                // find mouse location index
+////                int idx = PlotHelper::BinarySearch(dataHist.getData(BarDataType::TIME_S).data(), 0, dataHist.size(), mouse.x);
+////
+////                // render tool tip (won't be affected by plot clip rect)
+////                if (ImPlot::IsPlotHovered() && idx != -1) {
+////                    ImGui::BeginTooltip();
+////                    char buff[32];
+////                    ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist.getData(BarDataType::TIME_S)[idx]),buff,32,ImPlotDateFmt_DayMoYr,ImPlot::GetStyle().UseISO8601);
+////                    ImGui::Text("Date:");   ImGui::SameLine(60); ImGui::Text("%s",  buff);
+////                    ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::OPEN)[idx]);
+////                    ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::CLOSE)[idx]);
+////                    ImGui::Text("High:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::HIGH)[idx]);
+////                    ImGui::Text("Low:");    ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(BarDataType::LOW)[idx]);
+////                    ImGui::Text("Volume:"); ImGui::SameLine(60); ImGui::Text(fmt::format(std::locale("en_US.UTF-8"),"{:L}", (int)(dataHist.getData(BarDataType::VOLUME)[idx])).c_str());
+////                    ImGui::EndTooltip();
+////                }
+////            }
+//            //#################################
+//            ImPlot::EndPlot();
+//        }
 
         ImPlot::EndSubplots();
     }

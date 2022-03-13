@@ -8,7 +8,7 @@
 #include <vector>
 #include "BarData.h"
 #include "ReversedData.h"
-class BarHistory : public ReversedData<double,6>{
+class BarHistory : public ReversedData<double,7>{
 public:
     void append(const BarData& data);
     void updateLastBar(const BarData& barData);

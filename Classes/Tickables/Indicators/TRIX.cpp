@@ -60,7 +60,7 @@ void TRIX::calculate(BarHistory* barHistory)
     if (EMA3.size() >= 2) {
         double trix = (EMA3(0) - EMA3(1))/EMA3(1);
         push(trix * 100);
-        _time.push_back((*barHistory)(0,BarDataType::TIME));
+        _time.push_back((*barHistory)(0,BarDataType::TIME_S));
     }
 
 }
