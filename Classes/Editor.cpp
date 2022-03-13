@@ -35,7 +35,7 @@ void Editor::start() {
     //----------------------------------------------
     //this way is the logic to change the context now
     // and not at the begining of the next frame
-    _nextContextType = Editor::ContextType::LiveTrade;
+    _nextContextType = Editor::ContextType::BackTesting;
     internalLoadContext();
     //----------------------------------------------
 
