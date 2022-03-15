@@ -137,7 +137,55 @@ add_executable(BrokerApp
 		Classes/Nodes/IndicatorBaseNode.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h Classes/Contexts/LiveContext.cpp Classes/Contexts/LiveContext.h Classes/Widgets/SocketStreamController.cpp Classes/Widgets/SocketStreamController.h Classes/Widgets/LiveCandleChart.cpp Classes/Widgets/LiveCandleChart.h Classes/Networking/Binance/RestApiManager.cpp Classes/Networking/Binance/RestApiManager.h)
+		Classes/Networking/Binance/SocketManager.cpp
+		Classes/Networking/Binance/SocketManager.h
+		Classes/Contexts/LiveContext.cpp
+		Classes/Contexts/LiveContext.h
+		Classes/Widgets/SocketStreamController.cpp
+		Classes/Widgets/SocketStreamController.h
+		Classes/Widgets/LiveCandleChart.cpp
+		Classes/Widgets/LiveCandleChart.h
+		Classes/Networking/Binance/RestApiManager.cpp
+		Classes/Networking/Binance/RestApiManager.h
+		Classes/BrokerLib/BrokerColorsImgui.h
+		Classes/BrokerLib/BrokerColorsImgui.cpp
+		Classes/BrokerLib/DataSeriesRenderer.h
+		Classes/BrokerLib/DataSeriesRenderer.cpp
+		Classes/BrokerLib/DataSeriesRendererImgui.h
+		Classes/BrokerLib/DataSeriesRendererImgui.cpp
+		Classes/BrokerLib/IndicatorData.h
+		Classes/BrokerLib/IndicatorData.cpp
+		Classes/BrokerLib/IndicatorTickable.h
+		Classes/BrokerLib/IndicatorTickable.cpp
+		Classes/BrokerLib/OHLCData.h
+		Classes/BrokerLib/OHLCData.cpp
+		Classes/BrokerLib/OHLCRenderer.h
+		Classes/BrokerLib/OHLCRenderer.cpp
+		Classes/BrokerLib/SMAData.h
+		Classes/BrokerLib/SMAData.cpp
+		Classes/BrokerLib/SMARenderer.h
+		Classes/BrokerLib/SMARenderer.cpp
+		Classes/BrokerLib/VolumeData.h
+		Classes/BrokerLib/VolumeData.cpp
+		Classes/BrokerLib/VolumeRenderer.h
+		Classes/BrokerLib/VolumeRenderer.cpp
+		Classes/Widgets/NewCandleChart/ChartRenderer.h
+		Classes/Widgets/NewCandleChart/ChartRenderer.cpp
+		Classes/Widgets/NewCandleChart/ChartSliderView.h
+		Classes/Widgets/NewCandleChart/ChartSliderView.cpp
+		Classes/Widgets/NewCandleChart/MainChartRenderer.h
+		Classes/Widgets/NewCandleChart/MainChartRenderer.cpp
+		Classes/Widgets/NewCandleChart/MainSubplotRenderer.h
+		Classes/Widgets/NewCandleChart/MainSubplotRenderer.cpp
+		Classes/Widgets/NewCandleChart/NewChartView.h
+		Classes/Widgets/NewCandleChart/NewChartView.cpp
+		Classes/Widgets/NewCandleChart/RenderInterval.h
+		Classes/Widgets/NewCandleChart/SubplotRenderer.h
+		Classes/Widgets/NewCandleChart/SubplotRenderer.cpp
+		Classes/Widgets/NewCandleChart/SubplotRendererDelegate.h
+		Classes/Widgets/NewCandleChart/VolumeSubplotRenderer.h
+		Classes/Widgets/NewCandleChart/VolumeSubplotRenderer.cpp
+		)
 
 ###############################################################################
 # FETCH CONTENT LIBS

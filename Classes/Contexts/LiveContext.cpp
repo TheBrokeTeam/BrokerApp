@@ -320,3 +320,9 @@ void LiveContext::openSymbolTradeSocket(const Symbol &symbol) {
 //    ---------------------------------------------
 }
 
+std::shared_ptr<IndicatorTickable>
+LiveContext::loadNewIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode)
+{
+    return std::shared_ptr<IndicatorTickable>();
+}
+

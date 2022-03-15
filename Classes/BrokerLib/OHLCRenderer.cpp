@@ -20,9 +20,9 @@ void OHLCRenderer::onRender() {
 //    if (ImPlot::FitThisFrame()) {
 //        for (int i = lastIdxToPlot; i <= _lastIdxX; ++i) {
 //            ImPlot::FitPoint(
-//                    ImPlotPoint(dataHist.getData(BarDataType::TIME)[i], dataHist.getData(BarDataType::LOW)[i]));
+//                    ImPlotPoint(dataHist.getData(BarDataType::TIME_S)[i], dataHist.getData(BarDataType::LOW)[i]));
 //            ImPlot::FitPoint(
-//                    ImPlotPoint(dataHist.getData(BarDataType::TIME)[i], dataHist.getData(BarDataType::HIGH)[i]));
+//                    ImPlotPoint(dataHist.getData(BarDataType::TIME_S)[i], dataHist.getData(BarDataType::HIGH)[i]));
 //        }
 //    }
 
@@ -31,23 +31,23 @@ void OHLCRenderer::onRender() {
 
     if (ImPlot::FitThisFrame()) {
         for (int i = _renderInterval.startIndex; i <= _renderInterval.endIndex; i++)  {
-            ImPlot::FitPoint(ImPlotPoint(_data->getData(BarDataType::TIME)[i], _data->getData(BarDataType::LOW)[i]));
-            ImPlot::FitPoint(ImPlotPoint(_data->getData(BarDataType::TIME)[i], _data->getData(BarDataType::HIGH)[i]));
+            ImPlot::FitPoint(ImPlotPoint(_data->getData(BarDataType::TIME_S)[i], _data->getData(BarDataType::LOW)[i]));
+            ImPlot::FitPoint(ImPlotPoint(_data->getData(BarDataType::TIME_S)[i], _data->getData(BarDataType::HIGH)[i]));
         }
     }
 
     for (int i = _renderInterval.startIndex; i <= _renderInterval.endIndex; i++) {
         ImU32 color = ImGui::GetColorU32(
                 _data->getData(BarDataType::OPEN)[i] > _data->getData(BarDataType::CLOSE)[i] ? BrokerColorsImgui::bear_color : BrokerColorsImgui::bull_color);
-        ImVec2 openPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i] - candleWidth / 2,
+        ImVec2 openPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME_S)[i] - candleWidth / 2,
                                               _data->getData(BarDataType::OPEN)[i]);
-        ImVec2 closePos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i] + candleWidth / 2,
+        ImVec2 closePos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME_S)[i] + candleWidth / 2,
                                                _data->getData(BarDataType::CLOSE)[i]);
         drawList->AddRectFilled(openPos, closePos, color);
 
-        ImVec2 lowPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i],
+        ImVec2 lowPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME_S)[i],
                                              _data->getData(BarDataType::LOW)[i]);
-        ImVec2 highPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME)[i],
+        ImVec2 highPos = ImPlot::PlotToPixels(_data->getData(BarDataType::TIME_S)[i],
                                               _data->getData(BarDataType::HIGH)[i]);
         drawList->AddLine(lowPos, highPos, color, ImMax(1.0f, (closePos.x - openPos.x) / 10.0f));
     }
@@ -61,7 +61,7 @@ void OHLCRenderer::onRender() {
 //                                               _ticker->getSymbol()->getTimeIntervalInMinutes()).ToDouble();
 //
 //    int lastIdx = _data->size() - 1;
-//    int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME).data(), 0, lastIdx, maxX);
+//    int maxX_idx = PlotHelper::BinarySearch<double>(dataHist.getData(BarDataType::TIME_S).data(), 0, lastIdx, maxX);
 //    if (maxX_idx == -1)
 //        maxX_idx = lastIdx;
 //
@@ -71,12 +71,12 @@ void OHLCRenderer::onRender() {
 //    double startTime = minX;
 //    double endTime = maxX;
 //
-//    if (startTime < dataHist.getData(BarDataType::TIME).front())
-//        startTime = dataHist.getData(BarDataType::TIME).front();
-//    if (endTime > dataHist.getData(BarDataType::TIME).back()) endTime = dataHist.getData(BarDataType::TIME).back();
+//    if (startTime < dataHist.getData(BarDataType::TIME_S).front())
+//        startTime = dataHist.getData(BarDataType::TIME_S).front();
+//    if (endTime > dataHist.getData(BarDataType::TIME_S).back()) endTime = dataHist.getData(BarDataType::TIME_S).back();
 //
-//    if (startTime > dataHist.getData(BarDataType::TIME).back()) startTime = dataHist.getData(BarDataType::TIME).front();
-//    if (endTime < dataHist.getData(BarDataType::TIME).front()) endTime = dataHist.getData(BarDataType::TIME).back();
+//    if (startTime > dataHist.getData(BarDataType::TIME_S).back()) startTime = dataHist.getData(BarDataType::TIME_S).front();
+//    if (endTime < dataHist.getData(BarDataType::TIME_S).front()) endTime = dataHist.getData(BarDataType::TIME_S).back();
 //
 //    _ticker->updateRenderRange(startTime, endTime);
     //######################################

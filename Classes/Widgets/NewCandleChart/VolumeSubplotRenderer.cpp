@@ -63,13 +63,13 @@ void VolumeSubplotRenderer::onTooltipRender() {//TICKER TOOL TIP ###############
         ImPlot::PopPlotClipRect();
 
         // find mouse location index
-        int idx = PlotHelper::BinarySearch(dataHist.getData(TIME).data(), 0, dataHist.size(), mouse.x);
+        int idx = PlotHelper::BinarySearch(dataHist.getData(TIME_S).data(), 0, dataHist.size(), mouse.x);
 
         // render tool tip (won't be affected by plot clip rect)
         if (ImPlot::IsPlotHovered() && idx != -1) {
             ImGui::BeginTooltip();
             char buff[32];
-            ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist.getData(TIME)[idx]), buff, 32, ImPlotDateFmt_DayMoYr, ImPlot::GetStyle().UseISO8601);
+            ImPlot::FormatDate(ImPlotTime::FromDouble(dataHist.getData(TIME_S)[idx]), buff, 32, ImPlotDateFmt_DayMoYr, ImPlot::GetStyle().UseISO8601);
             ImGui::Text("Date:");   ImGui::SameLine(60); ImGui::Text("%s",  buff);
             ImGui::Text("Open:");   ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(OPEN)[idx]);
             ImGui::Text("Close:");  ImGui::SameLine(60); ImGui::Text("$%.2f", dataHist.getData(CLOSE)[idx]);

@@ -45,8 +45,8 @@ void MainSubplotRenderer::onSetupPlot() {
 
     ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,
                       ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
-    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[_renderInterval.startIndex],
-                            dataHist.getData(BarDataType::TIME)[_renderInterval.endIndex]);
+    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[_renderInterval.startIndex],
+                            dataHist.getData(BarDataType::TIME_S)[_renderInterval.endIndex]);
     ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
     ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
 //    ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME)[renderInfo.startIndex],

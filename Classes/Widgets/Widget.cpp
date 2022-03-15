@@ -26,9 +26,9 @@ void Widget::updateVisible(float dt)
 //    ImGui::SameLine();
 //
 //    //change the background of close button
-//    PushStyleColor(ImGuiCol_Button,Editor::broker_clear);
-//    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_clear);
-//    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_clear);
+//    PushStyleColor(ImGuiCol_Button,BrokerColorsImgui::broker_clear);
+//    PushStyleColor(ImGuiCol_ButtonActive,BrokerColorsImgui::broker_clear);
+//    PushStyleColor(ImGuiCol_ButtonHovered,BrokerColorsImgui::broker_clear);
 //
 //    //adding the close button
 //    auto info = getContext()->getEditor()->getTexture(Editor::Icons::close_window);
@@ -37,7 +37,7 @@ void Widget::updateVisible(float dt)
 //        SetVisible(false);
 //    }
 
-//    PushStyleColor(ImGuiCol_Separator,Editor::broker_light_grey);
+//    PushStyleColor(ImGuiCol_Separator,BrokerColorsImgui::broker_light_grey);
 
     ImGui::Separator();
 

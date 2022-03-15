@@ -6,6 +6,8 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 #include "iostream"
+#include "BrokerColorsImgui.h"
+
 
 #define dataHist (*_ticker->getBarHistory())
 
@@ -64,11 +66,11 @@ void LiveCandleChart::render(float dt)
     double movedMin, movedMax;
 
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 16);
-    ImGui::PushStyleColor(ImGuiCol_SliderGrab,Editor::broker_yellow_active);
-    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive,Editor::broker_yellow);
-    ImGui::PushStyleColor(ImGuiCol_FrameBg,Editor::broker_light_grey);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgActive,Editor::broker_light_grey);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,Editor::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab,BrokerColorsImgui::broker_yellow_active);
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive,BrokerColorsImgui::broker_yellow);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg,BrokerColorsImgui::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive,BrokerColorsImgui::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,BrokerColorsImgui::broker_light_grey);
 
     if(ImGui::SliderFloat("##Positioner",&_positionerValue,0.000f,1.000f,"%.3f")){
 

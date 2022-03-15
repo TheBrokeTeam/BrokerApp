@@ -44,8 +44,8 @@ void NewChartView::sliderDidScroll(float value) {
     int posIdxMax = int((_chart->_ticker->getBarHistory()->size() - 1) * value);
     int posIdxMin = posIdxMax - _chart->_ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _chart->_ticker->getMaxBarsToRender();
 
-    double movedMin = _chart->_ticker->getBarHistory()->getData(BarDataType::TIME)[posIdxMin];
-    double movedMax = _chart->_ticker->getBarHistory()->getData(BarDataType::TIME)[posIdxMax];
+    double movedMin = _chart->_ticker->getBarHistory()->getData(BarDataType::TIME_S)[posIdxMin];
+    double movedMax = _chart->_ticker->getBarHistory()->getData(BarDataType::TIME_S)[posIdxMax];
 
     _chart->updateRenderInterval(posIdxMin, posIdxMax);
 }

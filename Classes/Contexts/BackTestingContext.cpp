@@ -361,9 +361,9 @@ void BackTestingContext::plotIndicators() {
 //                ImGui::Text("Hey Luiz, it seems like you are not working too hard.. \nWhat about work on this right now?\n\n");
 //                ImGui::Separator();
 //
-//                ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_light_grey);
-//                ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_dark_grey);
-//                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow);
+//                ImGui::PushStyleColor(ImGuiCol_Button,BrokerColorsImgui::broker_light_grey);
+//                ImGui::PushStyleColor(ImGuiCol_ButtonActive,BrokerColorsImgui::broker_dark_grey);
+//                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,BrokerColorsImgui::broker_yellow);
 //
 //                if (ImGui::Button("OK", ImVec2(120, 0))) {
 //                    _shouldShowLuizPopup = false;
