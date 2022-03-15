@@ -5,6 +5,7 @@
 #include "IndicatorsView.h"
 #include "../Editor.h"
 #include "../Tickables/Indicators/SMA.h"
+#include "BrokerColorsImgui.h"
 #include <typeinfo>
 
 
@@ -22,9 +23,9 @@ void IndicatorsView::updateVisible(float dt) {
     drawView();
 }
 void IndicatorsView::drawView() {
-    PushStyleColor(ImGuiCol_Button, Editor::broker_black);
-    PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_light_grey);
-    PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_yellow);
+    PushStyleColor(ImGuiCol_Button, BrokerColorsImgui::broker_black);
+    PushStyleColor(ImGuiCol_ButtonHovered, BrokerColorsImgui::broker_light_grey);
+    PushStyleColor(ImGuiCol_ButtonActive, BrokerColorsImgui::broker_yellow);
 
     if(ImGui::BeginChild("INDICATORS_ITEMS", ImVec2(ImGui::GetWindowWidth(), 600))) {
 
@@ -55,7 +56,7 @@ void IndicatorsView::drawView() {
                 if (k == (_dragAndDropItems.size() - 1)) {
                     ImGui::Spacing();
                     //change the background of trash button
-                    ImGui::PushStyleColor(ImGuiCol_Button, Editor::broker_clear);
+                    ImGui::PushStyleColor(ImGuiCol_Button, BrokerColorsImgui::broker_clear);
 
                     auto info = getContext()->getEditor()->getTexture(Editor::Icons::trash);
 
@@ -107,7 +108,7 @@ void IndicatorsView::setTrashCallback(TrashClickCallback callback) {
     _trashCallback = callback;
 }
 void IndicatorsView::onPushStyleVar() {
-    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg, BrokerColorsImgui::broker_dark_grey);
 }
 
 

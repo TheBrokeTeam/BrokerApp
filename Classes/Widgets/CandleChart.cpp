@@ -6,6 +6,7 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 #include "iostream"
+#include "BrokerColorsImgui.h"
 
 #define dataHist (*_ticker->getBarHistory())
 
@@ -64,15 +65,15 @@ void CandleChart::render(float dt)
     double movedMin, movedMax;
 
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 16);
-    ImGui::PushStyleColor(ImGuiCol_SliderGrab,Editor::broker_yellow_active);
-    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive,Editor::broker_yellow);
-    ImGui::PushStyleColor(ImGuiCol_FrameBg,Editor::broker_light_grey);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgActive,Editor::broker_light_grey);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,Editor::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_SliderGrab, BrokerColorsImgui::broker_yellow_active);
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, BrokerColorsImgui::broker_yellow);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, BrokerColorsImgui::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, BrokerColorsImgui::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, BrokerColorsImgui::broker_light_grey);
 
-    if(ImGui::SliderFloat("##Positioner",&_positionerValue,0.000f,1.000f,"%.3f")){
+    if(ImGui::SliderFloat("##Positioner", &_positionValue, 0.000f, 1.000f, "%.3f")){
 
-        int posIdxMax = int((dataHist.size() - 1)*_positionerValue);
+        int posIdxMax = int((dataHist.size() - 1) * _positionValue);
         int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
 
         movedMin = dataHist.getData(BarDataType::TIME_S)[posIdxMin];
@@ -83,7 +84,7 @@ void CandleChart::render(float dt)
     else{
         //update postioner
         float posPercent = float(_lastIdxX+1)/dataHist.size();
-        _positionerValue = posPercent;
+        _positionValue = posPercent;
     }
 
     ImGui::PopStyleColor(5);
@@ -233,7 +234,7 @@ void CandleChart::render(float dt)
                     int i = *(int*)payload->Data;
 
                     puts("AGORA é a hora de plotar!!!");
-                    getContext()->loadIndicator(IndicatorsView::CandleIndicatorsTypes(i), true);
+                    getContext()->loadNewIndicator(IndicatorsView::CandleIndicatorsTypes(i), true);
                 }
                 ImPlot::EndDragDropTarget();
             }
@@ -247,12 +248,13 @@ void CandleChart::render(float dt)
         if (ImPlot::BeginPlot("##Volume")) {
 
             ImDrawList* drawList =  ImPlot::GetPlotDrawList();
+//SetupPLot
 
             ImPlot::SetupAxes(0,0,ImPlotAxisFlags_Time,ImPlotAxisFlags_AutoFit|ImPlotAxisFlags_RangeFit|ImPlotAxisFlags_Opposite);
             ImPlot::SetupAxisLimits(ImAxis_X1, dataHist.getData(BarDataType::TIME_S)[lastIdxToPlot], dataHist.getData(BarDataType::TIME_S)[_lastIdxX],0);
             ImPlot::SetupAxisFormat(ImAxis_Y1, PlotHelper::VolumeFormatter);
             ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].zoomOutMax = _ticker->getZoomOutMax();
-
+//MARK: Rendering
 
             auto color = ImVec4(1.f,0.75f,0.25f,1);
             ImPlot::SetNextFillStyle(color);
@@ -296,4 +298,8 @@ void CandleChart::render(float dt)
 
         ImPlot::EndSubplots();
     }
+}
+
+void CandleChart::setPositionValue(float positionValue) {
+    _positionValue = positionValue;
 }

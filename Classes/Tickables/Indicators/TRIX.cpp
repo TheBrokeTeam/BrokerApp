@@ -66,6 +66,7 @@ void TRIX::calculate(BarHistory* barHistory)
 }
 
 void TRIX::onRender() {
+
     ImPlot::SetNextLineStyle(_color, _lineWidth);
     auto renderInfo = getRenderInfo(_ticker);
     ImPlot::PlotLine(_plotName.c_str(), &_time[renderInfo.startIndex], &getData()[renderInfo.startIndex], renderInfo.size);

@@ -8,6 +8,7 @@
 #include "../Editor.h"
 #include "../Widgets/StrategyEditor.h"
 #include "UiNodeType.h"
+#include "BrokerColorsImgui.h"
 
 
 INode::INode(StrategyEditor* strategyEditor):_nodeEditor(strategyEditor)
@@ -30,7 +31,7 @@ void INode::render(float dt) {
     }
 
     ImNodes::BeginNodeTitleBar();
-    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_dark_grey);
+    ImGui::PushStyleColor(ImGuiCol_Text, BrokerColorsImgui::broker_dark_grey);
     ImGui::Text(_name.c_str());
     //has icon to render
     if(_icon != 0){
@@ -46,7 +47,7 @@ void INode::render(float dt) {
     ImGui::PopStyleColor();
     ImNodes::EndNodeTitleBar();
 
-    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_white);
+    ImGui::PushStyleColor(ImGuiCol_Text, BrokerColorsImgui::broker_white);
     onRender(dt);
     ImGui::PopStyleColor();
 
@@ -73,13 +74,13 @@ void INode::setIcon(int icon) {
 
 void INode::initStyle() {
 
-    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
-    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBar, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow_active));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarHovered, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow_hover));
+    ImNodes::PushColorStyle(ImNodesCol_TitleBarSelected, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow));
 
-    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
-    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
-    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_black);
+    ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow));
+    ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow_hover));
+    ImGui::PushStyleColor(ImGuiCol_Text, BrokerColorsImgui::broker_black);
 
 }
 

@@ -16,6 +16,7 @@
 #include "../Contexts/Contextualizable.h"
 #include "../Tickables/Tickable.h"
 
+
 class BarData;
 class Indicator;
 class Strategy;

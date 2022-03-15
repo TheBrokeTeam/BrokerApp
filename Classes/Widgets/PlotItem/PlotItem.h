@@ -39,7 +39,6 @@ public:
     void setIsSubplot(bool isSubplot);
 
 protected:
-
     PlotItemInfo getRenderInfo(Ticker* ticker);
     std::string _name{""};
     std::string _plotName{""};

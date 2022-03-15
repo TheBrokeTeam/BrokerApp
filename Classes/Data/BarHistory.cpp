@@ -26,7 +26,8 @@ void BarHistory::updateLastBar(const BarData &barData) {
     getData(BarDataType::VOLUME).back() = barData.volume;
 }
 
-BarData BarHistory::getBarDataAt(int idx) {
+BarData BarHistory::getBarDataAt(int idx)
+{
     BarData d;
     d.time_ms = getData(BarDataType::TIME_MS)[idx];
     d.time_s = getData(BarDataType::TIME_S)[idx];

@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <imnodes.h>
 #include "../Editor.h"
+#include "BrokerColorsImgui.h"
 
 
 IndicatorBaseNode::IndicatorBaseNode(std::shared_ptr<Indicator> ind, StrategyEditor* nodeEditor): INode(nodeEditor) {
@@ -63,7 +64,7 @@ void IndicatorBaseNode::initStyle() {
 
     ImNodes::PushColorStyle(ImNodesCol_Pin, ImGui::ColorConvertFloat4ToU32(indicator.getColor()));
     ImNodes::PushColorStyle(ImNodesCol_PinHovered, ImGui::ColorConvertFloat4ToU32(indicator.getColor()));
-    ImGui::PushStyleColor(ImGuiCol_Text, Editor::broker_black);
+    ImGui::PushStyleColor(ImGuiCol_Text, BrokerColorsImgui::broker_black);
 }
 
 void IndicatorBaseNode::finishStyle() {

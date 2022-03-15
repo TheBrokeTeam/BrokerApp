@@ -38,7 +38,7 @@ void Ticker::open(const TickData& tickData) {
     _barHistory.append(data);
 
     for(auto& t : _tickables){
-        t->onTick(&_barHistory);
+        t->onOpen(&_barHistory);
     }
 }
 
@@ -101,9 +101,8 @@ void Ticker::close(const TickData& tickData) {
     _barHistory.updateLastBar(data);
 
     for(auto& t : _tickables){
-            t->onClose(&_barHistory);
+        t->onClose(&_barHistory);
     }
-
 }
 
 void Ticker::reset() {

@@ -13,6 +13,8 @@
 #include "StockList.h"
 #include "StrategyEditor.h"
 #include "SocketStreamController.h"
+#include "BrokerColorsImgui.h"
+#include "NewCandleChart/NewChartView.h"
 #include <fmt/format.h>
 #include "../Contexts/BackTestingContext.h"
 #include "../Contexts/LiveContext.h"
@@ -37,7 +39,7 @@ void MainMenuBar::updateAlways(float dt)
     PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(GetPadding(), GetPadding()));
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    PushStyleColor(ImGuiCol_MenuBarBg,Editor::broker_black);
+    PushStyleColor(ImGuiCol_MenuBarBg, BrokerColorsImgui::broker_black);
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -151,6 +153,8 @@ void MainMenuBar::showBacktestContextViews()
     if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
     if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
     if (ImGui::MenuItem("Strategy View", "",&(getContext()->getWidget<StrategyEditor>()->GetVisible()))){}
+    if (ImGui::MenuItem("New Chart View", "CTRL+N",&(getContext()->getWidget<NewChartView>()->GetVisible()))){}
+
 
     if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
     if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}

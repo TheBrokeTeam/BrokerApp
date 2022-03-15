@@ -36,6 +36,8 @@ public:
     void handleDragDrop(PlotItem *plotItem) override;
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false) override;
+    std::shared_ptr<IndicatorTickable> loadNewIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) override;
+
     std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) override;
     std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) override;
 

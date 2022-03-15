@@ -8,6 +8,7 @@
 #include "../Nodes/Add.h"
 #include "../Nodes/NodeType.h"
 #include "../Nodes/UiNodeType.h"
+#include "BrokerColorsImgui.h"
 
 // User callback
 void mini_map_node_hovering_callback(int node_id, void* user_data)
@@ -33,12 +34,12 @@ void StrategyEditor::updateVisible(float dt) {
 
     ImGui::SameLine();
 
-    ImNodes::PushColorStyle(ImNodesCol_Link, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
-    ImNodes::PushColorStyle(ImNodesCol_LinkHovered, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_hover));
-    ImNodes::PushColorStyle(ImNodesCol_LinkSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
+    ImNodes::PushColorStyle(ImNodesCol_Link, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow_active));
+    ImNodes::PushColorStyle(ImNodesCol_LinkHovered, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow_hover));
+    ImNodes::PushColorStyle(ImNodesCol_LinkSelected, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow));
 
-    ImNodes::PushColorStyle(ImNodesCol_MiniMapLink, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
-    ImNodes::PushColorStyle(ImNodesCol_MiniMapLinkSelected, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow));
+    ImNodes::PushColorStyle(ImNodesCol_MiniMapLink, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow_active));
+    ImNodes::PushColorStyle(ImNodesCol_MiniMapLinkSelected, ImGui::ColorConvertFloat4ToU32(BrokerColorsImgui::broker_yellow));
 
     ImNodes::BeginNodeEditor();
 
@@ -132,7 +133,7 @@ void StrategyEditor::updateVisible(float dt) {
 }
 
 void StrategyEditor::onPushStyleVar() {
-    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg, BrokerColorsImgui::broker_dark_grey);
 }
 
 void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {

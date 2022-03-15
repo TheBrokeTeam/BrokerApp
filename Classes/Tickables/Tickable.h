@@ -15,7 +15,6 @@ class Ticker;
 
 class Tickable {
 public:
-
     Tickable(Ticker* ticker);
     virtual ~Tickable();
     virtual void onOpen(BarHistory* barHistory);
