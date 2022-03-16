@@ -39,13 +39,13 @@ void RestApiManager::getCandles(const Symbol &symbol,const CandlesCallback& call
                          TickData data_close;
 
                          //converting ms to sec and add simulated time for the sub tick on the bars
-                         double timeMs = static_cast<double>(k.start_time);
-                         double duration = static_cast<double>(k.end_time - k.start_time);
+                         double startTimeMs = static_cast<double>(k.start_time);
+                         double endTimeMs = static_cast<double>(k.end_time);
 
-                         data_open.time  = timeMs;
-                         data_high.time  = timeMs + duration*0.33;
-                         data_low.time  = timeMs + duration*0.66;
-                         data_close.time  = timeMs + duration - 1;
+                         data_open.time  = startTimeMs;
+                         data_high.time  = startTimeMs;// + duration*0.33;
+                         data_low.time  = startTimeMs;// + duration*0.66;
+                         data_close.time  = endTimeMs;
 
                          data_open.price = static_cast<double>(k.open);
                          data_high.price =  static_cast<double>(k.high);

@@ -88,6 +88,8 @@ private:
     bool _shouldRender = false;
 
     std::mutex _tickMutex;
+
+    double _lastIntervalFloor = -1;
 };
 
 

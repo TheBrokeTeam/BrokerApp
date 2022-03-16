@@ -25,8 +25,16 @@ bool Ticker::removeTickable(Tickable *tickable)
 void Ticker::open(const TickData& tickData) {
     BarData data;
 
-    data.time_ms = tickData.time;
-    data.time_s = tickData.time/1000;
+    //calculations to make interval slots
+    double interval = _symbol.getTimeIntervalInMiliSeconds();
+    double remaining = std::fmod(tickData.time,interval);
+    double intervalFloor = tickData.time - remaining;
+
+    if (remaining > 0)
+        std::cout << "Remaining: " << remaining << "Base: " << intervalFloor <<std::endl;
+
+    data.time_ms = intervalFloor;
+    data.time_s = data.time_ms/1000;
 
     data.volume = tickData.volume;
 
@@ -59,8 +67,9 @@ void Ticker::tick(const TickData& tickData, bool onlyUpdate) {
         return;
     }
 
+    double barTime = _barHistory(0,BarDataType::TIME_MS);
     //check if it is the close moment based on symbol interval (open time + bar's duration)
-    long lastTimeOfCurrentBar = _barHistory(0,BarDataType::TIME_MS) + _symbol.getTimeIntervalInMiliSeconds() - 1;
+    double lastTimeOfCurrentBar = barTime + _symbol.getTimeIntervalInMiliSeconds() - 1;
     if(lastTimeOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);

@@ -59,6 +59,10 @@ void SocketStreamController::updateVisible(float dt)
     if (ImGui::Button("Close Stream",ImVec2(200,50))) {
         getContext()->closeSymbolStream(_symbol);
     }
+
+    if (ImGui::Button("Open Test Order",ImVec2(200,50))) {
+        std::cout << "NADA ainda" << std::endl;
+    }
 }
 
 int SocketStreamController::getWindowFlags() {
