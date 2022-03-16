@@ -51,6 +51,7 @@ void SocketManager::openStream(const Symbol& symbol,const StreamCallback& callba
 void SocketManager::closeStream(const Symbol& symbol) {
     _ioctx->stop();
     _ws->unsubscribe(_handler);
+    _handler = nullptr;
 }
 
 void SocketManager::startStreamAsync() {
@@ -111,7 +112,8 @@ void SocketManager::openCandleStream(const Symbol &symbol, const SocketManager::
 
 void SocketManager::closeCandleStream(const Symbol &symbol) {
     _ioCandlectx->stop();
-    _ws->unsubscribe(_candleHandler);
+    _candleWs->unsubscribe(_candleHandler);
+    _candleHandler = nullptr;
 }
 
 void SocketManager::startCandleStreamAsync() {
