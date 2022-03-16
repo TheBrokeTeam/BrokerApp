@@ -20,7 +20,7 @@ RestApiManager::RestApiManager() {
 }
 
 void RestApiManager::getCandles(const Symbol &symbol,const CandlesCallback& callback) {
-    _api->klines(symbol.getCode(),"1m",1000,
+    _api->klines(symbol.getCode(),"1m",5,
                  [callback](const char *fl, int ec, std::string emsg, auto res) {
                      if ( ec ) {
                          std::cerr << "get price error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
@@ -43,8 +43,8 @@ void RestApiManager::getCandles(const Symbol &symbol,const CandlesCallback& call
                          double endTimeMs = static_cast<double>(k.end_time);
 
                          data_open.time  = startTimeMs;
-                         data_high.time  = startTimeMs;// + duration*0.33;
-                         data_low.time  = startTimeMs;// + duration*0.66;
+                         data_high.time  = startTimeMs + 20000;// + duration*0.33;
+                         data_low.time  = startTimeMs + 40000; // + duration*0.66;
                          data_close.time  = endTimeMs;
 
                          data_open.price = static_cast<double>(k.open);

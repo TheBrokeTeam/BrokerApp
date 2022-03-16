@@ -278,7 +278,7 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
             _ticker->tick(d);
 
         openSymbolTradeSocket(symbol);
-        openSymbolCandleSocket(symbol);
+//        openSymbolCandleSocket(symbol);
     };
 
     getEditor()->getApiManager()->getCandles(symbol,candlesCallback);

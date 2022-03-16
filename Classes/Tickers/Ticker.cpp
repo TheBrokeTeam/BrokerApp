@@ -48,15 +48,16 @@ void Ticker::open(const TickData& tickData) {
     for(auto& t : _tickables){
         t->onTick(&_barHistory);
     }
+
+    _lastIntervalFloor = intervalFloor;
 }
 
-void Ticker::tick(const TickData& tickData, bool onlyUpdate) {
+void Ticker::tick(const TickData& tickData, bool isLiveTick) {
 
     const std::lock_guard<std::mutex> lock(_tickMutex);
 
-    if(onlyUpdate){
-        //normal tick update
-        updateTick(tickData);
+    if(isLiveTick){
+        liveTick(tickData);
         return;
     }
 
@@ -67,9 +68,10 @@ void Ticker::tick(const TickData& tickData, bool onlyUpdate) {
         return;
     }
 
-    double barTime = _barHistory(0,BarDataType::TIME_MS);
     //check if it is the close moment based on symbol interval (open time + bar's duration)
+    double barTime = _barHistory(0,BarDataType::TIME_MS);
     double lastTimeOfCurrentBar = barTime + _symbol.getTimeIntervalInMiliSeconds() - 1;
+
     if(lastTimeOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
@@ -83,6 +85,29 @@ void Ticker::tick(const TickData& tickData, bool onlyUpdate) {
         t->onTick(&_barHistory);
     }
 }
+
+void Ticker::liveTick(const TickData &tickData) {
+    //check if it is the open moment
+    if(_barHistory.size() <= 0 || lastWasLiveClosed){
+        lastWasLiveClosed = false;
+        open(tickData);
+        return;
+    }
+
+    //normal tick update
+    double interval = _symbol.getTimeIntervalInMiliSeconds();
+    double remaining = std::fmod(tickData.time,interval);
+    double intervalFloor = tickData.time - remaining;
+
+    if(intervalFloor > _lastIntervalFloor){
+        lastWasLiveClosed = true;
+        close(tickData);
+        return;
+    }
+
+    updateTick(tickData);
+}
+
 
 void Ticker::close(const TickData& tickData) {
     BarData data;
@@ -171,3 +196,4 @@ void Ticker::updateTick(const TickData &tickData)
     _barHistory.updateLastBar(data);
 
 }
+

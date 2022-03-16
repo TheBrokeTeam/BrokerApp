@@ -44,7 +44,7 @@ public:
     void addTickable(Tickable* tickable);
     bool removeTickable(Tickable *tickable);
 
-    void tick(const TickData &tickData, bool onlyUpdate = false);
+    void tick(const TickData &tickData, bool isLiveTick = false);
 
     void setSymbol(const Symbol& symbol);
     Symbol* getSymbol();
@@ -65,6 +65,7 @@ public:
     int getMaxBarsToRender();
 
 private:
+    void liveTick(const TickData &tickData);
     void updateTick(const TickData &tickData);
 
     double _zoomOutMax;
@@ -75,6 +76,8 @@ private:
     void close(const TickData &tickData);
 
     bool lastWasClosed = false;
+    bool lastWasLiveClosed = false;
+
 
     std::set<Tickable*,TickableComparison> _tickables;
 
