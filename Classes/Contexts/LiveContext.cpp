@@ -311,7 +311,7 @@ void LiveContext::openSymbolTradeSocket(const Symbol &symbol) {
 //  open socket -----------------------------------
 //Todo:: handle errors
     SocketManager::StreamCallback streamCallback  = [this](const TickData& data){
-        _ticker->liveTick(data);
+        _ticker->tick(data,true);
     };
 
     _streams.push_back(streamCallback);

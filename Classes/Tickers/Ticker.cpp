@@ -42,7 +42,15 @@ void Ticker::open(const TickData& tickData) {
     }
 }
 
-void Ticker::tick(const TickData& tickData) {
+void Ticker::tick(const TickData& tickData, bool onlyUpdate) {
+
+    const std::lock_guard<std::mutex> lock(_tickMutex);
+
+    if(onlyUpdate){
+        //normal tick update
+        updateTick(tickData);
+        return;
+    }
 
     //check if it is the open moment
     if(_barHistory.size() <= 0 || lastWasClosed){
@@ -59,23 +67,8 @@ void Ticker::tick(const TickData& tickData) {
         return;
     }
 
-    //normal tick update
-    BarData data;
-
-    data.time_ms = _barHistory(0,BarDataType::TIME_MS);
-    data.time_s = _barHistory(0,BarDataType::TIME_S);
-    data.open = _barHistory(0,BarDataType::OPEN);
-    data.high = _barHistory(0,BarDataType::HIGH);
-    data.low = _barHistory(0,BarDataType::LOW);
-    data.close = _barHistory(0,BarDataType::CLOSE);
-    data.volume = _barHistory(0,BarDataType::VOLUME);
-
-    data.volume += tickData.volume;
-    data.high = tickData.price > data.high ? tickData.price : data.high;
-    data.low = tickData.price < data.low ? tickData.price : data.low;
-    data.close = tickData.price;
-
-    _barHistory.updateLastBar(data);
+    //it's just an update tick
+    updateTick(tickData);
 
     for(auto& t : _tickables){
         t->onTick(&_barHistory);
@@ -148,7 +141,7 @@ int Ticker::getMaxBarsToRender() {
     return _maxBarsToRender;
 }
 
-void Ticker::liveTick(const TickData &tickData)
+void Ticker::updateTick(const TickData &tickData)
 {
     //normal tick update
     BarData data;
@@ -167,4 +160,5 @@ void Ticker::liveTick(const TickData &tickData)
     data.close = tickData.price;
 
     _barHistory.updateLastBar(data);
+
 }

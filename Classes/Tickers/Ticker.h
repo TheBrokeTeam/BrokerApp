@@ -44,8 +44,7 @@ public:
     void addTickable(Tickable* tickable);
     bool removeTickable(Tickable *tickable);
 
-    void tick(const TickData &tickData);
-    void liveTick(const TickData &tickData);
+    void tick(const TickData &tickData, bool onlyUpdate = false);
 
     void setSymbol(const Symbol& symbol);
     Symbol* getSymbol();
@@ -66,6 +65,8 @@ public:
     int getMaxBarsToRender();
 
 private:
+    void updateTick(const TickData &tickData);
+
     double _zoomOutMax;
     int _maxBarsToRender = 1000;
 
@@ -85,6 +86,8 @@ private:
     std::string _id;
 
     bool _shouldRender = false;
+
+    std::mutex _tickMutex;
 };
 
 

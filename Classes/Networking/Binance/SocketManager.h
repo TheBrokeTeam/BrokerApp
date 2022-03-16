@@ -37,6 +37,7 @@ private:
 
     binapi::ws::websockets::handle _candleHandler{nullptr};
 
+
 };
 
 #endif //BROKERAPP_SOCKETMANAGER_H
