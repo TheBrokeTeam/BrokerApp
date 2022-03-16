@@ -281,7 +281,7 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
         openSymbolCandleSocket(symbol);
     };
 
-    _apiManager.getCandles(symbol,candlesCallback);
+    getEditor()->getApiManager()->getCandles(symbol,candlesCallback);
 
 //  add chart to render
     auto chart = getWidget<ChartView>();
@@ -290,7 +290,7 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
 }
 
 void LiveContext::closeSymbolStream(const Symbol& symbol) {
-    _socket_manager.closeStream(symbol);
+    getEditor()->getSocketManager()->closeStream(symbol);
 }
 
 void LiveContext::openSymbolCandleSocket(const Symbol &symbol) {
@@ -301,7 +301,7 @@ void LiveContext::openSymbolCandleSocket(const Symbol &symbol) {
             _ticker->tick(d);
     };
 
-    _socket_manager.openCandleStream(symbol,candleCallback);
+    getEditor()->getSocketManager()->openCandleStream(symbol,candleCallback);
 //    ---------------------------------------------
 
 }
@@ -316,7 +316,12 @@ void LiveContext::openSymbolTradeSocket(const Symbol &symbol) {
 
     _streams.push_back(streamCallback);
 
-    _socket_manager.openStream(symbol,streamCallback);
+    getEditor()->getSocketManager()->openStream(symbol,streamCallback);
 //    ---------------------------------------------
+}
+
+LiveContext::~LiveContext() {
+    getEditor()->getSocketManager()->closeStream(*_ticker->getSymbol());
+    getEditor()->getSocketManager()->closeCandleStream(*_ticker->getSymbol());
 }
 

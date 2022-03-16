@@ -17,6 +17,7 @@ class LiveContext : public Context {
 public:
 
     LiveContext(Editor* editor);
+    ~LiveContext();
     void initialize() override;
     void updateData(float dt) override;
     double getCurrentTimeStamp() override;
@@ -47,8 +48,7 @@ private:
     //and call loadticker
     std::vector<TickData> _data;
 
-    SocketManager _socket_manager;
-    RestApiManager _apiManager;
+
     double _currentTimeStamp = 0;
 
 };
