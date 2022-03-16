@@ -77,3 +77,7 @@ void Context::setShouldRender(bool value) {
 bool Context::getShouldRender() {
     return _shouldRender;
 }
+
+Context::~Context() {
+
+}

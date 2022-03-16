@@ -20,7 +20,7 @@
 class Context {
 public:
     Context(Editor* editor);
-
+    virtual ~Context();
 //    virtual void loadSymbol(Symbol symbol) = 0;
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
     bool startFetching = false;

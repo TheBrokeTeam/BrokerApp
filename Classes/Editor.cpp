@@ -125,10 +125,10 @@ void Editor::internalLoadContext()
     _context.reset();
     switch (_contextType) {
         case  Editor::ContextType::LiveTrade:
-            _context = std::make_shared<LiveContext>(this);
+            _context = std::make_unique<LiveContext>(this);
             break;
         case  Editor::ContextType::BackTesting:
-            _context = std::make_shared<BackTestingContext>(this);
+            _context = std::make_unique<BackTestingContext>(this);
             break;
         case Editor::ContextType::None:
         default:
