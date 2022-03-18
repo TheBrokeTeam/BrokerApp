@@ -61,7 +61,7 @@ void SocketStreamController::updateVisible(float dt)
     }
 
     if (ImGui::Button("Open Test Order",ImVec2(200,50))) {
-        std::cout << "NADA ainda" << std::endl;
+        getContext()->testFunction();
     }
 }
 

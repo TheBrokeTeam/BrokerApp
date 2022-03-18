@@ -29,6 +29,8 @@ public:
     void openSymbolStream(const Symbol& symbol) override;
     void closeSymbolStream(const Symbol& symbol) override;
 
+    void testFunction() override;
+
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode) override;
 
     void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;

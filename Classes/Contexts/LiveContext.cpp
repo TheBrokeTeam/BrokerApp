@@ -325,3 +325,12 @@ LiveContext::~LiveContext() {
     getEditor()->getSocketManager()->closeCandleStream(*_ticker->getSymbol());
 }
 
+void LiveContext::testFunction() {
+//    getEditor()->getApiManager()->accountInfo();
+    getEditor()->getApiManager()->startUserDataStream([this](bool success,auto key){
+       if(success)
+           getEditor()->getSocketManager()->openUserDataStream(key);
+    });
+
+}
+

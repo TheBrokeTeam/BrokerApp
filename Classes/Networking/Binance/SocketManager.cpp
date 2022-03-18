@@ -10,6 +10,7 @@
 SocketManager::SocketManager() {
 
     _ioctx = std::make_unique<boost::asio::io_context>();
+    _ioUserDataCtx = std::make_unique<boost::asio::io_context>();
     _ioCandlectx = std::make_unique<boost::asio::io_context>();
 
     _ws = std::make_unique<binapi::ws::websockets>(
@@ -17,6 +18,12 @@ SocketManager::SocketManager() {
             ,"stream.binance.com"
             ,"9443"
    );
+
+    _userDataWs = std::make_unique<binapi::ws::websockets>(
+            *_ioUserDataCtx
+            ,"stream.binance.com"
+            ,"9443"
+    );
 
     _candleWs = std::make_unique<binapi::ws::websockets>(
             *_ioCandlectx
@@ -122,6 +129,55 @@ void SocketManager::startCandleStreamAsync() {
     _ioCandlectx->run();
     std::cout << "After run" << std::endl;
 }
+
+void SocketManager::openUserDataStream(const std::string listenKey) {
+    _userDataWs->userdata(listenKey.c_str(),
+        [](const char *fl, int ec, std::string errmsg, binapi::userdata::account_update_t msg) -> bool {
+            if ( ec ) {
+                std::cout << "account update: fl=" << fl << ", ec=" << ec << ", errmsg: " << errmsg << ", msg: " << msg << std::endl;
+                return false;
+            }
+
+            std::cout << "account update:\n" << msg << std::endl;
+            return true;
+        }
+        ,[](const char *fl, int ec, std::string errmsg, binapi::userdata::balance_update_t msg) -> bool {
+            if ( ec ) {
+                std::cout << "balance update: fl=" << fl << ", ec=" << ec << ", errmsg: " << errmsg << ", msg: " << msg << std::endl;
+                return false;
+            }
+
+            std::cout << "balance update:\n" << msg << std::endl;
+            return true;
+        }
+        ,[](const char *fl, int ec, std::string errmsg, binapi::userdata::order_update_t msg) -> bool {
+            if ( ec ) {
+                std::cout << "order update: fl=" << fl << ", ec=" << ec << ", errmsg: " << errmsg << ", msg: " << msg << std::endl;
+                return false;
+            }
+
+            std::cout << "order update:\n" << msg << std::endl;
+            return true;
+        }
+    );
+
+    std::thread worker(&SocketManager::startUserDataStreamAsync, this);
+    worker.detach();
+}
+
+void SocketManager::startUserDataStreamAsync() {
+    std::cout << "Before run UserDataStream" << std::endl;
+    _ioUserDataCtx->restart();
+    _ioUserDataCtx->run();
+    std::cout << "After run UserDataStream" << std::endl;
+}
+
+void SocketManager::closeUserDataStream(const std::string listenKey) {
+    //TODO:: is unfinished need to stop it from api
+    _ioUserDataCtx->stop();
+    _userDataWs->unsubscribe_all();
+}
+
 
 
 

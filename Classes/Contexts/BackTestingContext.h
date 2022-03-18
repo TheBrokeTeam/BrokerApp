@@ -68,7 +68,6 @@ private:
     std::shared_ptr<Strategy> _strategy{nullptr};
     StrategyEditor* _strategyEditor{nullptr};
 
-
     std::vector<TickData> _data;
 
     //simulating

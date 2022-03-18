@@ -31,7 +31,7 @@ void Ticker::open(const TickData& tickData) {
     double intervalFloor = tickData.time - remaining;
 
     if (remaining > 0)
-        std::cout << "Remaining: " << remaining << "Base: " << intervalFloor <<std::endl;
+        std::cout << "Remaining: " << remaining << " Base: " << intervalFloor <<std::endl;
 
     data.time_ms = intervalFloor;
     data.time_s = data.time_ms/1000;

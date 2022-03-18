@@ -21,11 +21,14 @@ class SocketManager {
     void closeStream(const Symbol& symbol);
     void openCandleStream(const Symbol& symbol, const CandlesCallback& callback);
     void closeCandleStream(const Symbol& symbol);
-
+    void openUserDataStream(const std::string listenKey);
+    void closeUserDataStream(const std::string listenKey);
 
 private:
     void startStreamAsync();
     void startCandleStreamAsync();
+    void startUserDataStreamAsync();
+
 
     std::unique_ptr<boost::asio::io_context> _ioctx{nullptr};
     std::unique_ptr<boost::asio::io_context> _ioCandlectx{nullptr};
@@ -34,6 +37,9 @@ private:
     std::unique_ptr<binapi::ws::websockets> _candleWs{nullptr};
 
     binapi::ws::websockets::handle _handler{nullptr};
+
+    std::unique_ptr<binapi::ws::websockets> _userDataWs{nullptr};
+    std::unique_ptr<boost::asio::io_context> _ioUserDataCtx{nullptr};
 
     binapi::ws::websockets::handle _candleHandler{nullptr};
 
