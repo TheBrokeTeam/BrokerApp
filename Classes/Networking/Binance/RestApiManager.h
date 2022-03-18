@@ -32,9 +32,6 @@ private:
     std::unique_ptr<boost::asio::io_context> _apictx{nullptr};
     std::unique_ptr<binapi::rest::api> _api{nullptr};
 
-    std::string _privateKey = "lqCt45nhz8En19csU7l3erdT99bGae1vAkORP87oR2XsIoV3N6iwUF4x7XItydtc";
-    std::string _secretKey = "kzooUyS3fD24cGySYmlD6zZiOzyykEEl1BEbGoL0RG1QmOlSC7attIXVQeED1nGu";
-
 };
 
 

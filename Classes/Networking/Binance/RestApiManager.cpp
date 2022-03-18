@@ -6,6 +6,7 @@
 #include <iostream>
 #include <boost/asio/io_context.hpp>
 #include <thread>
+#include "LocalKeys.h"
 
 RestApiManager::RestApiManager() {
     _apictx = std::make_unique<boost::asio::io_context>();
@@ -13,8 +14,8 @@ RestApiManager::RestApiManager() {
             *_apictx
             ,"api.binance.com"
             ,"443"
-            ,_privateKey // can be empty for non USER_DATA reqs
-            ,_secretKey // can be empty for non USER_DATA reqs
+            ,LocalKeys::privateKey // can be empty for non USER_DATA reqs
+            ,LocalKeys::secretKey // can be empty for non USER_DATA reqs
             ,10000 // recvWindow milliseconds
     );
 }
