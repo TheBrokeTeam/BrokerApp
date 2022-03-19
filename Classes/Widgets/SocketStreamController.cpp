@@ -99,5 +99,9 @@ void SocketStreamController::testFunction() {
     }
     else{
         std::cout << BAJson::stringfy(document) << std::endl;
+
+        BAJson::save(document,"../Resources/tato.json");
     }
+
+
 }

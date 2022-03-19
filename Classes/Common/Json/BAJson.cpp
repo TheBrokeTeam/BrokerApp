@@ -4,6 +4,8 @@
 
 #include "BAJson.h"
 #include "../Utils/BAString.h"
+#include <rapidjson/filewritestream.h>
+
 
 const rapidjson::Value BAJson::kEmptyArray = rapidjson::Value(rapidjson::kArrayType);
 const rapidjson::Value BAJson::kEmptyObject = rapidjson::Value(rapidjson::kObjectType);
@@ -129,15 +131,6 @@ bool BAJson::parse(const std::string& json, rapidjson::Document& document)
 
 bool BAJson::parseFile(const std::string& filePath, rapidjson::Document& document)
 {
-//    auto contents = FileUtils::getInstance()->getStringFromFile(filePath);
-//
-//    if (contents.size() == 0)
-//    {
-//        OPDebug::warn("Json", "Could not parse JSON file. It is empty or was not found: " + filePath);
-//        return 0;
-//    }
-//    return parse(contents, document)
-
     FILE* fp = fopen(filePath.c_str(), "r"); // non-Windows use "r"
 
     char readBuffer[65536];
@@ -403,12 +396,15 @@ bool BAJson::existsPath(rapidjson::Value &value, const std::string &path)
 
 void BAJson::save(const rapidjson::Document& document, const std::string& file)
 {
-    rapidjson::StringBuffer buffer;
-    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    FILE* fp = fopen(file.c_str(), "wb"); // non-Windows use "w"
+
+    char writeBuffer[65536];
+    rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
+
+    rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
     document.Accept(writer);
 
-    auto jsonStr = buffer.GetString();
-//    FileUtils::getInstance()->writeStringToFile(jsonStr, file);
+    fclose(fp);
 }
 
 bool BAJson::hasBool(const rapidjson::Value& object, const std::string& memberName)
