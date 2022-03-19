@@ -31,6 +31,8 @@ public:
 
     void openUserDataStream() override;
 
+    void openOrder(const Symbol &symbol) override;
+
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode) override;
 
     void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;

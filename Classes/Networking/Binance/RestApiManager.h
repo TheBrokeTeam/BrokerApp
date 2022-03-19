@@ -9,10 +9,13 @@
 #include <binapi/api.hpp>
 #include <binapi/websocket.hpp>
 #include "../../Data/Symbol.h"
+#include "../../Data/Order.h"
+
 
 class RestApiManager {
 public:
     typedef std::function<void(std::vector<TickData>& data)> CandlesCallback;
+    typedef std::function<void(Order& order)> OrderCallback;
     typedef std::function<void(bool success, const std::string listenKey)> UserDataStreamCallback;
 
 
@@ -20,14 +23,15 @@ public:
     ~RestApiManager();
 
     void getCandles(const Symbol& symbol,const CandlesCallback& callback);
-    void openOrder(const Symbol& symbol,const CandlesCallback& callback);
+    void openOrder(const Symbol& symbol,const OrderCallback& callback);
     void accountInfo();
     void startUserDataStream(UserDataStreamCallback callback);
+    void cancelOrder(const std::string orderId);
+
 
 
 private:
-    void getKlinesAsync();
-    void openOrderAsync();
+    void runApiAsync();
 
     std::unique_ptr<boost::asio::io_context> _apictx{nullptr};
     std::unique_ptr<binapi::rest::api> _api{nullptr};

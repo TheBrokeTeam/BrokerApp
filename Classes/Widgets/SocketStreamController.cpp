@@ -60,15 +60,16 @@ void SocketStreamController::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    if (ImGui::Button("Open Stream",ImVec2(200,50))) {
+    if (ImGui::Button("Abrir ordem",ImVec2(200,50))) {
+        getContext()->openOrder(_symbol);
+    }
+
+    if (ImGui::Button("Cancelar ordem",ImVec2(200,50))) {
 
     }
 
-    if (ImGui::Button("Close Stream",ImVec2(200,50))) {
+    if (ImGui::Button("Ainda não sei",ImVec2(200,50))) {
 
-    }
-
-    if (ImGui::Button("Open Test Order",ImVec2(200,50))) {
     }
 }
 

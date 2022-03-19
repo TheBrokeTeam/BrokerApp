@@ -23,7 +23,6 @@ class SocketManager {
     void closeCandleStream(const Symbol& symbol);
     void openUserDataStream(const std::string listenKey);
     void closeUserDataStream(const std::string listenKey);
-
 private:
     void startStreamAsync();
     void startCandleStreamAsync();

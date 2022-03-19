@@ -7,6 +7,8 @@
 #include <boost/asio/io_context.hpp>
 #include <thread>
 #include "LocalKeys.h"
+#include "../../Helpers/Utils.h"
+#include "../../Data/Order.h"
 
 RestApiManager::RestApiManager() {
     _apictx = std::make_unique<boost::asio::io_context>();
@@ -76,11 +78,11 @@ void RestApiManager::getCandles(const Symbol &symbol,const CandlesCallback& call
                  }
     );
 
-    std::thread worker(&RestApiManager::getKlinesAsync, this);
+    std::thread worker(&RestApiManager::runApiAsync, this);
     worker.detach();
 }
 
-void RestApiManager::getKlinesAsync() {
+void RestApiManager::runApiAsync() {
     std::cout << "Before run api" << std::endl;
     _apictx->restart();
     _apictx->run();
@@ -88,63 +90,60 @@ void RestApiManager::getKlinesAsync() {
 }
 
 
-void RestApiManager::openOrder(const Symbol &symbol, const CandlesCallback &callback) {
-    _api->klines(symbol.getCode(),"1m",500,
-                 [callback](const char *fl, int ec, std::string emsg, auto res) {
-                     if ( ec ) {
-                         std::cerr << "get price error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
-                         return false;
-                     }
+void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callback) {
 
-                     std::cout << "Number of klines: " << res.klines.size() << std::endl;
+    _api->new_order(symbol.getCode(),
+                    binapi::e_side::buy,
+                    binapi::e_type::limit,
+                    binapi::e_time::GTC,
+                    binapi::e_trade_resp_type::FULL,
+                    "0.004",
+                    "2850.00",
+                    "",
+                    "",
+                    "",
+                    [callback](const char *fl, int ec, std::string emsg, auto res)
+                    {
+                        if ( ec ) {
+                            std::cerr << "open order failed: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
+                            return false;
+                        }
+                        std::cout << "open order success: " << res << std::endl;
 
-                     //TODO:: make a parse
-                     std::vector<TickData> data;
-                     for(auto& k : res.klines)
-                     {
-                         TickData data_open;
-                         TickData data_high;
-                         TickData data_low;
-                         TickData data_close;
+                        Order order;
+                        auto fullResp = res.get_responce_full();
+                        order.symbol = fullResp.symbol;
+                        order.orderId = fullResp.orderId;
+                        order.clientOrderId = fullResp.clientOrderId;
+                        order.transactTime = fullResp.transactTime;
+                        order.price = static_cast<double>(fullResp.price);
+                        order.origQty = static_cast<double>(fullResp.origQty);
+                        order.executedQty = static_cast<double>(fullResp.executedQty);
+                        order.cummulativeQuoteQty = static_cast<double>(fullResp.cummulativeQuoteQty);
+                        order.status = fullResp.status;
+                        order.timeInForce = fullResp.timeInForce;
+                        order.type = fullResp.type;
+                        order.side = fullResp.side;
+                        std::vector<Order::fill_part> fillsVec;
 
-                         //converting ms to sec and add simulated time for the sub tick on the bars
-                         double startTimeMs = static_cast<double>(k.start_time);
-                         double endTimeMs = static_cast<double>(k.end_time);
+                        for(binapi::rest::new_order_info_full_t::fill_part f : fullResp.fills) {
+                            fillsVec.push_back({
+                                                       static_cast<double>(f.price),
+                                                       static_cast<double>(f.qty),
+                                                       static_cast<double>(f.commission),
+                                                       f.commissionAsset
+                                               });
+                        }
 
-                         data_open.time  = startTimeMs;
-                         data_high.time  = startTimeMs + 20000;// + duration*0.33;
-                         data_low.time  = startTimeMs + 40000; // + duration*0.66;
-                         data_close.time  = endTimeMs;
+                        order.fills = fillsVec;
+                        
+                        callback(order);
+                        return true;
+                    });
 
-                         data_open.price = static_cast<double>(k.open);
-                         data_high.price =  static_cast<double>(k.high);
-                         data_low.price =  static_cast<double>(k.low);
-                         data_close.price =  static_cast<double>(k.close);
 
-                         //0.25 volume for each tick
-                         double volume = static_cast<double>(k.volume)*0.25;
-                         data_open.volume = volume;
-                         data_high.volume = volume;
-                         data_low.volume = volume;
-                         data_close.volume = volume;
-
-                         data.push_back(data_open);
-                         data.push_back(data_high);
-                         data.push_back(data_low);
-                         data.push_back(data_close);
-                     }
-
-                     callback(data);
-                     return true;
-                 }
-    );
-
-    std::thread worker(&RestApiManager::getKlinesAsync, this);
+    std::thread worker(&RestApiManager::runApiAsync, this);
     worker.detach();
-}
-
-void RestApiManager::openOrderAsync() {
-
 }
 
 void RestApiManager::accountInfo()
@@ -159,7 +158,7 @@ void RestApiManager::accountInfo()
         return true;
     });
 
-    std::thread worker(&RestApiManager::getKlinesAsync, this);
+    std::thread worker(&RestApiManager::runApiAsync, this);
     worker.detach();
 }
 
@@ -176,7 +175,14 @@ void RestApiManager::startUserDataStream(UserDataStreamCallback callback) {
       return true;
     });
 
-    std::thread worker(&RestApiManager::getKlinesAsync, this);
+    std::thread worker(&RestApiManager::runApiAsync, this);
     worker.detach();
 }
+
+void RestApiManager::cancelOrder(const std::string) {
+
+}
+
+
+
 

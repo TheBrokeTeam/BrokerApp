@@ -33,6 +33,8 @@ public:
 
     virtual void openUserDataStream() {};
 
+    virtual void openOrder(const Symbol &symbol) {};
+
     virtual double getCurrentTimeStamp() = 0 ;
 
     virtual void initialize() = 0;
