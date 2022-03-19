@@ -3,8 +3,8 @@
     {
       "binance":
       {
-        "api_key": "<key>",
-        "secret_key": "<key>"
+        "api_key": "your key",
+        "secret_key": "your key"
       }
     },
     {
