@@ -1,0 +1,18 @@
+{
+  "exchanges": [
+    {
+      "binance":
+      {
+        "api_key": "<key>",
+        "secret_key": "<key>"
+      }
+    },
+    {
+      "other":
+      {
+        "api_key": "",
+        "secret_key": ""
+      }
+    }
+  ]
+}
