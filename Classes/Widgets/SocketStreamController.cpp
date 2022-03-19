@@ -65,7 +65,7 @@ void SocketStreamController::updateVisible(float dt)
     }
 
     if (ImGui::Button("Cancelar ordem",ImVec2(200,50))) {
-
+        getContext()->closeAllOrders(_symbol);
     }
 
     if (ImGui::Button("Ainda não sei",ImVec2(200,50))) {

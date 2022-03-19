@@ -26,7 +26,7 @@ public:
     void openOrder(const Symbol& symbol,const OrderCallback& callback);
     void accountInfo();
     void startUserDataStream(UserDataStreamCallback callback);
-    void cancelOrder(const std::string orderId);
+    void cancelOrder(const Order& order);
 
 
 

@@ -136,7 +136,7 @@ void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callba
                         }
 
                         order.fills = fillsVec;
-                        
+
                         callback(order);
                         return true;
                     });
@@ -179,8 +179,19 @@ void RestApiManager::startUserDataStream(UserDataStreamCallback callback) {
     worker.detach();
 }
 
-void RestApiManager::cancelOrder(const std::string) {
+void RestApiManager::cancelOrder(const Order& order) {
+    auto start_uds = _api->cancel_order(order.symbol,order.orderId, order.clientOrderId,"",[](const char *fl, int ec, std::string emsg, auto res)
+      {
+          if ( ec ) {
+              std::cerr << "cancelOrder error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
+              return false;
+          }
+          std::cout << "cancelOrder: " << res << std::endl;
+          return true;
+      });
 
+    std::thread worker(&RestApiManager::runApiAsync, this);
+    worker.detach();
 }
 
 

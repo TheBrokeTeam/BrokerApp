@@ -16,6 +16,7 @@
 #include "../Tickables/Strategies/Strategy.h"
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
+#include "../Data/Order.h"
 
 class Context {
 public:
@@ -34,6 +35,7 @@ public:
     virtual void openUserDataStream() {};
 
     virtual void openOrder(const Symbol &symbol) {};
+    virtual void closeAllOrders(const Symbol &symbol) {};
 
     virtual double getCurrentTimeStamp() = 0 ;
 
@@ -119,6 +121,9 @@ protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
     std::vector<std::shared_ptr<Indicator>> _subplotIndicators;
+
+    std::vector<Order> _orders;
+
 
     //    std::vector<std::shared_ptr<Strategy>> _strategies;
     std::vector<std::shared_ptr<INode>> _nodes;

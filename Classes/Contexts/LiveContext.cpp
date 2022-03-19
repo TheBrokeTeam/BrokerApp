@@ -333,8 +333,14 @@ void LiveContext::openUserDataStream() {
 }
 
 void LiveContext::openOrder(const Symbol &symbol) {
-    getEditor()->getApiManager()->openOrder(symbol,[](Order& order){
+    getEditor()->getApiManager()->openOrder(symbol,[this](Order& order){
         std::cout << "Order opened:" << order.clientOrderId << std::endl;
+        _orders.push_back(order);
     });
 }
 
+void LiveContext::closeAllOrders(const Symbol &symbol) {
+    for(auto& o :_orders){
+        getEditor()->getApiManager()->cancelOrder(o);
+    }
+}

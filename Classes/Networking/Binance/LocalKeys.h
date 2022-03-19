@@ -9,8 +9,8 @@
 
 class LocalKeys{
 public:
-    inline static const std::string privateKey = "<PUT YOUR API KEY HERE>";
-    inline static const std::string secretKey = "<PUT YOUR SECRET KEY HERE>";
+    inline static const std::string privateKey = "lqCt45nhz8En19csU7l3erdT99bGae1vAkORP87oR2XsIoV3N6iwUF4x7XItydtc";
+    inline static const std::string secretKey = "kzooUyS3fD24cGySYmlD6zZiOzyykEEl1BEbGoL0RG1QmOlSC7attIXVQeED1nGu";
 };
 
 #endif //BROKERAPP_LOCALKEYS_H
