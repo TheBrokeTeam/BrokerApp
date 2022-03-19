@@ -29,7 +29,7 @@ public:
     void openSymbolStream(const Symbol& symbol) override;
     void closeSymbolStream(const Symbol& symbol) override;
 
-    void testFunction() override;
+    void openUserDataStream() override;
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode) override;
 

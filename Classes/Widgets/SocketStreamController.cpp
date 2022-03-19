@@ -8,8 +8,16 @@
 
 SocketStreamController::SocketStreamController(Context* context) : Widget(context)
 {
-    _title = "Downloader";
+    _title = "SS Controller";
     _is_window = true;
+
+    //TODO:: this should be automatic when on live context
+    _symbol =   Symbol(_symbolName,"1m",0,0);
+    getContext()->openSymbolStream(_symbol);
+    _oldSymbolName = _symbolName;
+
+    //TODO:: the user data stream should open automatic when the user already set his keys
+    getContext()->openUserDataStream();
 }
 
 void SocketStreamController::updateVisible(float dt)
@@ -34,8 +42,9 @@ void SocketStreamController::updateVisible(float dt)
 
     static char buff[8] = "ETHUSDT";
     ImGui::SetNextItemWidth(200);
-    if (ImGui::InputText("##Symbol",buff,8,ImGuiInputTextFlags_CharsUppercase)) {
+    if (ImGui::InputText("##Symbol",buff,8,ImGuiInputTextFlags_CharsUppercase | ImGuiInputTextFlags_EnterReturnsTrue)) {
         _symbolName = buff;
+        changeStream();
     }
 
     ImGui::SetNextItemWidth(80);
@@ -52,16 +61,14 @@ void SocketStreamController::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
     if (ImGui::Button("Open Stream",ImVec2(200,50))) {
-        _symbol =   Symbol(_symbolName,"1m",0,0);
-        getContext()->openSymbolStream(_symbol);
+
     }
 
     if (ImGui::Button("Close Stream",ImVec2(200,50))) {
-        getContext()->closeSymbolStream(_symbol);
+
     }
 
     if (ImGui::Button("Open Test Order",ImVec2(200,50))) {
-        getContext()->testFunction();
     }
 }
 
@@ -72,4 +79,11 @@ int SocketStreamController::getWindowFlags() {
 
 void SocketStreamController::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+}
+
+void SocketStreamController::changeStream() {
+    getContext()->closeSymbolStream(Symbol(_oldSymbolName,"1m",0,0));
+    _symbol =   Symbol(_symbolName,"1m",0,0);
+    getContext()->openSymbolStream(_symbol);
+    _oldSymbolName = _symbolName;
 }

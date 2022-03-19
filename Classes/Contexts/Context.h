@@ -31,7 +31,7 @@ public:
     virtual void setSimulationSpeed(float speed){};
     virtual bool isSimulating(){return false;};
 
-    virtual void testFunction() {};
+    virtual void openUserDataStream() {};
 
     virtual double getCurrentTimeStamp() = 0 ;
 
@@ -112,7 +112,6 @@ public:
     void setShouldRender(bool);
     virtual void openSymbolStream(const Symbol& symbol){};
     virtual void closeSymbolStream(const Symbol& symbol){};
-
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;

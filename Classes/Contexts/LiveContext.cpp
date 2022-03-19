@@ -271,7 +271,7 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
 
 //    TODO:: load some history data
 //   _data.clear();
-    RestApiManager::CandlesCallback candlesCallback  = [this,symbol](std::vector<TickData>& data){
+    RestApiManager::CandlesCallback candlesCallback = [this,symbol](std::vector<TickData>& data){
        std::cout << data.size() << std::endl;
 //       _data.swap(data);
         for(auto &d : data)
@@ -325,12 +325,10 @@ LiveContext::~LiveContext() {
     getEditor()->getSocketManager()->closeCandleStream(*_ticker->getSymbol());
 }
 
-void LiveContext::testFunction() {
-//    getEditor()->getApiManager()->accountInfo();
+void LiveContext::openUserDataStream() {
     getEditor()->getApiManager()->startUserDataStream([this](bool success,auto key){
        if(success)
            getEditor()->getSocketManager()->openUserDataStream(key);
     });
-
 }
 

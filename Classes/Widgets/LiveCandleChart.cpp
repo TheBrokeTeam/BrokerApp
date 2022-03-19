@@ -56,7 +56,7 @@ void LiveCandleChart::render(float dt)
 
     _t1 = ImPlot::AddTime(_t2, ImPlotTimeUnit_Yr, -1);
 
-    const double candleWidth = _ticker->getSymbol()->getTimeIntervalInSeconds();
+    const double candleWidth = _ticker->getSymbol()->getTimeIntervalInSeconds() * 0.9;
 
     std::vector<float> ratios = calculateRatios();
 

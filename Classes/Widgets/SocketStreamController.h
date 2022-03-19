@@ -17,8 +17,12 @@ public:
     void onPushStyleVar() override;
 
 private:
-    Symbol _symbol{"ETHUSDT","10s",0,0};
+    void changeStream();
+    Symbol _symbol{"ETHUSDT","1m",0,0};
+
     std::string _symbolName{"ETHUSDT"};
+    std::string _oldSymbolName{""};
+
 };
 
 #endif //BROKERAPP_SOCKETSTREAMCONTROLLER_H
