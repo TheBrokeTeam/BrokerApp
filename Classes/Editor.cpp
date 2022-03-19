@@ -143,7 +143,8 @@ const Editor::ContextType& Editor::getContextType() {
     return _contextType;
 }
 
-Editor::~Editor() {}
+Editor::~Editor() {
+}
 
 
 //APPLICATION ENTRY POINT

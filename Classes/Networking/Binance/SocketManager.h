@@ -22,7 +22,7 @@ class SocketManager {
     void openCandleStream(const Symbol& symbol, const CandlesCallback& callback);
     void closeCandleStream(const Symbol& symbol);
     void openUserDataStream(const std::string listenKey);
-    void closeUserDataStream(const std::string listenKey);
+    void closeUserDataStreamSocket();
 private:
     void startStreamAsync();
     void startCandleStreamAsync();
@@ -42,6 +42,9 @@ private:
 
     binapi::ws::websockets::handle _candleHandler{nullptr};
 
+
+    //TODO::remove it from here
+    std::string _userDataListenKey{""};
 
 };
 

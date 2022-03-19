@@ -323,6 +323,7 @@ void LiveContext::openSymbolTradeSocket(const Symbol &symbol) {
 LiveContext::~LiveContext() {
     getEditor()->getSocketManager()->closeStream(*_ticker->getSymbol());
     getEditor()->getSocketManager()->closeCandleStream(*_ticker->getSymbol());
+    getEditor()->getSocketManager()->closeUserDataStreamSocket();
 }
 
 void LiveContext::openUserDataStream() {

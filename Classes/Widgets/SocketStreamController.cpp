@@ -5,6 +5,7 @@
 #include "SocketStreamController.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
+#include "../Common/Json/BAJson.h"
 
 SocketStreamController::SocketStreamController(Context* context) : Widget(context)
 {
@@ -69,7 +70,7 @@ void SocketStreamController::updateVisible(float dt)
     }
 
     if (ImGui::Button("Ainda não sei",ImVec2(200,50))) {
-
+        testFunction();
     }
 }
 
@@ -87,4 +88,16 @@ void SocketStreamController::changeStream() {
     _symbol =   Symbol(_symbolName,"1m",0,0);
     getContext()->openSymbolStream(_symbol);
     _oldSymbolName = _symbolName;
+}
+
+void SocketStreamController::testFunction() {
+    auto jsonPath = "../Resources/test_data.json";
+
+    rapidjson::Document document;
+    if (!BAJson::parseFile(jsonPath, document)) {
+        std::cout << "NAo rolou ler json" << std::endl;
+    }
+    else{
+        std::cout << BAJson::stringfy(document) << std::endl;
+    }
 }

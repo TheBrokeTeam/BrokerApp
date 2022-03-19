@@ -23,7 +23,9 @@ RestApiManager::RestApiManager() {
 }
 
 RestApiManager::~RestApiManager() {
-
+    _api.reset(nullptr);
+    _apictx->stop();
+    _apictx.reset(nullptr);
 }
 
 

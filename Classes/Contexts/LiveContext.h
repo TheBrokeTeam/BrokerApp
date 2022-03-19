@@ -53,9 +53,7 @@ private:
     //and call loadticker
     std::vector<TickData> _data;
 
-
     double _currentTimeStamp = 0;
-
 };
 
 #endif //BROKERAPP_LIVECONTEXT_H

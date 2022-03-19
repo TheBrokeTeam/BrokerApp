@@ -15,6 +15,7 @@ public:
     void updateVisible(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
+    void testFunction();
 
 private:
     void changeStream();

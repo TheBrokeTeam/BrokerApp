@@ -32,7 +32,20 @@ SocketManager::SocketManager() {
     );
 }
 
-SocketManager::~SocketManager() {}
+SocketManager::~SocketManager() {
+
+    _ioctx->stop();
+    _ioUserDataCtx->stop();
+    _ioCandlectx->stop();
+
+    _ioctx.reset(nullptr);
+    _ioUserDataCtx.reset(nullptr);
+    _ioCandlectx.reset(nullptr);
+
+    _ws->unsubscribe_all();
+    _candleWs->unsubscribe_all();
+    _userDataWs->unsubscribe_all();
+}
 
 void SocketManager::openStream(const Symbol& symbol,const StreamCallback& callback) {
     _handler = _ws->trade(symbol.getCode().c_str(),
@@ -56,9 +69,11 @@ void SocketManager::openStream(const Symbol& symbol,const StreamCallback& callba
 }
 
 void SocketManager::closeStream(const Symbol& symbol) {
-    _ioctx->stop();
-    _ws->unsubscribe(_handler);
-    _handler = nullptr;
+    if(_ioctx) {
+        _ioctx->stop();
+        _ws->unsubscribe(_handler);
+        _handler = nullptr;
+    }
 }
 
 void SocketManager::startStreamAsync() {
@@ -118,9 +133,11 @@ void SocketManager::openCandleStream(const Symbol &symbol, const SocketManager::
 }
 
 void SocketManager::closeCandleStream(const Symbol &symbol) {
-    _ioCandlectx->stop();
-    _candleWs->unsubscribe(_candleHandler);
-    _candleHandler = nullptr;
+    if(_ioCandlectx) {
+        _ioCandlectx->stop();
+        _candleWs->unsubscribe(_candleHandler);
+        _candleHandler = nullptr;
+    }
 }
 
 void SocketManager::startCandleStreamAsync() {
@@ -131,6 +148,7 @@ void SocketManager::startCandleStreamAsync() {
 }
 
 void SocketManager::openUserDataStream(const std::string listenKey) {
+    _userDataListenKey = listenKey;
     _userDataWs->userdata(listenKey.c_str(),
         [](const char *fl, int ec, std::string errmsg, binapi::userdata::account_update_t msg) -> bool {
             if ( ec ) {
@@ -172,10 +190,11 @@ void SocketManager::startUserDataStreamAsync() {
     std::cout << "After run UserDataStream" << std::endl;
 }
 
-void SocketManager::closeUserDataStream(const std::string listenKey) {
-    //TODO:: is unfinished need to stop it from api
-    _ioUserDataCtx->stop();
-    _userDataWs->unsubscribe_all();
+void SocketManager::closeUserDataStreamSocket() {
+    if(_ioUserDataCtx){
+        _ioUserDataCtx->stop();
+        _userDataWs->unsubscribe_all();
+    }
 }
 
 
