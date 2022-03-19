@@ -91,18 +91,6 @@ const char* BAJson::getStringConst(const rapidjson::Value& object, const char* k
     return object[key].GetString();
 }
 
-//cocos2d::Size BAJson::getSize(const rapidjson::Value& object, const char* key, const cocos2d::Size& defaultValue)
-//{
-//    if (!object.HasMember(key) || !object[key].IsString()) {
-//        return defaultValue;
-//    }
-//
-//    float width, height;
-//    sscanf(object[key].GetString(), "%f;%f", &width, &height);
-//
-//    return cocos2d::Size(width, height);
-//}
-
 std::vector<std::string> BAJson::getStringVector(const rapidjson::Value& object, const char* key)
 {
     return getVector<std::string, const char*, &rapidjson::Value::IsString, &rapidjson::Value::GetString>(object, key);

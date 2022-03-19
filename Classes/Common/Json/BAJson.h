@@ -41,23 +41,6 @@ private:
 
         return items;
     }
-
-//    template<typename T>
-//    static void setArray(rapidjson::Document& document,
-//                         rapidjson::Value& object,
-//                         const std::string& key,
-//                         T&& data, const int size)
-//    {
-//        auto array = OPJson::array();
-//
-//        for (int i = 0; i < size; i++)
-//        {
-//            array.PushBack(data[i], document.GetAllocator());
-//        }
-//
-//        OPJson::set(document, object, key, array);
-//    }
-
 public:
 
     static rapidjson::Document document();
@@ -71,7 +54,6 @@ public:
     static double getDouble(const rapidjson::Value& object, const char* key, double defaultValue = 0);
     static std::string getString(const rapidjson::Value& object, const char* key, const std::string& defaultValue = "");
     static const char* getStringConst(const rapidjson::Value& object, const char* key, const char* defaultValue = 0);
-//    static cocos2d::Size getSize(const rapidjson::Value& object, const char* key, const cocos2d::Size& defaultValue = cocos2d::Size::ZERO);
 
     static std::vector<std::string> getStringVector(const rapidjson::Value& object, const char* key);
     static std::vector<int> getIntVector(const rapidjson::Value& object, const char* key);
