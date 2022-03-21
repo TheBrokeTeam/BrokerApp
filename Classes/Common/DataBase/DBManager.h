@@ -5,9 +5,21 @@
 #ifndef BROKERAPP_DBMANAGER_H
 #define BROKERAPP_DBMANAGER_H
 
+#include "../../Data/AccountInfo.h"
 
 class DBManager {
     public:
+    DBManager();
+    ~DBManager();
+    const AccountInfo& loadUserData();
+    void updateUserData(const AccountInfo& info);
+
+private:
+    std::string _privateKey{""};
+    std::string _secretKey{""};
+
+    void loadKeys();
+    AccountInfo _userAccountInfo;
 };
 
 

@@ -125,14 +125,38 @@ add_executable(BrokerApp
         Classes/Networking/Services/SymbolService.cpp
         Classes/Networking/Services/SymbolService.h
         Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
+        Classes/Networking/Services/UserService.h
+		Classes/Helpers/JsonUtils.h
+		Classes/Networking/Services/KLineService.cpp
+		Classes/Networking/Services/KLineService.h
+		Classes/Networking/Routes/KLineRouter.cpp
+		Classes/Networking/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h Classes/Contexts/LiveContext.cpp Classes/Contexts/LiveContext.h Classes/Widgets/SocketStreamController.cpp Classes/Widgets/SocketStreamController.h Classes/Widgets/LiveCandleChart.cpp Classes/Widgets/LiveCandleChart.h Classes/Networking/Binance/RestApiManager.cpp Classes/Networking/Binance/RestApiManager.h Classes/Networking/Binance/LocalKeys.h Classes/Common/Json/BAJson.cpp Classes/Common/Json/BAJson.h Classes/Common/Utils/BAString.cpp Classes/Common/Utils/BAString.h Classes/Common/DataBase/DBManager.cpp Classes/Common/DataBase/DBManager.h)
+		Classes/Networking/Binance/SocketManager.cpp
+		Classes/Networking/Binance/SocketManager.h
+		Classes/Contexts/LiveContext.cpp
+		Classes/Contexts/LiveContext.h
+		Classes/Widgets/SocketStreamController.cpp
+		Classes/Widgets/SocketStreamController.h
+		Classes/Widgets/LiveCandleChart.cpp
+		Classes/Widgets/LiveCandleChart.h
+		Classes/Networking/Binance/RestApiManager.cpp
+		Classes/Networking/Binance/RestApiManager.h
+		Classes/Networking/Binance/LocalKeys.h
+		Classes/Common/Json/BAJson.cpp
+		Classes/Common/Json/BAJson.h
+		Classes/Common/Utils/BAString.cpp
+		Classes/Common/Utils/BAString.h
+		Classes/Common/DataBase/DBManager.cpp
+		Classes/Common/DataBase/DBManager.h
+		Classes/Data/AccountInfo.h
+		Classes/Common/DataBase/Paths.cpp
+		Classes/Common/DataBase/Paths.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
