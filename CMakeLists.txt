@@ -139,8 +139,18 @@ add_executable(BrokerApp
 		Classes/Tickables/Indicators/MFI.h
         Classes/Widgets/LoginView.cpp
 		Classes/Widgets/LoginView.h
-		Classes/Data/User.h Classes/Data/User.cpp)
-		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h Classes/Contexts/LiveContext.cpp Classes/Contexts/LiveContext.h Classes/Widgets/SocketStreamController.cpp Classes/Widgets/SocketStreamController.h Classes/Widgets/LiveCandleChart.cpp Classes/Widgets/LiveCandleChart.h Classes/Networking/Binance/RestApiManager.cpp Classes/Networking/Binance/RestApiManager.h)
+		Classes/Data/User.h Classes/Data/User.cpp
+		Classes/Networking/Binance/SocketManager.cpp
+        Classes/Networking/Binance/SocketManager.h
+        Classes/Contexts/LiveContext.cpp
+        Classes/Contexts/LiveContext.h
+        Classes/Widgets/SocketStreamController.cpp 
+        Classes/Widgets/SocketStreamController.h
+        Classes/Widgets/LiveCandleChart.cpp
+        Classes/Widgets/LiveCandleChart.h
+        Classes/Networking/Binance/RestApiManager.cpp
+        Classes/Networking/Binance/RestApiManager.h
+        )
 
 ###############################################################################
 # FETCH CONTENT LIBS
