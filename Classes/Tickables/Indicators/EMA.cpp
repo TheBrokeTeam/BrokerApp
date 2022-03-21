@@ -27,7 +27,7 @@ void EMA::calculate(BarHistory* barHistory)
         }
 
         push(value);
-        _time.push_back((*barHistory)(0,BarDataType::TIME));
+        _time.push_back((*barHistory)(0,BarDataType::TIME_S));
     }
 }
 

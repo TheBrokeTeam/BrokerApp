@@ -8,7 +8,8 @@
 #include <cstring>
 
 enum BarDataType{
-    TIME,
+    TIME_MS,
+    TIME_S,
     OPEN,
     HIGH,
     LOW,
@@ -18,7 +19,8 @@ enum BarDataType{
 
 struct BarData {
 public:
-    double time;
+    double time_ms;
+    double time_s;
     double open;
     double high;
     double low;

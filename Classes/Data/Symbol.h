@@ -50,13 +50,17 @@ public:
         std::string csv_filename;
     };
 
-    const std::string& getCode();
+    const std::string& getCode() const;
     [[nodiscard]] long getStartTime() const;
     [[nodiscard]] long getEndTime() const;
     [[nodiscard]] std::string getStartDate() const;
     [[nodiscard]] std::string getEndDate() const;
 
     long getTimeIntervalInMinutes();
+
+    //used in live context
+    long getTimeIntervalInSeconds();
+    double getTimeIntervalInMiliSeconds();
 
     bool operator < (const Symbol& rhs) const {return _interval<rhs._interval;}
 

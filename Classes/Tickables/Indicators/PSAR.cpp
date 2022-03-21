@@ -32,7 +32,7 @@ void PSAR::calculate(BarHistory* barHistory)
         _signal = true;
         _sar = _low(0);
 
-        PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
+        PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME_S));
 
     } else {
         if (_signal) { // se é long...
@@ -47,7 +47,7 @@ void PSAR::calculate(BarHistory* barHistory)
                     _sar = _high(0);
                 }
 
-                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
+                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME_S));
 
                 _af = _af_step;
                 _ep = _low(0);
@@ -62,7 +62,7 @@ void PSAR::calculate(BarHistory* barHistory)
                 }
 
             } else {
-                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
+                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME_S));
 
                 if (_high(0) > _ep) {
                     _ep = _high(0);
@@ -91,7 +91,7 @@ void PSAR::calculate(BarHistory* barHistory)
                     _sar = _low(0);
                 }
 
-                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
+                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME_S));
 
                 _af = _af_step;
                 _ep = _high(0);
@@ -104,7 +104,7 @@ void PSAR::calculate(BarHistory* barHistory)
                 }
 
             } else {
-                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME));
+                PSAR::save(_signal, _sar, (*barHistory)(0,BarDataType::TIME_S));
 
                 if (_low(0) < _ep) {
                     _ep = _low(0);

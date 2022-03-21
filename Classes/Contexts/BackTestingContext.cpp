@@ -182,9 +182,14 @@ void BackTestingContext::updateData(float dt) {
             }
 
             auto& tickData = _data[_currentIndex++];
+            _currentTimeStamp = tickData.time;
             _ticker->tick(tickData);
         }
     }
+}
+
+double BackTestingContext::getCurrentTimeStamp() {
+    return _currentTimeStamp;
 }
 
 void BackTestingContext::startSimulation(Ticker* ticker) {
@@ -345,7 +350,7 @@ void BackTestingContext::showTabBars(bool show) {
     for(auto& w : getWidgets()){
         w->showTabBar(show);
     }
-    MainMenuBar::_show_tabbars = show;
+    Editor::show_tabbars = show;
 }
 
 std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator)
@@ -569,6 +574,6 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     auto chart = getWidget<ChartView>();
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
 
-
     return _ticker.get();
 }
+

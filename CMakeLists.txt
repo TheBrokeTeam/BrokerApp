@@ -140,6 +140,7 @@ add_executable(BrokerApp
         Classes/Widgets/LoginView.cpp
 		Classes/Widgets/LoginView.h
 		Classes/Data/User.h Classes/Data/User.cpp)
+		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h Classes/Contexts/LiveContext.cpp Classes/Contexts/LiveContext.h Classes/Widgets/SocketStreamController.cpp Classes/Widgets/SocketStreamController.h Classes/Widgets/LiveCandleChart.cpp Classes/Widgets/LiveCandleChart.h Classes/Networking/Binance/RestApiManager.cpp Classes/Networking/Binance/RestApiManager.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -166,6 +167,8 @@ add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
 add_subdirectory(external/rapidjson)
+add_subdirectory(external/binapi)
+
 
 #--CURL STUFF -------------------------------------------------------------
 include(FindCURL)
@@ -293,6 +296,7 @@ set(INCLUDES
         external/implot
         external/node_editor
         external/stb
+		external/binapi/include
         ${CMAKE_CURRENT_BINARY_DIR}/external/glad/include
         external/rapidcsv/src
         external/rapidjson/include
@@ -314,6 +318,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         implot
         imnodes
         rapidcsv
+		binapi
         ${CURL_LIBRARIES}
         )
+
 #-APPLICATION-LIBRARIES-END-------------------

@@ -44,7 +44,7 @@ void MFI::calculate(BarHistory* barHistory)
         double mfi = 100.0 - (100.0/(1+ratio));
 
         push(mfi);
-        _time.push_back((*barHistory)(0,BarDataType::TIME));
+        _time.push_back((*barHistory)(0,BarDataType::TIME_S));
     }
 
 }

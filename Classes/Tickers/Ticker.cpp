@@ -25,7 +25,9 @@ bool Ticker::removeTickable(Tickable *tickable)
 void Ticker::open(const TickData& tickData) {
     BarData data;
 
-    data.time = tickData.time;
+    data.time_ms = tickData.time;
+    data.time_s = tickData.time/1000;
+
     data.volume = tickData.volume;
 
     data.open = tickData.price;
@@ -49,9 +51,9 @@ void Ticker::tick(const TickData& tickData) {
         return;
     }
 
-    //check if it is the close moment based on symbol interval
-    long lastSecondOfCurrentBar = _barHistory(0,BarDataType::TIME) + _symbol.getTimeIntervalInMinutes()*60 - 1;
-    if(lastSecondOfCurrentBar <= (tickData.time)){
+    //check if it is the close moment based on symbol interval (open time + bar's duration)
+    long lastTimeOfCurrentBar = _barHistory(0,BarDataType::TIME_MS) + _symbol.getTimeIntervalInMiliSeconds() - 1;
+    if(lastTimeOfCurrentBar <= (tickData.time)){
         lastWasClosed = true;
         close(tickData);
         return;
@@ -60,7 +62,8 @@ void Ticker::tick(const TickData& tickData) {
     //normal tick update
     BarData data;
 
-    data.time = _barHistory(0,BarDataType::TIME);
+    data.time_ms = _barHistory(0,BarDataType::TIME_MS);
+    data.time_s = _barHistory(0,BarDataType::TIME_S);
     data.open = _barHistory(0,BarDataType::OPEN);
     data.high = _barHistory(0,BarDataType::HIGH);
     data.low = _barHistory(0,BarDataType::LOW);
@@ -69,19 +72,21 @@ void Ticker::tick(const TickData& tickData) {
 
     data.volume += tickData.volume;
     data.high = tickData.price > data.high ? tickData.price : data.high;
-    data.low = tickData.price < data.low ? tickData.price : data.low;;
+    data.low = tickData.price < data.low ? tickData.price : data.low;
+    data.close = tickData.price;
 
     _barHistory.updateLastBar(data);
 
     for(auto& t : _tickables){
-            t->onTick(&_barHistory);
+        t->onTick(&_barHistory);
     }
 }
 
 void Ticker::close(const TickData& tickData) {
     BarData data;
 
-    data.time = _barHistory(0,BarDataType::TIME);
+    data.time_ms = _barHistory(0,BarDataType::TIME_MS);
+    data.time_s = _barHistory(0,BarDataType::TIME_S);
     data.open = _barHistory(0,BarDataType::OPEN);
     data.high = _barHistory(0,BarDataType::HIGH);
     data.low = _barHistory(0,BarDataType::LOW);
@@ -132,7 +137,7 @@ void Ticker::addTickable(Tickable *tickable) {
 
 void Ticker::setSymbol(const Symbol &symbol) {
     _symbol = symbol;
-    _zoomOutMax = _symbol.getTimeIntervalInMinutes()*_maxBarsToRender*60;
+    _zoomOutMax = _symbol.getTimeIntervalInSeconds()*_maxBarsToRender;
 }
 
 double Ticker::getZoomOutMax() {
@@ -141,4 +146,25 @@ double Ticker::getZoomOutMax() {
 
 int Ticker::getMaxBarsToRender() {
     return _maxBarsToRender;
+}
+
+void Ticker::liveTick(const TickData &tickData)
+{
+    //normal tick update
+    BarData data;
+
+    data.time_ms = _barHistory(0,BarDataType::TIME_MS);
+    data.time_s = _barHistory(0,BarDataType::TIME_S);
+    data.open = _barHistory(0,BarDataType::OPEN);
+    data.high = _barHistory(0,BarDataType::HIGH);
+    data.low = _barHistory(0,BarDataType::LOW);
+    data.close = _barHistory(0,BarDataType::CLOSE);
+    data.volume = _barHistory(0,BarDataType::VOLUME);
+
+    data.volume += tickData.volume;
+    data.high = tickData.price > data.high ? tickData.price : data.high;
+    data.low = tickData.price < data.low ? tickData.price : data.low;
+    data.close = tickData.price;
+
+    _barHistory.updateLastBar(data);
 }
