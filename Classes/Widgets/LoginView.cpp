@@ -5,6 +5,7 @@
 #include "LoginView.h"
 #include "../Contexts/Context.h"
 #include "SubWidgets/Spinner.h"
+#include "../Helpers/JsonUtils.h"
 
 LoginView::LoginView(Context *context) : Widget(context) {
     _title = "Profile";
@@ -70,7 +71,6 @@ void LoginView::updateVisible(float dt) {
                 ImGuiWindowFlags_NoResize
         )))
         {
-
             if(getContext()->startLogin)
             {
                 const ImVec4 col = ImVec4(0.94f, 0.72f, 0.02f, 1.00f);
@@ -130,7 +130,6 @@ void LoginView::updateVisible(float dt) {
                 }
 
             }
-
         }
         ImGui::End();
     }

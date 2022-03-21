@@ -166,7 +166,6 @@ add_subdirectory(external/glfw)
 add_subdirectory(external/glad)
 add_subdirectory(external/rapidcsv)
 add_subdirectory(external/rapidjson)
-#add_subdirectory(external/boost_interprocess)
 
 #--CURL STUFF -------------------------------------------------------------
 include(FindCURL)
@@ -298,7 +297,6 @@ set(INCLUDES
         external/rapidcsv/src
         external/rapidjson/include
         ${CURL_INCLUDE_DIR}
-		external/boost_interprocess/include
         )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -319,4 +317,3 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         ${CURL_LIBRARIES}
         )
 #-APPLICATION-LIBRARIES-END-------------------
-
