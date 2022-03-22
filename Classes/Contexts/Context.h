@@ -109,7 +109,7 @@ public:
     //developer phase
     virtual void showTabBars(bool show) = 0;
 
-    bool getShouldRender();
+    bool getShouldRender() const;
     void setShouldRender(bool);
     virtual void openSymbolStream(const Symbol& symbol){};
     virtual void closeSymbolStream(const Symbol& symbol){};

@@ -135,8 +135,17 @@ add_executable(BrokerApp
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
+        Classes/Widgets/ConnectView.cpp
+		Classes/Widgets/ConnectView.h
+		Classes/Networking/ws/WSCommon.h
+		Classes/Networking/ws/WSMessage.h
+		Classes/Networking/ws/WebSocketManager.cpp
+		Classes/Networking/ws/WebSocketManager.h
+		Classes/Networking/ws/WSConnection.h
+		Classes/Networking/ws/WSQueue.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
+		Classes/Networking/ws/WSClient.h
         Classes/Widgets/LoginView.cpp
 		Classes/Widgets/LoginView.h
 		Classes/Data/User.h Classes/Data/User.cpp
@@ -192,6 +201,16 @@ else()
 endif()
 #--END CURL----------------------------------------------------------------
 
+#--ASIO STUFF--------------------------------------------------------------
+set(Asio_INCLUDE_DIR external/asio-1.22.0/include)
+
+#--END ASIO----------------------------------------------------------------
+
+#-OpenSSL STUFF -----------------------------------------------------
+find_package(OpenSSL REQUIRED)
+
+#-END OpenSSL -------------------------------------------------------
+
 set(IMGUI_SOURCE
         external/imgui/imgui.h
         external/imgui/imstb_rectpack.h
@@ -212,7 +231,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h)
+        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h Classes/Networking/ws/OLCNet.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -260,7 +279,6 @@ target_include_directories(imnodes
         )
 
 target_link_libraries(imnodes PUBLIC glfw imgui)
-
 
 #-EXTERNAL--END---------------
 
@@ -311,7 +329,8 @@ set(INCLUDES
         external/rapidcsv/src
         external/rapidjson/include
         ${CURL_INCLUDE_DIR}
-        )
+		${Asio_INCLUDE_DIR}
+		)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${INCLUDES}
@@ -330,6 +349,10 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         rapidcsv
 		binapi
         ${CURL_LIBRARIES}
-        )
-
+		OpenSSL::SSL
+		)
 #-APPLICATION-LIBRARIES-END-------------------
+
+
+
+#git clone --recurse-submodules[https://github.com/boostorg/asio.git] https://github.com/boostorg/boost.git boost

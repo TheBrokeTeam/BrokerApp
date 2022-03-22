@@ -12,6 +12,7 @@
 #include "ProfitAndLossesView.h"
 #include "StockList.h"
 #include "StrategyEditor.h"
+#include "ConnectView.h"
 #include "SocketStreamController.h"
 #include "LoginView.h"
 #include <fmt/format.h>

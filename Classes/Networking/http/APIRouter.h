@@ -11,7 +11,7 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidcsv.h>
-#include "../Data/Symbol.h"
+#include "../../Data/Symbol.h"
 
 enum RequestMethod {
     get,

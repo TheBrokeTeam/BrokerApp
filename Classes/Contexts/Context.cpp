@@ -75,7 +75,7 @@ void Context::setShouldRender(bool value) {
     _shouldRender = value;
 }
 
-bool Context::getShouldRender() {
+bool Context::getShouldRender() const {
     return _shouldRender;
 }
 
