@@ -114,23 +114,23 @@ add_executable(BrokerApp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
-        Classes/Networking/APIManager.cpp
-        Classes/Networking/APIManager.h
-        Classes/Networking/APIRouter.cpp
-        Classes/Networking/APIRouter.h
-        Classes/Networking/Routes/SymbolRouter.cpp
-        Classes/Networking/Routes/SymbolRouter.h
-        Classes/Networking/Routes/UserRouter.cpp
-        Classes/Networking/Routes/UserRouter.h
-        Classes/Networking/Services/SymbolService.cpp
-        Classes/Networking/Services/SymbolService.h
-        Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h
+        Classes/Networking/http/APIManager.cpp
+        Classes/Networking/http/APIManager.h
+        Classes/Networking/http/APIRouter.cpp
+        Classes/Networking/http/APIRouter.h
+        Classes/Networking/http/Routes/SymbolRouter.cpp
+        Classes/Networking/http/Routes/SymbolRouter.h
+        Classes/Networking/http/Routes/UserRouter.cpp
+        Classes/Networking/http/Routes/UserRouter.h
+        Classes/Networking/http/Services/SymbolService.cpp
+        Classes/Networking/http/Services/SymbolService.h
+        Classes/Networking/http/Services/UserService.cpp
+        Classes/Networking/http/Services/UserService.h
 		Classes/Helpers/JsonUtils.h
-		Classes/Networking/Services/KLineService.cpp
-		Classes/Networking/Services/KLineService.h
-		Classes/Networking/Routes/KLineRouter.cpp
-		Classes/Networking/Routes/KLineRouter.h
+		Classes/Networking/http/Services/KLineService.cpp
+		Classes/Networking/http/Services/KLineService.h
+		Classes/Networking/http/Routes/KLineRouter.cpp
+		Classes/Networking/http/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
@@ -202,7 +202,7 @@ endif()
 #--END CURL----------------------------------------------------------------
 
 #--ASIO STUFF--------------------------------------------------------------
-set(Asio_INCLUDE_DIR external/asio-1.22.0/include)
+set(Asio_INCLUDE_DIR external/asio-1.22.1/include)
 
 #--END ASIO----------------------------------------------------------------
 
