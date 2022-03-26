@@ -85,11 +85,11 @@ public:
     void loadContext(ContextType type);
 
     SocketManager* getSocketManager(){
-        return &_socketManager;
+        return _socketManager.get();
     }
 
     RestApiManager* getApiManager(){
-        return &_apiManager;
+        return _apiManager.get();
     }
 
 private:
@@ -104,8 +104,8 @@ private:
 
     void loadImage(Icons icon,const std::string& filepath);
     std::unique_ptr<Context> _context{nullptr};
-    SocketManager _socketManager;
-    RestApiManager _apiManager;
+    std::unique_ptr<SocketManager> _socketManager{nullptr};
+    std::unique_ptr<RestApiManager> _apiManager{nullptr};
 
 };
 

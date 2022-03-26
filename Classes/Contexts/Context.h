@@ -17,6 +17,7 @@
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
 #include "../Data/Order.h"
+#include "../Common/DataBase/DBManager.h"
 
 class Context {
 public:
@@ -108,6 +109,7 @@ public:
 
     const std::vector<std::shared_ptr<Widget>>& getWidgets();
     Editor* getEditor();
+    DBManager* getDBManager();
 
     //developer phase
     virtual void showTabBars(bool show) = 0;
@@ -129,6 +131,7 @@ protected:
     std::vector<std::shared_ptr<INode>> _nodes;
 
     Editor *_editor{nullptr};
+    DBManager _dbManager;
 
     bool _shouldRender = false;
 };

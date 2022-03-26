@@ -6,21 +6,11 @@
 #include <iostream>
 #include <boost/asio/io_context.hpp>
 #include <thread>
-#include "LocalKeys.h"
 #include "../../Helpers/Utils.h"
 #include "../../Data/Order.h"
+#include "../../Contexts/LiveContext.h"
 
-RestApiManager::RestApiManager() {
-    _apictx = std::make_unique<boost::asio::io_context>();
-    _api = std::make_unique<binapi::rest::api>(
-            *_apictx
-            ,"api.binance.com"
-            ,"443"
-            ,LocalKeys::privateKey // can be empty for non USER_DATA reqs
-            ,LocalKeys::secretKey // can be empty for non USER_DATA reqs
-            ,10000 // recvWindow milliseconds
-    );
-}
+RestApiManager::RestApiManager() {}
 
 RestApiManager::~RestApiManager() {
     _api.reset(nullptr);
@@ -28,6 +18,17 @@ RestApiManager::~RestApiManager() {
     _apictx.reset(nullptr);
 }
 
+void RestApiManager::initialize(const std::string& pk,const std::string& sk) {
+    _apictx = std::make_unique<boost::asio::io_context>();
+    _api = std::make_unique<binapi::rest::api>(
+            *_apictx
+            ,"api.binance.com"
+            ,"443"
+            ,pk // can be empty for non USER_DATA reqs
+            ,sk // can be empty for non USER_DATA reqs
+            ,10000 // recvWindow milliseconds
+    );
+}
 
 void RestApiManager::getCandles(const Symbol &symbol,const CandlesCallback& callback) {
     _api->klines(symbol.getCode(),"1m",500,
@@ -195,6 +196,7 @@ void RestApiManager::cancelOrder(const Order& order) {
     std::thread worker(&RestApiManager::runApiAsync, this);
     worker.detach();
 }
+
 
 
 

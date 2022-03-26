@@ -13,6 +13,8 @@ class DBManager {
     ~DBManager();
     const AccountInfo& loadUserData();
     void updateUserData(const AccountInfo& info);
+    const std::string& getPrivateKey();
+    const std::string& getSecretKey();
 
 private:
     std::string _privateKey{""};

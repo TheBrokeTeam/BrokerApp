@@ -53,6 +53,13 @@ void Editor::start() {
 
     //TODO:: make a way to change the layout configuration at run time
     ImGui::LoadIniSettingsFromDisk("ui_num_1");
+
+    _socketManager = std::make_unique<SocketManager>();
+    _apiManager = std::make_unique<RestApiManager>();
+
+    _apiManager->initialize(_context->getDBManager()->getPrivateKey(),
+                            _context->getDBManager()->getSecretKey()
+                            );
 }
 
 void Editor::update() {
@@ -136,6 +143,7 @@ void Editor::internalLoadContext()
             break;
     }
     _context->initialize();
+
     shouldReloadContext = false;
 }
 

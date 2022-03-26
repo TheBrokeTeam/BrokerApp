@@ -40,7 +40,7 @@ void DBManager::loadKeys() {
         std::string binanceKey = "binance";
         for(auto ex = exchangesJson.Begin(); ex != exchangesJson.End(); ex++){
             if (BAJson::exists(ex->GetObject(), binanceKey)) {
-                auto binanceJson = document[binanceKey.c_str()].GetObject();
+                auto binanceJson = ex->GetObject()[binanceKey.c_str()].GetObject();
 
                 auto pk = BAJson::getString(binanceJson,"api_key","");
                 auto sk = BAJson::getString(binanceJson,"secret_key","");
@@ -54,6 +54,14 @@ void DBManager::loadKeys() {
         }
     }
 
+}
+
+const std::string &DBManager::getPrivateKey() {
+    return _privateKey;
+}
+
+const std::string &DBManager::getSecretKey() {
+    return _secretKey;
 }
 
 

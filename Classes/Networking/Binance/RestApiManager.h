@@ -11,13 +11,11 @@
 #include "../../Data/Symbol.h"
 #include "../../Data/Order.h"
 
-
 class RestApiManager {
 public:
     typedef std::function<void(std::vector<TickData>& data)> CandlesCallback;
     typedef std::function<void(Order& order)> OrderCallback;
     typedef std::function<void(bool success, const std::string listenKey)> UserDataStreamCallback;
-
 
     RestApiManager();
     ~RestApiManager();
@@ -27,8 +25,7 @@ public:
     void accountInfo();
     void startUserDataStream(UserDataStreamCallback callback);
     void cancelOrder(const Order& order);
-
-
+    void initialize(const std::string& pk, const std::string& sk);
 
 private:
     void runApiAsync();

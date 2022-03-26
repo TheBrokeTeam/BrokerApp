@@ -81,3 +81,7 @@ bool Context::getShouldRender() {
 Context::~Context() {
 
 }
+
+DBManager *Context::getDBManager() {
+    return &_dbManager;
+}

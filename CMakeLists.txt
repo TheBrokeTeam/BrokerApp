@@ -147,7 +147,6 @@ add_executable(BrokerApp
 		Classes/Widgets/LiveCandleChart.h
 		Classes/Networking/Binance/RestApiManager.cpp
 		Classes/Networking/Binance/RestApiManager.h
-		Classes/Networking/Binance/LocalKeys.h
 		Classes/Common/Json/BAJson.cpp
 		Classes/Common/Json/BAJson.h
 		Classes/Common/Utils/BAString.cpp
