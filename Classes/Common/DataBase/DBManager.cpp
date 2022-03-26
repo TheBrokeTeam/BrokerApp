@@ -20,12 +20,11 @@ const AccountInfo&  DBManager::loadUserData() {
 }
 
 void DBManager::updateUserData(const AccountInfo &info) {
-    //update info on _userAccountInfo except hor
+    //update info on _userAccountInfo
     _userAccountInfo.update(info);
 }
 
 void DBManager::loadKeys() {
-    //load api keys from local json on _userAccountInfo
     auto jsonPath = Paths::ApiKeys;
 
     rapidjson::Document document;

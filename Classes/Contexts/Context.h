@@ -119,6 +119,8 @@ public:
     virtual void openSymbolStream(const Symbol& symbol){};
     virtual void closeSymbolStream(const Symbol& symbol){};
 
+    virtual void fetchUserAccountInfo(){};
+
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;

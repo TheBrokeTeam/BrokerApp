@@ -149,15 +149,41 @@ void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callba
     worker.detach();
 }
 
-void RestApiManager::accountInfo()
+void RestApiManager::accountInfo(const AccountInfoCallback& callback)
 {
-    _api->account_info([](const char *fl, int ec, std::string emsg, auto res)
+    _api->account_info([callback](const char *fl, int ec, std::string emsg, auto res)
     {
         if ( ec ) {
             std::cerr << "get account info error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
             return false;
         }
         std::cout << "account info: " << res << std::endl;
+        AccountInfo info;
+
+        info.makerCommission = static_cast<double>(res.makerCommission);
+        info.takerCommission = static_cast<double>(res.takerCommission);
+        info.buyerCommission = static_cast<double>(res.buyerCommission);
+        info.sellerCommission = static_cast<double>(res.sellerCommission);
+        info.canTrade = res.canTrade;
+        info.canWithdraw = res.canWithdraw;
+        info.canDeposit = info.canDeposit;
+        info.updateTime = static_cast<double>(res.updateTime);
+
+        std::vector<AccountInfo::balance> balances;
+
+        for(const auto &b : res.balances){
+            AccountInfo::balance balance;
+            balance.asset = b.second.asset;
+            balance.free = static_cast<double>(b.second.free);
+            balance.locked = static_cast<double>(b.second.locked);
+            //if the balance to that symbol is 0
+            if(balance.free > 0 || balance.locked > 0)
+                balances.push_back(balance);
+        }
+
+        info.balances = balances;
+        callback(info);
+
         return true;
     });
 

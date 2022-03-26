@@ -24,6 +24,8 @@ public:
 
 
     Ticker* fetchDataSymbol(Symbol symbol) override;
+    void fetchUserAccountInfo() override;
+
     void loadTicker() override;
     void handleDragDrop(PlotItem *plotItem) override;
     void openSymbolStream(const Symbol& symbol) override;

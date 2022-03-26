@@ -328,8 +328,10 @@ LiveContext::~LiveContext() {
 
 void LiveContext::openUserDataStream() {
     getEditor()->getApiManager()->startUserDataStream([this](bool success,auto key){
-       if(success)
+       if(success) {
+           fetchUserAccountInfo();
            getEditor()->getSocketManager()->openUserDataStream(key);
+       }
     });
 }
 
@@ -344,4 +346,10 @@ void LiveContext::closeAllOrders(const Symbol &symbol) {
     for(auto& o :_orders){
         getEditor()->getApiManager()->cancelOrder(o);
     }
+}
+
+void LiveContext::fetchUserAccountInfo() {
+    getEditor()->getApiManager()->accountInfo([this](const AccountInfo& info){
+        getDBManager()->updateUserData(info);
+    });
 }

@@ -22,7 +22,7 @@ struct AccountInfo{
         double free = 0;
         double locked = 0;
     };
-    std::map<std::string, balance> balances;
+    std::vector<balance> balances;
 
     void update(const AccountInfo& newInfo){
         this->makerCommission =     newInfo.makerCommission;
