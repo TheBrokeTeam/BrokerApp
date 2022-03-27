@@ -16,7 +16,7 @@
 class RestApiManager {
 public:
     typedef std::function<void(std::vector<TickData>& data)> CandlesCallback;
-    typedef std::function<void(Order& order)> OrderCallback;
+    typedef std::function<void(std::shared_ptr<Order> order)> OrderCallback;
     typedef std::function<void(bool success, const std::string listenKey)> UserDataStreamCallback;
     typedef std::function<void(AccountInfo& info)> AccountInfoCallback;
 
@@ -28,7 +28,7 @@ public:
     void openOrder(const Symbol& symbol,const OrderCallback& callback);
     void accountInfo(const AccountInfoCallback& callback);
     void startUserDataStream(UserDataStreamCallback callback);
-    void cancelOrder(const Order& order);
+    void cancelOrder(std::shared_ptr<Order> order,const OrderCallback &callback);
     void initialize(const std::string& pk, const std::string& sk);
 
 private:

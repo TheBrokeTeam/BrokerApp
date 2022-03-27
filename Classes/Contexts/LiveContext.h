@@ -43,6 +43,7 @@ public:
 
     void plotIndicators() override;
     void plotSubplotIndicators() override;
+    void plotOrders() override;
     void showTabBars(bool show) override;
 private:
     void openSymbolCandleSocket(const Symbol& symbol);
@@ -56,6 +57,7 @@ private:
     std::vector<TickData> _data;
 
     double _currentTimeStamp = 0;
+    void removeOrderById(const std::string& id);
 };
 
 #endif //BROKERAPP_LIVECONTEXT_H

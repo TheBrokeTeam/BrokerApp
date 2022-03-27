@@ -58,6 +58,7 @@ public:
     virtual void plotIndicators() = 0;
     virtual void plotSubplotIndicators() = 0;
     virtual void plotStrategy(){};
+    virtual void plotOrders(){};
     virtual void handleDragDrop(PlotItem *plotItem) = 0;
 
     int getSubplotIndicatorsCount(){
@@ -126,7 +127,7 @@ protected:
     std::vector<std::shared_ptr<Indicator>> _indicators;
     std::vector<std::shared_ptr<Indicator>> _subplotIndicators;
 
-    std::vector<Order> _orders;
+    std::vector<std::shared_ptr<Order>> _orders;
 
 
     //    std::vector<std::shared_ptr<Strategy>> _strategies;

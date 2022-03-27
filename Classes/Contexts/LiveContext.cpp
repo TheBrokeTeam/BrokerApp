@@ -16,6 +16,7 @@
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
 #include "../Helpers/Utils.h"
+#include "../Widgets/PlotItem/OrderPlot.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -336,15 +337,18 @@ void LiveContext::openUserDataStream() {
 }
 
 void LiveContext::openOrder(const Symbol &symbol) {
-    getEditor()->getApiManager()->openOrder(symbol,[this](Order& order){
-        std::cout << "Order opened:" << order.clientOrderId << std::endl;
-        _orders.push_back(order);
+    getEditor()->getApiManager()->openOrder(symbol,[this](std::shared_ptr<Order> order){
+        std::cout << "Order opened:" << order->clientOrderId << std::endl;
+        _orders.push_back(std::move(order));
     });
 }
 
 void LiveContext::closeAllOrders(const Symbol &symbol) {
     for(auto& o :_orders){
-        getEditor()->getApiManager()->cancelOrder(o);
+        getEditor()->getApiManager()->cancelOrder(o,[this](std::shared_ptr<Order> order){
+            std::cout << "Order opened:" << order->clientOrderId << std::endl;
+            removeOrderById(order->clientOrderId);
+        });
     }
 }
 
@@ -352,4 +356,20 @@ void LiveContext::fetchUserAccountInfo() {
     getEditor()->getApiManager()->accountInfo([this](const AccountInfo& info){
         getDBManager()->updateUserData(info);
     });
+}
+
+void LiveContext::plotOrders() {
+    for (auto &o :_orders) {
+        auto op = OrderPlot(this, o);
+        op.render();
+    }
+}
+void LiveContext::removeOrderById(const std::string& id) {
+    for(auto it = _orders.begin(); it != _orders.end(); it++){
+        auto o = *it;
+        if(o->clientOrderId == id){
+            _orders.erase(it);
+            return;
+        }
+    }
 }

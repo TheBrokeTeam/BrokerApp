@@ -230,6 +230,7 @@ void LiveCandleChart::render(float dt)
             //plot candle indicators
             getContext()->plotIndicators();
             getContext()->plotStrategy();
+            getContext()->plotOrders();
 
             //allow candles plot area to be a DRAG AND DROP target ##
             if (ImPlot::BeginDragDropTargetPlot()) {

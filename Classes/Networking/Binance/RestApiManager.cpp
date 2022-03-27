@@ -101,7 +101,7 @@ void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callba
                     binapi::e_time::GTC,
                     binapi::e_trade_resp_type::FULL,
                     "0.004",
-                    "2850.00",
+                    "3150.00",
                     "",
                     "",
                     "",
@@ -113,20 +113,20 @@ void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callba
                         }
                         std::cout << "open order success: " << res << std::endl;
 
-                        Order order;
+                        std::shared_ptr<Order> order = std::make_shared<Order>();
                         auto fullResp = res.get_responce_full();
-                        order.symbol = fullResp.symbol;
-                        order.orderId = fullResp.orderId;
-                        order.clientOrderId = fullResp.clientOrderId;
-                        order.transactTime = fullResp.transactTime;
-                        order.price = static_cast<double>(fullResp.price);
-                        order.origQty = static_cast<double>(fullResp.origQty);
-                        order.executedQty = static_cast<double>(fullResp.executedQty);
-                        order.cummulativeQuoteQty = static_cast<double>(fullResp.cummulativeQuoteQty);
-                        order.status = fullResp.status;
-                        order.timeInForce = fullResp.timeInForce;
-                        order.type = fullResp.type;
-                        order.side = fullResp.side;
+                        order->symbol = fullResp.symbol;
+                        order->orderId = fullResp.orderId;
+                        order->clientOrderId = fullResp.clientOrderId;
+                        order->transactTime = static_cast<double>(fullResp.transactTime);
+                        order->price = static_cast<double>(fullResp.price);
+                        order->origQty = static_cast<double>(fullResp.origQty);
+                        order->executedQty = static_cast<double>(fullResp.executedQty);
+                        order->cummulativeQuoteQty = static_cast<double>(fullResp.cummulativeQuoteQty);
+                        order->status = fullResp.status;
+                        order->timeInForce = fullResp.timeInForce;
+                        order->type = fullResp.type;
+                        order->side = fullResp.side;
                         std::vector<Order::fill_part> fillsVec;
 
                         for(binapi::rest::new_order_info_full_t::fill_part f : fullResp.fills) {
@@ -138,7 +138,7 @@ void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callba
                                                });
                         }
 
-                        order.fills = fillsVec;
+                        order->fills = fillsVec;
 
                         callback(order);
                         return true;
@@ -208,14 +208,19 @@ void RestApiManager::startUserDataStream(UserDataStreamCallback callback) {
     worker.detach();
 }
 
-void RestApiManager::cancelOrder(const Order& order) {
-    auto start_uds = _api->cancel_order(order.symbol,order.orderId, order.clientOrderId,"",[](const char *fl, int ec, std::string emsg, auto res)
+void RestApiManager::cancelOrder(std::shared_ptr<Order> order,const OrderCallback &callback) {
+    auto start_uds = _api->cancel_order(order->symbol,order->orderId, order->clientOrderId,"",[callback](const char *fl, int ec, std::string emsg, auto res)
       {
           if ( ec ) {
               std::cerr << "cancelOrder error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
               return false;
           }
           std::cout << "cancelOrder: " << res << std::endl;
+
+
+          std::shared_ptr<Order> order = std::make_shared<Order>();
+          order->clientOrderId = res.origClientOrderId;
+          callback(std::move(order));
           return true;
       });
 

@@ -13,7 +13,7 @@ public:
     std::string symbol;
     std::size_t orderId;
     std::string clientOrderId;
-    std::size_t transactTime;
+    double transactTime;
     double price;
     double origQty;
     double executedQty;
