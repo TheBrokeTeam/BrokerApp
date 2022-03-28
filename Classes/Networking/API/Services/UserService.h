@@ -27,11 +27,8 @@ private:
 public:
     UserService();
     rapidjson::Document authenticate(const rapidjson::Document& body);
-//    rapidjson::Document getGitHubToken();
-//    rapidjson::Document createNewUser();
     rapidjson::Document updateUser();
     rapidjson::Document deleteUser();
-
     void openAuth(const std::string& provider);
 };
 

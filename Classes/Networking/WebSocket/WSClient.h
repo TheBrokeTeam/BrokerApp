@@ -28,7 +28,7 @@ namespace olc::net {
                         m_context,
                         asio::ip::tcp::socket(m_context), m_qMessagesIn);
 
-                // Tell the connection object to connect to server
+                // Tell the connection object to connect to Server
                 m_connection->ConnectToServer(endpoints);
 
                 // Start Context Thread

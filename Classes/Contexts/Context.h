@@ -17,17 +17,17 @@
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
 #include "../Data/User.h"
+#include "../Networking/Server/HttpServer.h"
 
 class Context {
 
 public:
     Context(Editor* editor);
 
-//    virtual void loadSymbol(Symbol symbol) = 0;
+    // virtual void loadSymbol(Symbol symbol) = 0;
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
     bool startFetching = false;
     bool startSpinner = false;
-    bool startLogin = false;
     virtual void loadTicker() = 0;
     virtual void updateData(float dt);
     virtual void startSimulation(Ticker* ticker){};
@@ -117,6 +117,11 @@ public:
 
     std::string getUserId();
     void setUserId(const std::string&);
+
+    // login stuffs
+    bool _sentAuthentication = false;
+    bool _startingAuthentication = false;
+    bool _finishedAuthentication = false;
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;

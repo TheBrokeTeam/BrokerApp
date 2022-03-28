@@ -7,8 +7,8 @@
 
 
 #include "Widget.h"
-#include "../Networking/ws/WebSocketManager.h"
-#include "../Networking/WS/WSMessage.h"
+#include "../Networking/WebSocket/WebSocketManager.h"
+#include "../Networking/WebSocket/WSMessage.h"
 
 class ConnectView : public Widget {
 public:

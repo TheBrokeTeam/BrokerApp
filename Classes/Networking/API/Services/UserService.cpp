@@ -30,11 +30,6 @@ rapidjson::Document UserService::updateUser() {
 
 void UserService::openAuth(const std::string& provider){
     UserService::openPlatform(this->apiManager.getURL() + fmt::format("/login/{}", provider));
-//    rapidjson::Document body;
-//    body.SetObject();
-//    rapidjson::Document::AllocatorType& allocator = body.GetAllocator();
-//    body.AddMember("provider", "github", allocator);
-//    return this->apiManager.Request(UserRouter().authenticate(body));
 }
 
 void UserService::openPlatform(const std::string& url)

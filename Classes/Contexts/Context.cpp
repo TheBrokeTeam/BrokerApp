@@ -6,7 +6,7 @@
 
 #include <utility>
 
-Context::Context(Editor* editor): _editor(editor) {
+Context::Context(Editor* editor): _editor(editor){
 }
 
 void Context::updateData(float dt) {

@@ -7,6 +7,10 @@
 
 
 #include "Widget.h"
+#include "../Networking/Server/HttpServer.h"
+#include "../Contexts/Context.h"
+#include "SubWidgets/Spinner.h"
+#include "../Networking/API/Services/UserService.h"
 
 class LoginView : public Widget{
 public:
@@ -14,11 +18,10 @@ public:
     void updateVisible(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
-
+    static void createServer(Context*);
 private:
-    bool _onLogin = false;
-
     void openAuthProvider(const std::string&);
+    void Cancel();
 };
 
 

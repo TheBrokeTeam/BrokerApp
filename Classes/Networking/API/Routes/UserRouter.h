@@ -14,6 +14,7 @@ protected:
     std::string endpoint = "/users";
 public:
     UserRouter();
+    [[nodiscard]] APIRouter getName(const std::string&) const;
     [[nodiscard]] APIRouter getGitHubAuthorization() const;
     [[nodiscard]] APIRouter authenticate(const rapidjson::Document& body) const;
     [[nodiscard]] APIRouter createOne() const;

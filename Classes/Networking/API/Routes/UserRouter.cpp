@@ -27,6 +27,10 @@ APIRouter UserRouter::deleteOne() const {
     return {del, this->endpoint};
 }
 
+APIRouter UserRouter::getName(const std::string & id) const {
+    return {get, this->endpoint + "/" + id + "?scope=name"};
+}
+
 APIRouter UserRouter::getGitHubAuthorization() const {
     APIRouter apiRouter = APIRouter(post, this->endpoint + "/auth/github");
     return apiRouter;

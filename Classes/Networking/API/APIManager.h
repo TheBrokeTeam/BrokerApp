@@ -12,7 +12,7 @@
 class APIManager {
 protected:
     std::string baseURL = "https://api.binance.com/api/v3";
-    std::string serverURL = "http:/localhost:3200";
+    std::string serverURL = "http://localhost:3200";
     std::string csvURL = "https://data.binance.vision/data/spot/monthly";
     std::string accessKey = "XXX";
 public:

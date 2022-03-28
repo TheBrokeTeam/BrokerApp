@@ -114,38 +114,38 @@ add_executable(BrokerApp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
-        Classes/Networking/http/APIManager.cpp
-        Classes/Networking/http/APIManager.h
-        Classes/Networking/http/APIRouter.cpp
-        Classes/Networking/http/APIRouter.h
-        Classes/Networking/http/Routes/SymbolRouter.cpp
-        Classes/Networking/http/Routes/SymbolRouter.h
-        Classes/Networking/http/Routes/UserRouter.cpp
-        Classes/Networking/http/Routes/UserRouter.h
-        Classes/Networking/http/Services/SymbolService.cpp
-        Classes/Networking/http/Services/SymbolService.h
-        Classes/Networking/http/Services/UserService.cpp
-        Classes/Networking/http/Services/UserService.h
+		Classes/Networking/API/APIManager.cpp
+		Classes/Networking/API/APIManager.h
+		Classes/Networking/API/APIRouter.cpp
+		Classes/Networking/API/APIRouter.h
+		Classes/Networking/API/Routes/SymbolRouter.cpp
+		Classes/Networking/API/Routes/SymbolRouter.h
+		Classes/Networking/API/Routes/UserRouter.cpp
+		Classes/Networking/API/Routes/UserRouter.h
+		Classes/Networking/API/Services/SymbolService.cpp
+		Classes/Networking/API/Services/SymbolService.h
+		Classes/Networking/API/Services/UserService.cpp
+		Classes/Networking/API/Services/UserService.h
 		Classes/Helpers/JsonUtils.h
-		Classes/Networking/http/Services/KLineService.cpp
-		Classes/Networking/http/Services/KLineService.h
-		Classes/Networking/http/Routes/KLineRouter.cpp
-		Classes/Networking/http/Routes/KLineRouter.h
+		Classes/Networking/API/Services/KLineService.cpp
+		Classes/Networking/API/Services/KLineService.h
+		Classes/Networking/API/Routes/KLineRouter.cpp
+		Classes/Networking/API/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
         Classes/Widgets/ConnectView.cpp
 		Classes/Widgets/ConnectView.h
-		Classes/Networking/ws/WSCommon.h
-		Classes/Networking/ws/WSMessage.h
-		Classes/Networking/ws/WebSocketManager.cpp
-		Classes/Networking/ws/WebSocketManager.h
-		Classes/Networking/ws/WSConnection.h
-		Classes/Networking/ws/WSQueue.h
+		Classes/Networking/WebSocket/WSCommon.h
+		Classes/Networking/WebSocket/WSMessage.h
+		Classes/Networking/WebSocket/WebSocketManager.cpp
+		Classes/Networking/WebSocket/WebSocketManager.h
+		Classes/Networking/WebSocket/WSConnection.h
+		Classes/Networking/WebSocket/WSQueue.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/ws/WSClient.h
+		Classes/Networking/WebSocket/WSClient.h
         Classes/Widgets/LoginView.cpp
 		Classes/Widgets/LoginView.h
 		Classes/Data/User.h Classes/Data/User.cpp
@@ -159,6 +159,8 @@ add_executable(BrokerApp
         Classes/Widgets/LiveCandleChart.h
         Classes/Networking/Binance/RestApiManager.cpp
         Classes/Networking/Binance/RestApiManager.h
+		Classes/Networking/Server/HttpServer.cpp
+		Classes/Networking/Server/HttpServer.h
         )
 
 ###############################################################################
@@ -231,7 +233,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h Classes/Networking/ws/OLCNet.h)
+        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h Classes/Networking/WebSocket/OLCNet.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -352,7 +354,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 		OpenSSL::SSL
 		)
 #-APPLICATION-LIBRARIES-END-------------------
-
 
 
 #git clone --recurse-submodules[https://github.com/boostorg/asio.git] https://github.com/boostorg/boost.git boost

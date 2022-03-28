@@ -6,7 +6,7 @@
 #define BROKERAPP_USER_H
 
 #include <string>
-#include "../Networking/http/Services/UserService.h"
+#include "../Networking/API/Services/UserService.h"
 
 class User
 {
