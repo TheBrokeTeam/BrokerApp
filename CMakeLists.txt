@@ -145,23 +145,31 @@ add_executable(BrokerApp
 		Classes/Networking/WebSocket/WSQueue.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/WebSocket/WSClient.h
+		Classes/Networking/Binance/SocketManager.cpp
+		Classes/Networking/Binance/SocketManager.h
+		Classes/Contexts/LiveContext.cpp
+		Classes/Contexts/LiveContext.h
+		Classes/Widgets/SocketStreamController.cpp
+		Classes/Widgets/SocketStreamController.h
+		Classes/Widgets/LiveCandleChart.cpp
+		Classes/Widgets/LiveCandleChart.h
+		Classes/Networking/Binance/RestApiManager.cpp
+		Classes/Networking/Binance/RestApiManager.h
+		Classes/Common/Json/BAJson.cpp
+		Classes/Common/Json/BAJson.h
+		Classes/Common/Utils/BAString.cpp
+		Classes/Common/Utils/BAString.h
+		Classes/Common/DataBase/DBManager.cpp
+		Classes/Common/DataBase/DBManager.h
+		Classes/Data/AccountInfo.h
+		Classes/Common/DataBase/Paths.cpp
+		Classes/Common/DataBase/Paths.h)
         Classes/Widgets/LoginView.cpp
 		Classes/Widgets/LoginView.h
-		Classes/Data/User.h Classes/Data/User.cpp
-		Classes/Networking/Binance/SocketManager.cpp
-        Classes/Networking/Binance/SocketManager.h
-        Classes/Contexts/LiveContext.cpp
-        Classes/Contexts/LiveContext.h
-        Classes/Widgets/SocketStreamController.cpp 
-        Classes/Widgets/SocketStreamController.h
-        Classes/Widgets/LiveCandleChart.cpp
-        Classes/Widgets/LiveCandleChart.h
-        Classes/Networking/Binance/RestApiManager.cpp
-        Classes/Networking/Binance/RestApiManager.h
-		Classes/Networking/Server/HttpServer.cpp
-		Classes/Networking/Server/HttpServer.h
         )
+		Classes/Data/User.h Classes/Data/User.cpp
+		Classes/Networking/Server/HttpServer.h
+		Classes/Networking/Server/HttpServer.cpp
 
 ###############################################################################
 # FETCH CONTENT LIBS

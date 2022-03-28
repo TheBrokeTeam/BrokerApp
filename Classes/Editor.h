@@ -9,6 +9,8 @@
 #include <vector>
 #include "Contexts/Context.h"
 #include "Helpers/Utils.h"
+#include "Networking/Binance/SocketManager.h"
+#include "Networking/Binance/RestApiManager.h"
 
 class Ticker;
 class Editor : public App {
@@ -82,6 +84,14 @@ public:
     const Editor::ContextType& getContextType();
     void loadContext(ContextType type);
 
+    SocketManager* getSocketManager(){
+        return _socketManager.get();
+    }
+
+    RestApiManager* getApiManager(){
+        return _apiManager.get();
+    }
+
 private:
     void internalLoadContext();
     bool shouldReloadContext = false;
@@ -93,7 +103,9 @@ private:
     float getDeltaTime();
 
     void loadImage(Icons icon,const std::string& filepath);
-    std::shared_ptr<Context> _context{nullptr};
+    std::unique_ptr<Context> _context{nullptr};
+    std::unique_ptr<SocketManager> _socketManager{nullptr};
+    std::unique_ptr<RestApiManager> _apiManager{nullptr};
 
 };
 

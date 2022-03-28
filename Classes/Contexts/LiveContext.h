@@ -17,16 +17,24 @@ class LiveContext : public Context {
 public:
 
     LiveContext(Editor* editor);
+    ~LiveContext();
     void initialize() override;
     void updateData(float dt) override;
     double getCurrentTimeStamp() override;
 
 
     Ticker* fetchDataSymbol(Symbol symbol) override;
+    void fetchUserAccountInfo() override;
+
     void loadTicker() override;
     void handleDragDrop(PlotItem *plotItem) override;
     void openSymbolStream(const Symbol& symbol) override;
     void closeSymbolStream(const Symbol& symbol) override;
+
+    void openUserDataStream() override;
+
+    void openOrder(const Symbol &symbol) override;
+    void closeAllOrders(const Symbol &symbol) override;
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode) override;
 
@@ -47,10 +55,7 @@ private:
     //and call loadticker
     std::vector<TickData> _data;
 
-    SocketManager _socket_manager;
-    RestApiManager _apiManager;
     double _currentTimeStamp = 0;
-
 };
 
 #endif //BROKERAPP_LIVECONTEXT_H

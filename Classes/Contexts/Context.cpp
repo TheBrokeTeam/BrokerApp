@@ -87,3 +87,10 @@ std::string Context::getUserId() {
     return _user->id();
 }
 
+Context::~Context() {
+
+}
+
+DBManager *Context::getDBManager() {
+    return &_dbManager;
+}

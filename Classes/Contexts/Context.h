@@ -16,6 +16,8 @@
 #include "../Tickables/Strategies/Strategy.h"
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
+#include "../Data/Order.h"
+#include "../Common/DataBase/DBManager.h"
 #include "../Data/User.h"
 #include "../Networking/Server/HttpServer.h"
 
@@ -23,8 +25,8 @@ class Context {
 
 public:
     Context(Editor* editor);
-
-    // virtual void loadSymbol(Symbol symbol) = 0;
+    virtual ~Context();
+//    virtual void loadSymbol(Symbol symbol) = 0;
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
     bool startFetching = false;
     bool startSpinner = false;
@@ -33,6 +35,11 @@ public:
     virtual void startSimulation(Ticker* ticker){};
     virtual void setSimulationSpeed(float speed){};
     virtual bool isSimulating(){return false;};
+
+    virtual void openUserDataStream() {};
+
+    virtual void openOrder(const Symbol &symbol) {};
+    virtual void closeAllOrders(const Symbol &symbol) {};
 
     virtual double getCurrentTimeStamp() = 0 ;
 
@@ -105,6 +112,7 @@ public:
 
     const std::vector<std::shared_ptr<Widget>>& getWidgets();
     Editor* getEditor();
+    DBManager* getDBManager();
 
     //developer phase
     virtual void showTabBars(bool show) = 0;
@@ -114,6 +122,7 @@ public:
     virtual void openSymbolStream(const Symbol& symbol){};
     virtual void closeSymbolStream(const Symbol& symbol){};
 
+    virtual void fetchUserAccountInfo(){};
 
     std::string getUserId();
     void setUserId(const std::string&);
@@ -128,10 +137,14 @@ protected:
     std::vector<std::shared_ptr<Indicator>> _indicators;
     std::vector<std::shared_ptr<Indicator>> _subplotIndicators;
 
+    std::vector<Order> _orders;
+
+
     //    std::vector<std::shared_ptr<Strategy>> _strategies;
     std::vector<std::shared_ptr<INode>> _nodes;
 
     Editor *_editor{nullptr};
+    DBManager _dbManager;
 
     bool _shouldRender = false;
 

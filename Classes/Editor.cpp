@@ -53,6 +53,13 @@ void Editor::start() {
 
     //TODO:: make a way to change the layout configuration at run time
     ImGui::LoadIniSettingsFromDisk("ui_num_1");
+
+    _socketManager = std::make_unique<SocketManager>();
+    _apiManager = std::make_unique<RestApiManager>();
+
+    _apiManager->initialize(_context->getDBManager()->getPrivateKey(),
+                            _context->getDBManager()->getSecretKey()
+                            );
 }
 
 void Editor::update() {
@@ -125,10 +132,10 @@ void Editor::internalLoadContext()
     _context.reset();
     switch (_contextType) {
         case  Editor::ContextType::LiveTrade:
-            _context = std::make_shared<LiveContext>(this);
+            _context = std::make_unique<LiveContext>(this);
             break;
         case  Editor::ContextType::BackTesting:
-            _context = std::make_shared<BackTestingContext>(this);
+            _context = std::make_unique<BackTestingContext>(this);
             break;
         case Editor::ContextType::None:
         default:
@@ -136,6 +143,7 @@ void Editor::internalLoadContext()
             break;
     }
     _context->initialize();
+
     shouldReloadContext = false;
 }
 
@@ -143,7 +151,8 @@ const Editor::ContextType& Editor::getContextType() {
     return _contextType;
 }
 
-Editor::~Editor() {}
+Editor::~Editor() {
+}
 
 
 //APPLICATION ENTRY POINT
