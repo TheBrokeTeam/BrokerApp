@@ -53,7 +53,7 @@ void IndicatorFromChartExample::rule() {
 
     return;
 
-    if(barHist.size() < 5) return;
+//    if(barHist.size() < 5) return;
 
     double fifthPrice   = barHist(4,BarDataType::CLOSE);
     double fourthPrice  = barHist(3,BarDataType::CLOSE);

@@ -35,7 +35,7 @@ public:
 
     virtual void openUserDataStream() {};
 
-    virtual void openOrder(const Symbol &symbol) {};
+    virtual void openOrder(const Order &order) {};
     virtual void closeAllOrders(const Symbol &symbol) {};
 
     virtual double getCurrentTimeStamp() = 0 ;

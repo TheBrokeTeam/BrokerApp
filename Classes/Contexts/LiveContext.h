@@ -33,7 +33,7 @@ public:
 
     void openUserDataStream() override;
 
-    void openOrder(const Symbol &symbol) override;
+    void openOrder(const Order &order) override;
     void closeAllOrders(const Symbol &symbol) override;
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode) override;
@@ -58,6 +58,8 @@ private:
 
     double _currentTimeStamp = 0;
     void removeOrderById(const std::string& id);
+    void updateOrders(const Order& order);
+    std::mutex _orderMutex;
 };
 
 #endif //BROKERAPP_LIVECONTEXT_H

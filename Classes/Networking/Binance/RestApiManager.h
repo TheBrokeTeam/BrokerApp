@@ -25,7 +25,7 @@ public:
     ~RestApiManager();
 
     void getCandles(const Symbol& symbol,const CandlesCallback& callback);
-    void openOrder(const Symbol& symbol,const OrderCallback& callback);
+    void openOrder(const Order& order,const OrderCallback& callback);
     void accountInfo(const AccountInfoCallback& callback);
     void startUserDataStream(UserDataStreamCallback callback);
     void cancelOrder(std::shared_ptr<Order> order,const OrderCallback &callback);

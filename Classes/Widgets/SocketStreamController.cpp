@@ -61,17 +61,32 @@ void SocketStreamController::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    if (ImGui::Button("Abrir ordem",ImVec2(200,50))) {
-        getContext()->openOrder(_symbol);
+    if (ImGui::Button("Comprar",ImVec2(200,50))) {
+        Order order;
+//        order.price = 3174.00;
+        order.origQty = 0.004;
+        order.symbol = std::make_shared<Symbol>(_symbol);
+        order.side = Order::OrderSide::BUY;
+        order.type = Order::OrderType::MARKET;
+
+        getContext()->openOrder(order);
     }
 
-    if (ImGui::Button("Cancelar ordem",ImVec2(200,50))) {
-        getContext()->closeAllOrders(_symbol);
+    if (ImGui::Button("Vender",ImVec2(200,50))) {
+        Order order;
+//        order.price = 3174.00;
+        order.origQty = 0.004;
+        order.symbol = std::make_shared<Symbol>(_symbol);
+        order.side = Order::OrderSide::SELL;
+        order.type = Order::OrderType::MARKET;
+
+        getContext()->openOrder(order);
     }
 
-    if (ImGui::Button("Ainda não sei",ImVec2(200,50))) {
-        testFunction();
-    }
+
+//    if (ImGui::Button("Cancelar ordens abertas",ImVec2(200,50))) {
+//        getContext()->closeAllOrders(_symbol);
+//    }
 }
 
 int SocketStreamController::getWindowFlags() {

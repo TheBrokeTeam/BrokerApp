@@ -25,6 +25,26 @@ static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
 LiveContext::LiveContext(Editor *editor) : Context(editor) {
     _ticker.reset();
     _ticker = std::make_shared<Ticker>(this);
+
+    editor->getSocketManager()->setUpdateOrderCallback([this](Order order){
+        updateOrders(order);
+    });
+}
+
+void LiveContext::updateOrders(const Order& order){
+    bool founded = false;
+    for(auto o : _orders){
+        if(o->clientOrderId == order.clientOrderId) {
+            o->updateOrder(order);
+            founded = true;
+            break;
+        }
+    }
+
+    if(!founded) {
+        std::shared_ptr<Order> shrdOrder = std::make_shared<Order>(order);
+        _orders.push_back(shrdOrder);
+    }
 }
 
 void LiveContext::initialize() {
@@ -336,10 +356,12 @@ void LiveContext::openUserDataStream() {
     });
 }
 
-void LiveContext::openOrder(const Symbol &symbol) {
-    getEditor()->getApiManager()->openOrder(symbol,[this](std::shared_ptr<Order> order){
+void LiveContext::openOrder(const Order &order) {
+    getEditor()->getApiManager()->openOrder(order,[this](std::shared_ptr<Order> order){
         std::cout << "Order opened:" << order->clientOrderId << std::endl;
-        _orders.push_back(std::move(order));
+        const std::lock_guard<std::mutex> lock(_orderMutex);
+
+        updateOrders(*order.get());
     });
 }
 
@@ -359,6 +381,7 @@ void LiveContext::fetchUserAccountInfo() {
 }
 
 void LiveContext::plotOrders() {
+    const std::lock_guard<std::mutex> lock(_orderMutex);
     for (auto &o :_orders) {
         auto op = OrderPlot(this, o);
         op.render();

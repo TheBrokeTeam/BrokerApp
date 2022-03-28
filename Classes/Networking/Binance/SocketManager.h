@@ -9,11 +9,13 @@
 #include <binapi/api.hpp>
 #include <binapi/websocket.hpp>
 #include "../../Data/Symbol.h"
+#include "../../Data/Order.h"
 
 class SocketManager {
     public:
     typedef std::function<void(const TickData& data)> StreamCallback;
     typedef std::function<void(std::vector<TickData>& data)> CandlesCallback;
+    typedef std::function<void(Order order)> OrderCallback;
 
     SocketManager();
     ~SocketManager();
@@ -23,6 +25,9 @@ class SocketManager {
     void closeCandleStream(const Symbol& symbol);
     void openUserDataStream(const std::string listenKey);
     void closeUserDataStreamSocket();
+
+    void setUpdateOrderCallback(OrderCallback cb);
+
 private:
     void startStreamAsync();
     void startCandleStreamAsync();
@@ -45,6 +50,8 @@ private:
 
     //TODO::remove it from here
     std::string _userDataListenKey{""};
+
+    OrderCallback _updateOrderCallback{nullptr};
 
 };
 

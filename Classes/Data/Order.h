@@ -7,7 +7,7 @@
 
 #include <string>
 #include <vector>
-
+#include "Symbol.h"
 
 class Order {
 public:
@@ -30,7 +30,7 @@ public:
         MARKET
     };
 
-    std::string symbol;
+    std::shared_ptr<Symbol> symbol{nullptr};
     OrderStatus status;
     OrderSide side;
     OrderType type;
@@ -50,24 +50,19 @@ public:
     };
     std::vector<FillPart> fills;
 
-    void setStatus(const std::string& strStatus){
-        if(strStatus == "NEW") status = OrderStatus::NEW;
-        if(strStatus == "PARTIALLY_FILLED") status = OrderStatus::PARTIALLY_FILLED;
-        if(strStatus == "FILLED") status = OrderStatus::FILLED;
-        if(strStatus == "CANCELED") status = OrderStatus::CANCELED;
-        if(strStatus == "EXPIRED") status = OrderStatus::EXPIRED;
-        if(strStatus == "PENDING_CANCEL") status = OrderStatus::PENDING_CANCEL;
-        if(strStatus == "REJECTED") status = OrderStatus::REJECTED;
-    }
-
-    void setType(const std::string& strType){
-        if(strType == "LIMIT") type = OrderType::LIMIT;
-        if(strType == "MARKET") type = OrderType::MARKET;
-    }
-
-    void setSide(const std::string& strSide){
-        if(strSide == "BUY") side = OrderSide::BUY;
-        if(strSide == "SELL") side = OrderSide::SELL;
+    void updateOrder(const Order order){
+        this->symbol = order.symbol;
+        this->status = order.status;
+//        this->side = order.side;
+//        this->type = order.type;
+        this->reportTime = order.reportTime;
+//        this->transactionTime = order.transactionTime;
+//        this->clientOrderId = order.clientOrderId;
+        if(order.price != 0)
+            this->price = order.price;
+//        this->origQty = order.origQty;
+        this->lastExecutedQty = order.lastExecutedQty;
+        this->cumulativeQty = order.cumulativeQty;
     }
 
 

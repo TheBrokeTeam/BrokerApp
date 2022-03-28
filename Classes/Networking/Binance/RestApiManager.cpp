@@ -94,16 +94,15 @@ void RestApiManager::runApiAsync() {
     std::cout << "After run api" << std::endl;
 }
 
+void RestApiManager::openOrder(const Order& order, const OrderCallback &callback) {
 
-void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callback) {
-
-    _api->new_order(symbol.getCode(),
-                    binapi::e_side::buy,
-                    binapi::e_type::limit,
+    _api->new_order(order.symbol->getCode(),
+                    BinanceParser::toOrderSide(order.side),
+                    BinanceParser::toOrderType(order.type),
                     binapi::e_time::GTC,
                     binapi::e_trade_resp_type::FULL,
-                    "0.004",
-                    "3150.00",
+                    std::to_string(order.origQty),
+                    order.type == Order::OrderType::LIMIT ? std::to_string(order.price) : "",
                     "",
                     "",
                     "",
@@ -183,7 +182,7 @@ void RestApiManager::startUserDataStream(UserDataStreamCallback callback) {
 }
 
 void RestApiManager::cancelOrder(std::shared_ptr<Order> order,const OrderCallback &callback) {
-    auto start_uds = _api->cancel_order(order->symbol,0, order->clientOrderId,"",[callback](const char *fl, int ec, std::string emsg, auto res)
+    auto start_uds = _api->cancel_order(order->symbol->getCode(),0, order->clientOrderId,"",[callback](const char *fl, int ec, std::string emsg, auto res)
       {
           if ( ec ) {
               std::cerr << "cancelOrder error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;

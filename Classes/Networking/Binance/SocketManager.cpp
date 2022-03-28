@@ -6,6 +6,7 @@
 #include <iostream>
 #include <boost/asio/io_context.hpp>
 #include <thread>
+#include "../Parsers/BinanceParser.h"
 
 SocketManager::SocketManager() {
 
@@ -168,13 +169,18 @@ void SocketManager::openUserDataStream(const std::string listenKey) {
             std::cout << "balance update:\n" << msg << std::endl;
             return true;
         }
-        ,[](const char *fl, int ec, std::string errmsg, binapi::userdata::order_update_t msg) -> bool {
+        ,[this](const char *fl, int ec, std::string errmsg, binapi::userdata::order_update_t msg) -> bool {
             if ( ec ) {
                 std::cout << "order update: fl=" << fl << ", ec=" << ec << ", errmsg: " << errmsg << ", msg: " << msg << std::endl;
                 return false;
             }
 
             std::cout << "order update:\n" << msg << std::endl;
+            auto orderData = BinanceParser::socketUpdateOrderParse(msg);
+
+            if(_updateOrderCallback)
+                _updateOrderCallback(orderData);
+
             return true;
         }
     );
@@ -195,6 +201,10 @@ void SocketManager::closeUserDataStreamSocket() {
         _ioUserDataCtx->stop();
         _userDataWs->unsubscribe_all();
     }
+}
+
+void SocketManager::setUpdateOrderCallback(OrderCallback cb) {
+    _updateOrderCallback = cb;
 }
 
 
