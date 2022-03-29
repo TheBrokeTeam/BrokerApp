@@ -31,7 +31,7 @@ namespace olc::net {
     class connection: public std::enable_shared_from_this<connection<T>>{
 
     public:
-        connection(asio::io_context& asioContext, asio::ip::tcp::socket socket, WSQueue<owned_message<T>>& qIn)
+        connection(boost::asio::io_context& asioContext, boost::asio::ip::tcp::socket socket, WSQueue<owned_message<T>>& qIn)
             : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn) {
 
             m_handShakeOut = uint64_t(std::chrono::system_clock::now().time_since_epoch().count());
@@ -47,9 +47,9 @@ namespace olc::net {
 
     public:
 
-        void ConnectToServer(const asio::ip::tcp::resolver::results_type& endpoints)
+        void ConnectToServer(const boost::asio::ip::tcp::resolver::results_type& endpoints)
         {
-            asio::async_connect(m_socket, endpoints, [this](std::error_code ec, const asio::ip::tcp::endpoint& endpoint)
+            boost::asio::async_connect(m_socket, endpoints, [this](boost::system::error_code ec, const boost::asio::ip::tcp::endpoint& endpoint)
             {
                 if (!ec) {
                     std::cout << "Connected in Server on " << endpoint.port() << std::endl;
@@ -60,7 +60,7 @@ namespace olc::net {
 
         void Disconnect() {
             if (IsConnected()) {
-                asio::error_code ec;
+                boost::system::error_code ec;
                 m_socket.close(ec);
                 if(!ec)
                 {
@@ -84,7 +84,7 @@ namespace olc::net {
 
     public:
         void Send(const message<T>& msg) {
-            asio::post(m_asioContext, [this, msg]() {
+            boost::asio::post(m_asioContext, [this, msg]() {
                 // If the queue has a message in it, then we must
                 // assume that it is in the process of asynchronously being written.
                 // Either way add the message to the queue to be output. If no messages
@@ -103,8 +103,8 @@ namespace olc::net {
             // If this function is called, we know the outgoing message queue must have
             // at least one message to send. So allocate a transmission buffer to hold
             // the message, and issue the work - asio, send these bytes
-            asio::async_write(m_socket, asio::buffer(&m_qMessagesOut.front().header, sizeof(message_header<T>)),
-                              [this](std::error_code ec, std::size_t length) {
+            boost::asio::async_write(m_socket, boost::asio::buffer(&m_qMessagesOut.front().header, sizeof(message_header<T>)),
+                              [this](boost::system::error_code ec, std::size_t length) {
                 // asio has now sent the bytes - if there was a problem
                 // an error would be available...
                 if (!ec) {
@@ -142,8 +142,8 @@ namespace olc::net {
             // If this function is called, a header has just been sent, and that header
             // indicated a body existed for this message. Fill a transmission buffer
             // with the body data, and send it!
-            asio::async_write(m_socket, asio::buffer(m_qMessagesOut.front().body.data(), m_qMessagesOut.front().body.size()),
-                              [this](std::error_code ec, std::size_t length) {
+            boost::asio::async_write(m_socket, boost::asio::buffer(m_qMessagesOut.front().body.data(), m_qMessagesOut.front().body.size()),
+                              [this](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
                     // Sending was successful, so we are done with the message
                     // and remove it from the queue
@@ -170,8 +170,8 @@ namespace olc::net {
             // size, so allocate a transmission buffer large enough to store it. In fact,
             // we will construct the message in a "temporary" message object as it's
             // convenient to work with.
-            asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
-                             [this](std::error_code ec, std::size_t length) {
+            boost::asio::async_read(m_socket, boost::asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
+                             [this](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
                     // A complete message header has been read, check if this message
                     // has a body to follow...
@@ -202,8 +202,8 @@ namespace olc::net {
             // If this function is called, a header has already been read, and that header
             // request we read a body, The space for that body has already been allocated
             // in the temporary message object, so just wait for the bytes to arrive...
-            asio::async_read(m_socket, asio::buffer(m_msgTemporaryIn.body.data(), m_msgTemporaryIn.body.size()),
-                             [this](std::error_code ec, std::size_t length) {
+            boost::asio::async_read(m_socket, boost::asio::buffer(m_msgTemporaryIn.body.data(), m_msgTemporaryIn.body.size()),
+                             [this](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
                     std::cout << "Reading the body message" << std::endl;
                     // ...and they have! The message is now complete, so add
@@ -261,8 +261,8 @@ namespace olc::net {
                     "Sec-WebSocket-Key:" + m_secKey + "\r\n"
                     "Sec-WebSocket-Version: 13\r\n\r\n";
 
-            asio::async_write(m_socket, asio::buffer(sRequest.data(), sRequest.size()),
-                [this](std::error_code ec, std::size_t length)
+            boost::asio::async_write(m_socket, boost::asio::buffer(sRequest.data(), sRequest.size()),
+                [this](boost::system::error_code ec, std::size_t length)
                 {
                     if(!ec)
                     {
@@ -282,15 +282,15 @@ namespace olc::net {
                     }
                     else
                     {
-                        asio::post(m_asioContext, [this]() { m_socket.close(); });
+                        boost::asio::post(m_asioContext, [this]() { m_socket.close(); });
                     }
                 });
         }
 
         void ReadValidation(olc::net::server_interface<T>* server = nullptr)
         {
-            asio::async_read(m_socket, asio::buffer(&m_handShakeIn, sizeof(uint64_t)),
-                [this, server](std::error_code ec, std::size_t length)
+            boost::asio::async_read(m_socket, boost::asio::buffer(&m_handShakeIn, sizeof(uint64_t)),
+                [this, server](boost::system::error_code ec, std::size_t length)
                 {
                     if(!ec)
                     {
@@ -308,8 +308,8 @@ namespace olc::net {
 
 
     protected:
-        asio::ip::tcp::socket m_socket;
-        asio::io_context& m_asioContext;
+        boost::asio::ip::tcp::socket m_socket;
+        boost::asio::io_context& m_asioContext;
         WSQueue<message<T>> m_qMessagesOut;
         WSQueue<owned_message<T>> m_qMessagesIn;
         message<T> m_msgTemporaryIn;

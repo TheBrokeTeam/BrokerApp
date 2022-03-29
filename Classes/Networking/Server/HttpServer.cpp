@@ -18,17 +18,17 @@ void HttpServer::thread_main()
 void HttpServer::start_accept()
 {
     boost::shared_ptr<Request> req (new Request(*this));
-    acceptor.async_accept(*req->socket, boost::bind(&HttpServer::handle_accept, this, req, asio::error_code()));
+    acceptor.async_accept(*req->socket, boost::bind(&HttpServer::handle_accept, this, req, boost::system::error_code()));
 }
 
-void HttpServer::handle_accept(const boost::shared_ptr<Request>& req, const asio::error_code& error)
+void HttpServer::handle_accept(const boost::shared_ptr<Request>& req, const boost::system::error_code& error)
 {
     if (!error) { req->answer(); }
     start_accept();
 }
 
 void HttpServer::Run() {
-    sThread.reset(new asio::thread(boost::bind(&HttpServer::thread_main, this)));
+    sThread.reset(new std::thread(boost::bind(&HttpServer::thread_main, this)));
 }
 
 void HttpServer::on_read_header(const std::string& line)
@@ -53,7 +53,7 @@ std::string Request::make_daytime_string()
     return std::ctime(&now);
 }
 
-void Request::afterRead( const asio::error_code& ec, std::size_t bytes_transferred)
+void Request::afterRead( const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
     std::istream buffer(&request);
     std::string line;
@@ -67,7 +67,7 @@ void Request::afterRead( const asio::error_code& ec, std::size_t bytes_transferr
 
     server.ReadAuth();
 
-    asio::streambuf response;
+    boost::asio::streambuf response;
     std::ostream res_stream(&response);
 
     std::string time = make_daytime_string();
@@ -77,11 +77,11 @@ void Request::afterRead( const asio::error_code& ec, std::size_t bytes_transferr
                << "Content-Length: " << time.length() + 13 << "\r\n\r\n"
                << time << "\r\n";
 
-    asio::async_write(*socket, response, boost::bind(&Request::afterWrite, shared_from_this(), asio::error_code(), std::size_t(2048)));
+    boost::asio::async_write(*socket, response, boost::bind(&Request::afterWrite, shared_from_this(), boost::system::error_code(), std::size_t(2048)));
 
 }
 
-void Request::afterWrite( const asio::error_code& ec, std::size_t bytes_transferred) const
+void Request::afterWrite( const boost::system::error_code& ec, std::size_t bytes_transferred) const
 {
     // done writing, closing connection
     socket->close();
@@ -90,7 +90,7 @@ void Request::afterWrite( const asio::error_code& ec, std::size_t bytes_transfer
 void Request::answer()
 {
     if (!socket) return;
-    asio::async_read_until(*socket, request, "\r\n\r\n", boost::bind(&Request::afterRead, shared_from_this(), asio::error_code(), std::size_t(2048)));
+    boost::asio::async_read_until(*socket, request, "\r\n\r\n", boost::bind(&Request::afterRead, shared_from_this(), boost::system::error_code(), std::size_t(2048)));
 }
 
 void HttpServer::ReadAuth() {

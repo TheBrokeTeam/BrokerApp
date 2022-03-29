@@ -10,14 +10,14 @@
 #include <istream>
 #include <ctime>
 #include <string>
-#include <asio.hpp>
+#include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread.hpp>
 #include "../Classes/Contexts/Context.h"
 #include <algorithm>
 
-using asio::ip::tcp;
+using boost::asio::ip::tcp;
 class HttpServer;
 
 class Request : public boost::enable_shared_from_this<Request>
@@ -26,10 +26,10 @@ class Request : public boost::enable_shared_from_this<Request>
 
     // member variables
     HttpServer& server;
-    asio::streambuf request;
+    boost::asio::streambuf request;
 
-    void afterRead( const asio::error_code& ec, std::size_t bytes_transferred);
-    void afterWrite( const asio::error_code& ec, std::size_t bytes_transferred) const;
+    void afterRead( const boost::system::error_code& ec, std::size_t bytes_transferred);
+    void afterWrite( const boost::system::error_code& ec, std::size_t bytes_transferred) const;
 
 public:
     boost::shared_ptr<tcp::socket> socket;
@@ -45,7 +45,7 @@ public:
     explicit HttpServer(Context*, unsigned int);
     ~HttpServer() { if (sThread) sThread->join(); }
     void Run();
-    asio::io_service io_service;
+    boost::asio::io_service io_service;
     void on_read_header(const std::string&);
     std::map<std::string, std::string> headers;
 
@@ -53,11 +53,11 @@ public:
 
 private:
     tcp::acceptor acceptor;
-    boost::shared_ptr<asio::thread> sThread;
+    boost::shared_ptr<std::thread> sThread;
 
     void thread_main();
     void start_accept();
-    void handle_accept(const boost::shared_ptr<Request>&, const asio::error_code&);
+    void handle_accept(const boost::shared_ptr<Request>&, const boost::system::error_code&);
 
     std::string urlDecode(const std::string&);
 };

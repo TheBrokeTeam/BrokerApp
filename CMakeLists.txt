@@ -163,13 +163,14 @@ add_executable(BrokerApp
 		Classes/Common/DataBase/DBManager.h
 		Classes/Data/AccountInfo.h
 		Classes/Common/DataBase/Paths.cpp
-		Classes/Common/DataBase/Paths.h)
+		Classes/Common/DataBase/Paths.h
         Classes/Widgets/LoginView.cpp
 		Classes/Widgets/LoginView.h
-        )
-		Classes/Data/User.h Classes/Data/User.cpp
+		Classes/Data/User.h
+		Classes/Data/User.cpp
 		Classes/Networking/Server/HttpServer.h
 		Classes/Networking/Server/HttpServer.cpp
+        )
 
 ###############################################################################
 # FETCH CONTENT LIBS

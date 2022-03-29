@@ -13,9 +13,9 @@ ConnectView::ConnectView(Context *context)
 }
 
 std::vector<char> vBuffer(20 * 1024);
-void ConnectView::GrabSomeData(asio::ip::tcp::socket& socket) {
-    socket.async_read_some(asio::buffer(vBuffer.data(), vBuffer.size()),
-                           [&](std::error_code ec, size_t length){
+void ConnectView::GrabSomeData(boost::asio::ip::tcp::socket& socket) {
+    socket.async_read_some(boost::asio::buffer(vBuffer.data(), vBuffer.size()),
+                           [&](boost::system::error_code ec, size_t length){
         if(!ec) {
             std::cout << "Read" << length << "bytes" << std::endl;
             for (int i=0; i<length; i++){

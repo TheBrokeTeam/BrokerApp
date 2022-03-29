@@ -17,7 +17,7 @@ public:
     void onPushStyleVar() override;
 private:
     WebSocketManager client;
-    void GrabSomeData(asio::ip::tcp::socket& socket);
+    void GrabSomeData(boost::asio::ip::tcp::socket& socket);
     bool _is_connected = false;
 };
 
