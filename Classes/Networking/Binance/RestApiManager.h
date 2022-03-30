@@ -9,6 +9,8 @@
 #include <binapi/api.hpp>
 #include <binapi/websocket.hpp>
 #include "../../Data/Symbol.h"
+#include "SymbolInfo.h"
+
 
 class RestApiManager {
 public:
@@ -16,9 +18,12 @@ public:
     typedef std::function<void(bool success, const std::string listenKey)> UserDataStreamCallback;
 
 
+    typedef std::function<void(bool success, const std::vector<SymbolInfo>)> ExchangeInfoCallback;
+
     RestApiManager();
     ~RestApiManager();
 
+    void getExchangeInfo(ExchangeInfoCallback callback);
     void getCandles(const Symbol& symbol,const CandlesCallback& callback);
     void openOrder(const Symbol& symbol,const CandlesCallback& callback);
     void accountInfo();
