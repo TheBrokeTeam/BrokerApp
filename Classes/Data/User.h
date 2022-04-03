@@ -11,19 +11,17 @@
 class User
 {
 private:
-    bool isAuthenticated = false;
-
-protected:
-    static User* User_;
-    std::string id_;
+    std::string _id;
+    std::string _token;
+    std::string _name{""};
 
 public:
-    User(User &other) = delete;
-    void operator=(const User &) = delete;
-    static User *GetInstance(const std::string&);
-    std::string id() const;
+    explicit User(const std::string&, const std::string&);
+    User(const rapidjson::Document&);
+    ~User() = delete;
 
-    explicit User(std::string);
+    const char* GetName();
 };
+
 
 #endif //BROKERAPP_USER_H

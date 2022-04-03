@@ -24,10 +24,6 @@ rapidjson::Document UserService::deleteUser() {
     return this->apiManager.Request(UserRouter().deleteOne());
 }
 
-rapidjson::Document UserService::updateUser() {
-    return this->apiManager.Request(UserRouter().updateOne());
-}
-
 void UserService::openAuth(const std::string& provider){
     UserService::openPlatform(this->apiManager.getURL() + fmt::format("/login/{}", provider));
 }
@@ -50,4 +46,9 @@ void UserService::openPlatform(const std::string& url)
     }
     str.append(" " + url);
     std::system(str.data());
+}
+
+
+rapidjson::Document UserService::logout() {
+    return this->apiManager.Request(UserRouter().logout());
 }

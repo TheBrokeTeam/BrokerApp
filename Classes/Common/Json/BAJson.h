@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 #include <fstream>
 #include <vector>
 #include <rapidjson/document.h>

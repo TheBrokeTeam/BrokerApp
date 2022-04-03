@@ -14,8 +14,11 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread.hpp>
-#include "../Classes/Contexts/Context.h"
 #include <algorithm>
+//#include "../Classes/Data/User.h"
+#include "../../Common/Json/BAJson.h"
+//#include "../../Common/DataBase/DBManager.h"
+#include "../../Contexts/Context.h"
 
 using boost::asio::ip::tcp;
 class HttpServer;
@@ -41,17 +44,18 @@ public:
 class HttpServer
 {
 public:
-    Context* context;
     explicit HttpServer(Context*, unsigned int);
     ~HttpServer() { if (sThread) sThread->join(); }
     void Run();
+    void Stop();
     boost::asio::io_service io_service;
     void on_read_header(const std::string&);
     std::map<std::string, std::string> headers;
 
-    void ReadAuth();
+    bool ReadAuth(boost::asio::streambuf&);
 
 private:
+    Context* context;
     tcp::acceptor acceptor;
     boost::shared_ptr<std::thread> sThread;
 

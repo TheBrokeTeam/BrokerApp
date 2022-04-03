@@ -15,11 +15,10 @@ protected:
 public:
     UserRouter();
     [[nodiscard]] APIRouter getName(const std::string&) const;
-    [[nodiscard]] APIRouter getGitHubAuthorization() const;
     [[nodiscard]] APIRouter authenticate(const rapidjson::Document& body) const;
     [[nodiscard]] APIRouter createOne() const;
-    [[nodiscard]] APIRouter updateOne() const;
     [[nodiscard]] APIRouter deleteOne() const;
+    [[nodiscard]] APIRouter logout() const;
 };
 
 #endif //UNTITLED1_USERROUTER_H

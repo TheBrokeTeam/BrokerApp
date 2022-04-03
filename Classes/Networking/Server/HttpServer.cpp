@@ -4,13 +4,10 @@
 
 #include "HttpServer.h"
 
-HttpServer::HttpServer(Context* context, unsigned int port): acceptor(io_service, tcp::endpoint(tcp::v4(), port)) {
-    this->context = context;
-}
+HttpServer::HttpServer(Context* context, unsigned int port): context(context), acceptor(io_service, tcp::endpoint(tcp::v4(), port)) {}
 
 void HttpServer::thread_main()
 {
-    // adds some work to the io_service
     start_accept();
     io_service.run();
 }
@@ -23,12 +20,24 @@ void HttpServer::start_accept()
 
 void HttpServer::handle_accept(const boost::shared_ptr<Request>& req, const boost::system::error_code& error)
 {
-    if (!error) { req->answer(); }
+    if (!error) { req->answer(); } else {
+        std::cout << "Error (line 26 HttpServer.cpp): " << error.message() << std::endl;
+    }
+
     start_accept();
 }
 
 void HttpServer::Run() {
     sThread.reset(new std::thread(boost::bind(&HttpServer::thread_main, this)));
+}
+
+void HttpServer::Stop() {
+    io_service.stop();
+    acceptor.close();
+
+    if (sThread) {
+        sThread->detach();
+    }
 }
 
 void HttpServer::on_read_header(const std::string& line)
@@ -53,8 +62,8 @@ std::string Request::make_daytime_string()
     return std::ctime(&now);
 }
 
-void Request::afterRead( const boost::system::error_code& ec, std::size_t bytes_transferred)
-{
+bool HttpServer::ReadAuth(boost::asio::streambuf& request) {
+
     std::istream buffer(&request);
     std::string line;
 
@@ -62,62 +71,51 @@ void Request::afterRead( const boost::system::error_code& ec, std::size_t bytes_
         if (line.empty() || line == "\r") {
             break;
         }
-        server.on_read_header(line);
+        this->on_read_header(line);
     }
-
-    server.ReadAuth();
-
-    boost::asio::streambuf response;
-    std::ostream res_stream(&response);
-
-    std::string time = make_daytime_string();
-
-    res_stream << "HTTP/1.0 200 OK\r\n"
-               << "Content-Type: text/html; charset=UTF-8\r\n"
-               << "Content-Length: " << time.length() + 13 << "\r\n\r\n"
-               << time << "\r\n";
-
-    boost::asio::async_write(*socket, response, boost::bind(&Request::afterWrite, shared_from_this(), boost::system::error_code(), std::size_t(2048)));
-
-}
-
-void Request::afterWrite( const boost::system::error_code& ec, std::size_t bytes_transferred) const
-{
-    // done writing, closing connection
-    socket->close();
-}
-
-void Request::answer()
-{
-    if (!socket) return;
-    boost::asio::async_read_until(*socket, request, "\r\n\r\n", boost::bind(&Request::afterRead, shared_from_this(), boost::system::error_code(), std::size_t(2048)));
-}
-
-void HttpServer::ReadAuth() {
-    std::cout << headers["Cookie"] << std::endl;
 
     std::stringstream ssCookie(headers["Cookie"]);
 
     std::string cookie = ssCookie.str();
     size_t n_params = std::count(cookie.begin(), cookie.end(), 0x3d);
-    std::cout << n_params << std::endl;
 
-    std::map<std::string, std::string> params;
+//    std::map<std::string, std::string> params;
+    rapidjson::Document params;
+    params.SetObject();
     for(int i=0; i<n_params; i++)
     {
         std::string key;
         std::getline(ssCookie, key, '=');
+        key.erase(remove(key.begin(), key.end(), ' '), key.end());
 
         std::string value;
         std::getline(ssCookie, value, (i==(n_params-1)) ? '\r' : ';' );
+        value.erase(remove(value.begin(), value.end(), ' '), value.end());
 
-        params[key] = value;
+        if(key=="user")
+        {
+            rapidjson::Document user_doc;
+            user_doc.SetObject();
+            BAJson::parse(urlDecode(value), user_doc);
+
+            BAJson::set(params, key,  user_doc.GetObject());
+        } else {
+            BAJson::set(params, key, urlDecode(value));
+        }
+
+
     }
 
-    context->_sentAuthentication = false;
-    context->_startingAuthentication = false;
-    context->_finishedAuthentication = true;
+    if (!params.HasMember("user")) {
+        return false;
+    }
 
+    context->saveUser(params);
+
+    context->_startingAuthentication = false;
+    context->_sentAuthentication = false;
+
+    return true;
 }
 
 std::string HttpServer::urlDecode(const std::string& str) {
@@ -135,4 +133,53 @@ std::string HttpServer::urlDecode(const std::string& str) {
         }
     }
     return(ret);
+}
+
+
+void Request::afterRead(const boost::system::error_code& ec, std::size_t bytes_transferred)
+{
+    boost::asio::streambuf response;
+    std::ostream res_stream(&response);
+
+    std::string time = make_daytime_string();
+
+    if(server.ReadAuth(request))
+    {
+        std::fstream htmlFile;
+        htmlFile.open("/Users/maykonmeneghel/Desktop/TheBrokeTeam/BrokerApp/Resources/Html/success.html", std::ios::in);
+        if(!htmlFile){
+            std::cout << "File cannot open!" << std::endl;
+        }
+
+        htmlFile.seekg(0, std::ios::end);
+//        std::cout << htmlFile.tellg() << std::endl;
+        res_stream << "HTTP/1.0 200 OK\r\n"
+                   << "Content-Type: text/html\r\n"
+                   << "Content-Length: " << std::int16_t(htmlFile.tellg()) << "\r\n\r\n"
+                   << htmlFile.rdbuf() << "\r\n";
+
+        std::cout << htmlFile.rdbuf() << std::endl;
+
+    } else
+    {
+        std::string message = "Bad Request";
+        res_stream << "HTTP/1.0 403 Bad Request\r\n"
+                   << "Content-Type: text/html; charset=UTF-8\r\n"
+                   << "Content-Length: " << message.length() + 2 << "\r\n\r\n"
+                   << message << "\r\n";
+    }
+
+    boost::asio::async_write(*socket, response, boost::bind(&Request::afterWrite, shared_from_this(), boost::system::error_code(), std::size_t(2048)));
+
+}
+
+void Request::afterWrite( const boost::system::error_code& ec, std::size_t bytes_transferred) const
+{
+    socket->close();
+}
+
+void Request::answer()
+{
+    if (!socket) return;
+    boost::asio::async_read_until(*socket, request, "\r\n\r\n", boost::bind(&Request::afterRead, shared_from_this(), boost::system::error_code(), std::size_t(2048)));
 }

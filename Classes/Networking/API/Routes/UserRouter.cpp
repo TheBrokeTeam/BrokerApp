@@ -3,7 +3,8 @@
 //
 
 #include "UserRouter.h"
-#include "../../../Helpers/JsonUtils.h"
+//#include "../../../Helpers/JsonUtils.h"
+#include "../../../Common/Json/BAJson.h"
 
 UserRouter::UserRouter() = default;
 
@@ -14,13 +15,9 @@ APIRouter UserRouter::createOne() const {
 
 APIRouter UserRouter::authenticate(const rapidjson::Document& body) const {
     APIRouter apiRouter = APIRouter(post, this->endpoint + "/auth");
-    apiRouter.setBody(json::Stringfy(body));
-    std::cout << json::Stringfy(body) << std::endl;
+    apiRouter.setBody(BAJson::stringfy(body));
+    std::cout << BAJson::stringfy(body) << std::endl;
     return apiRouter;
-}
-
-APIRouter UserRouter::updateOne() const {
-    return {patch, this->endpoint};
 }
 
 APIRouter UserRouter::deleteOne() const {
@@ -31,7 +28,8 @@ APIRouter UserRouter::getName(const std::string & id) const {
     return {get, this->endpoint + "/" + id + "?scope=name"};
 }
 
-APIRouter UserRouter::getGitHubAuthorization() const {
-    APIRouter apiRouter = APIRouter(post, this->endpoint + "/auth/github");
+APIRouter UserRouter::logout() const {
+    APIRouter apiRouter = APIRouter(get, "/logout");
+//    apiRouter.setBody(BAJson::stringfy(body));
     return apiRouter;
 }

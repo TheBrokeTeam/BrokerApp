@@ -3,10 +3,14 @@
 //
 
 #include "LoginView.h"
+#include <fmt/format.h>
 
 LoginView::LoginView(Context *context) : Widget(context) {
     _title = "Profile";
     _is_window = true;
+    _httpServer = new HttpServer(context, 9494);
+    std::thread thrContext(LoginView::createHttpServer, _httpServer);
+    thrContext.detach();
 }
 
 void LoginView::updateVisible(float dt) {
@@ -25,10 +29,27 @@ void LoginView::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    if(getContext()->_finishedAuthentication) {
+    if(getContext()->userExists()) {
 
         PushStyleColor(ImGuiCol_Text, Editor::broker_white);
-        ImGui::Text("Hi, stranger");
+        User* user = getContext()->getUser();
+//        char* welcome_text = std::string("Hi, ").c_str();
+        std::string name_str = fmt::format("Hi, {}", user->GetName());
+//        fmt::format("Hi, {}", user->GetName()).c_str();
+//        const char* value = value_str.c_str();
+        ImGui::Text("%s", name_str.c_str());
+
+        PushStyleColor(ImGuiCol_Text,Editor::broker_black);
+        if (ImGui::Button("Log Out",ImVec2(200, 50)))
+        {
+            puts("Clicou em logout!!!");
+            getContext()->logout();
+        }
+
+        if (ImGui::Button("Switch Account",ImVec2(200, 50)))
+        {
+            puts("Clicou em witch account!!!");
+        }
 
     } else {
         // change color text
@@ -156,12 +177,9 @@ void LoginView::openAuthProvider(const std::string& provider) {
     getContext()->_sentAuthentication = true;
     UserService userService = UserService();
     userService.openAuth(provider);
-
-    std::thread thrContext(LoginView::createServer, getContext());
-    thrContext.detach();
 }
 
-void LoginView::createServer(Context* context) {
-    HttpServer server(context, 9494);
-    server.Run();
+void LoginView::createHttpServer(HttpServer* httpServer) {
+    httpServer->Run();
 }
+

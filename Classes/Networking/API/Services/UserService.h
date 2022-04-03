@@ -27,9 +27,9 @@ private:
 public:
     UserService();
     rapidjson::Document authenticate(const rapidjson::Document& body);
-    rapidjson::Document updateUser();
     rapidjson::Document deleteUser();
     void openAuth(const std::string& provider);
+    rapidjson::Document logout();
 };
 
 

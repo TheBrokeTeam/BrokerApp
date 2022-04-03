@@ -9,6 +9,8 @@
 #include <binapi/api.hpp>
 
 struct AccountInfo{
+    std::string userId{""};
+    std::string token{""};
     double makerCommission = 0;
     double takerCommission = 0;
     double buyerCommission = 0;

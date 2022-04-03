@@ -8,13 +8,36 @@
 
 DBManager::DBManager() {
     loadKeys();
+//    loadUserData();
 }
 
-DBManager::~DBManager() {
+DBManager::~DBManager() = default;
 
-}
+//void DBManager::saveUserData(const rapidjson::Document& doc) {
+//    if(!std::filesystem::exists(Paths::Root))
+//    {
+//        std::filesystem::create_directory(Paths::Root);
+//    }
+//
+//    if(!std::filesystem::exists(Paths::UserData))
+//    {
+//        BAJson::save(doc, Paths::UserData);
+//    }
+//}
 
-const AccountInfo&  DBManager::loadUserData() {
+//User* DBManager::loadUserData() {
+//    if(std::filesystem::exists(Paths::UserData)) {
+//        rapidjson::Document user_doc;
+//        user_doc.SetObject();
+//        BAJson::parseFile(Paths::UserData, user_doc);
+//        _user = new User(user_doc);
+//    } else {
+//        _user = nullptr;
+//    }
+//    return _user;
+//}
+
+const AccountInfo&  DBManager::loadUserAccountInfo() {
     //load the info on _userAccountInfo
     return _userAccountInfo;
 }
@@ -62,6 +85,14 @@ const std::string &DBManager::getPrivateKey() {
 const std::string &DBManager::getSecretKey() {
     return _secretKey;
 }
-
+//
+//bool DBManager::userExists() {
+//    return (_user != nullptr) ? true : false;
+//}
+//
+//User* DBManager::getUser()
+//{
+//    return _user;
+//}
 
 

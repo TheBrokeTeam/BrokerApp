@@ -17,14 +17,15 @@
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
 #include "../Data/Order.h"
+#include "../Common/DataBase/Paths.h"
 #include "../Common/DataBase/DBManager.h"
 #include "../Data/User.h"
-#include "../Networking/Server/HttpServer.h"
+#include "../Common/Json/BAJson.h"
 
 class Context {
 
 public:
-    Context(Editor* editor);
+    explicit Context(Editor* editor);
     virtual ~Context();
 //    virtual void loadSymbol(Symbol symbol) = 0;
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
@@ -124,13 +125,13 @@ public:
 
     virtual void fetchUserAccountInfo(){};
 
-    std::string getUserId();
-    void setUserId(const std::string&);
-
     // login stuffs
     bool _sentAuthentication = false;
     bool _startingAuthentication = false;
-    bool _finishedAuthentication = false;
+    bool userExists();
+    User* getUser();
+    void saveUser(const rapidjson::Document&);
+    void logout();
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
@@ -139,16 +140,16 @@ protected:
 
     std::vector<Order> _orders;
 
-
     //    std::vector<std::shared_ptr<Strategy>> _strategies;
     std::vector<std::shared_ptr<INode>> _nodes;
 
-    Editor *_editor{nullptr};
+    Editor* _editor{nullptr};
+    User* _user{nullptr};
     DBManager _dbManager;
 
-    bool _shouldRender = false;
+    User* loadUser();
 
-    User *_user{nullptr};
+    bool _shouldRender = false;
 };
 
 #endif //BROKERAPP_CONTEXT_H

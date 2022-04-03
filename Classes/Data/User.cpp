@@ -10,17 +10,20 @@
 #include "../Helpers/JsonUtils.h"
 #include <fmt/format.h>
 
-User::User(std::string id): id_(std::move(id))
+User::User(const std::string& id, const std::string& token)
 {
-
+    _id = id;
+    _token = token;
 }
 
-User* User::User_= nullptr;
+User::User(const rapidjson::Document& obj) {
+    _token = obj["token"].GetString();
 
-User *User::GetInstance(const std::string& id){
-    return new User(id);
+    rapidjson::GenericObject user = obj["user"].GetObject();
+    _id = user["_id"].GetString();
+    _name = user["name"].GetString();
 }
 
-std::string User::id() const {
-    return id_;
+const char* User::GetName() {
+    return _name.c_str();
 }
