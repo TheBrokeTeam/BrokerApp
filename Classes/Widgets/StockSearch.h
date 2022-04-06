@@ -8,38 +8,47 @@
 
 #include "Widget.h"
 #include <vector>
+#include <map>
 
 class StockSearch : public Widget {
 public:
     StockSearch(Context* context);
 
-    struct StockInfo {
-        std::string name{"Name"};
-        std::string code{"NM.SA"};
-        float price{10.0f};
-        float lastPriceDelta{-0.01f};
-        float volume{400};
-        float relativeChange{0.05};
-        float absoluteChange{0.35};
+    struct SymbolInfo {
+        std::string name{"BTCUSDT"};
+        std::string code{"BTCUSDT"};
+        float lastPrice{10.0f};
+        bool lastPriceSignal{true};
+        float lastDayDelta{0.254f};
     };
 
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
 private:
-    // std::vector<std::shared_ptr<StockInfo>> _stocks;
+    std::vector<std::shared_ptr<SymbolInfo>> _symbols;
     void buildHeader();
     static void cell();
     void buildFilter();
     void buildStockSearch();
+    std::map<std::string, bool> _favorites = {
+            {"ETHBTC", false},
+            {"ETHBRL", false},
+            {"ETHUSDT", true},
+            {"BTCBRL", false},
+            {"BTCUSDT", true},
+            {"BTCBUSD", false}
+    };
 
-    std::vector<std::string> symbols{"ETHBTC", "ETHBRL", "ETHUSDT", "BTCBRL", "BTCUSDT", "BTCBUSD"};
-    bool favorites[6] = {false, true, false, true, false, true};
-    std::vector<std::string> filtered_symbols;
+    //std::vector<std::string> symbols{"ETHBTC", "ETHBRL", "ETHUSDT", "BTCBRL", "BTCUSDT", "BTCBUSD"};
+    //bool favorites[6] = {false, true, false, true, false, true}; //lv: map
+    std::vector<std::shared_ptr<SymbolInfo>> filtered_symbols;
 
-    void buildRow(int row_number);
+    void buildRow(SymbolInfo info);
 
-    void setFavoriteColumn(int row_number);
+    void setFavoriteColumn(SymbolInfo info);
+
+    void setupTestSymbols();
 };
 
 

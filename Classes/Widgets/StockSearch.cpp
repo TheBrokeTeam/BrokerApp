@@ -12,7 +12,65 @@ StockSearch::StockSearch(Context *context) : Widget(context)
 {
     _title                  = "Stock Search";
     _is_window              = true;
+    setupTestSymbols();
+    setupTestSymbols();
+    setupTestSymbols();
+    setupTestSymbols();
+    setupTestSymbols();
+    setupTestSymbols();
+    setupTestSymbols();
 
+
+}
+
+void StockSearch::setupTestSymbols() {
+    std::__1::shared_ptr<SymbolInfo> btcusdt = std::__1::make_shared<SymbolInfo>();
+    btcusdt->code = "BTCUSDT";
+    btcusdt->lastPriceSignal = false;
+    btcusdt->lastDayDelta = 0.0342;
+    btcusdt->lastPrice = 43938.230;
+    btcusdt->name = "BTCUSDT";
+    _symbols.push_back(btcusdt);
+
+    std::__1::shared_ptr<SymbolInfo> btcbusd = std::__1::make_shared<SymbolInfo>();
+    btcbusd->code = "BTCBUSD";
+    btcbusd->lastPriceSignal = true;
+    btcbusd->lastDayDelta = -0.0351;
+    btcbusd->lastPrice = 43912.27;
+    btcbusd->name = "BTCBUSD";
+    _symbols.push_back(btcbusd);
+
+    std::__1::shared_ptr<SymbolInfo> ethbtc = std::__1::make_shared<SymbolInfo>();
+    ethbtc-> code = "ETHBTC";
+    ethbtc-> lastPriceSignal = true;
+    ethbtc->lastDayDelta = 0.0167;
+    ethbtc->lastPrice = 0.073638;
+    ethbtc->name = "ETHBTC";
+    _symbols.push_back(ethbtc);
+
+    std::__1::shared_ptr<SymbolInfo> ethbrl = std::__1::make_shared<SymbolInfo>();
+    ethbrl-> code = "ETHBRL";
+    ethbrl-> lastPriceSignal = true;
+    ethbrl->lastDayDelta = -0.0385;
+    ethbrl->lastPrice = 15353.98;
+    ethbrl->name = "ETHBRL";
+    _symbols.push_back(ethbrl);
+
+    std::__1::shared_ptr<SymbolInfo> btcbrl = std::__1::make_shared<SymbolInfo>();
+    btcbrl-> code = "BTCBRL";
+    btcbrl-> lastPriceSignal = false;
+    btcbrl->lastDayDelta = -0.0214;
+    btcbrl->lastPrice = 208731;
+    btcbrl->name = "BTCBRL";
+    _symbols.push_back(btcbrl);
+
+    std::__1::shared_ptr<SymbolInfo> ethusdt = std::__1::make_shared<SymbolInfo>();
+    ethusdt->code = "ETHUSDT";
+    ethusdt->lastPriceSignal = true;
+    ethusdt->lastDayDelta = 0.0527;
+    ethusdt->lastPrice = 3227.89;
+    ethusdt->name = "ETHUSDT";
+    _symbols.push_back(ethusdt);
 }
 
 
@@ -79,8 +137,8 @@ void StockSearch::buildFilter() {
 
     filtered_symbols.clear();
 
-     for (auto & symbol : symbols) {
-         if (filter.PassFilter(symbol.c_str()))
+     for (auto & symbol : _symbols) {
+         if (filter.PassFilter(symbol->name.c_str()))
              filtered_symbols.push_back(symbol);
      }
 
@@ -146,17 +204,17 @@ void StockSearch::buildStockSearch() {
     if (ImGui::BeginTable("Table1", 4, flags)) {
         // Display headers so we can inspect their interaction with borders.
         // (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
-        ImGui::TableSetupColumn("Favorite", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 40);
-        ImGui::TableSetupColumn("Pair", ImGuiTableColumnFlags_WidthStretch, 200);
-        ImGui::TableSetupColumn("LastPrice", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_NoResize, 60);
-        ImGui::TableSetupColumn("Change", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 60);
+        ImGui::TableSetupColumn("Fav", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 40);
+        ImGui::TableSetupColumn("Pair", ImGuiTableColumnFlags_WidthStretch, 170);
+        ImGui::TableSetupColumn("Last", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_NoResize, 90);
+        ImGui::TableSetupColumn("24h", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 60);
 
         ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_white);
         ImGui::TableHeadersRow();
         ImGui::PopStyleColor();
 
-        for (int row = 0; row < filtered_symbols.size(); row++) {
-            buildRow(row);
+        for (auto filtered: filtered_symbols) {
+            buildRow(*filtered.get()); //LV: ta certo?
         }
 
         ImGui::EndTable();
@@ -183,7 +241,7 @@ void StockSearch::buildStockSearch() {
 //    ImGui::PopStyleVar();
 }
 
-void StockSearch::buildRow(int row_number) {
+void StockSearch::buildRow(SymbolInfo info) {
     enum ContentsType {
         CT_Text, CT_FillButton
     };
@@ -197,25 +255,27 @@ void StockSearch::buildRow(int row_number) {
         ImGui::TableSetColumnIndex(column);
 
         if (column == 0) {
-            ImGui::PushID(("##selectable_row" + std::to_string(row_number)).c_str());
+            ImGui::PushID(("##selectable_row" + info.name).c_str());
             if (ImGui::Selectable("##selectable_row", false,
                                   ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap,
                                   ImVec2(0, 0))) {
-                printf("touched %d", row_number);
+                printf("touched %s\n", info.name.c_str());
             }
             ImGui::PopID();
             ImGui::SameLine();
-            setFavoriteColumn(row_number);
+            setFavoriteColumn(info);
 
         } else if (column == 1) {
-            if (contents_type == CT_Text)
-                ImGui::TextColored(Editor::broker_white, "%s", filtered_symbols[row_number].c_str());
-            else if (contents_type)
-                ImGui::Button(filtered_symbols[row_number].c_str(), ImVec2(-FLT_MIN, 0.0f));
+            ImGui::TextColored(Editor::broker_white, "%s", info.code.c_str());
+
         } else if (column == 2) {
-            ImGui::TextColored(Editor::broker_green, "5300.0");
+            ImVec4 lastPriceColor = info.lastPriceSignal ? Editor::broker_green : Editor::broker_red;
+            ImGui::TextColored(lastPriceColor, "%.2f", info.lastPrice);
+
         } else if (column == 3) {
-            ImGui::TextColored(Editor::broker_green, "+10.7%%");
+            ImVec4 lastDayDeltaColor = info.lastDayDelta>0 ? Editor::broker_green : Editor::broker_red;
+            ImGui::TextColored(lastDayDeltaColor, "%+.2f%%", info.lastDayDelta * 100);
+
         }
 
     }
@@ -227,17 +287,16 @@ void StockSearch::buildRow(int row_number) {
 //    }
 }
 
-void StockSearch::setFavoriteColumn(int row_number) {
+void StockSearch::setFavoriteColumn(SymbolInfo info) {
     //adding the close button
-    ImGui::PushID(("favorite_checkbox_" + std::to_string(row_number)).c_str());
+    ImGui::PushID(("favorite_checkbox_" + info.name).c_str());
    // ImGui::Checkbox("##Checkbox1", &favorites[row_number]);
 
-    Editor::Icons state = favorites[row_number] ? Editor::Icons::fav_selected : Editor::Icons::fav_unselected;
-    auto info = getContext()->getEditor()->getTexture(state);
+    Editor::Icons state = _favorites[info.name] ? Editor::Icons::fav_selected : Editor::Icons::fav_unselected;
+    auto texture = getContext()->getEditor()->getTexture(state);
 
-    if(ImGui::ImageButton((void*)(intptr_t)info.my_image_texture, ImVec2(15, 15))){
-        favorites[row_number] = favorites[row_number] ? false : true;
-        //LV: Não carrega quando clica na segunda linha, se a primeira nao tiver igual... tenho que trocar o id?
+    if(ImGui::ImageButton((void*)(intptr_t)texture.my_image_texture, ImVec2(15, 15))){
+        _favorites[info.name] = _favorites[info.name] ? false : true;
     }
     ImGui::PopID();
 
