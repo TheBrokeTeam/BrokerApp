@@ -31,6 +31,7 @@ private:
     static void cell();
     void buildFilter();
     void buildStockSearch();
+
     std::map<std::string, bool> _favorites = {
             {"ETHBTC", false},
             {"ETHBRL", false},
@@ -49,6 +50,10 @@ private:
     void setFavoriteColumn(SymbolInfo info);
 
     void setupTestSymbols();
+
+    void buildTabBar();
+
+    void applyTabFilter(std::string tabFilter);
 };
 
 

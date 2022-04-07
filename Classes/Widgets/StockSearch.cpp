@@ -73,13 +73,52 @@ void StockSearch::setupTestSymbols() {
     _symbols.push_back(ethusdt);
 }
 
+void StockSearch::buildTabBar() {
+    std::string tabnames[]{"Favs", "All", "USDT", "BTC", "BRL", "ETH"};
+
+    for (auto &name: tabnames) {
+
+        if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None)) {
+            if (ImGui::BeginTabItem(name.c_str())) {
+                applyTabFilter(name);
+                buildStockSearch();
+                //ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+    }
+}
+
+void StockSearch::applyTabFilter(std::string tabFilter) {
+    //std::vector<std::shared_ptr<SymbolInfo>> tab_filtered_symbols = {nullptr};
+
+    if (tabFilter == "All") {
+        return;
+    } else if (tabFilter == "Favs") {
+        filtered_symbols.erase(std::remove_if(filtered_symbols.begin(), filtered_symbols.end(), [&](auto& i) {
+            return !_favorites[i->name];
+        }), filtered_symbols.end());
+
+    } else {
+        filtered_symbols.erase(std::remove_if(filtered_symbols.begin(), filtered_symbols.end(), [&](auto& i) {
+            return (i->name).find(tabFilter) == std::string::npos;
+        }), filtered_symbols.end());
+
+    }
+
+    //filtered_symbols.clear();
+    //filtered_symbols = tab_filtered_symbols;
+}
 
 void StockSearch::updateVisible(float dt)
 {
     buildHeader();
     buildFilter();
-    buildStockSearch();
+    buildTabBar();
 }
+
 
 void StockSearch::buildHeader() {//change background of window
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
