@@ -80,27 +80,21 @@ void StockSearch::buildTabBar() {
     std::string tabnames[] = {"Favs", "All", "USDT", "BTC", "BRL", "ETH"};
 
     for (auto &name: tabnames) {
-
         if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None)) {
             if (ImGui::BeginTabItem(name.c_str())) {
                 applyTabFilter(name);
-                //if (ImGui::IsAnyItemFocused()) {
-                    //_selectedTab = name;
-
-                //}
-
                 buildStockSearch();
-                //ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
                 ImGui::EndTabItem();
+
             }
 
             ImGui::EndTabBar();
+
         }
     }
 }
 
 void StockSearch::applyTabFilter(std::string tabFilter) {
-    //std::vector<std::shared_ptr<SymbolRow>> tab_filtered_symbols = {nullptr};
 
     if (tabFilter == "All") {
         return;
@@ -116,6 +110,7 @@ void StockSearch::applyTabFilter(std::string tabFilter) {
 
     }
 
+
     //filtered_symbols.clear();
     //filtered_symbols = tab_filtered_symbols;
 }
@@ -125,6 +120,7 @@ void StockSearch::updateVisible(float dt)
     buildHeader();
     buildFilter();
     buildTabBar();
+
 }
 
 
