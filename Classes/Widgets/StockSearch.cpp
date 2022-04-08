@@ -19,7 +19,7 @@ StockSearch::StockSearch(Context *context) : Widget(context)
     setupTestSymbols();
     setupTestSymbols();
     setupTestSymbols();
-    
+
 }
 
 
@@ -211,8 +211,8 @@ void StockSearch::buildStockSearch() {
         // Display headers so we can inspect their interaction with borders.
         // (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
         ImGui::TableSetupColumn("Fav", ImGuiTableColumnFlags_WidthFixed, 40, SymbolInfoColumnID_Fav);
-        ImGui::TableSetupColumn("Pair", ImGuiTableColumnFlags_WidthStretch, 170, SymbolInfoColumnID_Name);
-        ImGui::TableSetupColumn("Last", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_NoResize, 90, SymbolInfoColumnID_LastPrice);
+        ImGui::TableSetupColumn("Pair", ImGuiTableColumnFlags_WidthStretch, 185, SymbolInfoColumnID_Name);
+        ImGui::TableSetupColumn("Last", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_NoResize, 75, SymbolInfoColumnID_LastPrice);
         ImGui::TableSetupColumn("24h", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 60, SymbolInfoColumnID_Delta);
 
         ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_white);
