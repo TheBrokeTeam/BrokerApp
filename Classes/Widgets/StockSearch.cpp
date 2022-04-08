@@ -4,7 +4,6 @@
 
 #include "StockSearch.h"
 #include <iomanip>
-#include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
 #include "../Editor.h"
 
@@ -282,6 +281,8 @@ void StockSearch::buildRow(SymbolRow &info) {
                                   ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap,
                                   ImVec2(0, 0))) {
                 printf("touched %s\n", info.name.c_str());
+                _symbolName = info.code;
+                changeStream();
             }
             ImGui::PopID();
             ImGui::SameLine();
@@ -335,3 +336,11 @@ void StockSearch::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 
+
+
+void StockSearch::changeStream() {
+    getContext()->closeSymbolStream(Symbol(_oldSymbolName,"1m",0,0));
+    _symbol =   Symbol(_symbolName,"1m",0,0);
+    getContext()->openSymbolStream(_symbol);
+    _oldSymbolName = _symbolName;
+}

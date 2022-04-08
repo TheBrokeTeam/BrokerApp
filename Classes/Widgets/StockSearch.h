@@ -16,6 +16,8 @@
 #include "Widget.h"
 #include <vector>
 #include <map>
+#include "../Data/Symbol.h"
+
 
 enum SymbolInfoColumnID
 {
@@ -73,14 +75,12 @@ class StockSearch : public Widget {
 public:
     StockSearch(Context* context);
 
-
-
     void updateVisible(float dt) override;
     void onPushStyleVar() override;
 
 private:
     ImVector<SymbolRow> _symbols;
-    //std::vector<std::shared_ptr<SymbolRow>> _symbols;
+
     void buildHeader();
     void buildFilter();
     void buildStockSearch();
@@ -89,30 +89,21 @@ private:
     bool setupFirstTab = false;
 
     ImGuiTextFilter filter;
-    std::map<std::string, bool> _favorites = {
-            {"ETHBTC", false},
-            {"ETHBRL", false},
-            {"ETHUSDT", true},
-            {"BTCBRL", false},
-            {"BTCUSDT", true},
-            {"BTCBUSD", false}
-    };
-
-    //std::vector<std::string> symbols{"ETHBTC", "ETHBRL", "ETHUSDT", "BTCBRL", "BTCUSDT", "BTCBUSD"};
-    //bool favorites[6] = {false, true, false, true, false, true}; //lv: map
-    //std::vector<std::shared_ptr<SymbolRow>> filtered_symbols;
     ImVector<SymbolRow> filtered_symbols;
 
     void buildRow(SymbolRow &info);
 
     void setFavoriteColumn(SymbolRow &info);
 
-
     void buildTabBar();
 
     void applyTabFilter(std::string tabFilter);
 
     void setupTestSymbols();
+    void changeStream();
+    Symbol _symbol{"ETHUSDT","1m",0,0};
+    std::string _symbolName{"ETHUSDT"};
+    std::string _oldSymbolName;
 };
 
 
