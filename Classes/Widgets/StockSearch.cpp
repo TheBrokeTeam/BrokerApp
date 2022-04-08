@@ -15,60 +15,65 @@ StockSearch::StockSearch(Context *context) : Widget(context)
     _title                  = "Stock Search";
     _is_window              = true;
     setupTestSymbols();
-
-
-
+    setupTestSymbols();
+    setupTestSymbols();
+    setupTestSymbols();
+    setupTestSymbols();
+    
 }
+
 
 void StockSearch::setupTestSymbols() {
-    std::__1::shared_ptr<SymbolRow> btcusdt = std::__1::make_shared<SymbolRow>();
-    btcusdt->code = "BTCUSDT";
-    btcusdt->lastPriceSignal = false;
-    btcusdt->lastDayDelta = 0.0342;
-    btcusdt->lastPrice = 43938.230;
-    btcusdt->name = "BTCUSDT";
-    _symbols.push_back(btcusdt);
+    SymbolRow row = SymbolRow();
+    row.code = "BTCUSDT";
+    row.lastPriceSignal = false;
+    row.lastDayDelta = 0.0342;
+    row.lastPrice = 43938.230;
+    row.name = "BTCUSDT";
+    row.favorited = true;
+    _symbols.push_back(row);
 
-    std::__1::shared_ptr<SymbolRow> btcbusd = std::__1::make_shared<SymbolRow>();
-    btcbusd->code = "BTCBUSD";
-    btcbusd->lastPriceSignal = true;
-    btcbusd->lastDayDelta = -0.0351;
-    btcbusd->lastPrice = 43912.27;
-    btcbusd->name = "BTCBUSD";
-    _symbols.push_back(btcbusd);
+    row.code = "BTCBUSD";
+    row.lastPriceSignal = true;
+    row.lastDayDelta = -0.0351;
+    row.lastPrice = 43912.27;
+    row.name = "BTCBUSD";
+    row.favorited = false;
+    _symbols.push_back(row);
 
-    std::__1::shared_ptr<SymbolRow> ethbtc = std::__1::make_shared<SymbolRow>();
-    ethbtc-> code = "ETHBTC";
-    ethbtc-> lastPriceSignal = true;
-    ethbtc->lastDayDelta = 0.0167;
-    ethbtc->lastPrice = 0.073638;
-    ethbtc->name = "ETHBTC";
-    _symbols.push_back(ethbtc);
+    row. code = "ETHBTC";
+    row. lastPriceSignal = true;
+    row.lastDayDelta = 0.0167;
+    row.lastPrice = 0.073638;
+    row.name = "ETHBTC";
+    row.favorited = false;
+    _symbols.push_back(row);
 
-    std::__1::shared_ptr<SymbolRow> ethbrl = std::__1::make_shared<SymbolRow>();
-    ethbrl-> code = "ETHBRL";
-    ethbrl-> lastPriceSignal = true;
-    ethbrl->lastDayDelta = -0.0385;
-    ethbrl->lastPrice = 15353.98;
-    ethbrl->name = "ETHBRL";
-    _symbols.push_back(ethbrl);
+    row. code = "ETHBRL";
+    row. lastPriceSignal = true;
+    row.lastDayDelta = -0.0385;
+    row.lastPrice = 15353.98;
+    row.name = "ETHBRL";
+    row.favorited = true;
+    _symbols.push_back(row);
 
-    std::__1::shared_ptr<SymbolRow> btcbrl = std::__1::make_shared<SymbolRow>();
-    btcbrl-> code = "BTCBRL";
-    btcbrl-> lastPriceSignal = false;
-    btcbrl->lastDayDelta = -0.0214;
-    btcbrl->lastPrice = 208731;
-    btcbrl->name = "BTCBRL";
-    _symbols.push_back(btcbrl);
+    row. code = "BTCBRL";
+    row. lastPriceSignal = false;
+    row.lastDayDelta = -0.0214;
+    row.lastPrice = 208731;
+    row.name = "BTCBRL";
+    row.favorited = true;
+    _symbols.push_back(row);
 
-    std::__1::shared_ptr<SymbolRow> ethusdt = std::__1::make_shared<SymbolRow>();
-    ethusdt->code = "ETHUSDT";
-    ethusdt->lastPriceSignal = true;
-    ethusdt->lastDayDelta = 0.0527;
-    ethusdt->lastPrice = 3227.89;
-    ethusdt->name = "ETHUSDT";
-    _symbols.push_back(ethusdt);
+    row.code = "ETHUSDT";
+    row.lastPriceSignal = true;
+    row.lastDayDelta = 0.0527;
+    row.lastPrice = 3227.89;
+    row.name = "ETHUSDT";
+    row.favorited = false;
+    _symbols.push_back(row);
 }
+
 
 void StockSearch::buildTabBar() {
     std::string tabnames[] = {"Favs", "All", "USDT", "BTC", "BRL", "ETH"};
@@ -79,7 +84,7 @@ void StockSearch::buildTabBar() {
                 if (_selectedTab != name || !setupFirstTab) {
                     filtered_symbols.clear();
                     for (auto & symbol : _symbols) {
-                        if (filter.PassFilter(symbol->name.c_str()))
+                        if (filter.PassFilter(symbol.name.c_str()))
                             filtered_symbols.push_back(symbol);
                     }
                     applyTabFilter(name);
@@ -104,16 +109,15 @@ void StockSearch::applyTabFilter(std::string tabFilter) {
         return;
     } else if (tabFilter == "Favs") {
         filtered_symbols.erase(std::remove_if(filtered_symbols.begin(), filtered_symbols.end(), [&](auto& i) {
-            return !_favorites[i->name];
+            return !i.favorited;
         }), filtered_symbols.end());
 
     } else {
         filtered_symbols.erase(std::remove_if(filtered_symbols.begin(), filtered_symbols.end(), [&](auto& i) {
-            return (i->name).find(tabFilter) == std::string::npos;
+            return (i.name).find(tabFilter) == std::string::npos;
         }), filtered_symbols.end());
 
     }
-
 
     //filtered_symbols.clear();
     //filtered_symbols = tab_filtered_symbols;
@@ -124,7 +128,6 @@ void StockSearch::updateVisible(float dt)
     buildHeader();
     buildFilter();
     buildTabBar();
-
 }
 
 
@@ -178,7 +181,7 @@ void StockSearch::buildFilter() {
     if (ImGui::IsItemEdited() || !populateFilteredSymbols) {
         filtered_symbols.clear();
         for (auto & symbol : _symbols) {
-            if (filter.PassFilter(symbol->name.c_str()))
+            if (filter.PassFilter(symbol.name.c_str()))
                 filtered_symbols.push_back(symbol);
         }
         populateFilteredSymbols = true;
@@ -198,61 +201,16 @@ void StockSearch::buildStockSearch() {
 
     // Expose a few Borders related flags interactively
 
-    static ImGuiTableFlags flags =  ImGuiTableFlags_SortTristate | ImGuiTableFlags_Sortable | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg ;
+    static ImGuiTableFlags flags =   ImGuiTableFlags_ScrollY | ImGuiTableFlags_SortMulti | ImGuiTableFlags_Sortable | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg ;
     //static bool display_headers = false;
 
 
-    ///PushStyleCompact()
-    ImGuiStyle &style = ImGui::GetStyle();
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding,
-                        ImVec2(style.FramePadding.x, (float) (int) (style.FramePadding.y * 0.60f)));
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing,
-                        ImVec2(style.ItemSpacing.x, (float) (int) (style.ItemSpacing.y * 0.60f)));
 
-    // finish PushStyleCompact()
-//
-//    ImGui::CheckboxFlags("ImGuiTableFlags_RowBg", &flags, ImGuiTableFlags_RowBg);
-//    ImGui::CheckboxFlags("ImGuiTableFlags_Borders", &flags, ImGuiTableFlags_Borders);
-//    ImGui::SameLine();
-//    HelpMarker(
-//            "ImGuiTableFlags_Borders\n = ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterV\n | ImGuiTableFlags_BordersInnerV\n | ImGuiTableFlags_BordersOuterH");
-//    ImGui::Indent();
-//
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersH", &flags, ImGuiTableFlags_BordersH);
-//    ImGui::Indent();
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersOuterH", &flags, ImGuiTableFlags_BordersOuterH);
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersInnerH", &flags, ImGuiTableFlags_BordersInnerH);
-//    ImGui::Unindent();
-//
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersV", &flags, ImGuiTableFlags_BordersV);
-//    ImGui::Indent();
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersOuterV", &flags, ImGuiTableFlags_BordersOuterV);
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersInnerV", &flags, ImGuiTableFlags_BordersInnerV);
-//    ImGui::Unindent();
-//
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersOuter", &flags, ImGuiTableFlags_BordersOuter);
-//    ImGui::CheckboxFlags("ImGuiTableFlags_BordersInner", &flags, ImGuiTableFlags_BordersInner);
-//    ImGui::Unindent();
-
-//    ImGui::AlignTextToFramePadding();
-//    ImGui::Text("Cell contents:");
-//    ImGui::SameLine();
-//    ImGui::RadioButton("Text", &contents_type, CT_Text);
-//    ImGui::SameLine();
-//    ImGui::RadioButton("FillButton", &contents_type, CT_FillButton);
-//    ImGui::Checkbox("Display headers", &display_headers);
-//    ImGui::CheckboxFlags("ImGuiTableFlags_NoBordersInBody", &flags, ImGuiTableFlags_NoBordersInBody);
-//    ImGui::SameLine();
-//    HelpMarker("Disable vertical borders in columns Body (borders will always appears in Headers");
-
-    ///PopStyleCompact();
-    ImGui::PopStyleVar(2);
-    //Finish PopStyleCompact();
 
     if (ImGui::BeginTable("Table1", 4, flags)) {
         // Display headers so we can inspect their interaction with borders.
         // (Headers are not the main purpose of this section of the demo, so we are not elaborating on them too much. See other sections for details)
-        ImGui::TableSetupColumn("Fav", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 40, SymbolInfoColumnID_Fav);
+        ImGui::TableSetupColumn("Fav", ImGuiTableColumnFlags_WidthFixed, 40, SymbolInfoColumnID_Fav);
         ImGui::TableSetupColumn("Pair", ImGuiTableColumnFlags_WidthStretch, 170, SymbolInfoColumnID_Name);
         ImGui::TableSetupColumn("Last", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_NoResize, 90, SymbolInfoColumnID_LastPrice);
         ImGui::TableSetupColumn("24h", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 60, SymbolInfoColumnID_Delta);
@@ -267,36 +225,18 @@ void StockSearch::buildStockSearch() {
             if (sorts_specs->SpecsDirty) {
                 SymbolRow::s_current_sort_specs = sorts_specs; // Store in variable accessible by the sort function.
                 if (filtered_symbols.size() > 1) {
-
                     qsort(&filtered_symbols[0], (size_t)filtered_symbols.size(), sizeof(filtered_symbols[0]), SymbolRow::CompareWithSortSpecs);
 
-//                    for (int n = 0; n < sorts_specs->SpecsCount; n++) {
-//                        const ImGuiTableColumnSortSpecs* sort_spec = &sorts_specs->Specs[n];
-//
-//                        switch (sort_spec->ColumnUserID) {
-//                            case SymbolInfoColumnID_Name:
-//                                std::sort(filtered_symbols.begin(), filtered_symbols.end());
-//
-//                                //delta = (strcmp(a->name.c_str(), b->name.c_str()));
-//                                break;
-//                            case SymbolInfoColumnID_Delta:
-//                                std::sort(filtered_symbols.begin(), filtered_symbols.end());
-//
-//                                //delta = (a->lastDayDelta - b->lastDayDelta);
-//                                break;
-//                            default:
-//                                //IM_ASSERT(0);
-//                                break;
-//                        }
-//                    }
                 }
 
                 SymbolRow::s_current_sort_specs = NULL;
                 sorts_specs->SpecsDirty = false;
+
             }
 
         for (auto& filtered: filtered_symbols) {
-            buildRow(*filtered); //LV: ta certo?
+            buildRow(filtered);
+
         }
 
         ImGui::EndTable();
@@ -323,7 +263,7 @@ void StockSearch::buildStockSearch() {
 //    ImGui::PopStyleVar();
 }
 
-void StockSearch::buildRow(SymbolRow info) {
+void StockSearch::buildRow(SymbolRow &info) {
     enum ContentsType {
         CT_Text, CT_FillButton
     };
@@ -371,16 +311,21 @@ void StockSearch::buildRow(SymbolRow info) {
 
 
 
-void StockSearch::setFavoriteColumn(SymbolRow info) {
-    //adding the close button
+void StockSearch::setFavoriteColumn(SymbolRow &info) {
+
     ImGui::PushID(("favorite_checkbox_" + info.name).c_str());
    // ImGui::Checkbox("##Checkbox1", &favorites[row_number]);
 
-    Editor::Icons state = _favorites[info.name] ? Editor::Icons::fav_selected : Editor::Icons::fav_unselected;
+    Editor::Icons state = info.favorited ? Editor::Icons::fav_selected : Editor::Icons::fav_unselected;
     auto texture = getContext()->getEditor()->getTexture(state);
 
     if(ImGui::ImageButton((void*)(intptr_t)texture.my_image_texture, ImVec2(15, 15))){
-        _favorites[info.name] = _favorites[info.name] ? false : true;
+        ImVector<SymbolRow>::iterator it = std::find_if(_symbols.begin(), _symbols.end(), [&](const SymbolRow & o) {
+            return o.code == info.code;
+        });
+
+        it->favorited = info.favorited ? false : true;
+        info.favorited = info.favorited ? false : true;
     }
     ImGui::PopID();
 
