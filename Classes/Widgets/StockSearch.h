@@ -77,13 +77,15 @@ public:
     void onPushStyleVar() override;
 
 private:
-    ImVector<SymbolRow> _symbols;
+    std::vector<std::shared_ptr<SymbolRow>> _symbols;
     void buildHeader();
     void buildFilter();
     void buildStockSearch();
     std::string _selectedTab = "Favs";
     bool populateFilteredSymbols = false;
+    bool setupFirstTab = false;
 
+    ImGuiTextFilter filter;
     std::map<std::string, bool> _favorites = {
             {"ETHBTC", false},
             {"ETHBRL", false},
@@ -95,7 +97,7 @@ private:
 
     //std::vector<std::string> symbols{"ETHBTC", "ETHBRL", "ETHUSDT", "BTCBRL", "BTCUSDT", "BTCBUSD"};
     //bool favorites[6] = {false, true, false, true, false, true}; //lv: map
-    ImVector<SymbolRow> filtered_symbols;
+    std::vector<std::shared_ptr<SymbolRow>> filtered_symbols;
 
     void buildRow(SymbolRow info);
 

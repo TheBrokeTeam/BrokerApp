@@ -21,58 +21,52 @@ StockSearch::StockSearch(Context *context) : Widget(context)
 }
 
 void StockSearch::setupTestSymbols() {
-    //std::__1::shared_ptr<SymbolRow> btcusdt = std::__1::make_shared<SymbolRow>();
-    SymbolRow btcusdt = SymbolRow();
-    btcusdt.code = "BTCUSDT";
-    btcusdt.lastPriceSignal = false;
-    btcusdt.lastDayDelta = 0.0342;
-    btcusdt.lastPrice = 43938.230;
-    btcusdt.name = "BTCUSDT";
+    std::__1::shared_ptr<SymbolRow> btcusdt = std::__1::make_shared<SymbolRow>();
+    btcusdt->code = "BTCUSDT";
+    btcusdt->lastPriceSignal = false;
+    btcusdt->lastDayDelta = 0.0342;
+    btcusdt->lastPrice = 43938.230;
+    btcusdt->name = "BTCUSDT";
     _symbols.push_back(btcusdt);
 
-    //std::__1::shared_ptr<SymbolRow> btcbusd = std::__1::make_shared<SymbolRow>();
-    SymbolRow btcbusd = SymbolRow();
-    btcbusd.code = "BTCBUSD";
-    btcbusd.lastPriceSignal = true;
-    btcbusd.lastDayDelta = -0.0351;
-    btcbusd.lastPrice = 43912.27;
-    btcbusd.name = "BTCBUSD";
+    std::__1::shared_ptr<SymbolRow> btcbusd = std::__1::make_shared<SymbolRow>();
+    btcbusd->code = "BTCBUSD";
+    btcbusd->lastPriceSignal = true;
+    btcbusd->lastDayDelta = -0.0351;
+    btcbusd->lastPrice = 43912.27;
+    btcbusd->name = "BTCBUSD";
     _symbols.push_back(btcbusd);
 
-    //std::__1::shared_ptr<SymbolRow> ethbtc = std::__1::make_shared<SymbolRow>();
-    SymbolRow ethbtc = SymbolRow();
-    ethbtc.code = "ETHBTC";
-    ethbtc.lastPriceSignal = true;
-    ethbtc.lastDayDelta = 0.0167;
-    ethbtc.lastPrice = 0.073638;
-    ethbtc.name = "ETHBTC";
+    std::__1::shared_ptr<SymbolRow> ethbtc = std::__1::make_shared<SymbolRow>();
+    ethbtc-> code = "ETHBTC";
+    ethbtc-> lastPriceSignal = true;
+    ethbtc->lastDayDelta = 0.0167;
+    ethbtc->lastPrice = 0.073638;
+    ethbtc->name = "ETHBTC";
     _symbols.push_back(ethbtc);
 
-    //std::__1::shared_ptr<SymbolRow> ethbrl = std::__1::make_shared<SymbolRow>();
-    SymbolRow ethbrl = SymbolRow();
-    ethbrl.code = "ETHBRL";
-    ethbrl.lastPriceSignal = true;
-    ethbrl.lastDayDelta = -0.0385;
-    ethbrl.lastPrice = 15353.98;
-    ethbrl.name = "ETHBRL";
+    std::__1::shared_ptr<SymbolRow> ethbrl = std::__1::make_shared<SymbolRow>();
+    ethbrl-> code = "ETHBRL";
+    ethbrl-> lastPriceSignal = true;
+    ethbrl->lastDayDelta = -0.0385;
+    ethbrl->lastPrice = 15353.98;
+    ethbrl->name = "ETHBRL";
     _symbols.push_back(ethbrl);
 
-    //std::__1::shared_ptr<SymbolRow> btcbrl = std::__1::make_shared<SymbolRow>();
-    SymbolRow btcbrl = SymbolRow();
-    btcbrl.code = "BTCBRL";
-    btcbrl.lastPriceSignal = false;
-    btcbrl.lastDayDelta = -0.0214;
-    btcbrl.lastPrice = 208731;
-    btcbrl.name = "BTCBRL";
+    std::__1::shared_ptr<SymbolRow> btcbrl = std::__1::make_shared<SymbolRow>();
+    btcbrl-> code = "BTCBRL";
+    btcbrl-> lastPriceSignal = false;
+    btcbrl->lastDayDelta = -0.0214;
+    btcbrl->lastPrice = 208731;
+    btcbrl->name = "BTCBRL";
     _symbols.push_back(btcbrl);
 
-    //std::__1::shared_ptr<SymbolRow> ethusdt = std::__1::make_shared<SymbolRow>();
-    SymbolRow ethusdt = SymbolRow();
-    ethusdt.code = "ETHUSDT";
-    ethusdt.lastPriceSignal = true;
-    ethusdt.lastDayDelta = 0.0527;
-    ethusdt.lastPrice = 3227.89;
-    ethusdt.name = "ETHUSDT";
+    std::__1::shared_ptr<SymbolRow> ethusdt = std::__1::make_shared<SymbolRow>();
+    ethusdt->code = "ETHUSDT";
+    ethusdt->lastPriceSignal = true;
+    ethusdt->lastDayDelta = 0.0527;
+    ethusdt->lastPrice = 3227.89;
+    ethusdt->name = "ETHUSDT";
     _symbols.push_back(ethusdt);
 }
 
@@ -82,7 +76,17 @@ void StockSearch::buildTabBar() {
     for (auto &name: tabnames) {
         if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_None)) {
             if (ImGui::BeginTabItem(name.c_str())) {
-                applyTabFilter(name);
+                if (_selectedTab != name || !setupFirstTab) {
+                    filtered_symbols.clear();
+                    for (auto & symbol : _symbols) {
+                        if (filter.PassFilter(symbol->name.c_str()))
+                            filtered_symbols.push_back(symbol);
+                    }
+                    applyTabFilter(name);
+                    _selectedTab = name;
+                    setupFirstTab = true;
+                }
+
                 buildStockSearch();
                 ImGui::EndTabItem();
 
@@ -100,12 +104,12 @@ void StockSearch::applyTabFilter(std::string tabFilter) {
         return;
     } else if (tabFilter == "Favs") {
         filtered_symbols.erase(std::remove_if(filtered_symbols.begin(), filtered_symbols.end(), [&](auto& i) {
-            return !_favorites[i.name];
+            return !_favorites[i->name];
         }), filtered_symbols.end());
 
     } else {
         filtered_symbols.erase(std::remove_if(filtered_symbols.begin(), filtered_symbols.end(), [&](auto& i) {
-            return (i.name).find(tabFilter) == std::string::npos;
+            return (i->name).find(tabFilter) == std::string::npos;
         }), filtered_symbols.end());
 
     }
@@ -163,8 +167,6 @@ void StockSearch::buildFilter() {
         // Helper class to easy setup a text filter.
         // You may want to implement a more feature-full filtering scheme in your own application.
 
-    static ImGuiTextFilter filter;
-
     ImGuiStyle &style = ImGui::GetStyle();
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding,
                         ImVec2(style.FramePadding.x, (float) (int) (style.FramePadding.y * 1.0f)));
@@ -176,11 +178,11 @@ void StockSearch::buildFilter() {
     if (ImGui::IsItemEdited() || !populateFilteredSymbols) {
         filtered_symbols.clear();
         for (auto & symbol : _symbols) {
-            if (filter.PassFilter(symbol.name.c_str()))
+            if (filter.PassFilter(symbol->name.c_str()))
                 filtered_symbols.push_back(symbol);
         }
         populateFilteredSymbols = true;
-        //applyTabFilter(_selectedTab);
+        applyTabFilter(_selectedTab);
     }
 
     ImGui::PopStyleColor();
@@ -264,9 +266,9 @@ void StockSearch::buildStockSearch() {
         if (ImGuiTableSortSpecs* sorts_specs = ImGui::TableGetSortSpecs())
             if (sorts_specs->SpecsDirty) {
                 SymbolRow::s_current_sort_specs = sorts_specs; // Store in variable accessible by the sort function.
-                if (filtered_symbols.Size > 1) {
+                if (filtered_symbols.size() > 1) {
 
-                    qsort(&filtered_symbols[0], (size_t)filtered_symbols.Size, sizeof(filtered_symbols[0]), SymbolRow::CompareWithSortSpecs);
+                    qsort(&filtered_symbols[0], (size_t)filtered_symbols.size(), sizeof(filtered_symbols[0]), SymbolRow::CompareWithSortSpecs);
 
 //                    for (int n = 0; n < sorts_specs->SpecsCount; n++) {
 //                        const ImGuiTableColumnSortSpecs* sort_spec = &sorts_specs->Specs[n];
@@ -293,8 +295,8 @@ void StockSearch::buildStockSearch() {
                 sorts_specs->SpecsDirty = false;
             }
 
-        for (auto filtered: filtered_symbols) {
-            buildRow(filtered); //LV: ta certo?
+        for (auto& filtered: filtered_symbols) {
+            buildRow(*filtered); //LV: ta certo?
         }
 
         ImGui::EndTable();
