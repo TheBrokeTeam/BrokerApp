@@ -170,7 +170,7 @@ add_executable(BrokerApp
 		Classes/Data/User.cpp
 		Classes/Networking/Server/HttpServer.h
 		Classes/Networking/Server/HttpServer.cpp
-        )
+        Classes/Networking/API/Services/BinanceService.cpp Classes/Networking/API/Services/BinanceService.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

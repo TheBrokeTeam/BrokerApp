@@ -17,7 +17,7 @@ class DBManager {
     void updateUserData(const AccountInfo& info);
     const std::string& getPrivateKey();
     const std::string& getSecretKey();
-//    bool userExists();
+//    bool userSelected();
 //    User* getUser();
 
 private:

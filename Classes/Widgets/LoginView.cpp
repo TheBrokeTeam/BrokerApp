@@ -9,7 +9,7 @@ LoginView::LoginView(Context *context) : Widget(context) {
     _title = "Profile";
     _is_window = true;
     _httpServer = new HttpServer(context, 9494);
-    std::thread thrContext(LoginView::createHttpServer, _httpServer);
+    std::thread thrContext(LoginView::runHttpServer, _httpServer);
     thrContext.detach();
 }
 
@@ -29,14 +29,11 @@ void LoginView::updateVisible(float dt) {
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    if(getContext()->userExists()) {
+    if(getContext()->userSelected()) {
 
         PushStyleColor(ImGuiCol_Text, Editor::broker_white);
         User* user = getContext()->getUser();
-//        char* welcome_text = std::string("Hi, ").c_str();
         std::string name_str = fmt::format("Hi, {}", user->GetName());
-//        fmt::format("Hi, {}", user->GetName()).c_str();
-//        const char* value = value_str.c_str();
         ImGui::Text("%s", name_str.c_str());
 
         PushStyleColor(ImGuiCol_Text,Editor::broker_black);
@@ -46,12 +43,8 @@ void LoginView::updateVisible(float dt) {
             getContext()->logout();
         }
 
-        if (ImGui::Button("Switch Account",ImVec2(200, 50)))
-        {
-            puts("Clicou em witch account!!!");
-        }
-
-    } else {
+    }
+    else {
         // change color text
         PushStyleColor(ImGuiCol_Text,Editor::broker_black);
 
@@ -179,7 +172,7 @@ void LoginView::openAuthProvider(const std::string& provider) {
     userService.openAuth(provider);
 }
 
-void LoginView::createHttpServer(HttpServer* httpServer) {
+void LoginView::runHttpServer(HttpServer* httpServer) {
     httpServer->Run();
 }
 

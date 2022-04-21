@@ -15,9 +15,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread.hpp>
 #include <algorithm>
-//#include "../Classes/Data/User.h"
 #include "../../Common/Json/BAJson.h"
-//#include "../../Common/DataBase/DBManager.h"
 #include "../../Contexts/Context.h"
 
 using boost::asio::ip::tcp;

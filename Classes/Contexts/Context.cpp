@@ -12,10 +12,10 @@ Context::Context(Editor* editor): _editor(editor)
     _dbManager = DBManager();
 
     if(std::filesystem::exists(Paths::UserData)) {
-        rapidjson::Document user_doc;
-        user_doc.SetObject();
-        BAJson::parseFile(Paths::UserData, user_doc);
-        _user = new User(user_doc);
+        rapidjson::Document users_doc;
+        users_doc.SetObject();
+        BAJson::parseFile(Paths::UserData, users_doc);
+        _user = new User(users_doc);
     } else {
         _user = nullptr;
     }
@@ -111,7 +111,7 @@ DBManager *Context::getDBManager()
 //    return _httpServer;
 //}
 
-bool Context::userExists()
+bool Context::userSelected()
 {
     return (_user != nullptr);
 }
@@ -121,30 +121,25 @@ User* Context::getUser()
     return _user;
 }
 
-void Context::saveUser(const rapidjson::Document& doc) {
+void Context::addUser(const rapidjson::Document& doc) {
     if(!std::filesystem::exists(Paths::Root))
     {
         std::filesystem::create_directory(Paths::Root);
     }
-
-    if(!std::filesystem::exists(Paths::UserData))
-    {
-        BAJson::save(doc, Paths::UserData);
-        loadUser();
-    }
+    BAJson::save(doc, Paths::UserData);
+    loadUser();
 }
 
-User* Context::loadUser()
+void Context::loadUser()
 {
     if(std::filesystem::exists(Paths::UserData)) {
-        rapidjson::Document user_doc;
-        user_doc.SetObject();
-        BAJson::parseFile(Paths::UserData, user_doc);
-        _user = new User(user_doc);
+        rapidjson::Document users_doc;
+        users_doc.SetObject();
+        BAJson::parseFile(Paths::UserData, users_doc);
+        _user = new User(users_doc);
     } else {
         _user = nullptr;
     }
-    return _user;
 }
 
 void Context::logout() {

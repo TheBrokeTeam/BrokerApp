@@ -110,7 +110,7 @@ bool HttpServer::ReadAuth(boost::asio::streambuf& request) {
         return false;
     }
 
-    context->saveUser(params);
+    context->addUser(params);
 
     context->_startingAuthentication = false;
     context->_sentAuthentication = false;
@@ -145,28 +145,32 @@ void Request::afterRead(const boost::system::error_code& ec, std::size_t bytes_t
 
     if(server.ReadAuth(request))
     {
-        std::fstream htmlFile;
-        htmlFile.open("/Users/maykonmeneghel/Desktop/TheBrokeTeam/BrokerApp/Resources/Html/success.html", std::ios::in);
-        if(!htmlFile){
-            std::cout << "File cannot open!" << std::endl;
-        }
+        std::ifstream html(Paths::SuccessHTML);
+        html.seekg(0, std::ios::end);
+        size_t size = html.tellg();
+        std::string buffer(size, ' ');
+        html.seekg(0);
+        html.read(&buffer[0], size);
 
-        htmlFile.seekg(0, std::ios::end);
-//        std::cout << htmlFile.tellg() << std::endl;
         res_stream << "HTTP/1.0 200 OK\r\n"
                    << "Content-Type: text/html\r\n"
-                   << "Content-Length: " << std::int16_t(htmlFile.tellg()) << "\r\n\r\n"
-                   << htmlFile.rdbuf() << "\r\n";
-
-        std::cout << htmlFile.rdbuf() << std::endl;
+                   << "Content-Length: " << size << "\r\n\r\n"
+                   << buffer << "\r\n";
 
     } else
     {
+        std::ifstream html(Paths::FailHTML);
+        html.seekg(0, std::ios::end);
+        size_t size = html.tellg();
+        std::string buffer(size, ' ');
+        html.seekg(0);
+        html.read(&buffer[0], size);
+
         std::string message = "Bad Request";
         res_stream << "HTTP/1.0 403 Bad Request\r\n"
                    << "Content-Type: text/html; charset=UTF-8\r\n"
-                   << "Content-Length: " << message.length() + 2 << "\r\n\r\n"
-                   << message << "\r\n";
+                   << "Content-Length: " << size << "\r\n\r\n"
+                   << buffer << "\r\n";
     }
 
     boost::asio::async_write(*socket, response, boost::bind(&Request::afterWrite, shared_from_this(), boost::system::error_code(), std::size_t(2048)));

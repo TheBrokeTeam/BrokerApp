@@ -86,7 +86,7 @@ const std::string &DBManager::getSecretKey() {
     return _secretKey;
 }
 //
-//bool DBManager::userExists() {
+//bool DBManager::userSelected() {
 //    return (_user != nullptr) ? true : false;
 //}
 //

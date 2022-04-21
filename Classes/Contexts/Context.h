@@ -128,9 +128,9 @@ public:
     // login stuffs
     bool _sentAuthentication = false;
     bool _startingAuthentication = false;
-    bool userExists();
+    bool userSelected();
     User* getUser();
-    void saveUser(const rapidjson::Document&);
+    void addUser(const rapidjson::Document &doc);
     void logout();
 
 protected:
@@ -147,7 +147,7 @@ protected:
     User* _user{nullptr};
     DBManager _dbManager;
 
-    User* loadUser();
+    void loadUser();
 
     bool _shouldRender = false;
 };
