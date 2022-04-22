@@ -19,25 +19,8 @@
 #include "../../Contexts/Context.h"
 
 using boost::asio::ip::tcp;
-class HttpServer;
 
-class Request : public boost::enable_shared_from_this<Request>
-{
-    static std::string make_daytime_string();
-
-    // member variables
-    HttpServer& server;
-    boost::asio::streambuf request;
-
-    void afterRead( const boost::system::error_code& ec, std::size_t bytes_transferred);
-    void afterWrite( const boost::system::error_code& ec, std::size_t bytes_transferred) const;
-
-public:
-    boost::shared_ptr<tcp::socket> socket;
-    explicit Request(HttpServer& server);
-    void answer();
-
-};
+class Request;
 
 class HttpServer
 {
