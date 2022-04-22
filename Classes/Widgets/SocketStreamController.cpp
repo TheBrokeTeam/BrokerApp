@@ -5,11 +5,20 @@
 #include "SocketStreamController.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
+#include "../Common/Json/BAJson.h"
 
 SocketStreamController::SocketStreamController(Context* context) : Widget(context)
 {
-    _title = "Downloader";
+    _title = "SS Controller";
     _is_window = true;
+
+    //TODO:: this should be automatic when on live context
+    _symbol =   Symbol(_symbolName,"1m",0,0);
+    getContext()->openSymbolStream(_symbol);
+    _oldSymbolName = _symbolName;
+
+    //TODO:: the user data stream should open automatic when the user already set his keys
+    getContext()->openUserDataStream();
 }
 
 void SocketStreamController::updateVisible(float dt)
@@ -34,8 +43,9 @@ void SocketStreamController::updateVisible(float dt)
 
     static char buff[8] = "ETHUSDT";
     ImGui::SetNextItemWidth(200);
-    if (ImGui::InputText("##Symbol",buff,8,ImGuiInputTextFlags_CharsUppercase)) {
+    if (ImGui::InputText("##Symbol",buff,8,ImGuiInputTextFlags_CharsUppercase | ImGuiInputTextFlags_EnterReturnsTrue)) {
         _symbolName = buff;
+        changeStream();
     }
 
     ImGui::SetNextItemWidth(80);
@@ -51,13 +61,16 @@ void SocketStreamController::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    if (ImGui::Button("Open Stream",ImVec2(200,50))) {
-        _symbol =   Symbol(_symbolName,"1m",0,0);
-        getContext()->openSymbolStream(_symbol);
+    if (ImGui::Button("Abrir ordem",ImVec2(200,50))) {
+        getContext()->openOrder(_symbol);
     }
 
-    if (ImGui::Button("Close Stream",ImVec2(200,50))) {
-        getContext()->closeSymbolStream(_symbol);
+    if (ImGui::Button("Cancelar ordem",ImVec2(200,50))) {
+        getContext()->closeAllOrders(_symbol);
+    }
+
+    if (ImGui::Button("Ainda não sei",ImVec2(200,50))) {
+        testFunction();
     }
 }
 
@@ -68,4 +81,27 @@ int SocketStreamController::getWindowFlags() {
 
 void SocketStreamController::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+}
+
+void SocketStreamController::changeStream() {
+    getContext()->closeSymbolStream(Symbol(_oldSymbolName,"1m",0,0));
+    _symbol =   Symbol(_symbolName,"1m",0,0);
+    getContext()->openSymbolStream(_symbol);
+    _oldSymbolName = _symbolName;
+}
+
+void SocketStreamController::testFunction() {
+    auto jsonPath = "../Resources/test_data.json";
+
+    rapidjson::Document document;
+    if (!BAJson::parseFile(jsonPath, document)) {
+        std::cout << "NAo rolou ler json" << std::endl;
+    }
+    else{
+        std::cout << BAJson::stringfy(document) << std::endl;
+
+        BAJson::save(document,"../Resources/tato.json");
+    }
+
+
 }

@@ -7,8 +7,9 @@
 #include "curl//curl.h"
 #include "curl/easy.h"
 #include <iostream>
-#include <rapidjson/document.h>
-#include <zip_file.hpp>
+#include "rapidjson/include/rapidjson/document.h"
+#include "miniz-cpp/zip_file.hpp"
+#include "fmt/format.h"
 #include <filesystem>
 #include <iomanip>
 #include <filesystem>
@@ -57,6 +58,7 @@ rapidjson::Document APIRouter::get(const std::string& baseURL) {
 
         struct curl_slist *hs = NULL;
         hs = curl_slist_append(hs, "Content-Type: application/json");
+        hs = curl_slist_append(hs, "Authorization: Bearer {}");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hs);
 
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);

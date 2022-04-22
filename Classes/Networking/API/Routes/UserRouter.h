@@ -14,10 +14,11 @@ protected:
     std::string endpoint = "/users";
 public:
     UserRouter();
-    [[nodiscard]] APIRouter getAuthorization(const rapidjson::Document& body) const;
-    [[nodiscard]] APIRouter createOne(const rapidjson::Document&) const;
-    [[nodiscard]] APIRouter updateOne() const;
+    [[nodiscard]] APIRouter getName(const std::string&) const;
+    [[nodiscard]] APIRouter authenticate(const rapidjson::Document& body) const;
+    [[nodiscard]] APIRouter createOne() const;
     [[nodiscard]] APIRouter deleteOne() const;
+    [[nodiscard]] APIRouter logout() const;
 };
 
 #endif //UNTITLED1_USERROUTER_H

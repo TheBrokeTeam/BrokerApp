@@ -114,25 +114,67 @@ add_executable(BrokerApp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
         Classes/Nodes/PSARNode.cpp
-        Classes/Networking/APIManager.cpp
-        Classes/Networking/APIManager.h
-        Classes/Networking/APIRouter.cpp
-        Classes/Networking/APIRouter.h
-        Classes/Networking/Routes/SymbolRouter.cpp
-        Classes/Networking/Routes/SymbolRouter.h
-        Classes/Networking/Routes/UserRouter.cpp
-        Classes/Networking/Routes/UserRouter.h
-        Classes/Networking/Services/SymbolService.cpp
-        Classes/Networking/Services/SymbolService.h
-        Classes/Networking/Services/UserService.cpp
-        Classes/Networking/Services/UserService.h Classes/Helpers/JsonUtils.h Classes/Networking/Services/KLineService.cpp Classes/Networking/Services/KLineService.h Classes/Networking/Routes/KLineRouter.cpp Classes/Networking/Routes/KLineRouter.h
+		Classes/Networking/API/APIManager.cpp
+		Classes/Networking/API/APIManager.h
+		Classes/Networking/API/APIRouter.cpp
+		Classes/Networking/API/APIRouter.h
+		Classes/Networking/API/Routes/SymbolRouter.cpp
+		Classes/Networking/API/Routes/SymbolRouter.h
+		Classes/Networking/API/Routes/UserRouter.cpp
+		Classes/Networking/API/Routes/UserRouter.h
+		Classes/Networking/API/Services/SymbolService.cpp
+		Classes/Networking/API/Services/SymbolService.h
+		Classes/Networking/API/Services/UserService.cpp
+		Classes/Networking/API/Services/UserService.h
+		Classes/Helpers/JsonUtils.h
+		Classes/Networking/API/Services/KLineService.cpp
+		Classes/Networking/API/Services/KLineService.h
+		Classes/Networking/API/Routes/KLineRouter.cpp
+		Classes/Networking/API/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
 		Classes/Nodes/IndicatorBaseNode.h
+        Classes/Widgets/ConnectView.cpp
+		Classes/Widgets/ConnectView.h
+		Classes/Networking/WebSocket/WSCommon.h
+		Classes/Networking/WebSocket/WSMessage.h
+		Classes/Networking/WebSocket/WebSocketManager.cpp
+		Classes/Networking/WebSocket/WebSocketManager.h
+		Classes/Networking/WebSocket/WSConnection.h
+		Classes/Networking/WebSocket/WSQueue.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h Classes/Contexts/LiveContext.cpp Classes/Contexts/LiveContext.h Classes/Widgets/SocketStreamController.cpp Classes/Widgets/SocketStreamController.h Classes/Widgets/LiveCandleChart.cpp Classes/Widgets/LiveCandleChart.h Classes/Networking/Binance/RestApiManager.cpp Classes/Networking/Binance/RestApiManager.h)
+		Classes/Networking/Binance/SocketManager.cpp
+		Classes/Networking/Binance/SocketManager.h
+		Classes/Contexts/LiveContext.cpp
+		Classes/Contexts/LiveContext.h
+		Classes/Widgets/SocketStreamController.cpp
+		Classes/Widgets/SocketStreamController.h
+		Classes/Widgets/LiveCandleChart.cpp
+		Classes/Widgets/LiveCandleChart.h
+		Classes/Networking/Binance/RestApiManager.cpp
+		Classes/Networking/Binance/RestApiManager.h
+		Classes/Common/Json/BAJson.cpp
+		Classes/Common/Json/BAJson.h
+		Classes/Common/Utils/BAString.cpp
+		Classes/Common/Utils/BAString.h
+		Classes/Common/DataBase/DBManager.cpp
+		Classes/Common/DataBase/DBManager.h
+		Classes/Data/AccountInfo.h
+		Classes/Common/DataBase/Paths.cpp
+		Classes/Common/DataBase/Paths.h
+        Classes/Widgets/LoginView.cpp
+		Classes/Widgets/LoginView.h
+		Classes/Data/User.h
+		Classes/Data/User.cpp
+		Classes/Networking/Server/HttpServer.h
+		Classes/Networking/Server/HttpServer.cpp
+        Classes/Networking/API/Services/BinanceService.cpp
+		Classes/Networking/API/Services/BinanceService.h
+		Classes/Networking/Server/Request.cpp
+		Classes/Networking/Server/Request.h
+		)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -174,6 +216,16 @@ else()
 endif()
 #--END CURL----------------------------------------------------------------
 
+#--ASIO STUFF--------------------------------------------------------------
+set(Asio_INCLUDE_DIR external/asio-1.22.1/include)
+
+#--END ASIO----------------------------------------------------------------
+
+#-OpenSSL STUFF -----------------------------------------------------
+find_package(OpenSSL REQUIRED)
+
+#-END OpenSSL -------------------------------------------------------
+
 set(IMGUI_SOURCE
         external/imgui/imgui.h
         external/imgui/imstb_rectpack.h
@@ -194,7 +246,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h)
+        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h Classes/Networking/WebSocket/OLCNet.h)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 
@@ -242,7 +294,6 @@ target_include_directories(imnodes
         )
 
 target_link_libraries(imnodes PUBLIC glfw imgui)
-
 
 #-EXTERNAL--END---------------
 
@@ -293,7 +344,8 @@ set(INCLUDES
         external/rapidcsv/src
         external/rapidjson/include
         ${CURL_INCLUDE_DIR}
-        )
+		${Asio_INCLUDE_DIR}
+		)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${INCLUDES}
@@ -312,7 +364,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
         rapidcsv
 		binapi
         ${CURL_LIBRARIES}
-        )
-
+		OpenSSL::SSL
+		)
 #-APPLICATION-LIBRARIES-END-------------------
 
+
+#git clone --recurse-submodules[https://github.com/boostorg/asio.git] https://github.com/boostorg/boost.git boost

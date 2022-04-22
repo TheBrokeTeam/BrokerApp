@@ -271,17 +271,17 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
 
 //    TODO:: load some history data
 //   _data.clear();
-    RestApiManager::CandlesCallback candlesCallback  = [this,symbol](std::vector<TickData>& data){
+    RestApiManager::CandlesCallback candlesCallback = [this,symbol](std::vector<TickData>& data){
        std::cout << data.size() << std::endl;
 //       _data.swap(data);
         for(auto &d : data)
             _ticker->tick(d);
 
         openSymbolTradeSocket(symbol);
-        openSymbolCandleSocket(symbol);
+//        openSymbolCandleSocket(symbol);
     };
 
-    _apiManager.getCandles(symbol,candlesCallback);
+    getEditor()->getApiManager()->getCandles(symbol,candlesCallback);
 
 //  add chart to render
     auto chart = getWidget<ChartView>();
@@ -290,7 +290,7 @@ void LiveContext::openSymbolStream(const Symbol& symbol) {
 }
 
 void LiveContext::closeSymbolStream(const Symbol& symbol) {
-    _socket_manager.closeStream(symbol);
+    getEditor()->getSocketManager()->closeStream(symbol);
 }
 
 void LiveContext::openSymbolCandleSocket(const Symbol &symbol) {
@@ -301,7 +301,7 @@ void LiveContext::openSymbolCandleSocket(const Symbol &symbol) {
             _ticker->tick(d);
     };
 
-    _socket_manager.openCandleStream(symbol,candleCallback);
+    getEditor()->getSocketManager()->openCandleStream(symbol,candleCallback);
 //    ---------------------------------------------
 
 }
@@ -311,12 +311,45 @@ void LiveContext::openSymbolTradeSocket(const Symbol &symbol) {
 //  open socket -----------------------------------
 //Todo:: handle errors
     SocketManager::StreamCallback streamCallback  = [this](const TickData& data){
-        _ticker->liveTick(data);
+        _ticker->tick(data,true);
     };
 
     _streams.push_back(streamCallback);
 
-    _socket_manager.openStream(symbol,streamCallback);
+    getEditor()->getSocketManager()->openStream(symbol,streamCallback);
 //    ---------------------------------------------
 }
 
+LiveContext::~LiveContext() {
+    getEditor()->getSocketManager()->closeStream(*_ticker->getSymbol());
+    getEditor()->getSocketManager()->closeCandleStream(*_ticker->getSymbol());
+    getEditor()->getSocketManager()->closeUserDataStreamSocket();
+}
+
+void LiveContext::openUserDataStream() {
+    getEditor()->getApiManager()->startUserDataStream([this](bool success,auto key){
+       if(success) {
+           fetchUserAccountInfo();
+           getEditor()->getSocketManager()->openUserDataStream(key);
+       }
+    });
+}
+
+void LiveContext::openOrder(const Symbol &symbol) {
+    getEditor()->getApiManager()->openOrder(symbol,[this](Order& order){
+        std::cout << "Order opened:" << order.clientOrderId << std::endl;
+        _orders.push_back(order);
+    });
+}
+
+void LiveContext::closeAllOrders(const Symbol &symbol) {
+    for(auto& o :_orders){
+        getEditor()->getApiManager()->cancelOrder(o);
+    }
+}
+
+void LiveContext::fetchUserAccountInfo() {
+    getEditor()->getApiManager()->accountInfo([this](const AccountInfo& info){
+        getDBManager()->updateUserData(info);
+    });
+}

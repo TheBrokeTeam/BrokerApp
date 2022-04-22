@@ -1,0 +1,25 @@
+body {
+    background-color: #e5e5e5;
+}
+h2 {
+    color: #1a1a1a;
+    text-align: center;
+    padding-top: 100.0px;
+    padding-bottom: 25.0px;
+    font-family: "SF Pro", ui-serif;
+    font-weight: lighter;
+}
+h1 {
+    color: #1a1a1a;
+    text-align: center;
+    padding-bottom: 10.0px;
+    font-size: 72px;
+}
+h3 {
+    color: #1a1a1a;
+    text-align: center;
+    padding-top: 50.0px;
+    padding-bottom: 10.0px;
+    font-family: "SF Mono", ui-serif;
+    font-weight: normal;
+}

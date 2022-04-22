@@ -16,11 +16,17 @@
 #include "../Tickables/Strategies/Strategy.h"
 #include "../Nodes/INode.h"
 #include "../Helpers/graph.h"
+#include "../Data/Order.h"
+#include "../Common/DataBase/Paths.h"
+#include "../Common/DataBase/DBManager.h"
+#include "../Data/User.h"
+#include "../Common/Json/BAJson.h"
 
 class Context {
-public:
-    Context(Editor* editor);
 
+public:
+    explicit Context(Editor* editor);
+    virtual ~Context();
 //    virtual void loadSymbol(Symbol symbol) = 0;
     virtual Ticker* fetchDataSymbol(Symbol) = 0;
     bool startFetching = false;
@@ -30,6 +36,11 @@ public:
     virtual void startSimulation(Ticker* ticker){};
     virtual void setSimulationSpeed(float speed){};
     virtual bool isSimulating(){return false;};
+
+    virtual void openUserDataStream() {};
+
+    virtual void openOrder(const Symbol &symbol) {};
+    virtual void closeAllOrders(const Symbol &symbol) {};
 
     virtual double getCurrentTimeStamp() = 0 ;
 
@@ -102,25 +113,41 @@ public:
 
     const std::vector<std::shared_ptr<Widget>>& getWidgets();
     Editor* getEditor();
+    DBManager* getDBManager();
 
     //developer phase
     virtual void showTabBars(bool show) = 0;
 
-    bool getShouldRender();
+    bool getShouldRender() const;
     void setShouldRender(bool);
     virtual void openSymbolStream(const Symbol& symbol){};
     virtual void closeSymbolStream(const Symbol& symbol){};
 
+    virtual void fetchUserAccountInfo(){};
+
+    // login stuffs
+    bool _sentAuthentication = false;
+    bool _startingAuthentication = false;
+    bool userSelected();
+    User* getUser();
+    void addUser(const rapidjson::Document &doc);
+    void logout();
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
     std::vector<std::shared_ptr<Indicator>> _subplotIndicators;
 
+    std::vector<Order> _orders;
+
     //    std::vector<std::shared_ptr<Strategy>> _strategies;
     std::vector<std::shared_ptr<INode>> _nodes;
 
-    Editor *_editor{nullptr};
+    Editor* _editor{nullptr};
+    User* _user{nullptr};
+    DBManager _dbManager;
+
+    void loadUser();
 
     bool _shouldRender = false;
 };

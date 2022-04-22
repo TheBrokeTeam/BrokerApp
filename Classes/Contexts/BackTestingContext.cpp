@@ -33,6 +33,8 @@
 #include "../Nodes/EMANode.h"
 #include "../Nodes/WMANode.h"
 #include "../Nodes/TRIXNode.h"
+#include "../Widgets/ConnectView.h"
+#include "../Widgets/LoginView.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -54,6 +56,8 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<StrategyEditor>(_ticker.get(),this));
     _widgets.emplace_back(std::make_shared<StockList>(this));
+    _widgets.emplace_back(std::make_shared<LoginView>(this));
+    _widgets.emplace_back(std::make_shared<ConnectView>(this));
 
     getWidget<StockList>()->SetVisible(false);
 

@@ -24,7 +24,6 @@ public:
     void initialize() override;
 
     Ticker* fetchDataSymbol(Symbol symbol) override;
-//    void loadSymbol(Symbol symbol) override;
     void loadTicker() override;
     void updateData(float dt) override;
     double getCurrentTimeStamp() override;
@@ -39,35 +38,19 @@ public:
     std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) override;
     std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) override;
 
-
     void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;
     void removeAllIndicators() override;
-
-
     void plotIndicators() override;
     void plotSubplotIndicators() override;
-
     void plotStrategy() override;
-
     void showTabBars(bool show) override;
 
 private:
-
-//    bool dataAlreadyExists(const Symbol& symbol);
-
-//    std::vector<TickData> loadCsv(Symbol symbol);
-
-//    std::string getSymbolFilePath(Symbol symbol);
-
-//    std::string build_url(std::string symbol, std::string year, std::string month, std::string interval);
-
-//    DownloadResponse download_file(std::string url, std::string filename);
 
     //TODO:: single symbol for now until backtesting is good
     std::shared_ptr<Ticker> _ticker{nullptr};
     std::shared_ptr<Strategy> _strategy{nullptr};
     StrategyEditor* _strategyEditor{nullptr};
-
 
     std::vector<TickData> _data;
 

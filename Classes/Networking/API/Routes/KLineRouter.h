@@ -6,7 +6,7 @@
 #define BROKERAPP_KLINEROUTER_H
 
 #include <string>
-#include "../../Data/Symbol.h"
+#include "../../../Data/Symbol.h"
 #include "../APIRouter.h"
 
 class KLineRouter {
