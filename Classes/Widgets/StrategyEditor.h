@@ -28,6 +28,7 @@ public:
 
     void removeNodeIndicator(std::shared_ptr<Indicator> indicator);
 
+    rapidjson::Document getJsonNodes();
 
 
 private:

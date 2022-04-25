@@ -74,6 +74,8 @@ public:
     const UiNodeType& getType();
     void setType(const UiNodeType& type);
     void setIcon(int icon);
+    rapidjson::Document toJson();
+
 protected:
     void setNodeName(const std::string& name);
     int _id;

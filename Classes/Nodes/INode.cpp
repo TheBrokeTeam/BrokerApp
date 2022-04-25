@@ -8,6 +8,7 @@
 #include "../Editor.h"
 #include "../Widgets/StrategyEditor.h"
 #include "UiNodeType.h"
+#include <map>
 
 
 INode::INode(StrategyEditor* strategyEditor):_nodeEditor(strategyEditor)
@@ -125,5 +126,29 @@ INode::~INode() {
         _graph->erase_node(id);
 
     _internalNodes.clear();
+}
+
+rapidjson::Document INode::toJson() {
+
+    rapidjson::Document jsonDoc;
+    jsonDoc.SetObject();
+
+    BAJson::set(jsonDoc, "id", this->_id);
+    BAJson::set(jsonDoc, "name", this->_name);
+
+    std::vector<float> position = { this->pos.x, this->pos.y };
+    BAJson::set(jsonDoc, "position", position);
+
+    BAJson::set(jsonDoc, "init", this->_init);
+    BAJson::set(jsonDoc, "icon", this->_icon);
+    BAJson::set(jsonDoc, "isIndicatorNode", this->_isIndicatorNode);
+    BAJson::set(jsonDoc, "internalNodes", this->_internalNodes);
+    BAJson::set(jsonDoc, "nodeEditor", this->_nodeEditor->getId());
+
+//    std::shared_ptr<graph::Graph<GraphNode>> _graph;
+//    std::weak_ptr<Indicator> _indicator;
+//    StrategyEditor* _nodeEditor{nullptr};
+
+    return jsonDoc;
 }
 

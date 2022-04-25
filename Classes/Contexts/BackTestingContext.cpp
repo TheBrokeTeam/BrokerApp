@@ -195,6 +195,12 @@ double BackTestingContext::getCurrentTimeStamp() {
 }
 
 void BackTestingContext::startSimulation(Ticker* ticker) {
+    // Save the nodes simulation
+    rapidjson::Document nodesDoc;
+    nodesDoc = this->_strategyEditor->getJsonNodes();
+
+    std::cout << BAJson::stringfy(nodesDoc) << std::endl;
+
     //just for tests
     //TODO:: use the ticker parameter
     getWidget<ProfitAndLossesView>()->clear();

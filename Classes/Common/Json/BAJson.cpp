@@ -5,6 +5,7 @@
 #include "BAJson.h"
 #include "../Utils/BAString.h"
 #include <rapidjson/filewritestream.h>
+#include "../Classes/Nodes/INode.h"
 
 
 const rapidjson::Value BAJson::kEmptyArray = rapidjson::Value(rapidjson::kArrayType);
@@ -188,6 +189,49 @@ void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const 
     object.AddMember(name, value, document.GetAllocator());
 }
 
+void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<float>& vec)
+{
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+    rapidjson::Value  array(rapidjson::kArrayType);
+    for(auto &value: vec) {
+        array.PushBack(value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes)
+{
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+    rapidjson::Value array(rapidjson::kArrayType);
+    for(const auto& node : nodes) {
+        rapidjson::Document jsonNode = node->toJson();
+        array.PushBack(jsonNode.GetObject(), document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<int>& vec)
+{
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+    rapidjson::Value  array(rapidjson::kArrayType);
+    for(auto &value: vec) {
+        array.PushBack(value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes) {
+    set(document, document, key, nodes);
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<int>& vec) {
+    set(document, document, key, vec);
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<float>& vec) {
+    set(document, document, key, vec);
+}
+
 void BAJson::set(rapidjson::Document &document, const std::string &key, rapidjson::Value &value)
 {
     set(document, document, key, value);
@@ -211,11 +255,6 @@ void BAJson::set(rapidjson::Document& document, const std::string& key, float fl
 void BAJson::set(rapidjson::Document& document, const std::string& key, int64_t int64Value)
 {
     set(document, document, key, int64Value);
-}
-
-void BAJson::set(rapidjson::Document& document, const std::string& key, double doubleValue)
-{
-    set(document, document, key, doubleValue);
 }
 
 void BAJson::set(rapidjson::Document& document, const std::string& key, const std::string& stringValue)
@@ -436,4 +475,3 @@ std::string BAJson::stringfy(const rapidjson::Document &document) {
     document.Accept(writer);
     return strbuf.GetString();
 }
-

@@ -263,3 +263,13 @@ void StrategyEditor::onClose(BarHistory *barHistory) {
             n->endEvaluate();
     }
 }
+
+rapidjson::Document StrategyEditor::getJsonNodes() {
+
+    rapidjson::Document nodesDoc;
+    nodesDoc.SetObject();
+
+    BAJson::set(nodesDoc, "nodes", this->_uiNodes);
+
+    return nodesDoc;
+}
