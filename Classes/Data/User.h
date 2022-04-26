@@ -21,6 +21,7 @@ public:
     ~User() = delete;
 
     const char* GetName();
+    const char* GetId();
 };
 
 

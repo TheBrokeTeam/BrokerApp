@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fmt/format.h>
 #include "../Helpers/JsonUtils.h"
+#include "../Common/Json/BAJson.h"
 #include <chrono>
 #include <thread>
 
@@ -334,4 +335,24 @@ double Symbol::getTimeIntervalInMiliSeconds() {
             1000.0*60*60*24*30
     };
     return intArr[int(_interval)];
+}
+
+
+std::string Symbol::getInterval() {
+    return this->intervalToString();
+}
+
+rapidjson::Document Symbol::toJson() {
+    rapidjson::Document doc;
+    doc.SetObject();
+    BAJson::set(doc, "code", this->getCode());
+    BAJson::set(doc, "interval", this->getInterval());
+    std::map<std::string, float> range = {
+            {"start", float(this->getStartTime())},
+            {"end", float(this->getEndTime())}
+    };
+    BAJson::set(doc, "range", range);
+//    BAJson::set(doc, "start", float(this->getStartTime()));
+//    BAJson::set(doc, "end", float(this->getEndTime()));
+    return doc;
 }

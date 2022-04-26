@@ -51,6 +51,7 @@ public:
     };
 
     const std::string& getCode() const;
+    std::string getInterval();
     [[nodiscard]] long getStartTime() const;
     [[nodiscard]] long getEndTime() const;
     [[nodiscard]] std::string getStartDate() const;
@@ -70,6 +71,8 @@ public:
     std::vector<TickData> loadCSV(Path);
 
 //    bool dataAlreadyExists(const std::string&);
+
+    rapidjson::Document toJson();
 
 private:
     std::string _code;

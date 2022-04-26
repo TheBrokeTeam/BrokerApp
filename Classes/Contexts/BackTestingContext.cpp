@@ -195,11 +195,33 @@ double BackTestingContext::getCurrentTimeStamp() {
 }
 
 void BackTestingContext::startSimulation(Ticker* ticker) {
-    // Save the nodes simulation
-    rapidjson::Document nodesDoc;
-    nodesDoc = this->_strategyEditor->getJsonNodes();
 
-    std::cout << BAJson::stringfy(nodesDoc) << std::endl;
+    if(this->_user) {
+
+        rapidjson::Document doc;
+        doc.SetObject();
+
+        BAJson::set(doc, "user", this->_user->GetId());
+
+        Symbol* symbol = this->_ticker->getSymbol();
+        rapidjson::Document jsonSymbol = symbol->toJson();
+        BAJson::set(doc, "symbol", jsonSymbol);
+
+        std::vector<std::shared_ptr<INode>> nodes = this->_strategyEditor->getNodes();
+
+        rapidjson::Document jsonNodes;
+        jsonNodes.SetArray();
+        for(const auto& node: nodes) {
+            rapidjson::Document n;
+            n.SetObject();
+            n = node->toJson();
+            jsonNodes.PushBack(n, doc.GetAllocator());
+        }
+
+        BAJson::set(doc, "nodes", jsonNodes);
+
+        std::cout << BAJson::stringfy(doc) << std::endl;
+    }
 
     //just for tests
     //TODO:: use the ticker parameter

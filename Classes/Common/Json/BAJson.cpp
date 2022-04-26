@@ -202,10 +202,18 @@ void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const 
 void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes)
 {
     rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+
     rapidjson::Value array(rapidjson::kArrayType);
-    for(const auto& node : nodes) {
-        rapidjson::Document jsonNode = node->toJson();
-        array.PushBack(jsonNode.GetObject(), document.GetAllocator());
+    array.SetObject();
+    for(auto& node: nodes) {
+        rapidjson::Document doc;
+        doc.SetArray();
+
+        doc = node->toJson();
+
+        std::cout << BAJson::stringfy(doc) << std::endl;
+
+        array.PushBack(doc.GetArray(), document.GetAllocator());
     }
     document.AddMember(name, array, document.GetAllocator());
 }
@@ -213,11 +221,28 @@ void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const 
 void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<int>& vec)
 {
     rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
-    rapidjson::Value  array(rapidjson::kArrayType);
+    rapidjson::Value array(rapidjson::kArrayType);
     for(auto &value: vec) {
         array.PushBack(value, document.GetAllocator());
     }
     document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::map<std::string, float>& dict)
+{
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+    rapidjson::Value array(rapidjson::kArrayType);
+    array.SetObject();
+    for(auto &d: dict) {
+        rapidjson::Value dict_key(d.first.c_str(), (unsigned int)d.first.size(), document.GetAllocator());
+        rapidjson::Value dict_value(d.second);
+        array.AddMember(dict_key, dict_value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string& key, const std::map<std::string, float>& dict) {
+    set(document, document, key, dict);
 }
 
 void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes) {
@@ -474,4 +499,53 @@ std::string BAJson::stringfy(const rapidjson::Document &document) {
     rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
     document.Accept(writer);
     return strbuf.GetString();
+}
+
+void BAJson::merge(rapidjson::Value &dstObject, rapidjson::Value &srcObject,
+                   rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> &allocator) {
+
+    for (auto srcIt = srcObject.MemberBegin(); srcIt != srcObject.MemberEnd(); ++srcIt)
+    {
+        auto dstIt = dstObject.FindMember(srcIt->name);
+        if (dstIt == dstObject.MemberEnd())
+        {
+            rapidjson::Value dstName ;
+            dstName.CopyFrom(srcIt->name, allocator);
+            rapidjson::Value dstVal ;
+            dstVal.CopyFrom(srcIt->value, allocator) ;
+
+            dstObject.AddMember(dstName, dstVal, allocator);
+
+            dstName.CopyFrom(srcIt->name, allocator);
+            dstIt = dstObject.FindMember(dstName);
+//            if (dstIt == dstObject.MemberEnd())
+//                return false ;
+        }
+        else
+        {
+            auto srcT = srcIt->value.GetType() ;
+            auto dstT = dstIt->value.GetType() ;
+//            if(srcT != dstT)
+//                return false ;
+
+            if (srcIt->value.IsArray())
+            {
+                for (auto arrayIt = srcIt->value.Begin(); arrayIt != srcIt->value.End(); ++arrayIt)
+                {
+                    rapidjson::Value dstVal ;
+                    dstVal.CopyFrom(*arrayIt, allocator) ;
+                    dstIt->value.PushBack(dstVal, allocator);
+                }
+            }
+//            else if (srcIt->value.IsObject())
+//            {
+//                if(!mergeObjects(dstIt->value, srcIt->value, allocator))
+//                    return false ;
+//            }
+            else
+            {
+                dstIt->value.CopyFrom(srcIt->value, allocator) ;
+            }
+        }
+    }
 }

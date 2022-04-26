@@ -264,12 +264,6 @@ void StrategyEditor::onClose(BarHistory *barHistory) {
     }
 }
 
-rapidjson::Document StrategyEditor::getJsonNodes() {
-
-    rapidjson::Document nodesDoc;
-    nodesDoc.SetObject();
-
-    BAJson::set(nodesDoc, "nodes", this->_uiNodes);
-
-    return nodesDoc;
+std::vector<std::shared_ptr<INode>> StrategyEditor::getNodes() {
+    return this->_uiNodes;
 }
