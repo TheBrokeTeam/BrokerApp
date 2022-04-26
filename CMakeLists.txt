@@ -118,19 +118,11 @@ add_executable(BrokerApp
 		Classes/Networking/API/APIManager.h
 		Classes/Networking/API/APIRouter.cpp
 		Classes/Networking/API/APIRouter.h
-		Classes/Networking/API/Routes/SymbolRouter.cpp
-		Classes/Networking/API/Routes/SymbolRouter.h
 		Classes/Networking/API/Routes/UserRouter.cpp
 		Classes/Networking/API/Routes/UserRouter.h
-		Classes/Networking/API/Services/SymbolService.cpp
-		Classes/Networking/API/Services/SymbolService.h
-		Classes/Networking/API/Services/UserService.cpp
+        Classes/Networking/API/Services/UserService.cpp
 		Classes/Networking/API/Services/UserService.h
 		Classes/Helpers/JsonUtils.h
-		Classes/Networking/API/Services/KLineService.cpp
-		Classes/Networking/API/Services/KLineService.h
-		Classes/Networking/API/Routes/KLineRouter.cpp
-		Classes/Networking/API/Routes/KLineRouter.h
 		Classes/Nodes/PSARNode.h
 		Classes/Nodes/PSARNode.h 
 		Classes/Nodes/IndicatorBaseNode.cpp 
@@ -174,6 +166,18 @@ add_executable(BrokerApp
 		Classes/Networking/API/Services/BinanceService.h
 		Classes/Networking/Server/Request.cpp
 		Classes/Networking/Server/Request.h
+		Classes/Networking/API/Routes/StrategyRouter.cpp
+		Classes/Networking/API/Routes/StrategyRouter.h
+		Classes/Networking/API/Services/StrategyService.cpp
+		Classes/Networking/API/Services/StrategyService.h
+		Classes/Networking/API/Services/KLineService.h
+		Classes/Networking/API/Services/KLineService.cpp
+		Classes/Networking/API/Routes/KLineRouter.h
+		Classes/Networking/API/Routes/KLineRouter.cpp
+		Classes/Networking/API/Services/SymbolService.h
+		Classes/Networking/API/Services/SymbolService.cpp
+		Classes/Networking/API/Routes/SymbolRouter.h
+		Classes/Networking/API/Routes/SymbolRouter.cpp
 		)
 
 ###############################################################################

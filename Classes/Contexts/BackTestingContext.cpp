@@ -35,6 +35,7 @@
 #include "../Nodes/TRIXNode.h"
 #include "../Widgets/ConnectView.h"
 #include "../Widgets/LoginView.h"
+#include "../Networking/API/Services/StrategyService.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -201,7 +202,7 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
         rapidjson::Document doc;
         doc.SetObject();
 
-        BAJson::set(doc, "user", this->_user->GetId());
+        BAJson::set(doc, "createdBy", this->_user->GetId());
 
         Symbol* symbol = this->_ticker->getSymbol();
         rapidjson::Document jsonSymbol = symbol->toJson();
@@ -220,7 +221,9 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 
         BAJson::set(doc, "nodes", jsonNodes);
 
-        std::cout << BAJson::stringfy(doc) << std::endl;
+        auto strategyService = new StrategyService();
+        rapidjson::Document result = strategyService->saveStrategy(doc);
+        std::cout << BAJson::stringfy(result) << std::endl;
     }
 
     //just for tests
