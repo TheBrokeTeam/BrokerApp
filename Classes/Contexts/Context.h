@@ -133,6 +133,9 @@ public:
     void addUser(const rapidjson::Document &doc);
     void logout();
 
+    std::vector<Bot> getBots();
+    void addBot(const Bot&);
+
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
@@ -140,12 +143,14 @@ protected:
 
     std::vector<Order> _orders;
 
-    //    std::vector<std::shared_ptr<Strategy>> _strategies;
+    //    std::vector<std::shared_ptr<Strategy>> _bots;
     std::vector<std::shared_ptr<INode>> _nodes;
 
     Editor* _editor{nullptr};
     User* _user{nullptr};
     DBManager _dbManager;
+    std::vector<Bot> _bots;
+    std::vector<Bot> fetchBots();
 
     void loadUser();
 

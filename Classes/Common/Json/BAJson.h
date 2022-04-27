@@ -16,6 +16,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/filereadstream.h>
 #include "imgui.h"
+#include "../../Data/Bot.h"
 
 class INode;
 

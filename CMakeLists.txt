@@ -166,10 +166,10 @@ add_executable(BrokerApp
 		Classes/Networking/API/Services/BinanceService.h
 		Classes/Networking/Server/Request.cpp
 		Classes/Networking/Server/Request.h
-		Classes/Networking/API/Routes/StrategyRouter.cpp
-		Classes/Networking/API/Routes/StrategyRouter.h
-		Classes/Networking/API/Services/StrategyService.cpp
-		Classes/Networking/API/Services/StrategyService.h
+        Classes/Networking/API/Routes/BotRouter.cpp
+        Classes/Networking/API/Routes/BotRouter.h
+		Classes/Networking/API/Services/BotService.cpp
+		Classes/Networking/API/Services/BotService.h
 		Classes/Networking/API/Services/KLineService.h
 		Classes/Networking/API/Services/KLineService.cpp
 		Classes/Networking/API/Routes/KLineRouter.h
@@ -178,7 +178,7 @@ add_executable(BrokerApp
 		Classes/Networking/API/Services/SymbolService.cpp
 		Classes/Networking/API/Routes/SymbolRouter.h
 		Classes/Networking/API/Routes/SymbolRouter.cpp
-		)
+		Classes/Widgets/StrategyLogView.cpp Classes/Widgets/StrategyLogView.h Classes/Data/Bot.cpp Classes/Data/Bot.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

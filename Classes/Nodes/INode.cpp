@@ -152,3 +152,9 @@ rapidjson::Document INode::toJson() {
     return jsonDoc;
 }
 
+//INode *INode::Parse(Context* context, const rapidjson::Document& doc) {
+//    Ticker* ticker = new Ticker(context);
+//    StrategyEditor* nodeEditor = new StrategyEditor(ticker, context);
+//
+//}
+

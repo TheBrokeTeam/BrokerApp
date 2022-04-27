@@ -75,6 +75,7 @@ public:
     void setType(const UiNodeType& type);
     void setIcon(int icon);
     rapidjson::Document toJson();
+//    INode* Parse(Context*, const rapidjson::Document&);
 
 protected:
     void setNodeName(const std::string& name);

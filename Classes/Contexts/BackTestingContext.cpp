@@ -35,7 +35,9 @@
 #include "../Nodes/TRIXNode.h"
 #include "../Widgets/ConnectView.h"
 #include "../Widgets/LoginView.h"
-#include "../Networking/API/Services/StrategyService.h"
+#include "../Networking/API/Services/BotService.h"
+#include "../Widgets/StrategyLogView.h"
+#include <chrono>
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -59,6 +61,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<StockList>(this));
     _widgets.emplace_back(std::make_shared<LoginView>(this));
     _widgets.emplace_back(std::make_shared<ConnectView>(this));
+    _widgets.emplace_back(std::make_shared<StrategyLogView>(this));
 
     getWidget<StockList>()->SetVisible(false);
 
@@ -199,31 +202,19 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 
     if(this->_user) {
 
-        rapidjson::Document doc;
-        doc.SetObject();
+        std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        std::tm tm = *std::gmtime(&now);
+        std::stringstream ss;
+        ss << std::put_time( &tm, "%Y-%m-%dT%H:%M:%S.%sZ");
 
-        BAJson::set(doc, "createdBy", this->_user->GetId());
+        Bot bot = Bot("unamed",
+                      *this->_ticker->getSymbol(),
+                      this->_strategyEditor->getNodes(),
+                      this->getUser()->GetId(),
+                      ss.str());
+        bot.save();
 
-        Symbol* symbol = this->_ticker->getSymbol();
-        rapidjson::Document jsonSymbol = symbol->toJson();
-        BAJson::set(doc, "symbol", jsonSymbol);
-
-        std::vector<std::shared_ptr<INode>> nodes = this->_strategyEditor->getNodes();
-
-        rapidjson::Document jsonNodes;
-        jsonNodes.SetArray();
-        for(const auto& node: nodes) {
-            rapidjson::Document n;
-            n.SetObject();
-            n = node->toJson();
-            jsonNodes.PushBack(n, doc.GetAllocator());
-        }
-
-        BAJson::set(doc, "nodes", jsonNodes);
-
-        auto strategyService = new StrategyService();
-        rapidjson::Document result = strategyService->saveStrategy(doc);
-        std::cout << BAJson::stringfy(result) << std::endl;
+        this->addBot(bot);
     }
 
     //just for tests
