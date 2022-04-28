@@ -152,20 +152,16 @@ void Context::logout() {
 
 std::vector<Bot> Context::fetchBots() {
     std::vector<Bot> botVec;
-
     if(_user) {
         BotService botService = BotService();
         rapidjson::Document bots = botService.fetchBots(_user->GetId());
-        assert(bots.IsArray()); // if is a bot list
-
+        assert(bots.IsArray());
         for (rapidjson::Value::ConstValueIterator itr = bots.Begin(); itr != bots.End(); ++itr) {
             const rapidjson::Value& jsonBot = *itr;
             Bot bot = Bot::Parse(jsonBot);
             botVec.push_back(bot);
         }
-
     }
-
     return botVec;
 }
 

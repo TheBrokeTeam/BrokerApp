@@ -130,8 +130,7 @@ INode::~INode() {
 
 rapidjson::Document INode::toJson() {
 
-    rapidjson::Document jsonDoc;
-    jsonDoc.SetObject();
+    auto jsonDoc = BAJson::document();
 
     BAJson::set(jsonDoc, "id", this->_id);
     BAJson::set(jsonDoc, "name", this->_name);

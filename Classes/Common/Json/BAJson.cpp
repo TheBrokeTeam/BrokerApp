@@ -549,3 +549,8 @@ void BAJson::merge(rapidjson::Value &dstObject, rapidjson::Value &srcObject,
         }
     }
 }
+
+void BAJson::append(rapidjson::Document &document, rapidjson::Document &object) {
+    rapidjson::Value v(object, document.GetAllocator());
+    append(document, v);
+}

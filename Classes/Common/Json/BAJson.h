@@ -128,6 +128,7 @@ public:
     static void append(rapidjson::Document& document, rapidjson::Value& object, const char* stringValue);
     static void append(rapidjson::Document& document, rapidjson::Value& object, const char* stringValue, std::size_t size);
     static void append(rapidjson::Document& document, rapidjson::Value& object, rapidjson::Value& value);
+    static void append(rapidjson::Document& document, rapidjson::Document& object);
 
     static bool hasBool(const rapidjson::Value& object, const std::string& memberName);
     static bool hasNumber(const rapidjson::Value& object, const std::string& memberName);

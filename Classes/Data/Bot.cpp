@@ -20,13 +20,14 @@ rapidjson::Document Bot::toJson() {
     rapidjson::Document jsonNodes;
     jsonNodes.SetArray();
     for(const auto& node: _nodes) {
-        rapidjson::Document n;
-        n.SetObject();
-        n = node->toJson();
-        jsonNodes.PushBack(n, doc.GetAllocator());
+        auto n = node->toJson();
+        BAJson::append(jsonNodes, n);
+        std::cout << BAJson::stringfy(jsonNodes) << std::endl;
     }
 
     BAJson::set(doc, "nodes", jsonNodes);
+
+    std::cout <<  BAJson::stringfy(doc) << std::endl;
 
     return doc;
 }
@@ -52,6 +53,7 @@ Bot Bot::Parse(const rapidjson::Value& value) {
 
     Symbol symbol = Symbol(code, interval,start,end);
 
+    // TODO: Re-construir a lista de nodes
     Bot bot = Bot(name,
                   symbol,
                   std::vector<std::shared_ptr<INode>>(),
