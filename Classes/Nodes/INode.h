@@ -16,6 +16,7 @@
 #include "../Tickables/Indicators/Indicator.h"
 #include "NodeType.h"
 #include "UiNodeType.h"
+//#include "../Data/Parsable.h"
 
 class StrategyEditor;
 
@@ -26,6 +27,8 @@ class GraphNode;
 class INode {
 public:
     INode(StrategyEditor* strategyEditor);
+//    explicit INode(int id, const std::string& type, const std::string& name, ImVec2 pos, bool init, std::vector<int> internalNodes, bool isIndicatorNode, const std::string& nodeEditor, int icon);
+
     virtual ~INode();
 
     virtual void handleStack(std::stack<float>& stack) = 0;
@@ -44,20 +47,24 @@ public:
     GraphNode* getGraphNode(int id);
 
         //just for root nodes
-    virtual int getRootNodeConnectionsNumber(){
+    virtual int getRootNodeConnectionsNumber()
+    {
         return 0;
     };
 
-    std::shared_ptr<Indicator> getIndicator(){
+    std::shared_ptr<Indicator> getIndicator()
+    {
         return _indicator.lock();
     }
 
-    void  setIndicator(std::shared_ptr<Indicator> indicator){
+    void  setIndicator(std::shared_ptr<Indicator> indicator)
+    {
         _indicator = indicator;
         _isIndicatorNode = true;
     }
 
-    bool getIsIndicatorNode() const{
+    bool getIsIndicatorNode() const
+    {
         return _isIndicatorNode;
     };
 
@@ -67,15 +74,22 @@ public:
     virtual void initStyle();
     virtual void finishStyle();
 
-
     int getId() const{
         return _id;
     }
+
     const UiNodeType& getType();
+
     void setType(const UiNodeType& type);
     void setIcon(int icon);
     rapidjson::Document toJson();
-//    INode* Parse(Context*, const rapidjson::Document&);
+//    static std::shared_ptr<INode> Parse(const rapidjson::Value& value);
+
+    static std::string typeToString(const UiNodeType& type);
+    static UiNodeType stringToUiNodeType(const std::string& str);
+    static NodeType stringToType(const std::string& str);
+
+    void setPosition(ImVec2 newPos);
 
 protected:
     void setNodeName(const std::string& name);
@@ -84,7 +98,7 @@ protected:
 
 private:
     std::string _name = "Node name";
-    ImVec2 pos;
+    ImVec2 _pos;
     bool _init = false;
     std::vector<int> _internalNodes;
     std::shared_ptr<graph::Graph<GraphNode>> _graph;

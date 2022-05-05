@@ -5,6 +5,18 @@
 #include "Bot.h"
 #include "../Common/Json/BAJson.h"
 #include "../Networking/API/Services/BotService.h"
+#include "../Nodes/SMANode.h"
+#include "../Nodes/BollingerNode.h"
+#include "../Nodes/VWAPNode.h"
+#include "../Nodes/CrossNode.h"
+#include "../Nodes/Counter.h"
+#include "../Tickables/Strategies/TradeNodeStrategy.h"
+#include "../Nodes/UpSequenceNode.h"
+#include "../Nodes/TradeNode.h"
+#include "../Nodes/DownSequenceNode.h"
+#include "../Nodes/BarValueNode.h"
+#include "../Widgets/ProfitAndLossesView.h"
+#include "../Widgets/StrategyEditor.h"
 
 #include <utility>
 
@@ -32,7 +44,9 @@ rapidjson::Document Bot::toJson() {
     return doc;
 }
 
-Bot Bot::Parse(const rapidjson::Value& value) {
+std::vector<BotInfo> Bot::Parse(const rapidjson::Value& value) {
+    std::vector<BotInfo> output;
+
     assert(value.IsObject());
 
     std::string _id = BAJson::getString(value, "_id");
@@ -40,7 +54,7 @@ Bot Bot::Parse(const rapidjson::Value& value) {
     std::string updatedAt = BAJson::getString(value, "updatedAt");
     std::string createdBy = BAJson::getString(value, "createdBy");
 
-    const rapidjson::Value& jsonSymbol =value["symbol"].GetObject();
+    const rapidjson::Value& jsonSymbol = value["symbol"].GetObject();
     assert(jsonSymbol.IsObject());
     std::string code = BAJson::getString(jsonSymbol, "code");
     std::string interval = BAJson::getString(jsonSymbol, "interval");
@@ -53,15 +67,26 @@ Bot Bot::Parse(const rapidjson::Value& value) {
 
     Symbol symbol = Symbol(code, interval,start,end);
 
-    // TODO: Re-construir a lista de nodes
-    Bot bot = Bot(name,
-                  symbol,
-                  std::vector<std::shared_ptr<INode>>(),
-                  createdBy,
-                  updatedAt
-    );
+    const rapidjson::Value& jsonNodes = value["nodes"].GetArray();
+    assert(jsonNodes.IsArray());
 
-    return bot;
+    rapidjson::GenericArray jsonNodesArray = jsonNodes.GetArray();
+
+    std::vector<NodeInfo> infos;
+    for(const auto& jsonNode: jsonNodesArray) {
+
+        UiNodeType uiNodeType = INode::stringToUiNodeType(jsonNode["nodeType"].GetString());
+        NodeType nodeType = INode::stringToType(jsonNode["nodeType"].GetString());
+
+        std::vector<float> position = BAJson::getFloatVector(jsonNode, "position");
+        ImVec2 pos = ImVec2(position[0], position[1]);
+
+        infos.push_back({uiNodeType, pos});
+
+    }
+    output.push_back({name, symbol, infos, createdBy, updatedAt});
+
+    return output;
 }
 
 Bot::Bot(const std::string& name, Symbol symbol, std::vector<std::shared_ptr<INode>> nodes, const std::string& createdBy, const std::string& updatedAt): _name(std::move(name)), _symbol(symbol), _nodes(std::move(nodes)), _createdBy(std::move(createdBy)), _updatedAt(std::move(updatedAt)) {

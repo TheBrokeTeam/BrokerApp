@@ -34,9 +34,9 @@ public:
     bool isSimulating() override;
     void handleDragDrop(PlotItem *plotItem) override;
 
-    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false) override;
-    std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator) override;
-    std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) override;
+    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false, std::optional<ImVec2> pos = std::nullopt) override;
+    std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator, std::optional<ImVec2> pos = std::nullopt) override;
+    std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos = std::nullopt) override;
 
     void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;
     void removeAllIndicators() override;
@@ -44,6 +44,11 @@ public:
     void plotSubplotIndicators() override;
     void plotStrategy() override;
     void showTabBars(bool show) override;
+
+    std::vector<Bot> getBots() override;
+    void addBot(const Bot&) override;
+
+    void setStrategyEditor(StrategyEditor* strategyEditor) override;
 
 private:
 
@@ -53,6 +58,9 @@ private:
     StrategyEditor* _strategyEditor{nullptr};
 
     std::vector<TickData> _data;
+
+    std::vector<Bot> _bots;
+    std::vector<Bot> fetchBots();
 
     //simulating
     int _countTicks = 0;

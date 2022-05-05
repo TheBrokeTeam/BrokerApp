@@ -3,7 +3,6 @@
 //
 
 #include "Context.h"
-#include "../Networking/API/Services/BotService.h"
 
 #include <utility>
 
@@ -17,7 +16,6 @@ Context::Context(Editor* editor): _editor(editor)
         users_doc.SetObject();
         BAJson::parseFile(Paths::UserData, users_doc);
         _user = new User(users_doc);
-        _bots = fetchBots();
     } else {
         _user = nullptr;
     }
@@ -148,27 +146,4 @@ void Context::logout() {
     _sentAuthentication = false;
     _startingAuthentication = false;
     _user = nullptr;
-}
-
-std::vector<Bot> Context::fetchBots() {
-    std::vector<Bot> botVec;
-    if(_user) {
-        BotService botService = BotService();
-        rapidjson::Document bots = botService.fetchBots(_user->GetId());
-        assert(bots.IsArray());
-        for (rapidjson::Value::ConstValueIterator itr = bots.Begin(); itr != bots.End(); ++itr) {
-            const rapidjson::Value& jsonBot = *itr;
-            Bot bot = Bot::Parse(jsonBot);
-            botVec.push_back(bot);
-        }
-    }
-    return botVec;
-}
-
-std::vector<Bot> Context::getBots() {
-    return _bots;
-}
-
-void Context::addBot(const Bot& bot) {
-    this->_bots.push_back(bot);
 }

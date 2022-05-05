@@ -178,7 +178,12 @@ add_executable(BrokerApp
 		Classes/Networking/API/Services/SymbolService.cpp
 		Classes/Networking/API/Routes/SymbolRouter.h
 		Classes/Networking/API/Routes/SymbolRouter.cpp
-		Classes/Widgets/StrategyLogView.cpp Classes/Widgets/StrategyLogView.h Classes/Data/Bot.cpp Classes/Data/Bot.h)
+		Classes/Widgets/StrategyLogView.cpp
+		Classes/Widgets/StrategyLogView.h
+		Classes/Data/Bot.cpp
+		Classes/Data/Bot.h
+		Classes/Data/Parsable.h
+		)
 
 ###############################################################################
 # FETCH CONTENT LIBS

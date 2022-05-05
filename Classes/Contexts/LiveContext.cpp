@@ -51,7 +51,7 @@ void LiveContext::loadTicker() {
         _ticker->tick(d);
 }
 
-std::shared_ptr<Indicator> LiveContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
+std::shared_ptr<Indicator> LiveContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode, std::optional<ImVec2> pos) {
 
     if(_ticker == nullptr)
         return nullptr;

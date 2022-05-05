@@ -63,8 +63,16 @@ void StrategyEditor::updateVisible(float dt) {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(NodesList::NODES_DRAG_ID)) {
             UiNodeType type = *(UiNodeType *) payload->Data;
             auto node = getContext()->createNode(_graph,type);
-            if(node)
+            if(node) {
+                ImVec2 mousePos = ImGui::GetMousePos();
+                ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
+                // TODO::understand why is that
+                //this values was by try and error: ImVec2(8,35)
+                ImVec2 pos = mousePos - winPos - ImVec2(8,35);
+                node->setPosition(pos);
+
                 _uiNodes.push_back(node);
+            }
         }
 
         ImGui::EndDragDropTarget();
@@ -266,4 +274,12 @@ void StrategyEditor::onClose(BarHistory *barHistory) {
 
 std::vector<std::shared_ptr<INode>> StrategyEditor::getNodes() {
     return this->_uiNodes;
+}
+
+void StrategyEditor::addUiNode(NodeInfo nodeInfo) {
+    auto node = getContext()->createNode(_graph, nodeInfo.type, nodeInfo.pos);
+    if(node) {
+        node->setPosition(nodeInfo.pos);
+        _uiNodes.push_back(node);
+    }
 }

@@ -36,7 +36,7 @@ public:
     void openOrder(const Symbol &symbol) override;
     void closeAllOrders(const Symbol &symbol) override;
 
-    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode) override;
+    std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode, std::optional<ImVec2> pos = std::nullopt) override;
 
     void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;
     void removeAllIndicators() override;

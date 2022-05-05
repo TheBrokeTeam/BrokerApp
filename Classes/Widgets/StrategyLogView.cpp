@@ -8,19 +8,22 @@
 StrategyLogView::StrategyLogView(Context *context) : Widget(context) {
     _title                  = "Logs";
     _is_window              = true;
+    _headers = std::list<std::string>({"updatedAt", "name", "code", "interval"});
 }
 
 void StrategyLogView::updateVisible(float dt) {
     Widget::updateVisible(dt);
 
-    std::initializer_list<std::string> _headers = {"updatedAt", "name", "code", "interval"};
-
-    static ImGuiTableFlags flags = ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter |
-            ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
+    static ImGuiTableFlags flags =  ImGuiTableFlags_ScrollY         |
+                                    ImGuiTableFlags_RowBg           |
+                                    ImGuiTableFlags_BordersOuter    |
+                                    ImGuiTableFlags_Reorderable     |
+                                    ImGuiTableColumnFlags_WidthFixed
+                                    ;
 
     const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
     ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8);
-    if (ImGui::BeginTable("table_scroll", int(_headers.size()), flags, outer_size))
+    if (ImGui::BeginTable("table_advanced", int(_headers.size()), flags, outer_size))
     {
         ImGui::TableSetupScrollFreeze(0, 1); // Make top row always visible
 
@@ -33,6 +36,7 @@ void StrategyLogView::updateVisible(float dt) {
         if(getContext()->userSelected()) {
 
             for(auto& bot: getContext()->getBots()) {
+
                 ImGui::TableNextRow();
 
                 ImGui::TableSetColumnIndex(0);
@@ -56,6 +60,7 @@ void StrategyLogView::updateVisible(float dt) {
         }
 
         ImGui::EndTable();
+
     }
 }
 

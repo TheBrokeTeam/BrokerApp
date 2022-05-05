@@ -9,6 +9,7 @@
 #include "Widget.h"
 #include <rapidjson/document.h>
 #include "../Data/Bot.h"
+#include <list>
 
 class StrategyLogView: public Widget {
 public:
@@ -16,6 +17,9 @@ public:
     void updateVisible(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
+
+private:
+    std::list<std::string> _headers;
 };
 
 

@@ -47,11 +47,11 @@ public:
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 
-    virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false) = 0;
-    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator){
+    virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false, std::optional<ImVec2> pos = std::nullopt) = 0;
+    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator, std::optional<ImVec2> pos = std::nullopt){
         return nullptr;
     };
-    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) {
+    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos = std::nullopt) {
         return nullptr;
     };
 
@@ -133,8 +133,10 @@ public:
     void addUser(const rapidjson::Document &doc);
     void logout();
 
-    std::vector<Bot> getBots();
-    void addBot(const Bot&);
+    virtual std::vector<Bot> getBots(){};
+    virtual void addBot(const Bot&){};
+
+    virtual void setStrategyEditor(StrategyEditor* strategyEditor){};
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
@@ -149,12 +151,12 @@ protected:
     Editor* _editor{nullptr};
     User* _user{nullptr};
     DBManager _dbManager;
-    std::vector<Bot> _bots;
-    std::vector<Bot> fetchBots();
+
 
     void loadUser();
 
     bool _shouldRender = false;
+
 };
 
 #endif //BROKERAPP_CONTEXT_H

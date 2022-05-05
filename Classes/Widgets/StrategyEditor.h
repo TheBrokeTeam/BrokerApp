@@ -30,6 +30,7 @@ public:
 
     std::vector<std::shared_ptr<INode>> getNodes();
 
+    void addUiNode(NodeInfo nodeInfo);
 
 private:
     std::shared_ptr<INode> getNodeFromId(int id);

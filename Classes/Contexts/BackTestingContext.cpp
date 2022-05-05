@@ -37,6 +37,7 @@
 #include "../Widgets/LoginView.h"
 #include "../Networking/API/Services/BotService.h"
 #include "../Widgets/StrategyLogView.h"
+#include "../Networking/API/Services/BotService.h"
 #include <chrono>
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -75,6 +76,8 @@ void BackTestingContext::initialize() {
 
     _strategyEditor->setPriority(2);
     _ticker->addTickable(_strategyEditor);
+
+    _bots = fetchBots();
 }
 
 //void BackTestingContext::loadSymbol(Symbol symbol) {
@@ -229,7 +232,7 @@ void BackTestingContext::setSimulationSpeed(float speed) {
     _speed = speed*_speedLimit;
 }
 
-std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
+std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode, std::optional<ImVec2> pos) {
 
     if(_ticker == nullptr)
         return nullptr;
@@ -244,7 +247,7 @@ std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::Can
             indicator = _indicators.back();
             _ticker->addTickable(_indicators.back().get());
             if(shouldCreateNode)
-                createIndicatorNode(UiNodeType::SMA,_indicators.back());
+                createIndicatorNode(UiNodeType::SMA,_indicators.back(), pos);
         }
             break;
         case IndicatorsView::CandleIndicatorsTypes::BOLL: {
@@ -377,7 +380,7 @@ void BackTestingContext::showTabBars(bool show) {
     Editor::show_tabbars = show;
 }
 
-std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator)
+std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator, std::optional<ImVec2> pos)
 {
     std::shared_ptr<INode> node{nullptr};
 
@@ -438,13 +441,13 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
 }
 
 //this will be called from strategy editor widget
-std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type)
+std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos)
 {
     std::shared_ptr<INode> node{nullptr};
 
     switch (type) {
         case UiNodeType::SMA:
-            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, true),_strategyEditor);
+            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, true, pos),_strategyEditor);
             break;
         case UiNodeType::BOLL:
             node = std::make_shared<BollingerNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL, true),_strategyEditor);
@@ -599,5 +602,44 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
 
     return _ticker.get();
+}
+
+std::vector<Bot> BackTestingContext::fetchBots()
+{
+    std::vector<Bot> botVec;
+    if(this->userSelected())
+    {
+        BotService botService = BotService();
+        rapidjson::Document bots = botService.fetchBots(_user->GetId());
+        assert(bots.IsArray());
+        for (rapidjson::Value::ConstValueIterator itr = bots.Begin(); itr != bots.End(); ++itr) {
+            const rapidjson::Value& jsonBot = *itr;
+            auto botInfos = Bot::Parse(jsonBot);
+            for(auto& info: botInfos) {
+                std::vector<std::shared_ptr<INode>> nodes;
+                for (auto &nodeInfo: info.nodes) {
+                    _strategyEditor->addUiNode(nodeInfo);
+                }
+
+//                auto bot = Bot(info.name, info.symbol, info.type, info.pos);
+//                botVec.push_back(bot);
+            }
+        }
+    }
+    return botVec;
+}
+
+std::vector<Bot> BackTestingContext::getBots()
+{
+    return _bots;
+}
+
+void BackTestingContext::addBot(const Bot& bot)
+{
+    this->_bots.push_back(bot);
+}
+
+void BackTestingContext::setStrategyEditor(StrategyEditor *strategyEditor) {
+    this->_strategyEditor = strategyEditor;
 }
 

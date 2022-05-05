@@ -9,15 +9,21 @@
 #include "../Widgets/StrategyEditor.h"
 #include "UiNodeType.h"
 #include <map>
+#include <utility>
 
 
-INode::INode(StrategyEditor* strategyEditor):_nodeEditor(strategyEditor)
+INode::INode(StrategyEditor* strategyEditor): _nodeEditor(strategyEditor)
 {
-    ImVec2 mousePos = ImGui::GetMousePos();
-    ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
-    // TODO::understand why is that
-    //this values was by try and error: ImVec2(8,35)
-    pos = mousePos - winPos - ImVec2(8,35);
+//    if(!pos.has_value())
+//    {
+//        ImVec2 mousePos = ImGui::GetMousePos();
+//        ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
+//        // TODO::understand why is that
+//        //this values was by try and error: ImVec2(8,35)
+//        _pos = mousePos - winPos - ImVec2(8,35);
+//    } else {
+//        _pos = pos.value();
+//    }
     _graph = strategyEditor->getGraph();
 }
 
@@ -27,7 +33,7 @@ void INode::render(float dt) {
 
     if(!_init) {
         _init = true;
-        ImNodes::SetNodeEditorSpacePos(_id,pos);
+        ImNodes::SetNodeEditorSpacePos(_id,_pos);
     }
 
     ImNodes::BeginNodeTitleBar();
@@ -134,11 +140,12 @@ rapidjson::Document INode::toJson() {
 
     BAJson::set(jsonDoc, "id", this->_id);
     BAJson::set(jsonDoc, "name", this->_name);
+    BAJson::set(jsonDoc, "nodeType", INode::typeToString(this->_type));
 
-    std::vector<float> position = { this->pos.x, this->pos.y };
+    std::vector<float> position = { this->_pos.x, this->_pos.y };
     BAJson::set(jsonDoc, "position", position);
 
-    BAJson::set(jsonDoc, "init", this->_init);
+    BAJson::set(jsonDoc, "_init", this->_init);
     BAJson::set(jsonDoc, "icon", this->_icon);
     BAJson::set(jsonDoc, "isIndicatorNode", this->_isIndicatorNode);
     BAJson::set(jsonDoc, "internalNodes", this->_internalNodes);
@@ -151,9 +158,104 @@ rapidjson::Document INode::toJson() {
     return jsonDoc;
 }
 
-//INode *INode::Parse(Context* context, const rapidjson::Document& doc) {
-//    Ticker* ticker = new Ticker(context);
-//    StrategyEditor* nodeEditor = new StrategyEditor(ticker, context);
+//std::shared_ptr<INode> INode::Parse(const rapidjson::Value& value) {
+//    assert(value.IsObject());
 //
+//    const rapidjson::Value& jsonPos = value["position"].GetArray();
+//    assert(jsonPos.IsArray());
+//    float x = jsonPos[0].GetFloat();
+//    float y = jsonPos[1].GetFloat();
+//    ImVec2 pos = ImVec2(x, y);
+//
+//    // TODO:
+//    const rapidjson::Value& internalNodes = value["internalNodes"].GetArray();
+//    assert(internalNodes.IsArray());
+//    std::vector<int> vec = std::vector<int>();
+//
+////    (int id, const std::string& type, const std::string& name, ImVec2 pos, bool init, std::vector<int> internalNodes, bool isIndicatorNode, const std::string& nodeEditor, int icon)
+//
+//    Ticker* ticker = Ticker(context);
+//    StrategyEditor* strategyEditor = StrategyEditor(ticker, context);
+//    INode* node = INode(&strategyEditor);
+//
+////std::shared_ptr<INode> node = new INode(BAJson::getInt(value, "id"),
+////                   BAJson::getString(value, "nodeType"),
+////                   BAJson::getString(value, "name"),
+////                   pos,
+////                   BAJson::getBool(value, "_init"),
+////                   vec,
+////                   BAJson::getBool(value, "isIndicatorNode"),
+////                   BAJson::getString(value, "nodeEditor"),
+////                   BAJson::getInt(value, "icon")
+////                   )
 //}
 
+//INode::INode(int id, const std::string& type, const std::string& name, ImVec2 pos, bool init, std::vector<int> internalNodes, bool isIndicatorNode, const std::string& nodeEditor, int icon) {
+//    this->_id = id;
+//    this->_type = stringToType(type);
+//    this->_name = name;
+//    this->_pos = pos;
+//    this->_init = init;
+//    this->_internalNodes = std::move(internalNodes);
+//    this->_isIndicatorNode = isIndicatorNode;
+//    this->_icon = icon;
+//
+//    //    this->_nodeEditor = StrategyEditor();
+//}
+
+std::string INode::typeToString(const UiNodeType& type) {
+    switch (type) {
+        case UiNodeType::EMA:               return "EMA";
+        case UiNodeType::BAR_SEQ_DOWN:      return "BAR_SEQ_DOWN";
+        case UiNodeType::BAR_SEQ_UP:        return "BAR_SEQ_UP";
+        case UiNodeType::BOLL:              return "BOLL";
+        case UiNodeType::COUNTER:           return "COUNTER";
+        case UiNodeType::CROSS:             return "CROSS";
+        case UiNodeType::PSAR:              return "PSAR";
+        case UiNodeType::TRADE:             return "TRADE";
+        case UiNodeType::TREND:             return "TREND";
+        case UiNodeType::TRIX:              return "TRIX";
+        case UiNodeType::VWAP:              return "VWAP";
+        case UiNodeType::WMA:               return "WMA";
+        case UiNodeType::SMA:               return "SMA";
+        default:                            return "[Unknown Node Type]";
+    }
+}
+
+UiNodeType INode::stringToUiNodeType(const std::string& str) {
+    if ( str == "EMA" )    return UiNodeType::EMA;
+    if ( str == "BAR_SEQ_DOWN" )    return UiNodeType::BAR_SEQ_DOWN;
+    if ( str == "BAR_SEQ_UP" )    return UiNodeType::BAR_SEQ_UP;
+    if ( str == "BOLL" )   return UiNodeType::BOLL;
+    if ( str == "COUNTER" )   return UiNodeType::COUNTER;
+    if ( str == "CROSS" )    return UiNodeType::CROSS;
+    if ( str == "PSAR" )    return UiNodeType::PSAR;
+    if ( str == "TRADE" )    return UiNodeType::TRADE;
+    if ( str == "TREND" )    return UiNodeType::TREND;
+    if ( str == "TRIX" )    return UiNodeType::TRIX;
+    if ( str == "VWAP" )   return UiNodeType::VWAP;
+    if ( str == "WMA" )    return UiNodeType::WMA;
+    if ( str == "SMA" )    return UiNodeType::SMA;
+    return UiNodeType::BAR_SEQ_DOWN;
+}
+
+NodeType INode::stringToType(const std::string& str) {
+    if ( str == "EMA" )    return NodeType::EMA;
+    if ( str == "BAR_SEQ_DOWN" )    return NodeType::BAR_SEQ_DOWN;
+    if ( str == "BAR_SEQ_UP" )    return NodeType::BAR_SEQ_UP;
+    if ( str == "BOLL" )   return NodeType::BOLL;
+    if ( str == "COUNTER" )   return NodeType::COUNTER;
+    if ( str == "CROSS" )    return NodeType::CROSS;
+    if ( str == "PSAR" )    return NodeType::PSAR;
+    if ( str == "TRADE" )    return NodeType::TRADE;
+    if ( str == "TREND" )    return NodeType::TREND;
+    if ( str == "TRIX" )    return NodeType::TRIX;
+    if ( str == "VWAP" )   return NodeType::VWAP;
+    if ( str == "WMA" )    return NodeType::WMA;
+    if ( str == "SMA" )    return NodeType::SMA;
+    return NodeType::BAR_SEQ_DOWN;
+}
+
+void INode::setPosition(ImVec2 newPos) {
+    _pos = newPos;
+}
