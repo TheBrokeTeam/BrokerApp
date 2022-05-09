@@ -20,10 +20,67 @@
 
 #include <utility>
 
-rapidjson::Document Bot::toJson() {
+Bot::Bot(Symbol symbol, std::vector<NodeInfo> nodes, const std::string& createdBy, const std::string& updatedAt): _symbol(std::move(symbol))
+{
+    this->_id = "";
+    this->_nodes = std::move(nodes);
+    this->_createdBy = createdBy;
+    this->_updatedAt = updatedAt;
+    std::string nodeNames;
+    for(auto node: _nodes)
+    {
+        for(int i=0; i<3; i++)
+            nodeNames.push_back(node.name[i]);
+    }
+    this->_name = _symbol.getCode() + _symbol.getInterval() + nodeNames;
+}
+
+Bot::Bot(const BotInfo& info): _symbol(info.symbol)
+{
+    this->_id = info.id;
+    this->_name = info.name;
+    this->_nodes = info.nodes;
+    this->_createdBy = info.createdBy;
+    this->_updatedAt = info.updatedAt;
+}
+
+Symbol Bot::GetSymbol()
+{
+    return _symbol;
+}
+
+std::string Bot::GetName()
+{
+    return _name;
+}
+
+std::vector<NodeInfo> Bot::GetNodes()
+{
+    return _nodes;
+}
+
+std::string Bot::GetUpdatedTime()
+{
+    return _updatedAt;
+}
+
+std::string Bot::GetId()
+{
+    return _id;
+}
+
+rapidjson::Document Bot::Save()
+{
+    auto bootService = new BotService();
+    return bootService->saveBot(this->toJson());
+}
+
+rapidjson::Document Bot::toJson()
+{
     rapidjson::Document doc;
     doc.SetObject();
 
+    BAJson::set(doc, "name", _name);
     BAJson::set(doc, "createdBy", _createdBy);
 
     rapidjson::Document jsonSymbol = _symbol.toJson();
@@ -31,8 +88,8 @@ rapidjson::Document Bot::toJson() {
 
     rapidjson::Document jsonNodes;
     jsonNodes.SetArray();
-    for(const auto& node: _nodes) {
-        auto n = node->toJson();
+    for(auto& node: _nodes) {
+        auto n = node.toJson();
         BAJson::append(jsonNodes, n);
         std::cout << BAJson::stringfy(jsonNodes) << std::endl;
     }
@@ -44,12 +101,13 @@ rapidjson::Document Bot::toJson() {
     return doc;
 }
 
-std::vector<BotInfo> Bot::Parse(const rapidjson::Value& value) {
+std::vector<BotInfo> Bot::Parse(const rapidjson::Value& value)
+{
     std::vector<BotInfo> output;
 
     assert(value.IsObject());
 
-    std::string _id = BAJson::getString(value, "_id");
+    std::string id = BAJson::getString(value, "_id");
     std::string name = BAJson::getString(value, "name", "No named");
     std::string updatedAt = BAJson::getString(value, "updatedAt");
     std::string createdBy = BAJson::getString(value, "createdBy");
@@ -75,41 +133,40 @@ std::vector<BotInfo> Bot::Parse(const rapidjson::Value& value) {
     std::vector<NodeInfo> infos;
     for(const auto& jsonNode: jsonNodesArray) {
 
+        std::string nodeName = jsonNode["name"].GetString();
+        int nodeId = jsonNode["id"].GetInt();
+        std::string nodeEditorId = jsonNode["nodeEditor"].GetString();
+        bool _init = jsonNode["_init"].GetBool();
+        bool isIndicatorNode = jsonNode["isIndicatorNode"].GetBool();
+        int icon = jsonNode["icon"].GetInt();
+
         UiNodeType uiNodeType = INode::stringToUiNodeType(jsonNode["nodeType"].GetString());
-        NodeType nodeType = INode::stringToType(jsonNode["nodeType"].GetString());
+
+        const rapidjson::Value& internalNodesArray = jsonNode["internalNodes"].GetArray();
+        assert(internalNodesArray.IsArray());
+        std::vector<int> internalNodes;
+
+        for(auto& internalNode: internalNodesArray.GetArray()){
+            internalNodes.push_back(internalNode.GetInt());
+        }
 
         std::vector<float> position = BAJson::getFloatVector(jsonNode, "position");
         ImVec2 pos = ImVec2(position[0], position[1]);
 
-        infos.push_back({uiNodeType, pos});
+        infos.push_back({
+            nodeId,
+            uiNodeType,
+            pos,
+            nodeName,
+            internalNodes,
+            _init,
+            isIndicatorNode,
+            icon,
+            nodeEditorId
+        });
 
     }
-    output.push_back({name, symbol, infos, createdBy, updatedAt});
+    output.push_back({id, name, symbol, infos, createdBy, updatedAt});
 
     return output;
-}
-
-Bot::Bot(const std::string& name, Symbol symbol, std::vector<std::shared_ptr<INode>> nodes, const std::string& createdBy, const std::string& updatedAt): _name(std::move(name)), _symbol(symbol), _nodes(std::move(nodes)), _createdBy(std::move(createdBy)), _updatedAt(std::move(updatedAt)) {
-
-}
-
-Symbol Bot::GetSymbol() {
-    return _symbol;
-}
-
-std::string Bot::GetName() {
-    return _name;
-}
-
-std::vector<std::shared_ptr<INode>> Bot::GetNodes() {
-    return _nodes;
-}
-
-std::string Bot::GetUpdatedTime() {
-    return _updatedAt;
-}
-
-rapidjson::Document Bot::save() {
-    auto bootService = new BotService();
-    return bootService->saveBot(this->toJson());
 }

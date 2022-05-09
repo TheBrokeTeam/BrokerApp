@@ -16,7 +16,20 @@
 #include "../Tickables/Indicators/Indicator.h"
 #include "NodeType.h"
 #include "UiNodeType.h"
-//#include "../Data/Parsable.h"
+
+struct NodeInfo {
+    int id;
+    UiNodeType nodeType;
+    ImVec2 position;
+    std::string name;
+    std::vector<int> internalNodes;
+    bool _init;
+    bool isIndicatorNode;
+    int icon;
+    std::string nodeEditor;
+
+    rapidjson::Document toJson();
+};
 
 class StrategyEditor;
 
@@ -27,6 +40,7 @@ class GraphNode;
 class INode {
 public:
     INode(StrategyEditor* strategyEditor);
+    INode(const NodeInfo& info);
 //    explicit INode(int id, const std::string& type, const std::string& name, ImVec2 pos, bool init, std::vector<int> internalNodes, bool isIndicatorNode, const std::string& nodeEditor, int icon);
 
     virtual ~INode();
@@ -82,8 +96,8 @@ public:
 
     void setType(const UiNodeType& type);
     void setIcon(int icon);
-    rapidjson::Document toJson();
-//    static std::shared_ptr<INode> Parse(const rapidjson::Value& value);
+//    rapidjson::Document toJson();
+    NodeInfo Parse();
 
     static std::string typeToString(const UiNodeType& type);
     static UiNodeType stringToUiNodeType(const std::string& str);

@@ -8,23 +8,25 @@
 #include "../Editor.h"
 #include "../Widgets/StrategyEditor.h"
 #include "UiNodeType.h"
-#include <map>
 #include <utility>
 
 
 INode::INode(StrategyEditor* strategyEditor): _nodeEditor(strategyEditor)
 {
-//    if(!pos.has_value())
-//    {
-//        ImVec2 mousePos = ImGui::GetMousePos();
-//        ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
-//        // TODO::understand why is that
-//        //this values was by try and error: ImVec2(8,35)
-//        _pos = mousePos - winPos - ImVec2(8,35);
-//    } else {
-//        _pos = pos.value();
-//    }
     _graph = strategyEditor->getGraph();
+}
+
+INode::INode(const NodeInfo& info) {
+    this->_id = info.id;
+    this->_name = info.name;
+    this->_pos = info.position;
+    this->_type = info.nodeType;
+    this->_icon = info.icon;
+    this->_internalNodes = info.internalNodes;
+    this->_isIndicatorNode = info.isIndicatorNode;
+    this->_init = info._init;
+
+    _graph = this->_nodeEditor->getGraph();
 }
 
 void INode::render(float dt) {
@@ -134,74 +136,41 @@ INode::~INode() {
     _internalNodes.clear();
 }
 
-rapidjson::Document INode::toJson() {
+rapidjson::Document NodeInfo::toJson() {
 
     auto jsonDoc = BAJson::document();
 
-    BAJson::set(jsonDoc, "id", this->_id);
-    BAJson::set(jsonDoc, "name", this->_name);
-    BAJson::set(jsonDoc, "nodeType", INode::typeToString(this->_type));
+    BAJson::set(jsonDoc, "id", this->id);
+    BAJson::set(jsonDoc, "name", this->name);
+    BAJson::set(jsonDoc, "nodeType", INode::typeToString(this->nodeType));
 
-    std::vector<float> position = { this->_pos.x, this->_pos.y };
-    BAJson::set(jsonDoc, "position", position);
+    std::vector<float> pos = { this->position.x, this->position.y };
+    BAJson::set(jsonDoc, "position", pos);
 
     BAJson::set(jsonDoc, "_init", this->_init);
-    BAJson::set(jsonDoc, "icon", this->_icon);
-    BAJson::set(jsonDoc, "isIndicatorNode", this->_isIndicatorNode);
-    BAJson::set(jsonDoc, "internalNodes", this->_internalNodes);
-    BAJson::set(jsonDoc, "nodeEditor", this->_nodeEditor->getId());
+    BAJson::set(jsonDoc, "icon", this->icon);
+    BAJson::set(jsonDoc, "isIndicatorNode", this->isIndicatorNode);
+    BAJson::set(jsonDoc, "internalNodes", this->internalNodes);
 
-//    std::shared_ptr<graph::Graph<GraphNode>> _graph;
-//    std::weak_ptr<Indicator> _indicator;
-//    StrategyEditor* _nodeEditor{nullptr};
+    // TODO: Será que não deveria salvar um json do nodeEditor?
+    BAJson::set(jsonDoc, "nodeEditor", this->nodeEditor);
 
     return jsonDoc;
 }
 
-//std::shared_ptr<INode> INode::Parse(const rapidjson::Value& value) {
-//    assert(value.IsObject());
-//
-//    const rapidjson::Value& jsonPos = value["position"].GetArray();
-//    assert(jsonPos.IsArray());
-//    float x = jsonPos[0].GetFloat();
-//    float y = jsonPos[1].GetFloat();
-//    ImVec2 pos = ImVec2(x, y);
-//
-//    // TODO:
-//    const rapidjson::Value& internalNodes = value["internalNodes"].GetArray();
-//    assert(internalNodes.IsArray());
-//    std::vector<int> vec = std::vector<int>();
-//
-////    (int id, const std::string& type, const std::string& name, ImVec2 pos, bool init, std::vector<int> internalNodes, bool isIndicatorNode, const std::string& nodeEditor, int icon)
-//
-//    Ticker* ticker = Ticker(context);
-//    StrategyEditor* strategyEditor = StrategyEditor(ticker, context);
-//    INode* node = INode(&strategyEditor);
-//
-////std::shared_ptr<INode> node = new INode(BAJson::getInt(value, "id"),
-////                   BAJson::getString(value, "nodeType"),
-////                   BAJson::getString(value, "name"),
-////                   pos,
-////                   BAJson::getBool(value, "_init"),
-////                   vec,
-////                   BAJson::getBool(value, "isIndicatorNode"),
-////                   BAJson::getString(value, "nodeEditor"),
-////                   BAJson::getInt(value, "icon")
-////                   )
-//}
-
-//INode::INode(int id, const std::string& type, const std::string& name, ImVec2 pos, bool init, std::vector<int> internalNodes, bool isIndicatorNode, const std::string& nodeEditor, int icon) {
-//    this->_id = id;
-//    this->_type = stringToType(type);
-//    this->_name = name;
-//    this->_pos = pos;
-//    this->_init = init;
-//    this->_internalNodes = std::move(internalNodes);
-//    this->_isIndicatorNode = isIndicatorNode;
-//    this->_icon = icon;
-//
-//    //    this->_nodeEditor = StrategyEditor();
-//}
+NodeInfo INode::Parse() {
+    return {
+            this->_id,
+            this->_type,
+            this->_pos,
+            this->_name,
+            this->_internalNodes,
+            this->_init,
+            this->_isIndicatorNode,
+            this->_icon,
+            this->_nodeEditor->getId()
+    };
+}
 
 std::string INode::typeToString(const UiNodeType& type) {
     switch (type) {

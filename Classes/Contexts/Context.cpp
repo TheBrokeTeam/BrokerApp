@@ -147,3 +147,8 @@ void Context::logout() {
     _startingAuthentication = false;
     _user = nullptr;
 }
+
+void Context::selectBot(const Bot &bot) {
+    _currentBot = bot;
+    loadBot();
+}

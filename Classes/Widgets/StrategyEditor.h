@@ -39,6 +39,8 @@ private:
     std::shared_ptr<graph::Graph<GraphNode>> _graph{nullptr};
     std::vector<std::shared_ptr<INode>> _uiNodes;
     std::unique_ptr<NodesList> _nodesList{nullptr};
+
+    ImGuiListClipper _clipper;
 };
 
 #endif //BROKERAPP_STRATEGYEDITOR_H

@@ -36,7 +36,7 @@ public:
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false, std::optional<ImVec2> pos = std::nullopt) override;
     std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator, std::optional<ImVec2> pos = std::nullopt) override;
-    std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos = std::nullopt) override;
+    std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos = std::nullopt, bool shouldCreateIndicatorNode = false) override;
 
     void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) override;
     void removeAllIndicators() override;
@@ -49,6 +49,10 @@ public:
     void addBot(const Bot&) override;
 
     void setStrategyEditor(StrategyEditor* strategyEditor) override;
+    StrategyEditor* getStrategyEditor() override;
+
+protected:
+    void loadBot() override;
 
 private:
 

@@ -4,11 +4,12 @@
 
 #include "StrategyLogView.h"
 #include "../Editor.h"
+#include "../Contexts/BackTestingContext.h"
 
 StrategyLogView::StrategyLogView(Context *context) : Widget(context) {
     _title                  = "Logs";
     _is_window              = true;
-    _headers = std::list<std::string>({"updatedAt", "name", "code", "interval"});
+    _headers = std::list<std::string>({"updatedAt", "name", "code", "interval", "nodes"});
 }
 
 void StrategyLogView::updateVisible(float dt) {
@@ -43,7 +44,10 @@ void StrategyLogView::updateVisible(float dt) {
                 ImGui::Text("%s", bot.GetUpdatedTime().c_str());
 
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%s", bot.GetName().c_str());
+                if (ImGui::Selectable(bot.GetName().c_str(), false, ImGuiSelectableFlags_SelectOnClick)) {
+                    std::cout << "Clicou em " << bot.GetName().c_str() << std::endl;
+                    getContext()->selectBot(bot);
+                }
 
                 Symbol s = bot.GetSymbol();
                 ImGui::TableSetColumnIndex(2);
@@ -51,6 +55,12 @@ void StrategyLogView::updateVisible(float dt) {
 
                 ImGui::TableSetColumnIndex(3);
                 ImGui::Text("%s", s.getInterval().c_str());
+
+                ImGui::TableSetColumnIndex(4);
+                for(auto& node: bot.GetNodes()) {
+                    ImGui::Text("%s", node.name.c_str());
+                }
+
             }
         } else {
             ImGui::TableNextRow();
@@ -61,7 +71,9 @@ void StrategyLogView::updateVisible(float dt) {
 
         ImGui::EndTable();
 
+
     }
+
 }
 
 int StrategyLogView::getWindowFlags() {

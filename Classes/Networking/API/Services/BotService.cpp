@@ -7,8 +7,8 @@
 
 BotService::BotService() = default;
 
-rapidjson::Document BotService::saveBot(const rapidjson::Document& strategy) {
-    return this->apiManager.Request(BotRouter().save(strategy));
+rapidjson::Document BotService::saveBot(const rapidjson::Document& bot) {
+    return this->apiManager.Request(BotRouter().save(bot));
 }
 
 rapidjson::Document BotService::deleteBot(const std::string& id) {

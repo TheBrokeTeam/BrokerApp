@@ -13,7 +13,7 @@ private:
 
 public:
     BotService();
-    rapidjson::Document saveBot(const rapidjson::Document &strategy);
+    rapidjson::Document saveBot(const rapidjson::Document &bot);
     rapidjson::Document deleteBot(const std::string &id);
     rapidjson::Document fetchBots(const std::string &userId);
 };

@@ -62,7 +62,7 @@ void StrategyEditor::updateVisible(float dt) {
 
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(NodesList::NODES_DRAG_ID)) {
             UiNodeType type = *(UiNodeType *) payload->Data;
-            auto node = getContext()->createNode(_graph,type);
+            auto node = getContext()->createNode(_graph, type, std::nullopt, true);
             if(node) {
                 ImVec2 mousePos = ImGui::GetMousePos();
                 ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
@@ -277,9 +277,9 @@ std::vector<std::shared_ptr<INode>> StrategyEditor::getNodes() {
 }
 
 void StrategyEditor::addUiNode(NodeInfo nodeInfo) {
-    auto node = getContext()->createNode(_graph, nodeInfo.type, nodeInfo.pos);
+    auto node = getContext()->createNode(_graph, nodeInfo.nodeType, nodeInfo.position);
     if(node) {
-        node->setPosition(nodeInfo.pos);
+        node->setPosition(nodeInfo.position);
         _uiNodes.push_back(node);
     }
 }

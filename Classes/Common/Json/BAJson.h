@@ -18,7 +18,7 @@
 #include "imgui.h"
 #include "../../Data/Bot.h"
 
-class INode;
+//class INode;
 
 class BAJson
 {
@@ -76,7 +76,7 @@ public:
     static void set(rapidjson::Document& document, const std::string& key, rapidjson::Value& value);
     static void set(rapidjson::Document& document, const std::string& key, const std::vector<float>& vec);
     static void set(rapidjson::Document& document, const std::string& key, const std::vector<int>& vec);
-    static void set(rapidjson::Document& document, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes);
+//    static void set(rapidjson::Document& document, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes);
     static void set(rapidjson::Document& document, const std::string& key, const std::map<std::string, float>& dict);
 
     template<typename T>
@@ -104,7 +104,7 @@ public:
     static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, rapidjson::Value& value);
     static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<float>& vec);
     static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<int>& vec);
-    static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes);
+//    static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes);
     static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::map<std::string, float>& dict);
 
     static void merge(rapidjson::Value& dstObject, rapidjson::Value& srcObject, rapidjson::Document::AllocatorType& allocator);

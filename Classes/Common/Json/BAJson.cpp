@@ -5,7 +5,6 @@
 #include "BAJson.h"
 #include "../Utils/BAString.h"
 #include <rapidjson/filewritestream.h>
-#include "../Classes/Nodes/INode.h"
 
 
 const rapidjson::Value BAJson::kEmptyArray = rapidjson::Value(rapidjson::kArrayType);
@@ -199,24 +198,24 @@ void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const 
     document.AddMember(name, array, document.GetAllocator());
 }
 
-void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes)
-{
-    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
-
-    rapidjson::Value array(rapidjson::kArrayType);
-    array.SetObject();
-    for(auto& node: nodes) {
-        rapidjson::Document doc;
-        doc.SetArray();
-
-        doc = node->toJson();
-
-        std::cout << BAJson::stringfy(doc) << std::endl;
-
-        array.PushBack(doc.GetArray(), document.GetAllocator());
-    }
-    document.AddMember(name, array, document.GetAllocator());
-}
+//void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes)
+//{
+//    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+//
+//    rapidjson::Value array(rapidjson::kArrayType);
+//    array.SetObject();
+//    for(auto& node: nodes) {
+//        rapidjson::Document doc;
+//        doc.SetArray();
+//
+//        doc = node->toJson();
+//
+//        std::cout << BAJson::stringfy(doc) << std::endl;
+//
+//        array.PushBack(doc.GetArray(), document.GetAllocator());
+//    }
+//    document.AddMember(name, array, document.GetAllocator());
+//}
 
 void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<int>& vec)
 {
@@ -245,9 +244,9 @@ void BAJson::set(rapidjson::Document &document, const std::string& key, const st
     set(document, document, key, dict);
 }
 
-void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes) {
-    set(document, document, key, nodes);
-}
+//void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes) {
+//    set(document, document, key, nodes);
+//}
 
 void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<int>& vec) {
     set(document, document, key, vec);

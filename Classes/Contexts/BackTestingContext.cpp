@@ -37,7 +37,6 @@
 #include "../Widgets/LoginView.h"
 #include "../Networking/API/Services/BotService.h"
 #include "../Widgets/StrategyLogView.h"
-#include "../Networking/API/Services/BotService.h"
 #include <chrono>
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
@@ -80,88 +79,6 @@ void BackTestingContext::initialize() {
     _bots = fetchBots();
 }
 
-//void BackTestingContext::loadSymbol(Symbol symbol) {
-//
-//    std::string filename = "data.zip";
-//    auto url = build_url(symbol.getCode(),symbol.year,symbol.month,symbol.getInterval());
-//
-//    if(!dataAlreadyExists(symbol))
-//        auto resp = download_file(url,filename);
-//
-//    _data.clear();
-//    _data = loadCsv(symbol);
-//
-//    _ticker->setSymbol(symbol);
-//    _ticker->reset();
-//    loadTicker();
-//
-//    auto chart = getWidget<ChartView>();
-//    chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
-//}
-
-//BackTestingContext::DownloadResponse BackTestingContext::download_file(std::string url, std::string filename) {
-//    bool success = false;
-//    CURL *curl;
-//    FILE *fp;
-//    CURLcode res;
-//    curl = curl_easy_init();
-//    DownloadResponse response;
-//    if (curl) {
-//        fp = fopen(filename.c_str(), "wb");
-//        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-//
-//        //TODO:: I dont know if this is ok based on these comments:
-//        //https://stackoverflow.com/questions/25540547/how-to-download-a-zip-file-from-server-using-curl-in-c
-//
-//        curl_easy_setopt(curl, CURLOPT_CAINFO, "./ca-bundle.crt");
-//        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-//        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
-//        //###########################################################
-//
-//        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-//        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-//        res = curl_easy_perform(curl);
-//        if (res == 0)
-//            success = true;
-//        curl_easy_cleanup(curl);
-//        fclose(fp);
-//
-//        response.success = success;
-//
-//        if(!response.success)
-//            return response;
-//
-////        //TODO::remove the unzip from here
-////        miniz_cpp::zip_file file(filename);
-////        file.extractall("./");
-////
-////        namespace fs = std::filesystem;
-////
-////        fs::remove(filename);
-////
-////        response.extractedFileName = file.getinfo(0).filename;
-//    }
-//    return response;
-//}
-
-//// TODO:
-//std::string BackTestingContext::build_url(std::string symbol, std::string year, std::string month, std::string interval) {
-//
-//    return fmt::format("https://data.binance.vision/data/spot/monthly/klines/{}/{}/{}-{}-{}-{}.zip",
-//                       symbol,
-//                       interval,
-//                       symbol,
-//                       interval,
-//                       year,
-//                       month
-//    );
-//}
-
-//// TODO:
-//bool BackTestingContext::dataAlreadyExists(const Symbol &symbol) {
-//    return std::filesystem::exists(getSymbolFilePath(symbol));
-//}
-
 bool BackTestingContext::isSimulating() {
     return _simulating;
 }
@@ -172,6 +89,8 @@ void BackTestingContext::loadTicker() {
 }
 
 void BackTestingContext::updateData(float dt) {
+
+
 
     if(!_simulating) return;
 
@@ -207,15 +126,21 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
 
         std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         std::tm tm = *std::gmtime(&now);
-        std::stringstream ss;
-        ss << std::put_time( &tm, "%Y-%m-%dT%H:%M:%S.%sZ");
+        std::stringstream updatedAt;
+        updatedAt << std::put_time( &tm, "%Y-%m-%dT%H:%M:%S.%sZ");
 
-        Bot bot = Bot("unamed",
-                      *this->_ticker->getSymbol(),
-                      this->_strategyEditor->getNodes(),
+        std::vector<NodeInfo> nodeInfos;
+        for(auto& node: _strategyEditor->getNodes())
+        {
+            nodeInfos.push_back(node->Parse());
+        }
+
+        Bot bot = Bot(*this->_ticker->getSymbol(),
+                      nodeInfos,
                       this->getUser()->GetId(),
-                      ss.str());
-        bot.save();
+                      updatedAt.str());
+
+        bot.Save();
 
         this->addBot(bot);
     }
@@ -441,19 +366,22 @@ std::shared_ptr<INode> BackTestingContext::createIndicatorNode(UiNodeType type, 
 }
 
 //this will be called from strategy editor widget
-std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos)
+std::shared_ptr<INode> BackTestingContext::createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos, bool shouldCreateIndicatorNode)
 {
     std::shared_ptr<INode> node{nullptr};
 
     switch (type) {
         case UiNodeType::SMA:
-            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, true, pos),_strategyEditor);
+            node = std::make_shared<SMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::SMA, shouldCreateIndicatorNode, pos),_strategyEditor);
+            break;
+        case UiNodeType::EMA:
+            node = std::make_shared<EMANode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::EMA, shouldCreateIndicatorNode, pos),_strategyEditor);
             break;
         case UiNodeType::BOLL:
-            node = std::make_shared<BollingerNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL, true),_strategyEditor);
+            node = std::make_shared<BollingerNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::BOLL, shouldCreateIndicatorNode),_strategyEditor);
             break;
         case UiNodeType::VWAP:
-            node = std::make_shared<VWAPNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::VWAP, true),_strategyEditor);
+            node = std::make_shared<VWAPNode>(loadIndicator(IndicatorsView::CandleIndicatorsTypes::VWAP, shouldCreateIndicatorNode),_strategyEditor);
             break;
         case UiNodeType::CROSS:
             node = std::make_shared<CrossNode>(_strategyEditor);
@@ -612,17 +540,17 @@ std::vector<Bot> BackTestingContext::fetchBots()
         BotService botService = BotService();
         rapidjson::Document bots = botService.fetchBots(_user->GetId());
         assert(bots.IsArray());
+
         for (rapidjson::Value::ConstValueIterator itr = bots.Begin(); itr != bots.End(); ++itr) {
             const rapidjson::Value& jsonBot = *itr;
             auto botInfos = Bot::Parse(jsonBot);
             for(auto& info: botInfos) {
-                std::vector<std::shared_ptr<INode>> nodes;
-                for (auto &nodeInfo: info.nodes) {
-                    _strategyEditor->addUiNode(nodeInfo);
-                }
-
-//                auto bot = Bot(info.name, info.symbol, info.type, info.pos);
-//                botVec.push_back(bot);
+                // TODO: Aqui já está adicionando ao strategyEditor
+//                for (auto &node: info.nodes) {
+//                    _strategyEditor->addUiNode(node);
+//                }
+                auto bot = Bot(info);
+                botVec.push_back(bot);
             }
         }
     }
@@ -643,3 +571,18 @@ void BackTestingContext::setStrategyEditor(StrategyEditor *strategyEditor) {
     this->_strategyEditor = strategyEditor;
 }
 
+StrategyEditor* BackTestingContext::getStrategyEditor() {
+    return _strategyEditor;
+}
+
+void BackTestingContext::loadBot() {
+    if(_currentBot == std::nullopt)
+        return;
+
+    _strategyEditor->clear();
+    this->fetchDataSymbol(_currentBot->GetSymbol());
+    for (auto &node: _currentBot->GetNodes()) {
+        _strategyEditor->addUiNode(node);
+        _strategyEditor->addRootId(node.id);
+    }
+}

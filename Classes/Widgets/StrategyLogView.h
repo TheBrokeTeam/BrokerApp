@@ -18,6 +18,8 @@ public:
     int getWindowFlags() override;
     void onPushStyleVar() override;
 
+    ImVector<std::string> _selections;
+
 private:
     std::list<std::string> _headers;
 };

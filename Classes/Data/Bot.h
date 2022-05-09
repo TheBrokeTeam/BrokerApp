@@ -9,13 +9,8 @@
 #include "../Nodes/INode.h"
 #include "Symbol.h"
 
-
-struct NodeInfo {
-    UiNodeType type;
-    ImVec2 pos;
-};
-
 struct BotInfo {
+    std::string id;
     std::string name;
     Symbol symbol;
     std::vector<NodeInfo> nodes;
@@ -25,22 +20,26 @@ struct BotInfo {
 
 class Bot {
 private:
+    std::string _id;
     std::string _name;
-    std::string _createdBy;
     Symbol _symbol;
-    std::vector<std::shared_ptr<INode>> _nodes;
+    std::vector<NodeInfo> _nodes;
+    std::string _createdBy;
     std::string _updatedAt;
 public:
-    Bot(const std::string& name, Symbol symbol, std::vector<std::shared_ptr<INode>> nodes, const std::string& createdBy, const std::string& updatedAt);
+    Bot(Symbol symbol, std::vector<NodeInfo> nodes, const std::string& createdBy, const std::string& updatedAt);
+    explicit Bot(const BotInfo& info);
 
     rapidjson::Document toJson();
     static std::vector<BotInfo> Parse(const rapidjson::Value&);
-    rapidjson::Document save();
+    rapidjson::Document Save();
 
     std::string GetName();
+    std::string GetId();
     Symbol GetSymbol();
-    std::vector<std::shared_ptr<INode>> GetNodes();
+    std::vector<NodeInfo> GetNodes();
     std::string GetUpdatedTime();
+
 };
 
 

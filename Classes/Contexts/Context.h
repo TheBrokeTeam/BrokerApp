@@ -51,7 +51,7 @@ public:
     virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator, std::optional<ImVec2> pos = std::nullopt){
         return nullptr;
     };
-    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos = std::nullopt) {
+    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos = std::nullopt, bool shouldCreateIndicatorNode = false) {
         return nullptr;
     };
 
@@ -137,6 +137,12 @@ public:
     virtual void addBot(const Bot&){};
 
     virtual void setStrategyEditor(StrategyEditor* strategyEditor){};
+    virtual StrategyEditor* getStrategyEditor(){};
+
+
+    void selectBot(const Bot&);
+//    void deselectBot();
+//    bool isSelectedBot();
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
@@ -145,6 +151,9 @@ protected:
 
     std::vector<Order> _orders;
 
+    std::optional<Bot> _currentBot = std::nullopt;
+
+    virtual void loadBot(){};
     //    std::vector<std::shared_ptr<Strategy>> _bots;
     std::vector<std::shared_ptr<INode>> _nodes;
 
@@ -156,7 +165,6 @@ protected:
     void loadUser();
 
     bool _shouldRender = false;
-
 };
 
 #endif //BROKERAPP_CONTEXT_H
