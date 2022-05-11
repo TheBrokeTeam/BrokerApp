@@ -136,39 +136,87 @@ INode::~INode() {
     _internalNodes.clear();
 }
 
-rapidjson::Document NodeInfo::toJson() {
+rapidjson::Document INode::toJson() {
 
     auto jsonDoc = BAJson::document();
 
-    BAJson::set(jsonDoc, "id", this->id);
-    BAJson::set(jsonDoc, "name", this->name);
-    BAJson::set(jsonDoc, "nodeType", INode::typeToString(this->nodeType));
+    BAJson::set(jsonDoc, "id", this->_id);
+    BAJson::set(jsonDoc, "name", this->_name);
+    BAJson::set(jsonDoc, "nodeType", INode::typeToString(this->_type));
 
-    std::vector<float> pos = { this->position.x, this->position.y };
+    std::vector<float> pos = { this->_pos.x, this->_pos.y };
     BAJson::set(jsonDoc, "position", pos);
 
     BAJson::set(jsonDoc, "_init", this->_init);
-    BAJson::set(jsonDoc, "icon", this->icon);
-    BAJson::set(jsonDoc, "isIndicatorNode", this->isIndicatorNode);
-    BAJson::set(jsonDoc, "internalNodes", this->internalNodes);
+    BAJson::set(jsonDoc, "icon", this->_icon);
+    BAJson::set(jsonDoc, "isIndicatorNode", this->_isIndicatorNode);
 
-    // TODO: Será que não deveria salvar um json do nodeEditor?
-    BAJson::set(jsonDoc, "nodeEditor", this->nodeEditor);
+    BAJson::set(jsonDoc, "internalNodes", this->_internalNodes);
+
+    rapidjson::Document jsonInternalEdges;
+    jsonInternalEdges.SetArray();
+
+    bool isEmpty = true;
+
+    for(auto internalNode : this->_internalNodes)
+    {
+        rapidjson::Document jsonInternalEdge = BAJson::document();
+
+        rapidjson::Document jsonNeighbors;
+        jsonNeighbors.SetArray();
+        for(auto neighborNode: _graph->neighbors(internalNode))
+        {
+            rapidjson::Document jsonN = BAJson::document();
+            BAJson::set(jsonN, "from", std::to_string(internalNode));
+            BAJson::set(jsonN, "to", std::to_string(neighborNode));
+            BAJson::append(jsonNeighbors, jsonN);
+            isEmpty = false;
+        }
+
+        BAJson::set(jsonInternalEdge, std::to_string(internalNode), jsonNeighbors);
+        BAJson::append(jsonInternalEdges, jsonInternalEdge);
+    }
+
+    if(!isEmpty) {
+        BAJson::set(jsonDoc, "internalEdges", jsonInternalEdges);
+    }
 
     return jsonDoc;
 }
 
-NodeInfo INode::Parse() {
+//rapidjson::Document NodeInfo::getEdgeFromInternalNode(graph::Graph<GraphNode> *graph, int nodeId)
+//{
+//    rapidjson::Document doc = BAJson::document();
+//
+//    rapidjson::Document doc2 = BAJson::document();
+//    doc2.SetArray();
+//
+//    for(auto& from : graph->neighbors(nodeId))
+//    {
+//        rapidjson::Document edgeDoc = BAJson::document();
+//        BAJson::set(edgeDoc, "from", from);
+//        BAJson::set(edgeDoc, "to", nodeId);
+//        BAJson::append(doc2, edgeDoc);
+//    }
+//
+//    rapidjson::Value v(doc2, doc.GetAllocator());
+//
+//    BAJson::set(doc, std::to_string(nodeId),v);
+//
+//    return doc;
+//}
+
+NodeInfo INode::toInfo() {
     return {
             this->_id,
             this->_type,
             this->_pos,
             this->_name,
             this->_internalNodes,
+            this->_internalEdges,
             this->_init,
             this->_isIndicatorNode,
-            this->_icon,
-            this->_nodeEditor->getId()
+            this->_icon
     };
 }
 

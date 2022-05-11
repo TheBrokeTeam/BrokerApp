@@ -122,21 +122,32 @@ double BackTestingContext::getCurrentTimeStamp() {
 
 void BackTestingContext::startSimulation(Ticker* ticker) {
 
-    if(this->_user) {
+    if(this->userSelected()) {
 
         std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         std::tm tm = *std::gmtime(&now);
         std::stringstream updatedAt;
         updatedAt << std::put_time( &tm, "%Y-%m-%dT%H:%M:%S.%sZ");
 
-        std::vector<NodeInfo> nodeInfos;
-        for(auto& node: _strategyEditor->getNodes())
-        {
-            nodeInfos.push_back(node->Parse());
-        }
+//        std::vector<NodeInfo> nodeInfos;
+//        for(auto& node: _strategyEditor->getNodes())
+//        {
+//            nodeInfos.push_back(node->toInfo());
+//        }
+//
+//        rapidjson::Document nodeEdges;
+//        nodeEdges.SetArray();
+//
+//        for(auto edge: _strategyEditor->getGraph()->edges())
+//        {
+//            auto n = edge.toJson();
+//            BAJson::append(nodeEdges, n);
+//            std::cout << BAJson::stringfy(nodeEdges) << std::endl;
+//        }
 
         Bot bot = Bot(*this->_ticker->getSymbol(),
-                      nodeInfos,
+                      _strategyEditor,
+                      StrategyInfo(*this->_ticker->getSymbol()),
                       this->getUser()->GetId(),
                       updatedAt.str());
 
@@ -543,15 +554,9 @@ std::vector<Bot> BackTestingContext::fetchBots()
 
         for (rapidjson::Value::ConstValueIterator itr = bots.Begin(); itr != bots.End(); ++itr) {
             const rapidjson::Value& jsonBot = *itr;
-            auto botInfos = Bot::Parse(jsonBot);
-            for(auto& info: botInfos) {
-                // TODO: Aqui já está adicionando ao strategyEditor
-//                for (auto &node: info.nodes) {
-//                    _strategyEditor->addUiNode(node);
-//                }
-                auto bot = Bot(info);
-                botVec.push_back(bot);
-            }
+            auto strategyInfo = Bot::toStrategyInfo(jsonBot);
+            auto bot = Bot(strategyInfo.symbol, NULL, strategyInfo, strategyInfo.createdBy, strategyInfo.updatedAt);
+            botVec.push_back(bot);
         }
     }
     return botVec;
@@ -579,10 +584,8 @@ void BackTestingContext::loadBot() {
     if(_currentBot == std::nullopt)
         return;
 
-    _strategyEditor->clear();
     this->fetchDataSymbol(_currentBot->GetSymbol());
-    for (auto &node: _currentBot->GetNodes()) {
-        _strategyEditor->addUiNode(node);
-        _strategyEditor->addRootId(node.id);
+    for (auto nodeInfo: _currentBot->_strategyInfo.nodesInfo) {
+        INode& node = _strategyEditor->addUiNode(nodeInfo);
     }
 }

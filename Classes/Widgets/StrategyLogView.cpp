@@ -56,10 +56,10 @@ void StrategyLogView::updateVisible(float dt) {
                 ImGui::TableSetColumnIndex(3);
                 ImGui::Text("%s", s.getInterval().c_str());
 
-                ImGui::TableSetColumnIndex(4);
-                for(auto& node: bot.GetNodes()) {
-                    ImGui::Text("%s", node.name.c_str());
-                }
+//                ImGui::TableSetColumnIndex(4);
+//                for(auto& node: bot.GetNodes()) {
+//                    ImGui::Text("%s", node.name.c_str());
+//                }
 
             }
         } else {

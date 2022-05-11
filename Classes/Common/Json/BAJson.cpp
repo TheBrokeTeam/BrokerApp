@@ -553,3 +553,46 @@ void BAJson::append(rapidjson::Document &document, rapidjson::Document &object) 
     rapidjson::Value v(object, document.GetAllocator());
     append(document, v);
 }
+
+void BAJson::set(rapidjson::Document &document, rapidjson::Value &object, const std::string &key,
+                 const std::map<std::string, std::vector<int>> &internalEdges) {
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+
+    rapidjson::Value array(rapidjson::kArrayType);
+    array.SetObject();
+    for(auto &edge: internalEdges) {
+        rapidjson::Value dict_key(edge.first.c_str(), (unsigned int)edge.first.size(), document.GetAllocator());
+
+        rapidjson::Value array2(rapidjson::kArrayType);
+        array2.SetObject();
+
+        rapidjson::Document doc = BAJson::document();
+
+        rapidjson::Document doc2 = BAJson::document();
+        doc2.SetArray();
+
+//        for(auto& from : graph->neighbors(nodeId))
+//        {
+//            rapidjson::Document edgeDoc = BAJson::document();
+//            BAJson::set(edgeDoc, "from", from);
+//            BAJson::set(edgeDoc, "to", nodeId);
+//            BAJson::append(doc2, edgeDoc);
+//        }
+//
+//        rapidjson::Value v(doc2, doc.GetAllocator());
+//
+//        BAJson::set(doc, std::to_string(nodeId),v);
+
+//            auto e = NodeInfo::getEdgeFromInternalNode(graph, nodeId);
+//        BAJson::append(edgesArray, e.GetObject());
+//
+//        rapidjson::Value dict_value(edge.second);
+//        array.AddMember(dict_key, dict_value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string &key,
+                 const std::map<std::string, std::vector<int>> &internalEdges) {
+    set(document, document, key, internalEdges);
+}

@@ -276,10 +276,56 @@ std::vector<std::shared_ptr<INode>> StrategyEditor::getNodes() {
     return this->_uiNodes;
 }
 
-void StrategyEditor::addUiNode(NodeInfo nodeInfo) {
+INode& StrategyEditor::addUiNode(NodeInfo nodeInfo) {
     auto node = getContext()->createNode(_graph, nodeInfo.nodeType, nodeInfo.position);
     if(node) {
         node->setPosition(nodeInfo.position);
         _uiNodes.push_back(node);
+
+    }
+    return *node;
+}
+
+rapidjson::Document StrategyEditor::toJson()
+{
+    rapidjson::Document jsonStrategy = BAJson::document();
+
+    rapidjson::Document jsonNodes;
+    jsonNodes.SetArray();
+    for(auto& node: this->getNodes())
+    {
+        auto n = node->toJson();
+        BAJson::append(jsonNodes, n);
+        std::cout << BAJson::stringfy(jsonNodes) << std::endl;
+    }
+    BAJson::set(jsonStrategy, "nodes", jsonNodes);
+
+    return jsonStrategy;
+}
+
+void StrategyEditor::fixNodesConnections(StrategyInfo strategyInfo) {
+    for(auto& nodeInfo: strategyInfo.nodesInfo) {
+        for(auto& node: _uiNodes) {
+            auto internalNodes = node->getInternalNodes();
+            int counter = 0;
+            for(auto& nodeId: nodeInfo.internalNodes) {
+                std::cout << "nodeInfo.internalNodes: " << nodeId << std::endl;
+                for(auto& edgeInfo: nodeInfo.internalEdges) {
+                    for(auto& edge: edgeInfo.edges) {
+                        if(edgeInfo.id == nodeId) {
+                            edgeInfo.id = internalNodes[counter];
+                            edge.from = internalNodes[counter];
+                            std::cout << "edgeInfo.id: " << edgeInfo.id << std::endl;
+                            std::cout << "edge.from: " << edge.from << std::endl;
+                        }
+                        // TODO: fazer o to::
+                    }
+                }
+                counter++;
+            }
+            for(auto& nodeId: internalNodes) {
+                std::cout << "internalNodes: " << nodeId << std::endl;
+            }
+        }
     }
 }

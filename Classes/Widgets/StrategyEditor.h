@@ -30,7 +30,11 @@ public:
 
     std::vector<std::shared_ptr<INode>> getNodes();
 
-    void addUiNode(NodeInfo nodeInfo);
+    INode& addUiNode(NodeInfo nodeInfo);
+
+    rapidjson::Document toJson();
+
+    void fixNodesConnections(StrategyInfo strategyInfo);
 
 private:
     std::shared_ptr<INode> getNodeFromId(int id);

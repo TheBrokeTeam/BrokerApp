@@ -17,25 +17,34 @@
 #include "NodeType.h"
 #include "UiNodeType.h"
 
+class GraphNode;
+
+struct Edge {
+    int from;
+    int to;
+};
+
+struct EdgeInfo {
+    int id;
+    std::vector<Edge> edges;
+};
+
 struct NodeInfo {
     int id;
     UiNodeType nodeType;
     ImVec2 position;
     std::string name;
     std::vector<int> internalNodes;
+    std::vector<EdgeInfo> internalEdges;
     bool _init;
     bool isIndicatorNode;
     int icon;
-    std::string nodeEditor;
 
-    rapidjson::Document toJson();
+//    static rapidjson::Document getEdgeFromInternalNode(graph::Graph<GraphNode> *graph, int nodeId);
+//    rapidjson::Document toJson(graph::Graph<GraphNode> *graph);
 };
 
 class StrategyEditor;
-
-
-class GraphNode;
-
 
 class INode {
 public:
@@ -96,14 +105,19 @@ public:
 
     void setType(const UiNodeType& type);
     void setIcon(int icon);
-//    rapidjson::Document toJson();
-    NodeInfo Parse();
+
+    rapidjson::Document toJson();
+    NodeInfo toInfo();
 
     static std::string typeToString(const UiNodeType& type);
     static UiNodeType stringToUiNodeType(const std::string& str);
     static NodeType stringToType(const std::string& str);
 
     void setPosition(ImVec2 newPos);
+
+    std::vector<int> getInternalNodes() {
+        return _internalNodes;
+    }
 
 protected:
     void setNodeName(const std::string& name);
@@ -115,6 +129,7 @@ private:
     ImVec2 _pos;
     bool _init = false;
     std::vector<int> _internalNodes;
+    std::vector<EdgeInfo> _internalEdges;
     std::shared_ptr<graph::Graph<GraphNode>> _graph;
     bool _isIndicatorNode = false;
     std::weak_ptr<Indicator> _indicator;
