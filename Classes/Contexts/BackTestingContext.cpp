@@ -129,25 +129,8 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
         std::stringstream updatedAt;
         updatedAt << std::put_time( &tm, "%Y-%m-%dT%H:%M:%S.%sZ");
 
-//        std::vector<NodeInfo> nodeInfos;
-//        for(auto& node: _strategyEditor->getNodes())
-//        {
-//            nodeInfos.push_back(node->toInfo());
-//        }
-//
-//        rapidjson::Document nodeEdges;
-//        nodeEdges.SetArray();
-//
-//        for(auto edge: _strategyEditor->getGraph()->edges())
-//        {
-//            auto n = edge.toJson();
-//            BAJson::append(nodeEdges, n);
-//            std::cout << BAJson::stringfy(nodeEdges) << std::endl;
-//        }
-
         Bot bot = Bot(*this->_ticker->getSymbol(),
                       _strategyEditor,
-                      StrategyInfo(*this->_ticker->getSymbol()),
                       this->getUser()->GetId(),
                       updatedAt.str());
 
@@ -156,8 +139,6 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
         this->addBot(bot);
     }
 
-    //just for tests
-    //TODO:: use the ticker parameter
     getWidget<ProfitAndLossesView>()->clear();
     _ticker->reset();
     _currentIndex = 0;
@@ -552,10 +533,9 @@ std::vector<Bot> BackTestingContext::fetchBots()
         rapidjson::Document bots = botService.fetchBots(_user->GetId());
         assert(bots.IsArray());
 
-        for (rapidjson::Value::ConstValueIterator itr = bots.Begin(); itr != bots.End(); ++itr) {
-            const rapidjson::Value& jsonBot = *itr;
-            auto strategyInfo = Bot::toStrategyInfo(jsonBot);
-            auto bot = Bot(strategyInfo.symbol, NULL, strategyInfo, strategyInfo.createdBy, strategyInfo.updatedAt);
+        for(auto& jsonBot: bots.GetArray()) {
+            auto botInfo = Bot::toInfo(jsonBot);
+            auto bot = Bot(botInfo);
             botVec.push_back(bot);
         }
     }
@@ -585,7 +565,12 @@ void BackTestingContext::loadBot() {
         return;
 
     this->fetchDataSymbol(_currentBot->GetSymbol());
-    for (auto nodeInfo: _currentBot->_strategyInfo.nodesInfo) {
+    _strategyEditor->clear();
+
+    for (auto& nodeInfo: _currentBot->GetNodes()) {
+        _strategyEditor->fixNodesConnections(nodeInfo);
         INode& node = _strategyEditor->addUiNode(nodeInfo);
     }
+
+
 }

@@ -149,9 +149,10 @@ void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
 
 void StrategyEditor::clear() {
     auto copyNodes = _uiNodes;
-    for(auto n : copyNodes){
-        if(!n->getIsIndicatorNode())
-            deleteUiNodeFromFromList(n->getId(),false);
+    for(auto& n : copyNodes){
+        deleteUiNodeFromFromList(n->getId(),false);
+//        if(!n->getIsIndicatorNode())
+//            deleteUiNodeFromFromList(n->getId(),false);
     }
 }
 
@@ -281,15 +282,12 @@ INode& StrategyEditor::addUiNode(NodeInfo nodeInfo) {
     if(node) {
         node->setPosition(nodeInfo.position);
         _uiNodes.push_back(node);
-
     }
     return *node;
 }
 
 rapidjson::Document StrategyEditor::toJson()
 {
-    rapidjson::Document jsonStrategy = BAJson::document();
-
     rapidjson::Document jsonNodes;
     jsonNodes.SetArray();
     for(auto& node: this->getNodes())
@@ -298,34 +296,29 @@ rapidjson::Document StrategyEditor::toJson()
         BAJson::append(jsonNodes, n);
         std::cout << BAJson::stringfy(jsonNodes) << std::endl;
     }
-    BAJson::set(jsonStrategy, "nodes", jsonNodes);
 
-    return jsonStrategy;
+    return jsonNodes;
 }
 
-void StrategyEditor::fixNodesConnections(StrategyInfo strategyInfo) {
-    for(auto& nodeInfo: strategyInfo.nodesInfo) {
-        for(auto& node: _uiNodes) {
-            auto internalNodes = node->getInternalNodes();
-            int counter = 0;
-            for(auto& nodeId: nodeInfo.internalNodes) {
-                std::cout << "nodeInfo.internalNodes: " << nodeId << std::endl;
-                for(auto& edgeInfo: nodeInfo.internalEdges) {
-                    for(auto& edge: edgeInfo.edges) {
-                        if(edgeInfo.id == nodeId) {
-                            edgeInfo.id = internalNodes[counter];
-                            edge.from = internalNodes[counter];
-                            std::cout << "edgeInfo.id: " << edgeInfo.id << std::endl;
-                            std::cout << "edge.from: " << edge.from << std::endl;
-                        }
-                        // TODO: fazer o to::
-                    }
+void StrategyEditor::fixNodesConnections(NodeInfo nodeInfo) {
+    auto internalNodes = nodeInfo.internalNodes;
+    int counter = 0;
+    for(auto& nodeId: nodeInfo.internalNodes) {
+        std::cout << "nodeInfo.internalNodes: " << nodeId << std::endl;
+        for(auto& edgeInfo: nodeInfo.internalEdges) {
+            for(auto& edge: edgeInfo.edges) {
+                if(edgeInfo.id == nodeId) {
+                    edgeInfo.id = internalNodes[counter];
+                    edge.from = internalNodes[counter];
+                    std::cout << "edgeInfo.id: " << edgeInfo.id << std::endl;
+                    std::cout << "edge.from: " << edge.from << std::endl;
                 }
-                counter++;
-            }
-            for(auto& nodeId: internalNodes) {
-                std::cout << "internalNodes: " << nodeId << std::endl;
+                // TODO: fazer o to::
             }
         }
+        counter++;
+    }
+    for(auto& nodeId: internalNodes) {
+        std::cout << "internalNodes: " << nodeId << std::endl;
     }
 }

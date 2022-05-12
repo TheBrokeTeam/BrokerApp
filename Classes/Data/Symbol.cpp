@@ -352,7 +352,5 @@ rapidjson::Document Symbol::toJson() {
             {"end", float(this->getEndTime())}
     };
     BAJson::set(doc, "range", range);
-//    BAJson::set(doc, "start", float(this->getStartTime()));
-//    BAJson::set(doc, "end", float(this->getEndTime()));
     return doc;
 }

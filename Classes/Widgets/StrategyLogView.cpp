@@ -45,7 +45,7 @@ void StrategyLogView::updateVisible(float dt) {
 
                 ImGui::TableSetColumnIndex(1);
                 if (ImGui::Selectable(bot.GetName().c_str(), false, ImGuiSelectableFlags_SelectOnClick)) {
-                    std::cout << "Clicou em " << bot.GetName().c_str() << std::endl;
+                    std::cout << "User select the " << bot.GetName().c_str()  << "bot." << std::endl;
                     getContext()->selectBot(bot);
                 }
 

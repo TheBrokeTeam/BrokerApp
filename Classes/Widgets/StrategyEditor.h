@@ -34,7 +34,7 @@ public:
 
     rapidjson::Document toJson();
 
-    void fixNodesConnections(StrategyInfo strategyInfo);
+    void fixNodesConnections(NodeInfo nodeInfo);
 
 private:
     std::shared_ptr<INode> getNodeFromId(int id);

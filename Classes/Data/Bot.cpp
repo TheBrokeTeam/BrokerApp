@@ -6,45 +6,33 @@
 #include "../Common/Json/BAJson.h"
 #include "../Networking/API/Services/BotService.h"
 #include "../Nodes/SMANode.h"
-#include "../Nodes/BollingerNode.h"
-#include "../Nodes/VWAPNode.h"
-#include "../Nodes/CrossNode.h"
 #include "../Nodes/Counter.h"
-#include "../Tickables/Strategies/TradeNodeStrategy.h"
-#include "../Nodes/UpSequenceNode.h"
-#include "../Nodes/TradeNode.h"
-#include "../Nodes/DownSequenceNode.h"
-#include "../Nodes/BarValueNode.h"
-#include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/StrategyEditor.h"
-
 #include <utility>
 
-Bot::Bot(Symbol symbol, StrategyEditor* strategyEditor, StrategyInfo strategyInfo, const std::string& createdBy, const std::string& updatedAt): _symbol(std::move(symbol)), _strategyInfo(strategyInfo)
+Bot::Bot(Symbol symbol, StrategyEditor* strategyEditor, const std::string& createdBy, const std::string& updatedAt): _symbol(std::move(symbol))
 {
     this->_id = "";
-    this->_strategyEditor = std::move(strategyEditor);
+    this->_strategyEditor = strategyEditor;
+
+    for(auto& node: _strategyEditor->getNodes()) {
+        auto n = node->toInfo();
+        this->_nodesInfo.push_back(n);
+    }
+
     this->_createdBy = createdBy;
     this->_updatedAt = updatedAt;
     this->_name = "Unamed";
-
-//    std::string nodeNames;
-//    for(auto node: _nodes)
-//    {
-//        for(int i=0; i<3; i++)
-//            nodeNames.push_back(node.name[i]);
-//    }
-//    this->_name = _symbol.getCode() + _symbol.getInterval() + nodeNames;
 }
 
-//Bot::Bot(const BotInfo& info): _symbol(info.symbol)
-//{
-//    this->_id = info.id;
-//    this->_name = info.name;
-//    this->_strategyEditor = info.strategyEditor;
-//    this->_createdBy = info.createdBy;
-//    this->_updatedAt = info.updatedAt;
-//}
+Bot::Bot(const BotInfo& info): _symbol(info.symbol)
+{
+    this->_id = info.id;
+    this->_nodesInfo = info.nodesInfo;
+    this->_name = info.name;
+    this->_createdBy = info.createdBy;
+    this->_updatedAt = info.updatedAt;
+}
 
 Symbol Bot::GetSymbol()
 {
@@ -56,10 +44,10 @@ std::string Bot::GetName()
     return _name;
 }
 
-//std::vector<NodeInfo> Bot::GetNodes()
-//{
-//    return _nodes;
-//}
+std::vector<NodeInfo> Bot::GetNodes()
+{
+    return _nodesInfo;
+}
 
 std::string Bot::GetUpdatedTime()
 {
@@ -88,15 +76,15 @@ rapidjson::Document Bot::toJson()
     rapidjson::Document jsonSymbol = _symbol.toJson();
     BAJson::set(doc, "symbol", jsonSymbol);
 
-    rapidjson::Document jsonStrategyEditor = _strategyEditor->toJson();
-    BAJson::set(doc, "strategyEditor", jsonStrategyEditor);
+    rapidjson::Document jsonNodes = _strategyEditor ->toJson();
+    BAJson::set(doc, "nodes", jsonNodes);
 
     std::cout <<  BAJson::stringfy(doc) << std::endl;
 
     return doc;
 }
 
-StrategyInfo Bot::toStrategyInfo(const rapidjson::Value& value)
+BotInfo Bot::toInfo(const rapidjson::Value& value)
 {
     const rapidjson::Value& jsonSymbol = value["symbol"].GetObject();
     assert(jsonSymbol.IsObject());
@@ -111,18 +99,15 @@ StrategyInfo Bot::toStrategyInfo(const rapidjson::Value& value)
 
     Symbol symbol = Symbol(code, interval,start,end);
 
-    StrategyInfo strategyInfo(symbol);
+    BotInfo botInfo(symbol);
     assert(value.IsObject());
 
-    strategyInfo.id = BAJson::getString(value, "_id");
-    strategyInfo.name = BAJson::getString(value, "name", "No named");
-    strategyInfo.updatedAt = BAJson::getString(value, "updatedAt");
-    strategyInfo.createdBy = BAJson::getString(value, "createdBy");
+    botInfo.id = BAJson::getString(value, "_id");
+    botInfo.name = BAJson::getString(value, "name", "No named");
+    botInfo.updatedAt = BAJson::getString(value, "updatedAt");
+    botInfo.createdBy = BAJson::getString(value, "createdBy");
 
-    const rapidjson::Value& strategyEditorJson = value["strategyEditor"].GetObject();
-    assert(strategyEditorJson.IsObject());
-
-    const rapidjson::Value& jsonNodes = strategyEditorJson["nodes"].GetArray();
+    const rapidjson::Value& jsonNodes = value["nodes"].GetArray();
     assert(jsonNodes.IsArray());
 
     for(const auto& jsonNode:  jsonNodes.GetArray()) {
@@ -170,81 +155,9 @@ StrategyInfo Bot::toStrategyInfo(const rapidjson::Value& value)
 
             }
         }
-        strategyInfo.nodesInfo.push_back(nodeInfo);
+        botInfo.nodesInfo.push_back(nodeInfo);
     }
-    return strategyInfo;
+    return botInfo;
 }
 
-//std::vector<BotInfo> Bot::toInfo(const rapidjson::Value& value)
-//{
-//    std::vector<BotInfo> output;
-//
-//    assert(value.IsObject());
-//
-//    std::string id = BAJson::getString(value, "_id");
-//    std::string name = BAJson::getString(value, "name", "No named");
-//    std::string updatedAt = BAJson::getString(value, "updatedAt");
-//    std::string createdBy = BAJson::getString(value, "createdBy");
-//
-//    const rapidjson::Value& jsonSymbol = value["symbol"].GetObject();
-//    assert(jsonSymbol.IsObject());
-//    std::string code = BAJson::getString(jsonSymbol, "code");
-//    std::string interval = BAJson::getString(jsonSymbol, "interval");
-//
-//    const rapidjson::Value& range = jsonSymbol["range"].GetObject();
-//    assert(range.IsObject());
-//
-//    long start = BAJson::getLong(range, "start");
-//    long end = BAJson::getLong(range, "end");
-//
-//    Symbol symbol = Symbol(code, interval,start,end);
-//
-//    const rapidjson::Value& jsonNodes = value["nodes"].GetArray();
-//    assert(jsonNodes.IsArray());
-//
-//    rapidjson::GenericArray jsonNodesArray = jsonNodes.GetArray();
-//
-//    std::vector<NodeInfo> infos;
-//    for(const auto& jsonNode: jsonNodesArray) {
-//
-//        std::string nodeName = jsonNode["name"].GetString();
-//        int nodeId = jsonNode["id"].GetInt();
-//        std::string nodeEditorId = jsonNode["nodeEditor"].GetString();
-//        bool _init = jsonNode["_init"].GetBool();
-//        bool isIndicatorNode = jsonNode["isIndicatorNode"].GetBool();
-//        int icon = jsonNode["icon"].GetInt();
-//
-//        UiNodeType uiNodeType = INode::stringToUiNodeType(jsonNode["nodeType"].GetString());
-//
-//        const rapidjson::Value& internalNodesArray = jsonNode["internalNodes"].GetArray();
-//        assert(internalNodesArray.IsArray());
-//        std::vector<int> internalNodes;
-//
-//        for(auto& internalNode: internalNodesArray.GetArray()){
-//            internalNodes.push_back(internalNode.GetInt());
-//        }
-//
-//        std::vector<float> position = BAJson::getFloatVector(jsonNode, "position");
-//        ImVec2 pos = ImVec2(position[0], position[1]);
-//
-////        std::map<std::string, std::vector<graph::Span<const int>>> internalEdges = std::map<std::string, std::vector<graph::Span<const int>>>();
-//
-//        infos.push_back({
-//            nodeId,
-//            uiNodeType,
-//            pos,
-//            nodeName,
-//            internalNodes,
-//            _init,
-//            isIndicatorNode,
-//            icon
-//        });
-//
-//    }
-//    output.push_back({id, name, symbol, infos, createdBy, updatedAt});
-//
-//    return output;
-//}
-StrategyInfo::StrategyInfo(Symbol symbol): symbol(symbol) {
-
-}
+BotInfo::BotInfo(Symbol symbol): symbol(std::move(symbol)) { }

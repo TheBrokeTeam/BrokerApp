@@ -40,8 +40,6 @@ struct NodeInfo {
     bool isIndicatorNode;
     int icon;
 
-//    static rapidjson::Document getEdgeFromInternalNode(graph::Graph<GraphNode> *graph, int nodeId);
-//    rapidjson::Document toJson(graph::Graph<GraphNode> *graph);
 };
 
 class StrategyEditor;
