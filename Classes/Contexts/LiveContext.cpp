@@ -17,6 +17,7 @@
 #include "../Widgets/StrategyEditor.h"
 #include "../Helpers/Utils.h"
 #include "../Widgets/StockSearch.h"
+#include "../Widgets/OrderLog.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -34,6 +35,7 @@ void LiveContext::initialize() {
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<SocketStreamController>(this));
     _widgets.emplace_back(std::make_shared<StockSearch>(this));
+    _widgets.emplace_back(std::make_shared<OrderLog>(this));
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         removeAllIndicators();

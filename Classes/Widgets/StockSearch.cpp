@@ -117,9 +117,6 @@ void StockSearch::applyTabFilter(std::string tabFilter) {
         }), filtered_symbols.end());
 
     }
-
-    //filtered_symbols.clear();
-    //filtered_symbols = tab_filtered_symbols;
 }
 
 void StockSearch::updateVisible(float dt)
@@ -176,7 +173,6 @@ void StockSearch::buildFilter() {
 
     filter.Draw("##SearchFilter", ImGui::GetWindowWidth()-30);
 
-
     if (ImGui::IsItemEdited() || !populateFilteredSymbols) {
         filtered_symbols.clear();
         for (auto & symbol : _symbols) {
@@ -198,13 +194,8 @@ void StockSearch::buildFilter() {
 
 void StockSearch::buildStockSearch() {
 
-    // Expose a few Borders related flags interactively
 
     static ImGuiTableFlags flags =   ImGuiTableFlags_ScrollY | ImGuiTableFlags_SortMulti | ImGuiTableFlags_Sortable | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg ;
-    //static bool display_headers = false;
-
-
-
 
     if (ImGui::BeginTable("Table1", 4, flags)) {
         // Display headers so we can inspect their interaction with borders.
@@ -240,26 +231,6 @@ void StockSearch::buildStockSearch() {
 
         ImGui::EndTable();
     }
-
-//    ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(5, 5));
-//    //ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));
-//
-//    int tableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_RowBg | ImGuiTableFlags_PadOuterX |
-//                     ImGuiTableFlags_ScrollY;
-//    if (ImGui::BeginTable("##table2", 2, tableFlags))
-//    {
-//        ImGui::TableSetupColumn("Asset", ImGuiTableColumnFlags_WidthStretch);
-//        ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthFixed);
-//
-//        for (int row = 0; row < 30; row++)
-//        {
-//            ImGui::TableNextRow();
-//            ImGui::TableNextColumn();
-//            cell();
-//        }
-//        ImGui::EndTable();
-//    }
-//    ImGui::PopStyleVar();
 }
 
 void StockSearch::buildRow(SymbolRow &info) {
@@ -269,8 +240,6 @@ void StockSearch::buildRow(SymbolRow &info) {
     static int contents_type = CT_Text;
 
     ImGui::TableNextRow();
-
-    //ImGui::BeginGroup();
 
     for (int column = 0; column < 4; column++) {
         ImGui::TableSetColumnIndex(column);
@@ -303,11 +272,6 @@ void StockSearch::buildRow(SymbolRow &info) {
 
     }
 
-    //ImGui::EndGroup();
-
-
-//    if(ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
-//    }
 }
 
 

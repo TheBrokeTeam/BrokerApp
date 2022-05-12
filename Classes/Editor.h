@@ -71,7 +71,8 @@ public:
         node_trend_black,
         node_trade_black,
         fav_selected,
-        fav_unselected
+        fav_unselected,
+        garbage_bin
     };
 
     ImageInfo getTexture(Icons icon);

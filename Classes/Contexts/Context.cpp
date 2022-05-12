@@ -12,6 +12,10 @@ void Context::updateData(float dt) {
 
 }
 
+void Context::addOrder(OrderRow order) {
+    _orders.push_back(row)
+}
+
 void Context::updateUI(float dt) {
     for(auto& w : _widgets)
         w->update(dt);

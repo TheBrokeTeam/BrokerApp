@@ -32,7 +32,6 @@ public:
     virtual bool isSimulating(){return false;};
 
     virtual void openUserDataStream() {};
-
     virtual double getCurrentTimeStamp() = 0 ;
 
     virtual void initialize() = 0;
@@ -48,7 +47,6 @@ public:
 
     virtual void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) = 0;
     virtual void removeAllIndicators() = 0;
-
 
     virtual void plotIndicators() = 0;
     virtual void plotSubplotIndicators() = 0;

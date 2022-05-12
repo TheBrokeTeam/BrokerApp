@@ -28,8 +28,6 @@ public:
 
     void removeNodeIndicator(std::shared_ptr<Indicator> indicator);
 
-
-
 private:
     std::shared_ptr<INode> getNodeFromId(int id);
     void deleteUiNodeFromFromList(int id, bool shouldRemoveIndicator = true);
