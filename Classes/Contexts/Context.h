@@ -138,8 +138,8 @@ public:
 
 
     void selectBot(const Bot&);
-//    void deselectBot();
-//    bool isSelectedBot();
+
+    void addOrder(Order order);
 
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;

@@ -3,6 +3,7 @@
 //
 
 #include "Context.h"
+#include "../Widgets/OrderLog.h"
 
 #include <utility>
 
@@ -26,8 +27,8 @@ void Context::updateData(float dt)
 
 }
 
-void Context::addOrder(OrderRow order) {
-    _orders.push_back(row)
+void Context::addOrder(Order order) {
+    _orders.push_back(order);
 }
 
 void Context::updateUI(float dt) {

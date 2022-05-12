@@ -341,7 +341,6 @@ void LiveContext::openUserDataStream() {
 
 void LiveContext::openOrder(const Symbol &symbol) {
     getEditor()->getApiManager()->openOrder(symbol,[this](Order& order){
-        std::cout << "Order opened:" << order.clientOrderId << std::endl;
         _orders.push_back(order);
     });
 }

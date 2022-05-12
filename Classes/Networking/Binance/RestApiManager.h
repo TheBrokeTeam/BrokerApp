@@ -32,7 +32,7 @@ public:
     void openOrder(const Symbol& symbol,const OrderCallback& callback);
     void accountInfo(const AccountInfoCallback& callback);
     void startUserDataStream(UserDataStreamCallback callback);
-    void cancelOrder(const Order& order);
+    void cancelOrder(Order& order);
     void initialize(const std::string& pk, const std::string& sk);
 
 private:

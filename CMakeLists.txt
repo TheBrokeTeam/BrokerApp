@@ -200,7 +200,7 @@ add_executable(BrokerApp
 		Classes/Data/Bot.cpp
 		Classes/Data/Bot.h
 		Classes/Data/Parsable.h
-		)
+        Classes/Networking/API/Routes/OrderRouter.cpp Classes/Networking/API/Routes/OrderRouter.h Classes/Networking/API/Services/OrderService.cpp Classes/Networking/API/Services/OrderService.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS

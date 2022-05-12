@@ -31,25 +31,6 @@ enum OrderInfoColumnID
     OrderColumnID_Fee
 };
 
-enum OrderType {
-    Limit,
-    LimitStop,
-    Market,
-    OCO
-};
-
-enum TradeSideType {
-    Buy,
-    Sell
-};
-
-enum OrderStatusType {
-    Cancelled,
-    Expired,
-    Filled,
-    PartiallyFilled,
-};
-
 enum OrderLogTabBarType {
     OpenOrders,
     OrderHistory,

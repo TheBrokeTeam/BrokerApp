@@ -68,6 +68,7 @@ public:
     static void set(rapidjson::Document& document, const std::string& key, int intValue);
     static void set(rapidjson::Document& document, const std::string& key, float floatValue);
     static void set(rapidjson::Document& document, const std::string& key, int64_t longValue);
+    static void set(rapidjson::Document& document, const std::string& key, double doubleValue);
 
 
     static void set(rapidjson::Document& document, const std::string& key, const std::string& stringValue);
