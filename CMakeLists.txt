@@ -137,6 +137,7 @@ add_executable(BrokerApp
 		Classes/Networking/WebSocket/WSQueue.h
 		Classes/Tickables/Indicators/MFI.cpp 
 		Classes/Tickables/Indicators/MFI.h
+		Classes/Networking/Binance/SocketManager.cpp Classes/Networking/Binance/SocketManager.h Classes/Contexts/LiveContext.cpp Classes/Contexts/LiveContext.h Classes/Widgets/SocketStreamController.cpp Classes/Widgets/SocketStreamController.h Classes/Widgets/LiveCandleChart.cpp Classes/Widgets/LiveCandleChart.h Classes/Networking/Binance/RestApiManager.cpp Classes/Networking/Binance/RestApiManager.h Classes/Networking/Binance/LocalKeys.h Classes/Widgets/StockSearch.cpp Classes/Widgets/StockSearch.h Classes/Networking/Binance/SymbolInfo.cpp Classes/Networking/Binance/SymbolInfo.h Classes/Widgets/OrderLog.cpp Classes/Widgets/OrderLog.h Classes/Widgets/OrderLogTable.h)
 		Classes/Networking/Binance/SocketManager.cpp
 		Classes/Networking/Binance/SocketManager.h
 		Classes/Contexts/LiveContext.cpp

@@ -223,7 +223,21 @@ void RestApiManager::cancelOrder(const Order& order) {
     worker.detach();
 }
 
+void RestApiManager::getExchangeInfo(ExchangeInfoCallback callback) {
+    auto start_uds = _api->exchange_info([callback](const char *fl, int ec, std::string emsg, auto res){
+        std::vector<SymbolInfo> symbolInfo;
 
+        if (ec) {
+            std::cerr << "getExchangeInfo error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;
+            callback(false, symbolInfo);
+            return false;
+        }
+        std::cout << "exchangeInfo: " << res << std::endl;
+        callback(true, symbolInfo);
+        return true;
+    });
 
-
+    std::thread worker(&RestApiManager::getKlinesAsync, this);
+    worker.detach();
+}
 
