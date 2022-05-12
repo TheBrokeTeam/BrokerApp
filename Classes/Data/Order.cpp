@@ -46,25 +46,44 @@ rapidjson::Document Order::toJson() {
     BAJson::set(jsonOrder, "type", Order::typeToString(this->type));
     BAJson::set(jsonOrder, "side", Order::tradeSideTypeToString(this->side));
 
+    rapidjson::Document jsonFillArray;
+    jsonFillArray.StartArray();
+    for(auto& fill: fills) {
+        auto n = fill.toJson();
+        BAJson::append(jsonFillArray, n);
+    }
+
+    BAJson::set(jsonOrder, "fills", jsonFillArray);
+
     return jsonOrder;
 }
 
 Order Order::Parse(const rapidjson::Document& doc) {
     assert(doc.IsObject());
 
-    return {atoi(doc["id"].GetString()),
-            doc["code"].GetString(),
-            doc["clientOrderId"].GetString(),
-            std::size_t(doc["transactTime"].GetDouble()),
-            doc["price"].GetDouble(),
-            doc["origQty"].GetDouble(),
-            doc["executedQty"].GetDouble(),
-            doc["cummulativeQuoteQty"].GetDouble(),
-            Order::stringToStatusType(doc["status"].GetString()),
-            doc["timeInForce"].GetString(),
-            Order::stringToType(doc["type"].GetString()),
-            Order::stringToTradeSideType(doc["side"].GetString()),
-            };
+    Order order = Order(atoi(doc["id"].GetString()),
+                        doc["code"].GetString(),
+                        doc["clientOrderId"].GetString(),
+                        std::size_t(doc["transactTime"].GetDouble()),
+                        doc["price"].GetDouble(),
+                        doc["origQty"].GetDouble(),
+                        doc["executedQty"].GetDouble(),
+                        doc["cummulativeQuoteQty"].GetDouble(),
+                        Order::stringToStatusType(doc["status"].GetString()),
+                        doc["timeInForce"].GetString(),
+                        Order::stringToType(doc["type"].GetString()),
+                        Order::stringToTradeSideType(doc["side"].GetString())
+                        );
+
+    std::vector<fill_part> fills;
+    for(auto& jsonFill: doc["fills"].GetArray()) {
+        auto n = fill_part::Parse(jsonFill);
+        fills.push_back(n);
+    }
+
+    order.setFills(fills);
+
+    return order;
 }
 
 void Order::Save() {
@@ -82,7 +101,7 @@ std::string Order::statusTypeToString(OrderStatusType value) {
 }
 
 void Order::setFills(const std::vector<fill_part>& fillsVec) {
-    this->fills = std::move(fillsVec);
+    this->fills = fillsVec;
 }
 
 std::string Order::GetCode() {
@@ -122,12 +141,32 @@ OrderType Order::stringToType(const std::string& value) {
 
 std::string Order::tradeSideTypeToString(TradeSideType value) {
     switch (value) {
-        case TradeSideType::Buy:   { return "Buy";     }
-        case TradeSideType::Sell:  { return "Sell"; }
+        case TradeSideType::Buy:        { return "Buy";       }
+        case TradeSideType::Sell:       { return "Sell";      }
+        case TradeSideType::Undefined:  { return "Undefined"; }
     }
 }
 
 TradeSideType Order::stringToTradeSideType(const std::string &value) {
     if ( value == "Buy" )  return TradeSideType::Buy;
     if ( value == "Sell" ) return TradeSideType::Sell;
+    else return TradeSideType::Undefined;
+}
+
+rapidjson::Document fill_part::toJson() const {
+    rapidjson::Document jsonFill = BAJson::document();
+    BAJson::set(jsonFill, "price", price);
+    BAJson::set(jsonFill, "qty", qty);
+    BAJson::set(jsonFill, "commission", commission);
+    BAJson::set(jsonFill, "commissionAsset", commissionAsset);
+    return jsonFill;
+}
+
+fill_part fill_part::Parse(const rapidjson::Value& doc) {
+    return {
+        doc["price"].GetDouble(),
+        doc["qty"].GetDouble(),
+        doc["commission"].GetDouble(),
+        doc["commissionAsset"].GetString()
+    };
 }

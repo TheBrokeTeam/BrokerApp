@@ -18,7 +18,8 @@ enum OrderType {
 
 enum TradeSideType {
     Buy,
-    Sell
+    Sell,
+    Undefined
 };
 
 enum OrderStatusType {
@@ -33,6 +34,8 @@ struct fill_part {
     double qty;
     double commission;
     std::string commissionAsset;
+    [[nodiscard]] rapidjson::Document toJson() const;
+    static fill_part Parse(const rapidjson::Value&);
 };
 
 class Order {

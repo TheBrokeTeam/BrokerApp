@@ -114,6 +114,7 @@ void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callba
                         std::cout << "open order success: " << res << std::endl;
 
                         auto fullResp = res.get_responce_full();
+
                         Order order = Order(
                                 fullResp.orderId,
                                 fullResp.symbol,
