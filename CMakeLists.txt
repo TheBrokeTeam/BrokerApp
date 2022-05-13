@@ -3,108 +3,131 @@ project(BrokerApp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(BrokerApp
-        Classes/Editor.cpp
-        Classes/Editor.h
-        Classes/Widgets/Widget.cpp
-        Classes/Widgets/Widget.h
-        Classes/Widgets/StockList.cpp
-        Classes/Widgets/StockList.h
-        Classes/Contexts/Context.cpp
-        Classes/Contexts/Context.h
-        Classes/Widgets/MainMenuBar.cpp
-        Classes/Widgets/MainMenuBar.h
-        Classes/Contexts/BackTestingContext.cpp
-        Classes/Contexts/BackTestingContext.h
-        Classes/Widgets/DownloaderView.cpp
-        Classes/Widgets/DownloaderView.h
-        Classes/Widgets/CandleChart.cpp
-        Classes/Widgets/CandleChart.h
-        Classes/Contexts/Contextualizable.cpp
-        Classes/Contexts/Contextualizable.h
-        Classes/Widgets/ChartView.cpp
-        Classes/Widgets/ChartView.h
-        Classes/Widgets/IndicatorsView.cpp
-        Classes/Widgets/IndicatorsView.h
-        Classes/Data/Symbol.cpp
-        Classes/Data/Symbol.h
-        Classes/Data/DataSource.cpp
-        Classes/Data/DataSource.h
-        Classes/Data/BarData.cpp
-        Classes/Data/BarData.h
-        Classes/Data/DataManager.cpp
-        Classes/Data/DataManager.h
-        Classes/Tickables/Tickable.cpp
-        Classes/Tickables/Tickable.h
-        Classes/Tickables/Indicators/Indicator.cpp
-        Classes/Tickables/Indicators/Indicator.h
-        Classes/Tickables/Indicators/EMA.h
-        Classes/Tickables/Indicators/EMA.cpp
-        Classes/Tickables/Strategies/Strategy.cpp
-        Classes/Tickables/Strategies/Strategy.h
-        Classes/Data/Position.cpp
-        Classes/Data/Position.h
-        Classes/Data/Order.cpp
-        Classes/Data/Order.h
-        Classes/Tickers/Ticker.cpp
-        Classes/Tickers/Ticker.h
-        Classes/Data/TickData.cpp
-        Classes/Data/TickData.h
-        Classes/Data/BarHistory.cpp
-        Classes/Data/BarHistory.h
-        Classes/Helpers/PlotHelper.h
-        Classes/Helpers/Utils.h
-        Classes/Tickables/Indicators/SMA.cpp
-        Classes/Tickables/Indicators/SMA.h
-        Classes/Helpers/ImageLoader.cpp
-        Classes/Helpers/ImageLoader.h
-        Classes/Data/ReversedData.h
-        Classes/Tickables/Indicators/Bollinger.cpp
-        Classes/Tickables/Indicators/Bollinger.h
-        Classes/Widgets/SimulationController.cpp
-        Classes/Widgets/SimulationController.h
-        Classes/Tickables/Strategies/IndicatorFromChartExample.cpp
-        Classes/Tickables/Strategies/IndicatorFromChartExample.h
-        Classes/Widgets/ProfitAndLossesView.cpp
-        Classes/Widgets/ProfitAndLossesView.h
-        Classes/Widgets/PlotItem/PlotItem.cpp
-        Classes/Widgets/PlotItem/PlotItem.h
-        Classes/Tickables/Strategies/IndicatorToChartExample.cpp
-        Classes/Tickables/Strategies/IndicatorToChartExample.h
-        Classes/Widgets/StrategyEditor.cpp
-        Classes/Widgets/StrategyEditor.h
-        Classes/Nodes/SMANode.cpp
-        Classes/Nodes/SMANode.h
-        Classes/Nodes/INode.h
-        Classes/Nodes/INode.cpp
-        Classes/Nodes/CrossNode.cpp
-        Classes/Nodes/CrossNode.h
-        Classes/Nodes/Add.cpp
-        Classes/Nodes/Add.h
-        Classes/Nodes/Counter.cpp
-        Classes/Nodes/Counter.h
-        Classes/Widgets/NodesList.cpp
-        Classes/Widgets/NodesList.h
-        Classes/Nodes/TradeNode.cpp
-        Classes/Nodes/TradeNode.h
-        Classes/Tickables/Strategies/TradeNodeStrategy.cpp
-        Classes/Tickables/Strategies/TradeNodeStrategy.h
-        Classes/Nodes/UpSequenceNode.cpp
-        Classes/Nodes/UpSequenceNode.h
-        Classes/Nodes/DownSequenceNode.cpp
-        Classes/Nodes/DownSequenceNode.h
-        Classes/Nodes/BarValueNode.cpp
-        Classes/Nodes/BarValueNode.h
-        Classes/Tickables/Indicators/WMA.h
-        Classes/Tickables/Indicators/WMA.cpp
-        Classes/Tickables/Indicators/TRIX.cpp
-        Classes/Tickables/Indicators/TRIX.h
-        Classes/Tickables/Indicators/PSAR.cpp
-        Classes/Tickables/Indicators/PSAR.h 
-		Classes/Nodes/BollingerNode.cpp 
+set(CommonDir
+		Classes/Common/DataBase/DBManager.cpp
+		Classes/Common/DataBase/DBManager.h
+		Classes/Common/DataBase/Paths.cpp
+		Classes/Common/DataBase/Paths.h
+		Classes/Common/Json/BAJson.cpp
+		Classes/Common/Json/BAJson.h
+		Classes/Common/Utils/BAString.cpp
+		Classes/Common/Utils/BAString.h
+		)
+
+set(ContextDir
+		Classes/Contexts/BackTestingContext.cpp
+		Classes/Contexts/BackTestingContext.h
+		Classes/Contexts/Context.cpp
+		Classes/Contexts/Context.h
+		Classes/Contexts/Contextualizable.cpp
+		Classes/Contexts/Contextualizable.h
+		Classes/Contexts/LiveContext.cpp
+		Classes/Contexts/LiveContext.h
+		)
+
+set(DataDir
+		Classes/Data/AccountInfo.h
+		Classes/Data/BarData.cpp
+		Classes/Data/BarData.h
+		Classes/Data/BarHistory.cpp
+		Classes/Data/BarHistory.h
+		Classes/Data/Bot.cpp
+		Classes/Data/Bot.h
+		Classes/Data/DataManager.cpp
+		Classes/Data/DataManager.h
+		Classes/Data/DataSource.cpp
+		Classes/Data/DataSource.h
+		Classes/Data/Order.cpp
+		Classes/Data/Order.h
+		Classes/Data/Parsable.h
+		Classes/Data/Position.cpp
+		Classes/Data/Position.h
+		Classes/Data/ReversedData.h
+		Classes/Data/Symbol.cpp
+		Classes/Data/Symbol.h
+		Classes/Data/TickData.cpp
+		Classes/Data/TickData.h
+		Classes/Data/User.h
+		Classes/Data/User.cpp
+		)
+
+set(HelpersDir
+		Classes/Helpers/graph.h
+		Classes/Helpers/ImageLoader.cpp
+		Classes/Helpers/ImageLoader.h
+		Classes/Helpers/JsonUtils.h
+		Classes/Helpers/PlotHelper.h
+		Classes/Helpers/Utils.h
+		)
+
+set(NetworkingDir
+		Classes/Networking/API/Routes/BotRouter.cpp
+		Classes/Networking/API/Routes/BotRouter.h
+		Classes/Networking/API/Routes/KLineRouter.h
+		Classes/Networking/API/Routes/KLineRouter.cpp
+		Classes/Networking/API/Routes/OrderRouter.cpp
+		Classes/Networking/API/Routes/OrderRouter.h
+		Classes/Networking/API/Routes/SymbolRouter.h
+		Classes/Networking/API/Routes/SymbolRouter.cpp
+		Classes/Networking/API/Routes/UserRouter.cpp
+		Classes/Networking/API/Routes/UserRouter.h
+		Classes/Networking/API/Services/BinanceService.cpp
+		Classes/Networking/API/Services/BinanceService.h
+		Classes/Networking/API/Services/BotService.cpp
+		Classes/Networking/API/Services/BotService.h
+		Classes/Networking/API/Services/KLineService.h
+		Classes/Networking/API/Services/KLineService.cpp
+		Classes/Networking/API/Services/OrderService.cpp
+		Classes/Networking/API/Services/OrderService.h
+		Classes/Networking/API/Services/SymbolService.h
+		Classes/Networking/API/Services/SymbolService.cpp
+		Classes/Networking/API/Services/UserService.cpp
+		Classes/Networking/API/Services/UserService.h
+		Classes/Networking/API/APIManager.cpp
+		Classes/Networking/API/APIManager.h
+		Classes/Networking/API/APIRouter.cpp
+		Classes/Networking/API/APIRouter.h
+		Classes/Networking/Binance/RestApiManager.cpp
+		Classes/Networking/Binance/RestApiManager.h
+		Classes/Networking/Binance/SocketManager.cpp
+		Classes/Networking/Binance/SocketManager.h
+		Classes/Networking/Binance/SymbolInfo.cpp
+		Classes/Networking/Binance/SymbolInfo.h
+		Classes/Networking/Server/HttpServer.h
+		Classes/Networking/Server/HttpServer.cpp
+		Classes/Networking/Server/Request.cpp
+		Classes/Networking/Server/Request.h
+		Classes/Networking/WebSocket/OLCNet.h
+		Classes/Networking/WebSocket/WebSocketManager.cpp
+		Classes/Networking/WebSocket/WebSocketManager.h
+		Classes/Networking/WebSocket/WSClient.h
+		Classes/Networking/WebSocket/WSCommon.h
+		Classes/Networking/WebSocket/WSConnection.h
+		Classes/Networking/WebSocket/WSMessage.h
+		Classes/Networking/WebSocket/WSQueue.h
+		)
+
+set(NodesDir
+		Classes/Nodes/SMANode.cpp
+		Classes/Nodes/SMANode.h
+		Classes/Nodes/INode.h
+		Classes/Nodes/INode.cpp
+		Classes/Nodes/CrossNode.cpp
+		Classes/Nodes/CrossNode.h
+		Classes/Nodes/Add.cpp
+		Classes/Nodes/Add.h
+		Classes/Nodes/Counter.cpp
+		Classes/Nodes/Counter.h
+		Classes/Nodes/TradeNode.cpp
+		Classes/Nodes/TradeNode.h
+		Classes/Nodes/UpSequenceNode.cpp
+		Classes/Nodes/UpSequenceNode.h
+		Classes/Nodes/DownSequenceNode.cpp
+		Classes/Nodes/DownSequenceNode.h
+		Classes/Nodes/BarValueNode.cpp
+		Classes/Nodes/BarValueNode.h
+		Classes/Nodes/BollingerNode.cpp
 		Classes/Nodes/BollingerNode.h
-		Classes/Tickables/Indicators/VWAP.h
-		Classes/Tickables/Indicators/VWAP.cpp
 		Classes/Nodes/VWAPNode.cpp
 		Classes/Nodes/VWAPNode.h
 		Classes/Nodes/EMANode.cpp
@@ -113,94 +136,115 @@ add_executable(BrokerApp
 		Classes/Nodes/WMANode.cpp
 		Classes/Nodes/TRIXNode.cpp
 		Classes/Nodes/TRIXNode.h
-        Classes/Nodes/PSARNode.cpp
-		Classes/Networking/API/APIManager.cpp
-		Classes/Networking/API/APIManager.h
-		Classes/Networking/API/APIRouter.cpp
-		Classes/Networking/API/APIRouter.h
-		Classes/Networking/API/Routes/UserRouter.cpp
-		Classes/Networking/API/Routes/UserRouter.h
-        Classes/Networking/API/Services/UserService.cpp
-		Classes/Networking/API/Services/UserService.h
-		Classes/Helpers/JsonUtils.h
+		Classes/Nodes/PSARNode.cpp
 		Classes/Nodes/PSARNode.h
-		Classes/Nodes/PSARNode.h 
-		Classes/Nodes/IndicatorBaseNode.cpp 
+		Classes/Nodes/PSARNode.h
+		Classes/Nodes/IndicatorBaseNode.cpp
 		Classes/Nodes/IndicatorBaseNode.h
-        Classes/Widgets/ConnectView.cpp
-		Classes/Widgets/ConnectView.h
-		Classes/Networking/WebSocket/WSCommon.h
-		Classes/Networking/WebSocket/WSMessage.h
-		Classes/Networking/WebSocket/WebSocketManager.cpp
-		Classes/Networking/WebSocket/WebSocketManager.h
-		Classes/Networking/WebSocket/WSConnection.h
-		Classes/Networking/WebSocket/WSQueue.h
-		Classes/Tickables/Indicators/MFI.cpp 
+		)
+
+
+set(TickablesDir
+		Classes/Tickables/Tickable.cpp
+		Classes/Tickables/Tickable.h
+		Classes/Tickables/Indicators/Indicator.cpp
+		Classes/Tickables/Indicators/Indicator.h
+		Classes/Tickables/Indicators/EMA.h
+		Classes/Tickables/Indicators/EMA.cpp
+		Classes/Tickables/Strategies/Strategy.cpp
+		Classes/Tickables/Strategies/Strategy.h
+		Classes/Tickables/Indicators/MFI.cpp
 		Classes/Tickables/Indicators/MFI.h
-		Classes/Networking/Binance/SocketManager.cpp
-        Classes/Networking/Binance/SocketManager.h
-        Classes/Contexts/LiveContext.cpp
-        Classes/Contexts/LiveContext.h
-        Classes/Widgets/SocketStreamController.cpp
-        Classes/Widgets/SocketStreamController.h
-        Classes/Widgets/LiveCandleChart.cpp
-        Classes/Widgets/LiveCandleChart.h
-        Classes/Networking/Binance/RestApiManager.cpp
-        Classes/Networking/Binance/RestApiManager.h
-        Classes/Widgets/StockSearch.cpp
-        Classes/Widgets/StockSearch.h
-        Classes/Networking/Binance/SymbolInfo.cpp
-        Classes/Networking/Binance/SymbolInfo.h
-        Classes/Widgets/OrderLog.cpp
-        Classes/Widgets/OrderLog.h
-        Classes/Widgets/OrderLogTable.h
-		Classes/Networking/Binance/SocketManager.cpp
-		Classes/Networking/Binance/SocketManager.h
-		Classes/Contexts/LiveContext.cpp
-		Classes/Contexts/LiveContext.h
-		Classes/Widgets/SocketStreamController.cpp
-		Classes/Widgets/SocketStreamController.h
+		Classes/Tickables/Indicators/VWAP.h
+		Classes/Tickables/Indicators/VWAP.cpp
+		Classes/Tickables/Indicators/WMA.h
+		Classes/Tickables/Indicators/WMA.cpp
+		Classes/Tickables/Indicators/TRIX.cpp
+		Classes/Tickables/Indicators/TRIX.h
+		Classes/Tickables/Indicators/PSAR.cpp
+		Classes/Tickables/Indicators/PSAR.h
+		Classes/Tickables/Strategies/TradeNodeStrategy.cpp
+		Classes/Tickables/Strategies/TradeNodeStrategy.h
+		Classes/Tickables/Strategies/IndicatorToChartExample.cpp
+		Classes/Tickables/Strategies/IndicatorToChartExample.h
+		Classes/Tickables/Strategies/IndicatorFromChartExample.cpp
+		Classes/Tickables/Strategies/IndicatorFromChartExample.h
+		Classes/Tickables/Indicators/Bollinger.cpp
+		Classes/Tickables/Indicators/Bollinger.h
+		Classes/Tickables/Indicators/SMA.cpp
+		Classes/Tickables/Indicators/SMA.h
+		)
+
+set(TickersDir
+		Classes/Tickers/Ticker.cpp
+		Classes/Tickers/Ticker.h
+		)
+
+set(WidgetDir
+		Classes/Widgets/PlotItem/PlotItem.cpp
+		Classes/Widgets/PlotItem/PlotItem.h
+		Classes/Widgets/SubWidgets/BufferingBar.cpp
+		Classes/Widgets/SubWidgets/BufferingBar.h
+		Classes/Widgets/SubWidgets/DateChooser.cpp
+		Classes/Widgets/SubWidgets/DateChooser.h
+		Classes/Widgets/SubWidgets/Spinner.cpp
+		Classes/Widgets/SubWidgets/Spinner.h
+		Classes/Widgets/CandleChart.cpp
+		Classes/Widgets/CandleChart.h
+		Classes/Widgets/ChartView.cpp
+		Classes/Widgets/ChartView.h
+		Classes/Widgets/ConnectView.cpp
+		Classes/Widgets/ConnectView.h
+		Classes/Widgets/DownloaderView.cpp
+		Classes/Widgets/DownloaderView.h
+		Classes/Widgets/IndicatorsView.cpp
+		Classes/Widgets/IndicatorsView.h
 		Classes/Widgets/LiveCandleChart.cpp
 		Classes/Widgets/LiveCandleChart.h
-		Classes/Networking/Binance/RestApiManager.cpp
-		Classes/Networking/Binance/RestApiManager.h
-		Classes/Common/Json/BAJson.cpp
-		Classes/Common/Json/BAJson.h
-		Classes/Common/Utils/BAString.cpp
-		Classes/Common/Utils/BAString.h
-		Classes/Common/DataBase/DBManager.cpp
-		Classes/Common/DataBase/DBManager.h
-		Classes/Data/AccountInfo.h
-		Classes/Common/DataBase/Paths.cpp
-		Classes/Common/DataBase/Paths.h
-        Classes/Widgets/LoginView.cpp
+		Classes/Widgets/LoginView.cpp
 		Classes/Widgets/LoginView.h
-		Classes/Data/User.h
-		Classes/Data/User.cpp
-		Classes/Networking/Server/HttpServer.h
-		Classes/Networking/Server/HttpServer.cpp
-        Classes/Networking/API/Services/BinanceService.cpp
-		Classes/Networking/API/Services/BinanceService.h
-		Classes/Networking/Server/Request.cpp
-		Classes/Networking/Server/Request.h
-        Classes/Networking/API/Routes/BotRouter.cpp
-        Classes/Networking/API/Routes/BotRouter.h
-		Classes/Networking/API/Services/BotService.cpp
-		Classes/Networking/API/Services/BotService.h
-		Classes/Networking/API/Services/KLineService.h
-		Classes/Networking/API/Services/KLineService.cpp
-		Classes/Networking/API/Routes/KLineRouter.h
-		Classes/Networking/API/Routes/KLineRouter.cpp
-		Classes/Networking/API/Services/SymbolService.h
-		Classes/Networking/API/Services/SymbolService.cpp
-		Classes/Networking/API/Routes/SymbolRouter.h
-		Classes/Networking/API/Routes/SymbolRouter.cpp
+		Classes/Widgets/MainMenuBar.cpp
+		Classes/Widgets/MainMenuBar.h
+		Classes/Widgets/NodesList.cpp
+		Classes/Widgets/NodesList.h
+		Classes/Widgets/OrderLog.cpp
+		Classes/Widgets/OrderLog.h
+		Classes/Widgets/OrderLogTable.h
+		Classes/Widgets/ProfitAndLossesView.cpp
+		Classes/Widgets/ProfitAndLossesView.h
+		Classes/Widgets/SimulationController.cpp
+		Classes/Widgets/SimulationController.h
+		Classes/Widgets/SocketStreamController.cpp
+		Classes/Widgets/SocketStreamController.h
+		Classes/Widgets/StockList.cpp
+		Classes/Widgets/StockList.h
+		Classes/Widgets/StockSearch.cpp
+		Classes/Widgets/StockSearch.h
+		Classes/Widgets/StrategyEditor.cpp
+		Classes/Widgets/StrategyEditor.h
 		Classes/Widgets/StrategyLogView.cpp
 		Classes/Widgets/StrategyLogView.h
-		Classes/Data/Bot.cpp
-		Classes/Data/Bot.h
-		Classes/Data/Parsable.h
-        Classes/Networking/API/Routes/OrderRouter.cpp Classes/Networking/API/Routes/OrderRouter.h Classes/Networking/API/Services/OrderService.cpp Classes/Networking/API/Services/OrderService.h)
+		Classes/Widgets/Widget.cpp
+		Classes/Widgets/Widget.h
+		)
+
+set(EditorDir
+		Classes/Editor.cpp
+		Classes/Editor.h
+		)
+
+add_executable(BrokerApp
+		${CommonDir}
+		${ContextDir}
+		${DataDir}
+		${HelpersDir}
+		${NetworkingDir}
+		${NodesDir}
+		${TickablesDir}
+		${TickersDir}
+		${WidgetDir}
+		${EditorDir}
+		)
 
 ###############################################################################
 # FETCH CONTENT LIBS
@@ -272,7 +316,7 @@ set(IMGUI_HEADER
         external/imgui/imgui_tables.cpp
         external/imgui/imgui_demo.cpp
         external/imgui/backends/imgui_impl_glfw.cpp
-        external/imgui/backends/imgui_impl_opengl3.cpp Classes/Widgets/SubWidgets/DateChooser.cpp Classes/Widgets/SubWidgets/DateChooser.h Classes/Widgets/SubWidgets/BufferingBar.cpp Classes/Widgets/SubWidgets/BufferingBar.h Classes/Widgets/SubWidgets/Spinner.cpp Classes/Widgets/SubWidgets/Spinner.h Classes/Networking/WebSocket/OLCNet.h)
+        external/imgui/backends/imgui_impl_opengl3.cpp)
 
 add_library(imgui STATIC ${IMGUI_SOURCE} ${IMGUI_HEADER})
 

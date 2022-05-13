@@ -39,7 +39,6 @@ void OrderLog::setupTestOrder() {
     row.type = OrderType::Limit;
     row.price = 5000.1;
     row.triggerConditions = ">=200 & <= 10";
-    getContext()->;
 
 }
 

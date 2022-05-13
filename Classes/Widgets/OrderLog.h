@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include "../Data/Symbol.h"
+#include "../Data/Order.h"
 
 
 enum OrderInfoColumnID
@@ -118,7 +119,7 @@ public:
     void onPushStyleVar() override;
 
 private:
-    //ImVector<OrderRow> _orders;
+    ImVector<OrderRow> _orders;
 
     void buildHeader();
     void buildFilter();

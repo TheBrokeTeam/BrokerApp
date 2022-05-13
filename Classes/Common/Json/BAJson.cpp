@@ -596,3 +596,7 @@ void BAJson::set(rapidjson::Document &document, const std::string &key,
                  const std::map<std::string, std::vector<int>> &internalEdges) {
     set(document, document, key, internalEdges);
 }
+
+void BAJson::set(rapidjson::Document &document, const std::string &key, double doubleValue) {
+    set(document, document, key, doubleValue);
+}

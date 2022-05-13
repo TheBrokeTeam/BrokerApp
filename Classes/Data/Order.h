@@ -34,7 +34,7 @@ struct fill_part {
     double qty;
     double commission;
     std::string commissionAsset;
-    [[nodiscard]] rapidjson::Document toJson() const;
+    [[nodiscard]] rapidjson::Document toJson();
     static fill_part Parse(const rapidjson::Value&);
 };
 

@@ -153,12 +153,12 @@ TradeSideType Order::stringToTradeSideType(const std::string &value) {
     else return TradeSideType::Undefined;
 }
 
-rapidjson::Document fill_part::toJson() const {
+rapidjson::Document fill_part::toJson() {
     rapidjson::Document jsonFill = BAJson::document();
-    BAJson::set(jsonFill, "price", price);
-    BAJson::set(jsonFill, "qty", qty);
-    BAJson::set(jsonFill, "commission", commission);
-    BAJson::set(jsonFill, "commissionAsset", commissionAsset);
+    BAJson::set(jsonFill, "price", this->price);
+    BAJson::set(jsonFill, "qty", this->qty);
+    BAJson::set(jsonFill, "commission", this->commission);
+    BAJson::set(jsonFill, "commissionAsset", this->commissionAsset);
     return jsonFill;
 }
 
