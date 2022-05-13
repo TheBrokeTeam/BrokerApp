@@ -568,9 +568,8 @@ void BackTestingContext::loadBot() {
     _strategyEditor->clear();
 
     for (auto& nodeInfo: _currentBot->GetNodes()) {
-        _strategyEditor->fixNodesConnections(nodeInfo);
         INode& node = _strategyEditor->addUiNode(nodeInfo);
     }
 
-
+    _strategyEditor->fixNodesConnections(_currentBot->GetNodes());
 }

@@ -300,25 +300,61 @@ rapidjson::Document StrategyEditor::toJson()
     return jsonNodes;
 }
 
-void StrategyEditor::fixNodesConnections(NodeInfo nodeInfo) {
-    auto internalNodes = nodeInfo.internalNodes;
-    int counter = 0;
-    for(auto& nodeId: nodeInfo.internalNodes) {
-        std::cout << "nodeInfo.internalNodes: " << nodeId << std::endl;
-        for(auto& edgeInfo: nodeInfo.internalEdges) {
-            for(auto& edge: edgeInfo.edges) {
-                if(edgeInfo.id == nodeId) {
-                    edgeInfo.id = internalNodes[counter];
-                    edge.from = internalNodes[counter];
-                    std::cout << "edgeInfo.id: " << edgeInfo.id << std::endl;
-                    std::cout << "edge.from: " << edge.from << std::endl;
+void StrategyEditor::fixNodesConnections(const std::vector<NodeInfo>& nodesInfo) {
+    struct connection {
+        int id;
+        UiNodeType type;
+    };
+
+    std::map<int, connection> nodeInfoToUiNode;
+
+    for(auto& nodeInfo: nodesInfo) {
+        for(auto& node: _uiNodes) {
+            if(node->getType() == nodeInfo.nodeType) {
+                nodeInfoToUiNode.insert(std::pair<int, connection>(nodeInfo.id, {node->getId(), node->getType()}));
+                for(int i=0; i< nodeInfo.internalNodes.size(); i++) {
+                    nodeInfoToUiNode.insert(std::pair<int, connection>(nodeInfo.internalNodes[i], {node->getInternalNodes()[i], node->getInternalNodes()[i] == node->getId() ? node->getType() : UiNodeType::VALUE }));
                 }
-                // TODO: fazer o to::
             }
         }
-        counter++;
     }
-    for(auto& nodeId: internalNodes) {
-        std::cout << "internalNodes: " << nodeId << std::endl;
+
+    for(auto& nodeInfo: nodesInfo){
+        for(auto& internalEdge: nodeInfo.internalEdges) {
+            for(auto& edge: internalEdge.edges) {
+                connection from = nodeInfoToUiNode.at(edge.from);
+                connection to = nodeInfoToUiNode.at(edge.to);
+                // verificar se um deles não é internalNodes
+                if(from.type != UiNodeType::VALUE || to.type != UiNodeType::VALUE
+                    && nodeInfo.nodeType != to.type) {
+                    _graph->insert_edge(from.id, to.id);
+                }
+            }
+        }
     }
+
+//    for(auto& kv: nodeInfoToUiNode) {
+//        for(auto& node: _uiNodes) {
+//            if(kv.second == node->getId()) {
+//                // TODO: varrer as conexoes e achar as correspondentes à esse nodeId
+//                for(auto& nodeInfo: nodesInfo) {
+//                    if(nodeInfo.id == node->getId()) {
+//                        // Conectar seus edges usando o map
+//                        for(auto& internalEdge: nodeInfo.internalEdges) {
+//                            // Verifcar se é o edge do tipo dele
+//                            if(internalEdge.id == nodeInfo.id) {
+//                                for(auto& edge: internalEdge.edges) {
+//                                    int from = nodeInfoToUiNode.at(edge.from);
+//                                    int to = nodeInfoToUiNode.at(edge.to);
+//                                    _graph->insert_edge(from, to);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }
+//    }
+    std::cout << "fim" << std::endl;
 }
