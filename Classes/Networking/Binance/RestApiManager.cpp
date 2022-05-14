@@ -101,7 +101,7 @@ void RestApiManager::openOrder(const Symbol &symbol, const OrderCallback &callba
                     binapi::e_time::GTC,
                     binapi::e_trade_resp_type::FULL,
                     "0.004",
-                    "2850.00",
+                    "850.00",
                     "",
                     "",
                     "",

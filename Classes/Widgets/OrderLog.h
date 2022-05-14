@@ -11,6 +11,7 @@
 #include <map>
 #include "../Data/Symbol.h"
 #include "../Data/Order.h"
+#include "../Networking/API/Services/OrderService.h"
 
 
 enum OrderInfoColumnID
@@ -83,7 +84,13 @@ struct OrderRow {
         //average = order.average;
         //fee = ;
 
+
+        //order.Save(); // foi pro banco de dados
+
     }
+
+
+
 
     static const ImGuiTableSortSpecs* s_current_sort_specs;
 
@@ -178,6 +185,8 @@ private:
     std::string getStatusTypeName(OrderStatusType statusType);
 
     void removeItem(OrderRow &order);
+
+    void loadOrders();
 };
 
 

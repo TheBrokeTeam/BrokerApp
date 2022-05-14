@@ -89,7 +89,7 @@ public:
 
     void setFills(const std::vector<fill_part>& fillsVec);
     rapidjson::Document toJson();
-    static Order Parse(const rapidjson::Document&);
+    static Order Parse(const rapidjson::Value&);
     void Save();
 
     static std::string statusTypeToString(OrderStatusType value);
@@ -100,6 +100,7 @@ public:
 
     static std::string tradeSideTypeToString(TradeSideType value);
     static TradeSideType stringToTradeSideType(const std::string& value);
+
 };
 
 

@@ -42,13 +42,16 @@ void StrategyLogView::updateVisible(float dt) {
                 ImGui::TableNextRow();
 
                 ImGui::TableSetColumnIndex(0);
-                ImGui::Text("%s", bot.GetUpdatedTime().c_str());
 
-                ImGui::TableSetColumnIndex(1);
-                if (ImGui::Selectable(bot.GetName().c_str(), false, ImGuiSelectableFlags_SelectOnClick)) {
+                if (ImGui::Selectable(bot.GetName().c_str(), false, ImGuiSelectableFlags_SelectOnClick | ImGuiSelectableFlags_SpanAllColumns)) {
                     std::cout << "User select the " << bot.GetName().c_str()  << "bot." << std::endl;
                     getContext()->selectBot(bot);
                 }
+
+                ImGui::Text("%s", bot.GetUpdatedTime().c_str());
+
+                ImGui::TableSetColumnIndex(1);
+
 
                 Symbol s = bot.GetSymbol();
                 ImGui::TableSetColumnIndex(2);

@@ -13,11 +13,27 @@ OrderLog::OrderLog(Context *context) : Widget(context)
 {
     _title                  = "Order Log";
     _is_window              = true;
-    setupTestOrder();
-    setupTestOrder();
-    setupTestOrder();
+
+   loadOrders();
+
+//    setupTestOrder();
+//    setupTestOrder();
+//    setupTestOrder();
 }
 
+void OrderLog::loadOrders() {
+    if (getContext()->userSelected()) {
+        OrderService orderService = OrderService();
+        rapidjson::Document jsonOrders = orderService.fetchOrders(getContext()->getUser()->GetId());
+
+        if (jsonOrders.IsArray()) {
+            for (auto& jsonOrder: jsonOrders.GetArray()) {
+                auto order = Order::Parse(jsonOrder);
+                _orders.push_back(OrderRow(order));
+            }
+        }
+    }
+}
 
 void OrderLog::setupTestOrder() {
     OrderRow row = OrderRow();

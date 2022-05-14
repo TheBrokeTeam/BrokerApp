@@ -58,7 +58,7 @@ rapidjson::Document Order::toJson() {
     return jsonOrder;
 }
 
-Order Order::Parse(const rapidjson::Document& doc) {
+Order Order::Parse(const rapidjson::Value& doc) {
     assert(doc.IsObject());
 
     Order order = Order(atoi(doc["id"].GetString()),
