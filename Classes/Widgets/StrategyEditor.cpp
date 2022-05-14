@@ -150,9 +150,8 @@ void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
 void StrategyEditor::clear() {
     auto copyNodes = _uiNodes;
     for(auto& n : copyNodes){
-        deleteUiNodeFromFromList(n->getId(),false);
-//        if(!n->getIsIndicatorNode())
-//            deleteUiNodeFromFromList(n->getId(),false);
+        bool shouldRemoveIndicator = n->getIsIndicatorNode();
+        deleteUiNodeFromFromList(n->getId(),shouldRemoveIndicator);
     }
 }
 
@@ -306,14 +305,14 @@ void StrategyEditor::fixNodesConnections(const std::vector<NodeInfo>& nodesInfo)
         UiNodeType type;
     };
 
-    std::map<int, connection> nodeInfoToUiNode;
+    std::map<int, connection> nodeConnectionsMap;
 
-    for(auto& nodeInfo: nodesInfo) {
-        for(auto& node: _uiNodes) {
-            if(node->getType() == nodeInfo.nodeType) {
-                nodeInfoToUiNode.insert(std::pair<int, connection>(nodeInfo.id, {node->getId(), node->getType()}));
-                for(int i=0; i< nodeInfo.internalNodes.size(); i++) {
-                    nodeInfoToUiNode.insert(std::pair<int, connection>(nodeInfo.internalNodes[i], {node->getInternalNodes()[i], node->getInternalNodes()[i] == node->getId() ? node->getType() : UiNodeType::VALUE }));
+    for(auto& oldNodeInfo: nodesInfo) {
+        for(auto& currentNode: _uiNodes) {
+            if(currentNode->getType() == oldNodeInfo.nodeType) {
+                nodeConnectionsMap.insert(std::pair<int, connection>(oldNodeInfo.id, {currentNode->getId(), currentNode->getType()}));
+                for(int i=0; i< oldNodeInfo.internalNodes.size(); i++) {
+                    nodeConnectionsMap.insert(std::pair<int, connection>(oldNodeInfo.internalNodes[i], {currentNode->getInternalNodes()[i], currentNode->getInternalNodes()[i] == currentNode->getId() ? currentNode->getType() : UiNodeType::VALUE }));
                 }
             }
         }
@@ -322,9 +321,8 @@ void StrategyEditor::fixNodesConnections(const std::vector<NodeInfo>& nodesInfo)
     for(auto& nodeInfo: nodesInfo){
         for(auto& internalEdge: nodeInfo.internalEdges) {
             for(auto& edge: internalEdge.edges) {
-                connection from = nodeInfoToUiNode.at(edge.from);
-                connection to = nodeInfoToUiNode.at(edge.to);
-                // verificar se um deles não é internalNodes
+                connection from = nodeConnectionsMap.at(edge.from);
+                connection to = nodeConnectionsMap.at(edge.to);
                 if(from.type != UiNodeType::VALUE || to.type != UiNodeType::VALUE
                     && nodeInfo.nodeType != to.type) {
                     _graph->insert_edge(from.id, to.id);
@@ -333,28 +331,4 @@ void StrategyEditor::fixNodesConnections(const std::vector<NodeInfo>& nodesInfo)
         }
     }
 
-//    for(auto& kv: nodeInfoToUiNode) {
-//        for(auto& node: _uiNodes) {
-//            if(kv.second == node->getId()) {
-//                // TODO: varrer as conexoes e achar as correspondentes à esse nodeId
-//                for(auto& nodeInfo: nodesInfo) {
-//                    if(nodeInfo.id == node->getId()) {
-//                        // Conectar seus edges usando o map
-//                        for(auto& internalEdge: nodeInfo.internalEdges) {
-//                            // Verifcar se é o edge do tipo dele
-//                            if(internalEdge.id == nodeInfo.id) {
-//                                for(auto& edge: internalEdge.edges) {
-//                                    int from = nodeInfoToUiNode.at(edge.from);
-//                                    int to = nodeInfoToUiNode.at(edge.to);
-//                                    _graph->insert_edge(from, to);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-//        }
-//    }
-    std::cout << "fim" << std::endl;
 }

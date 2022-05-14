@@ -531,12 +531,12 @@ std::vector<Bot> BackTestingContext::fetchBots()
     {
         BotService botService = BotService();
         rapidjson::Document bots = botService.fetchBots(_user->GetId());
-        assert(bots.IsArray());
-
-        for(auto& jsonBot: bots.GetArray()) {
-            auto botInfo = Bot::toInfo(jsonBot);
-            auto bot = Bot(botInfo);
-            botVec.push_back(bot);
+        if( bots.IsArray() ) {
+            for(auto& jsonBot: bots.GetArray()) {
+                auto botInfo = Bot::toInfo(jsonBot);
+                auto bot = Bot(botInfo);
+                botVec.push_back(bot);
+            }
         }
     }
     return botVec;
@@ -564,8 +564,8 @@ void BackTestingContext::loadBot() {
     if(_currentBot == std::nullopt)
         return;
 
-    this->fetchDataSymbol(_currentBot->GetSymbol());
     _strategyEditor->clear();
+    this->fetchDataSymbol(_currentBot->GetSymbol());
 
     for (auto& nodeInfo: _currentBot->GetNodes()) {
         INode& node = _strategyEditor->addUiNode(nodeInfo);
