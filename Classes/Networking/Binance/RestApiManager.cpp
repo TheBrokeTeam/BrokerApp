@@ -224,7 +224,7 @@ void RestApiManager::startUserDataStream(UserDataStreamCallback callback) {
 }
 
 void RestApiManager::cancelOrder(Order& order) {
-    auto start_uds = _api->cancel_order(order.GetCode(),order.GetId(), order.GetClientId(),"",[](const char *fl, int ec, std::string emsg, auto res)
+    auto start_uds = _api->cancel_order(order.getCode(),order.getId(), order.getClientId(),"",[](const char *fl, int ec, std::string emsg, auto res)
       {
           if ( ec ) {
               std::cerr << "cancelOrder error: fl=" << fl << ", ec=" << ec << ", emsg=" << emsg << std::endl;

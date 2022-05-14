@@ -104,15 +104,15 @@ void Order::setFills(const std::vector<fill_part>& fillsVec) {
     this->fills = fillsVec;
 }
 
-std::string Order::GetCode() {
+std::string Order::getCode() {
     return this->code;
 }
 
-int Order::GetId() {
+int Order::getId() {
     return this->id;
 }
 
-std::string Order::GetClientId() {
+std::string Order::getClientId() {
     return this->clientOrderId;
 }
 
@@ -151,6 +151,42 @@ TradeSideType Order::stringToTradeSideType(const std::string &value) {
     if ( value == "Buy" )  return TradeSideType::Buy;
     if ( value == "Sell" ) return TradeSideType::Sell;
     else return TradeSideType::Undefined;
+}
+
+double Order::getPrice() const {
+    return price;
+}
+
+double Order::getOrigQty() const {
+    return origQty;
+}
+
+double Order::getExecutedQty() const {
+    return executedQty;
+}
+
+double Order::getCummulativeQuoteQty() const {
+    return cummulativeQuoteQty;
+}
+
+OrderStatusType Order::getStatus() const {
+    return status;
+}
+
+OrderType Order::getType() const {
+    return type;
+}
+
+TradeSideType Order::getSide() const {
+    return side;
+}
+
+const std::vector<fill_part> &Order::getFills() const {
+    return fills;
+}
+
+const std::string &Order::getCreatedAt() const {
+    return createdAt;
 }
 
 rapidjson::Document fill_part::toJson() {

@@ -42,27 +42,50 @@ enum OrderLogTabBarType {
 struct OrderRow {
 
     std::string orderID;
-    time_t date;
-    std::string pair;
+    std::string date;
+    std::string code;
 
     TradeSideType side;
     OrderType type;
     OrderStatusType status;
 
-    float executed;
+    double executed;
 
-    float price;
-    float fee;
-    float amount;
-    float filled;
-    float total;
-    float stopLoss;
-    float takeProfit;
-    float average;
+    double price;
+    double fee;
+    double amount;
+    double filled;
+    double total;
+    double stopLoss;
+    double takeProfit;
+    double average;
     std::string triggerConditions;
 
-    static const ImGuiTableSortSpecs* s_current_sort_specs;
+    OrderRow() {};
 
+    OrderRow(Order &order) {
+        orderID = std::to_string(order.getId());
+        code = order.getCode();
+        executed = order.getExecutedQty();
+        amount = order.getOrigQty();
+
+        side = order.getSide();
+        type = order.getType();
+        status = order.getStatus();
+
+        //TODO: Need do add in Orders before using
+        date = order.getCreatedAt();
+        //stopLoss = order.stopLoss;
+        //takeProfit = order.takeProfit;
+
+        //TODO: Need to undestand what which field means
+        //filled = order.fills...;
+        //average = order.average;
+        //fee = ;
+
+    }
+
+    static const ImGuiTableSortSpecs* s_current_sort_specs;
 
     // Compare function to be used by qsort()
     static int CompareWithSortSpecs(const void* lhs, const void* rhs)
@@ -77,8 +100,8 @@ struct OrderRow {
             int delta = 0;
             switch (sort_spec->ColumnUserID) {
                 case OrderColumnID_OrderID: delta = strcmp(a->orderID.c_str(),b->orderID.c_str()) ; break;
-                case OrderColumnID_Date: delta = (a->date - b->date) ; break;
-                case OrderColumnID_Pair: delta = strcmp(a->pair.c_str(),b->pair.c_str()) ; break;
+                case OrderColumnID_Date: delta = strcmp(a->date.c_str(),b->date.c_str()) ; break;
+                case OrderColumnID_Pair: delta = strcmp(a->code.c_str(),b->code.c_str()) ; break;
 
                 case OrderColumnID_Type: delta = (int(a->type) - int(b->type)) ; break;
                 case OrderColumnID_Side: delta = (int(a->side) - int(b->side)) ; break;
@@ -149,7 +172,6 @@ private:
     OrderLogTabBarType _selectedTab = OrderLogTabBarType::OpenOrders;
 
     std::string getTabName(OrderLogTabBarType tabname);
-
 
     std::string getSideName(TradeSideType side);
     std::string getOrderTypeName(OrderType type);

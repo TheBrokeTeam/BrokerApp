@@ -47,6 +47,26 @@ private:
     double price;
     double origQty{};
     double executedQty;
+public:
+    double getPrice() const;
+
+    double getOrigQty() const;
+
+    double getExecutedQty() const;
+
+    double getCummulativeQuoteQty() const;
+
+    OrderStatusType getStatus() const;
+
+    OrderType getType() const;
+
+    TradeSideType getSide() const;
+
+    const std::vector<fill_part> &getFills() const;
+
+    const std::string &getCreatedAt() const;
+
+private:
     double cummulativeQuoteQty;
     OrderStatusType status;
     std::string timeInForce;
@@ -62,9 +82,10 @@ public:
           double executedQty, double cummulativeQuoteQty, OrderStatusType status, std::string timeInForce,
           OrderType type, TradeSideType side);
 
-    std::string GetCode();
-    int GetId();
-    std::string GetClientId();
+    std::string getCode();
+    int getId();
+    std::string getClientId();
+
 
     void setFills(const std::vector<fill_part>& fillsVec);
     rapidjson::Document toJson();

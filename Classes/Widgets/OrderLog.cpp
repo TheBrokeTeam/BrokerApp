@@ -25,7 +25,7 @@ void OrderLog::setupTestOrder() {
 
     row.orderID = "0103939413";
     row.amount = 100.0;
-    row.pair = "ETHBTC";
+    row.code = "ETHBTC";
     row.average = 50.0;
 
     row.executed = 0.01;
@@ -436,17 +436,17 @@ void OrderLog::buildRow(OrderRow &info) {
             //std::string h = std::string (ctime (&info.date));
 
             ///with custom date format
-            struct tm *timeinfo;
-            char buffer [80];
+//            struct tm *timeinfo;
+//            char buffer [80];
+//
+//            timeinfo = localtime(&info.date);
+//            strftime (buffer, 80,"%Y-%m-%d-%H-%M-%S",timeinfo);
 
-            timeinfo = localtime(&info.date);
-            strftime (buffer, 80,"%Y-%m-%d-%H-%M-%S",timeinfo);
-
-            ImGui::TextColored(Editor::broker_white, "%s", buffer);
+            ImGui::TextColored(Editor::broker_white, "%s", info.date.c_str());
 
 
         } else if (strcmp(ImGui::TableGetColumnName(column), "Pair") == 0) {
-            ImGui::TextColored(Editor::broker_white, "%s", info.pair.c_str());
+            ImGui::TextColored(Editor::broker_white, "%s", info.code.c_str());
 
         } else if (strcmp(ImGui::TableGetColumnName(column), "Type") == 0) {
             ImGui::TextColored(Editor::broker_white, "%s", (getOrderTypeName(info.type)).c_str());
