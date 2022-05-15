@@ -11,6 +11,12 @@
 #include "../Helpers/graph.h"
 #include "NodesList.h"
 
+
+enum StrategyTab {
+    StrategyTabEditor,
+    StrategyTabLog
+};
+
 class StrategyEditor : public Widget , public Tickable {
 public:
     StrategyEditor(Ticker* ticker, Context* context);
@@ -45,6 +51,18 @@ private:
     std::unique_ptr<NodesList> _nodesList{nullptr};
 
     ImGuiListClipper _clipper;
+
+    StrategyTab _selectedTab{StrategyTab::StrategyTabEditor};
+    std::list<std::string> _tableHeaders{std::list<std::string>({"updatedAt", "name", "code", "interval", "nodes"})};
+
+    void buildNodeEditor(float dt);
+    void buildNodeToolBar(float dt);
+    void buildTabBar(float dt);
+    void buildStrategyLogTable(float dt);
+
+    std::string tabNameToString(StrategyTab tabName);
+
+    void openTab(float dt);
 };
 
 #endif //BROKERAPP_STRATEGYEDITOR_H

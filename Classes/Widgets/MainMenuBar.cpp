@@ -18,7 +18,7 @@
 #include <fmt/format.h>
 #include "../Contexts/BackTestingContext.h"
 #include "../Contexts/LiveContext.h"
-#include "StrategyLogView.h"
+//#include "StrategyLogView.h"
 
 MainMenuBar::MainMenuBar(Context* context) : Widget(context)
 {
@@ -157,7 +157,7 @@ void MainMenuBar::showBacktestContextViews()
 
     if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
     if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
-    if (ImGui::MenuItem("Logs", "",&(getContext()->getWidget<StrategyLogView>()->GetVisible()))){}
+//    if (ImGui::MenuItem("Logs", "",&(getContext()->getWidget<StrategyLogView>()->GetVisible()))){}
 }
 
 void MainMenuBar::showLiveContextViews() {

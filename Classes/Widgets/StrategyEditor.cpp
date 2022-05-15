@@ -16,11 +16,10 @@ void mini_map_node_hovering_callback(int node_id, void* user_data)
 }
 
 StrategyEditor::StrategyEditor(Ticker* ticker,Context* context) : Widget(context), Tickable(ticker) {
-    _title                  = "Strategy editor";
+    _title                  = "Bot Simulator";
     _is_window              = true;
     _graph = std::make_shared<graph::Graph<GraphNode>>();
     _nodesList = std::make_unique<NodesList>(context);
-
     _nodesList->setTrashCallback([this](){
         clear();
     });
@@ -28,9 +27,112 @@ StrategyEditor::StrategyEditor(Ticker* ticker,Context* context) : Widget(context
 
 void StrategyEditor::updateVisible(float dt) {
     Widget::updateVisible(dt);
+    buildTabBar(dt);
+}
 
+void StrategyEditor::buildTabBar(float dt) {
+    StrategyTab tabNames[] = { StrategyTab::StrategyTabEditor, StrategyTab::StrategyTabLog};
+
+    for (auto &tabName: tabNames) {
+        if (ImGui::BeginTabBar("StrategyEditorTabBar", ImGuiTabBarFlags_None)) {
+
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_yellow);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_dark_grey);
+
+            std::string label = StrategyEditor::tabNameToString(tabName);
+            if(ImGui::BeginTabItem(label.c_str())) {
+                _selectedTab = tabName;
+                openTab(dt);
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
+//        ImGui::PopStyleVar();
+        ImGui::PopStyleColor(2);
+    }
+
+
+}
+
+void StrategyEditor::openTab(float dt) {
+    switch(_selectedTab) {
+        case StrategyTab::StrategyTabEditor: {
+            buildNodeToolBar(dt);
+            buildNodeEditor(dt);
+            break;
+        }
+        case StrategyTab::StrategyTabLog: {
+            buildStrategyLogTable(dt);
+            break;
+        }
+
+    }
+}
+
+void StrategyEditor::buildStrategyLogTable(float dt) {
+    static ImGuiTableFlags flags =  ImGuiTableFlags_ScrollY         |
+                                    ImGuiTableFlags_RowBg           |
+                                    ImGuiTableFlags_BordersOuter    |
+                                    ImGuiTableFlags_Reorderable     |
+                                    ImGuiTableColumnFlags_WidthFixed |
+                                    ImGuiTableFlags_NoPadOuterX
+    ;
+
+    const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
+    ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8);
+    if (ImGui::BeginTable("table_advanced", int(_tableHeaders.size()), flags, outer_size))
+    {
+        ImGui::TableSetupScrollFreeze(0, 1); // Make top row always visible
+
+        for(const auto& header: _tableHeaders) {
+            ImGui::TableSetupColumn(header.c_str(), ImGuiTableColumnFlags_None);
+        }
+
+        ImGui::TableHeadersRow();
+        if(getContext()->userSelected()) {
+            for(auto& bot: getContext()->getBots()) {
+
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+
+                if (ImGui::Selectable(bot.GetUpdatedTime().c_str(), false, ImGuiSelectableFlags_SelectOnClick | ImGuiSelectableFlags_SpanAllColumns)) {
+                    std::cout << "User select the " << bot.GetName().c_str()  << "bot." << std::endl;
+                    getContext()->selectBot(bot);
+                }
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text("%s", bot.GetName().c_str());
+
+                Symbol s = bot.GetSymbol();
+                ImGui::TableSetColumnIndex(2);
+                ImGui::Text("%s", s.getCode().c_str());
+
+                ImGui::TableSetColumnIndex(3);
+                ImGui::Text("%s", s.getInterval().c_str());
+
+                ImGui::TableSetColumnIndex(4);
+                for(auto& node: bot.GetNodes()) {
+                    ImGui::Text("%s", node.name.c_str());
+                }
+
+            }
+        } else {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            std::string message = "No records found";
+            ImGui::Text("%s", message.c_str());
+        }
+
+        ImGui::EndTable();
+    }
+}
+
+void StrategyEditor::buildNodeToolBar(float dt) {
+    ImGui::NewLine();
     _nodesList->updateVisible(dt);
+}
 
+void StrategyEditor::buildNodeEditor(float dt) {
     ImGui::SameLine();
 
     ImNodes::PushColorStyle(ImNodesCol_Link, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
@@ -332,3 +434,11 @@ void StrategyEditor::fixNodesConnections(const std::vector<NodeInfo>& nodesInfo)
     }
 
 }
+
+std::string StrategyEditor::tabNameToString(StrategyTab tabName) {
+    if(tabName == StrategyTab::StrategyTabEditor) { return "Strategy Editor"; }
+    if(tabName == StrategyTab::StrategyTabLog) { return "Logs"; }
+    else {return "Unknown";}
+}
+
+
