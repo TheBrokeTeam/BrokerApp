@@ -53,7 +53,8 @@ private:
     ImGuiListClipper _clipper;
 
     StrategyTab _selectedTab{StrategyTab::StrategyTabEditor};
-    std::list<std::string> _tableHeaders{std::list<std::string>({"updatedAt", "name", "code", "interval", "nodes"})};
+
+    std::list<std::string> _tableHeaders{std::list<std::string>({"updated time", "bot name", "code", "interval", "start date", "end date", "nodes"})};
 
     void buildNodeEditor(float dt);
     void buildNodeToolBar(float dt);

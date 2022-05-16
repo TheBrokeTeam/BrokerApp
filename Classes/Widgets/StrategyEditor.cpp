@@ -35,10 +35,6 @@ void StrategyEditor::buildTabBar(float dt) {
 
     for (auto &tabName: tabNames) {
         if (ImGui::BeginTabBar("StrategyEditorTabBar", ImGuiTabBarFlags_None)) {
-
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_yellow);
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_dark_grey);
-
             std::string label = StrategyEditor::tabNameToString(tabName);
             if(ImGui::BeginTabItem(label.c_str())) {
                 _selectedTab = tabName;
@@ -47,8 +43,6 @@ void StrategyEditor::buildTabBar(float dt) {
             }
             ImGui::EndTabBar();
         }
-//        ImGui::PopStyleVar();
-        ImGui::PopStyleColor(2);
     }
 
 
@@ -70,12 +64,11 @@ void StrategyEditor::openTab(float dt) {
 }
 
 void StrategyEditor::buildStrategyLogTable(float dt) {
-    static ImGuiTableFlags flags =  ImGuiTableFlags_ScrollY         |
-                                    ImGuiTableFlags_RowBg           |
-                                    ImGuiTableFlags_BordersOuter    |
-                                    ImGuiTableFlags_Reorderable     |
-                                    ImGuiTableColumnFlags_WidthFixed |
-                                    ImGuiTableFlags_NoPadOuterX
+    static ImGuiTableFlags flags =  ImGuiTableFlags_ScrollY     |
+                                    ImGuiTableFlags_SortMulti   |
+                                    ImGuiTableFlags_Sortable    |
+                                    ImGuiTableFlags_Borders     |
+                                    ImGuiTableFlags_RowBg
     ;
 
     const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
@@ -85,25 +78,24 @@ void StrategyEditor::buildStrategyLogTable(float dt) {
         ImGui::TableSetupScrollFreeze(0, 1); // Make top row always visible
 
         for(const auto& header: _tableHeaders) {
-            ImGui::TableSetupColumn(header.c_str(), ImGuiTableColumnFlags_None);
+            ImGui::TableSetupColumn(header.c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize);
         }
 
         ImGui::TableHeadersRow();
         if(getContext()->userSelected()) {
-            for(auto& bot: getContext()->getBots()) {
-
+            std::vector<Bot> bots = getContext()->getBots();
+            for(int i=0; i< bots.size(); i++) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
-
-                if (ImGui::Selectable(bot.GetUpdatedTime().c_str(), false, ImGuiSelectableFlags_SelectOnClick | ImGuiSelectableFlags_SpanAllColumns)) {
-                    std::cout << "User select the " << bot.GetName().c_str()  << "bot." << std::endl;
-                    getContext()->selectBot(bot);
+                if (ImGui::Selectable(bots[i].GetUpdatedTime().c_str(), false, ImGuiSelectableFlags_SelectOnClick | ImGuiSelectableFlags_SpanAllColumns)) {
+                    std::cout << "User select the " << bots[i].GetName().c_str()  << "bot." << std::endl;
+                    getContext()->selectBot(bots[i]);
                 }
 
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%s", bot.GetName().c_str());
+                ImGui::Text("%s", bots[i].GetName().c_str());
 
-                Symbol s = bot.GetSymbol();
+                Symbol s = bots[i].GetSymbol();
                 ImGui::TableSetColumnIndex(2);
                 ImGui::Text("%s", s.getCode().c_str());
 
@@ -111,9 +103,21 @@ void StrategyEditor::buildStrategyLogTable(float dt) {
                 ImGui::Text("%s", s.getInterval().c_str());
 
                 ImGui::TableSetColumnIndex(4);
-                for(auto& node: bot.GetNodes()) {
-                    ImGui::Text("%s", node.name.c_str());
+                ImGui::Text("%s", s.getStartDate().c_str());
+
+                ImGui::TableSetColumnIndex(5);
+                ImGui::Text("%s", s.getEndDate().c_str());
+
+                ImGui::TableSetColumnIndex(6);
+
+                std::string nodeNames;
+                std::vector<NodeInfo> nodes = bots[i].GetNodes();
+                for(int i=0; i < nodes.size(); i++) {
+                    nodeNames += nodes[i].name;
+                    if( i != nodes.size()-1 ) { nodeNames += ","; }
                 }
+
+                ImGui::Text("%s", nodeNames.c_str());
 
             }
         } else {
