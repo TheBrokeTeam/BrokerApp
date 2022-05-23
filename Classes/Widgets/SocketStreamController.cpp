@@ -61,26 +61,30 @@ void SocketStreamController::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    if (ImGui::Button("Comprar",ImVec2(200,50))) {
-        Order order;
-//        order.price = 3174.00;
-        order.origQty = 0.004;
-        order.symbol = std::make_shared<Symbol>(_symbol);
-        order.side = Order::OrderSide::BUY;
-        order.type = Order::OrderType::MARKET;
+    static float amountToTrade = 0.006;x 
 
-        getContext()->openOrder(order);
+
+    if (ImGui::Button("Comprar",ImVec2(200,50))) {
+        if(auto st = _strategy.lock())
+            st->openPosition(false,amountToTrade);
     }
 
     if (ImGui::Button("Vender",ImVec2(200,50))) {
-        Order order;
-//        order.price = 3174.00;
-        order.origQty = 0.004;
-        order.symbol = std::make_shared<Symbol>(_symbol);
-        order.side = Order::OrderSide::SELL;
-        order.type = Order::OrderType::MARKET;
+        if(auto st = _strategy.lock())
+            st->openPosition(true,amountToTrade);
+    }
 
-        getContext()->openOrder(order);
+    ImGui::SliderFloat("Amount",&amountToTrade,0.004,0.01,"%.4f",ImGuiSliderFlags_None);
+
+    ImGui::Dummy(ImVec2(0,40));
+
+
+    if(auto st = _strategy.lock()) {
+        if(!st->getOpenedPositions().empty())
+        if (ImGui::Button("Close First Position", ImVec2(200, 50))) {
+            if (auto st = _strategy.lock())
+                st->openPosition(true);
+        }
     }
 
 
@@ -117,6 +121,8 @@ void SocketStreamController::testFunction() {
 
         BAJson::save(document,"../Resources/tato.json");
     }
+}
 
-
+void SocketStreamController::setStrategyTest(std::weak_ptr<Strategy> strategy) {
+    _strategy = strategy;
 }

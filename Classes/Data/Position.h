@@ -6,9 +6,6 @@
 #define BROKERAPP_POSITION_H
 
 
-class Position {
-
-};
 
 
 #endif //BROKERAPP_POSITION_H

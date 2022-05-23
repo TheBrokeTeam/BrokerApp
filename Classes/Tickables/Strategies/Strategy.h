@@ -17,10 +17,12 @@ public:
         double inPrice;
         double outPrice;
         double profit;
+        double amount;
         bool isShorting;
     };
 
     typedef std::function<void(const Position& position)> ClosePositionCallback;
+
 
 
     Strategy(Ticker* ticker);
@@ -32,7 +34,7 @@ public:
     //called when simulation ends
     void onFinish();
 
-    virtual std::string openPosition(bool shorting);
+    virtual std::string openPosition(bool shorting, double amount = 0.006);
     virtual bool closePosition(const std::string &posId);
 
     virtual void rule();
@@ -41,6 +43,8 @@ public:
     double getProfit();
 
     const std::vector<Position>& getClosedPositions();
+    const std::vector<Position>& getOpenedPositions();
+
 
     //testing profit and losses
     std::vector<double> profitHistory;
@@ -53,6 +57,8 @@ public:
     virtual void onRender() override;
 
     void setClosePositionCallback(ClosePositionCallback callback);
+    void setOpenPositionCallback(ClosePositionCallback callback);
+
 
 protected:
     std::vector<Position> _openedPositions;
@@ -70,6 +76,8 @@ private:
     ImVec4 _colorNegative{1, 0, 0, 1};
     float _lineWidth = 1.0f;
     ClosePositionCallback _closePositionCallback{nullptr};
+    ClosePositionCallback _openPositionCallback{nullptr};
+
 };
 
 #endif //BROKERAPP_STRATEGY_H

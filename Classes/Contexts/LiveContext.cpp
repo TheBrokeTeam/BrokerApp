@@ -17,6 +17,7 @@
 #include "../Widgets/StrategyEditor.h"
 #include "../Helpers/Utils.h"
 #include "../Widgets/PlotItem/OrderPlot.h"
+#include "../Widgets/ProfitAndLossesView.h"
 
 static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
                                         "2h", "4h", "6h", "8h", "12h", "1d",
@@ -53,6 +54,54 @@ void LiveContext::initialize() {
     _widgets.emplace_back(std::make_shared<ChartView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<SocketStreamController>(this));
+    _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
+
+
+    if(_strategy != nullptr)
+    {
+        _ticker->removeTickable(_strategy.get());
+        _strategy.reset();
+    }
+
+    _strategy = std::make_shared<ManualStrategy>(_ticker.get());
+
+    _strategy->setOpenPositionCallback([this](const Strategy::Position& position){
+        Order order;
+
+        //ignored on MARKET orders
+        order.price = position.inPrice;
+
+        order.origQty = position.amount;
+        order.symbol = std::make_shared<Symbol>(*_strategy->getTicker()->getSymbol());
+        order.side = position.isShorting ? Order::OrderSide::SELL : Order::OrderSide::BUY;
+        order.type = Order::OrderType::MARKET;
+
+        openOrder(order);
+    });
+
+    _strategy->setClosePositionCallback([this](const Strategy::Position& position){
+        Order order;
+
+        //ignored on MARKET orders
+        order.price = position.inPrice;
+
+        order.origQty = position.amount;
+        order.symbol = std::make_shared<Symbol>(*_strategy->getTicker()->getSymbol());
+        order.side = position.isShorting ? Order::OrderSide::BUY : Order::OrderSide::SELL;
+        order.type = Order::OrderType::MARKET;
+
+        openOrder(order);
+
+        getWidget<ProfitAndLossesView>()->onClosePosition(position);
+    });
+
+    getWidget<SocketStreamController>()->setStrategyTest(_strategy);
+    getWidget<ProfitAndLossesView>()->setStrategyTest(_strategy);
+
+    auto strategyPtr = dynamic_cast<ManualStrategy*>(_strategy.get());
+
+    strategyPtr->setPriority(3);
+    _ticker->addTickable(strategyPtr);
 
     getWidget<IndicatorsView>()->setTrashCallback([this](){
         removeAllIndicators();

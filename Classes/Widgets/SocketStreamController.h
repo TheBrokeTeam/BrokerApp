@@ -7,6 +7,7 @@
 
 #include "Widget.h"
 #include "../Data/Symbol.h"
+#include "../Tickables/Strategies/ManualStrategy.h"
 
 class SocketStreamController : public Widget
 {
@@ -16,6 +17,7 @@ public:
     int getWindowFlags() override;
     void onPushStyleVar() override;
     void testFunction();
+    void setStrategyTest(std::weak_ptr<Strategy> strategy);
 
 private:
     void changeStream();
@@ -24,6 +26,7 @@ private:
     std::string _symbolName{"ETHUSDT"};
     std::string _oldSymbolName{""};
 
+    std::weak_ptr<Strategy> _strategy;
 };
 
 #endif //BROKERAPP_SOCKETSTREAMCONTROLLER_H

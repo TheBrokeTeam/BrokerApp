@@ -60,6 +60,9 @@ private:
     void removeOrderById(const std::string& id);
     void updateOrders(const Order& order);
     std::mutex _orderMutex;
+
+    std::shared_ptr<Strategy> _strategy{nullptr};
+
 };
 
 #endif //BROKERAPP_LIVECONTEXT_H

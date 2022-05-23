@@ -159,6 +159,7 @@ void MainMenuBar::showBacktestContextViews()
 void MainMenuBar::showLiveContextViews() {
 
     if (ImGui::MenuItem("Stream controller", "CTRL+D",&(getContext()->getWidget<SocketStreamController>()->GetVisible()))){}
+    if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
     if (ImGui::MenuItem("Chart View", "CTRL+G",&(getContext()->getWidget<ChartView>()->GetVisible()))){}
     if (ImGui::MenuItem("Indicators View", "",&(getContext()->getWidget<IndicatorsView>()->GetVisible()))){}
 }

@@ -141,8 +141,9 @@ void Strategy::removeOpenedPosition(const Position &pos) {
     }
 }
 
-std::string Strategy::openPosition(bool shorting) {
+std::string Strategy::openPosition(bool shorting,double amount) {
     Strategy::Position pos;
+
     pos.inPrice =  barHist(0,BarDataType::CLOSE);
     pos.outPrice = pos.inPrice;
     pos.id = uuid::generate_uuid_v4();
@@ -150,7 +151,12 @@ std::string Strategy::openPosition(bool shorting) {
     pos.inTime =  barHist(0,BarDataType::TIME_S);
     pos.outTime =  pos.inTime;
     pos.profit = 0;
+    pos.amount = amount;
+
     openPosition(pos);
+    if(_openPositionCallback)
+        _openPositionCallback(pos);
+
     return pos.id;
 }
 
@@ -196,8 +202,13 @@ const std::vector<Strategy::Position> &Strategy::getClosedPositions() {
     return _closedPositions;
 }
 
+const std::vector<Strategy::Position> &Strategy::getOpenedPositions() {
+    return _openedPositions;
+}
+
 Strategy::~Strategy() {
     _closePositionCallback = nullptr;
+    _openPositionCallback = nullptr;
 }
 
 void Strategy::reset() {
@@ -208,4 +219,10 @@ void Strategy::reset() {
 void Strategy::setClosePositionCallback(Strategy::ClosePositionCallback callback) {
     _closePositionCallback = callback;
 }
+
+void Strategy::setOpenPositionCallback(Strategy::ClosePositionCallback callback) {
+    _openPositionCallback = callback;
+}
+
+
 

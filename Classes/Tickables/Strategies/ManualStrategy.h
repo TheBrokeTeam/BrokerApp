@@ -11,8 +11,8 @@ public:
     inline static int current_count_id = 0;
     ManualStrategy(Ticker* ticker);
     ~ManualStrategy();
-    void checkTarget(Strategy::Position &pos) override;
     void resetPlot() override;
+
     float takeProfitPrice = 0.0f;
     float stopLossPrice = 0.0f;
     bool isPositioned = false;
