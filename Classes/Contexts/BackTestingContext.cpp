@@ -58,6 +58,7 @@ void BackTestingContext::initialize() {
     getWidget<StockList>()->SetVisible(false);
 
     getWidget<ProfitAndLossesView>()->SetVisible(false);
+    getWidget<DownloaderView>()->SetVisible(false);
 
     _strategyEditor = getWidget<StrategyEditor>();
 

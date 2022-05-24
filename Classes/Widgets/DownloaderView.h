@@ -21,7 +21,7 @@ public:
     void updateVisible(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
-    static void fetchingSymbol(const FetchInfo&, Context*);
+    void fetchingSymbol(const FetchInfo&, Context*);
 
 private:
     FetchInfo _info;

@@ -61,7 +61,7 @@ void SocketStreamController::updateVisible(float dt)
     PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
     PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-    static float amountToTrade = 0.006;x 
+    static float amountToTrade = 0.006;
 
 
     if (ImGui::Button("Comprar",ImVec2(200,50))) {

@@ -22,7 +22,7 @@ public:
     };
 
     inline static bool showAboutWindow         = false;
-    inline static bool show_tabbars         = false;
+    inline static bool show_tabbars         = true;
     inline static bool imgui_metrics         = false;
     inline static bool imgui_style           = false;
     inline static bool imgui_demo            = false;

@@ -34,7 +34,7 @@ void Editor::start() {
 
     //----------------------------------------------
     //this way is the logic to change the context now
-    // and not at the begining of the next frame
+    // and not at the beginning of the next frame
     _nextContextType = Editor::ContextType::BackTesting;
     internalLoadContext();
     //----------------------------------------------
