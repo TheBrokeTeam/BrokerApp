@@ -15,7 +15,7 @@
 DownloaderView::DownloaderView(Context* context) : Widget(context)
 {
     _title = "Downloader";
-    _is_window = true;
+    _is_window = false;
 
     ImGui::SetDateToday(&endDate);
     startDate = endDate;
@@ -26,8 +26,10 @@ DownloaderView::DownloaderView(Context* context) : Widget(context)
     _info.fetchEndTime = ImGui::GetTimestamp(endDate, true);
 }
 
-void DownloaderView::updateVisible(float dt)
+void DownloaderView::updateAlways(float dt)
 {
+    if(!_is_visible) return;
+
 //    Widget::updateVisible(dt);
 
 //    //change color text
@@ -153,9 +155,14 @@ void DownloaderView::updateVisible(float dt)
 //        PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
 //        PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
 
-        if (ImGui::Button("Download",ImVec2(200,50))) {
-            puts("Clicou no botão download!!!");
+        if (ImGui::Button("Download",ImVec2(150,50))) {
             getContext()->startFetching = true;
+        }
+
+        ImGui::SameLine(170);
+
+        if (ImGui::Button("Cancel",ImVec2(150,50))) {
+            closePopup();
         }
 
         if(getContext()->startFetching) {
@@ -177,7 +184,7 @@ int DownloaderView::getWindowFlags() {
 }
 
 void DownloaderView::onPushStyleVar() {
-//    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
+    PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
 
 void DownloaderView::fetchingSymbol(const FetchInfo& _info, Context* context) {
@@ -186,6 +193,10 @@ void DownloaderView::fetchingSymbol(const FetchInfo& _info, Context* context) {
     context->fetchDataSymbol(symbol);
     context->startSpinner = false;
 
+    closePopup();
+}
+
+void DownloaderView::closePopup(){
     ImGui::CloseCurrentPopup();
     SetVisible(false);
 }

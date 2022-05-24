@@ -18,12 +18,13 @@ public:
         long fetchEndTime{};
     };
 
-    void updateVisible(float dt) override;
+    void updateAlways(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
     void fetchingSymbol(const FetchInfo&, Context*);
 
 private:
+    void closePopup();
     FetchInfo _info;
     tm startDate{};
     tm endDate{};

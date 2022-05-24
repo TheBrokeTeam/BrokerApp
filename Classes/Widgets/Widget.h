@@ -29,12 +29,12 @@ public:
 
     void update(float dt);
 
-    virtual void updateAlways(float dt);      // Called always
-    virtual void updateVisible(float dt);     // Called only when the widget is visible
-    virtual void onShow();          // Called when the window becomes visible
-    virtual void onHide();          // called when the window becomes invisible
-    virtual void onPushStyleVar();  // Called just before ImGui::Begin()
-    virtual void onPushStyleColor();  // Called just before ImGui::Begin()
+    virtual void updateAlways(float dt);        // Called always
+    virtual void updateVisible(float dt);       // Called only when the widget is visible
+    virtual void onShow();                      // Called when the window becomes visible
+    virtual void onHide();                      // called when the window becomes invisible
+    virtual void onPushStyleVar();              // Called just before ImGui::Begin()
+    virtual void onPushStyleColor();            // Called just before ImGui::Begin()
 
     // Use this to push style variables. They will be automatically popped.
     template<typename T>
