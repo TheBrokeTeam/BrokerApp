@@ -5,10 +5,8 @@
 #include "DownloaderView.h"
 #include "../Data/Symbol.h"
 #include "../Contexts/Context.h"
-#include "../Editor.h"
 #include "SubWidgets/DateChooser.h"
 #include "SubWidgets/Spinner.h"
-#include "SubWidgets/BufferingBar.h"
 #include <iostream>
 #include <thread>
 
@@ -29,25 +27,6 @@ DownloaderView::DownloaderView(Context* context) : Widget(context)
 void DownloaderView::updateAlways(float dt)
 {
     if(!_is_visible) return;
-
-    //change color text
-//    ImGui::PushStyleColor(ImGuiCol_Text,Editor::broker_white);
-
-    //change background of frames
-//    ImGui::PushStyleColor(ImGuiCol_FrameBg,Editor::broker_white);
-//    ImGui::PushStyleColor(ImGuiCol_FrameBgActive,Editor::broker_white);
-//    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,Editor::broker_white);
-
-    //change background of items on combos
-//    ImGui::PushStyleColor(ImGuiCol_PopupBg,Editor::broker_black);
-
-    //change background from other buttons
-//    ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_white);
-//    ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_white);
-//    ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_white);
-
-
-
 
     ImGui::OpenPopup("Data Manager");
     // Always center this window when appearing
@@ -86,35 +65,6 @@ void DownloaderView::updateAlways(float dt)
         ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_dark_grey);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_dark_grey);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_dark_grey);
-
-
-
-//Example: how to use the most moder begin combo end combo
-
-//        static const std::string interval_str[]{"1m", "3m", "5m", "15m", "30m", "1h",
-//                                                    "2h", "4h", "6h", "8h", "12h", "1d",
-//                                                    "3d", "1w", "1mo"};
-
-//        static int comboFlags = ImGuiComboFlags_None;
-//        const char* combo_preview_value = interval_str[interval].c_str();  // Pass in the preview value visible before opening the combo (it could be anything)
-//        if (ImGui::BeginCombo("##intervalid", combo_preview_value, comboFlags))
-//        {
-//
-//            for (int n = 0; n < IM_ARRAYSIZE(interval_str); n++)
-//            {
-//                const bool is_selected = (interval == n);
-//                if (ImGui::Selectable(interval_str[n].c_str(), is_selected))
-//                    interval = n;
-//
-//                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-//                if (is_selected)
-//                    ImGui::SetItemDefaultFocus();
-//            }
-//            ImGui::EndCombo();
-//        }
-//
-//        _info.fetchInterVal = interval_str[interval];
-
 
         if (ImGui::Combo("##intervalid", &interval, "1m\0""3m\0""5m\0""15m\0""30m\0""1h\0""2h\0""4h\0""6h\0""8h\0""12h\0""1d\0""3d\0""1w\0""1mo\0")) {
             //change color text
@@ -204,7 +154,6 @@ void DownloaderView::updateAlways(float dt)
 
 
         ImGui::Dummy(ImVec2(200,20));
-
 
         //if not loading data already show buttons
         if(!getContext()->startSpinner) {
