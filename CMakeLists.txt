@@ -155,7 +155,7 @@ add_executable(BrokerApp
 		Classes/Common/DataBase/DBManager.h
 		Classes/Data/AccountInfo.h
 		Classes/Common/DataBase/Paths.cpp
-		Classes/Common/DataBase/Paths.h Classes/Widgets/PlotItem/OrderPlot.cpp Classes/Widgets/PlotItem/OrderPlot.h Classes/Networking/Parsers/BinanceParser.h Classes/Tickables/Strategies/ManualStrategy.cpp Classes/Tickables/Strategies/ManualStrategy.h Classes/Abstratctions/Trader.cpp Classes/Abstratctions/Trader.h)
+		Classes/Common/DataBase/Paths.h Classes/Widgets/PlotItem/OrderPlot.cpp Classes/Widgets/PlotItem/OrderPlot.h Classes/Networking/Parsers/BinanceParser.h Classes/Tickables/Strategies/ManualStrategy.cpp Classes/Tickables/Strategies/ManualStrategy.h Classes/Abstratctions/Trader.cpp Classes/Abstratctions/Trader.h Classes/Widgets/BackTestToolbar.cpp Classes/Widgets/BackTestToolbar.h)
 
 ###############################################################################
 # FETCH CONTENT LIBS
