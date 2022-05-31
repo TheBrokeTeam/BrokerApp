@@ -35,7 +35,7 @@ public:
     inline static const ImVec4 broker_green = ImVec4(0.52f, 0.6f,0.0f, 1.00f);
     inline static const ImVec4 broker_red = ImVec4(1.0f, 0.5f,0.35f, 1.00f);
     inline static const ImVec4 broker_dark_grey = ImVec4(24.0f/255, 26.0f/255,31.0f/255, 1.00f);
-    inline static const ImVec4 broker_light_grey = ImVec4(62.0f/255, 62.0f/255,62.0f/255, 1.00f);
+    inline static const ImVec4 broker_light_grey = ImVec4(44.0f/255, 44.0f/255,46.0f/255, 1.00f);
     inline static const ImVec4 broker_clear = ImVec4(0, 0,0, 0.00f);
 
     inline static const ImVec4 broker_pnl_profit = ImVec4(0.3f, 0.3f,1.0f, 0.3f);

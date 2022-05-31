@@ -37,7 +37,6 @@ void MainMenuBar::updateAlways(float dt)
 {
     PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(GetPadding(), GetPadding()));
     PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     PushStyleColor(ImGuiCol_MenuBarBg,Editor::broker_black);
 
     if (ImGui::BeginMainMenuBar())
