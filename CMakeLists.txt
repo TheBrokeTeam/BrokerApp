@@ -3,7 +3,7 @@ project(BrokerApp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(BrokerApp
+add_executable(BrokerApp MACOSX_BUNDLE
         Classes/Editor.cpp
         Classes/Editor.h
         Classes/Widgets/Widget.cpp
@@ -175,6 +175,7 @@ add_executable(BrokerApp
 
 #-END---FETCH CONTENT LIBS----------------------------
 
+#set_target_properties(BrokerApp PROPERTIES MACOSX_BUNDLE TRUE)
 
 #--EXTERNAL ------------------
 add_subdirectory(external/fmt)
