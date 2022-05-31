@@ -114,7 +114,9 @@ Editor::ImageInfo Editor::getTexture(Editor::Icons icon) {
 
 void Editor::showDockSpace()
 {
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    viewport->WorkPos.y = BrokerMenuBarHeight + BrokerToolBarHeight;
+    ImGui::DockSpaceOverViewport(viewport);
 }
 
 void Editor::loadContext(Editor::ContextType type)

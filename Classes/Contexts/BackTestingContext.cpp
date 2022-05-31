@@ -5,6 +5,7 @@
 #include "BackTestingContext.h"
 
 #include <curl/curl.h>
+
 #include "../Tickables/Indicators/SMA.h"
 #include "../Tickables/Indicators/Bollinger.h"
 #include "../Tickables/Indicators/EMA.h"
@@ -13,6 +14,7 @@
 #include "../Tickables/Indicators/PSAR.h"
 #include "../Tickables/Indicators/MFI.h"
 #include "../Tickables/Indicators/VWAP.h"
+
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
 #include "../Widgets/SimulationController.h"
@@ -20,6 +22,8 @@
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
 #include "../Widgets/StockList.h"
+#include "../Widgets/BackTestToolbar.h"
+
 #include "../Nodes/SMANode.h"
 #include "../Nodes/PSARNode.h"
 #include "../Nodes/BollingerNode.h"
@@ -54,6 +58,7 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<StrategyEditor>(_ticker.get(),this));
     _widgets.emplace_back(std::make_shared<StockList>(this));
+    _widgets.emplace_back(std::make_shared<BackTestToolbar>(this));
 
     getWidget<StockList>()->SetVisible(false);
 

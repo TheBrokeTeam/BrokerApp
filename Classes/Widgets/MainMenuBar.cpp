@@ -13,6 +13,7 @@
 #include "StockList.h"
 #include "StrategyEditor.h"
 #include "SocketStreamController.h"
+#include "BackTestToolbar.h"
 #include <fmt/format.h>
 #include "../Contexts/BackTestingContext.h"
 #include "../Contexts/LiveContext.h"
@@ -102,8 +103,11 @@ void MainMenuBar::updateAlways(float dt)
 
             ImGui::EndMenu();
         }
+
         ImGui::EndMainMenuBar();
     }
+
+
 
     //TODO:: remove this on release
     //update editor develop function
@@ -154,6 +158,8 @@ void MainMenuBar::showBacktestContextViews()
 
     if (ImGui::MenuItem("PnL", "",&(getContext()->getWidget<ProfitAndLossesView>()->GetVisible()))){}
     if (ImGui::MenuItem("Stock List", "",&(getContext()->getWidget<StockList>()->GetVisible()))){}
+    if (ImGui::MenuItem("Tabbar", "",&(getContext()->getWidget<BackTestToolbar>()->GetVisible()))){}
+
 }
 
 void MainMenuBar::showLiveContextViews() {

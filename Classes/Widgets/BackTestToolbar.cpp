@@ -7,48 +7,36 @@
 
 BackTestToolbar::BackTestToolbar(Context* context) : Widget(context){
     _title                  = "ToolBar";
-    _is_window              = true;
+    _is_window              = false;
 }
 
-void BackTestToolbar::updateVisible(float dt) {
-    Widget::updateVisible(dt);
-
-    //change color text
-    PushStyleColor(ImGuiCol_Text,Editor::broker_black);
-
-    //change background of frames
-    PushStyleColor(ImGuiCol_FrameBg,Editor::broker_white);
-    PushStyleColor(ImGuiCol_FrameBgActive,Editor::broker_white);
-    PushStyleColor(ImGuiCol_FrameBgHovered,Editor::broker_white);
-
-
-    //CONTROLLERS BELOW
-    PushStyleColor(ImGuiCol_SliderGrab,Editor::broker_yellow_active);
-    PushStyleColor(ImGuiCol_SliderGrabActive,Editor::broker_yellow);
-
-    static float _speedSimulation = 0.1f;
-    if(ImGui::SliderFloat("##Speed",&_speedSimulation,0.00f,100.00f,"%.2f")){
-        getContext()->setSimulationSpeed(_speedSimulation);
-
-    }
-
-    ImGui::SameLine();
-    ImGui::TextColored(Editor::broker_white,"Speed");
-
-    ImGui::Dummy(ImVec2(200,30));
-
-
-    PushStyleColor(ImGuiCol_Button,Editor::broker_yellow);
-    PushStyleColor(ImGuiCol_ButtonActive,Editor::broker_yellow_active);
-    PushStyleColor(ImGuiCol_ButtonHovered,Editor::broker_yellow_hover);
-
-    if (ImGui::Button("Play",ImVec2(200,50))) {
-        puts("Clicou no botão play!!!");
-        getContext()->startSimulation(nullptr);
-    }
-
+void BackTestToolbar::updateAlways(float dt) {
+    ToolbarUI();
 }
 
+void BackTestToolbar::ToolbarUI()
+{
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, BrokerMenuBarHeight));
+    ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, BrokerToolBarHeight));
+    ImGui::SetNextWindowViewport(viewport->ID);
+
+    ImGuiWindowFlags window_flags = 0
+                                    | ImGuiWindowFlags_NoDocking
+                                    | ImGuiWindowFlags_NoTitleBar
+                                    | ImGuiWindowFlags_NoResize
+                                    | ImGuiWindowFlags_NoMove
+                                    | ImGuiWindowFlags_NoScrollbar
+                                    | ImGuiWindowFlags_NoSavedSettings
+    ;
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+    ImGui::Begin("TOOLBAR", NULL, window_flags);
+    ImGui::PopStyleVar();
+
+    ImGui::Button("Toolbar goes here", ImVec2(0, 37));
+
+    ImGui::End();
+}
 int BackTestToolbar::getWindowFlags() {
     return  ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoCollapse;
@@ -57,3 +45,13 @@ int BackTestToolbar::getWindowFlags() {
 void BackTestToolbar::onPushStyleVar() {
     PushStyleColor(ImGuiCol_WindowBg,Editor::broker_dark_grey);
 }
+
+void BackTestToolbar::setStopCallback(ClickCallback c){
+    _stopCallback = c;
+}
+
+void BackTestToolbar::setPlayCallback(ClickCallback c){
+    _playCallback = c;
+}
+
+

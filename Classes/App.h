@@ -11,7 +11,7 @@
 #include <imnodes.h>
 #include <string>
 #include <map>
-
+#include "BrokerConfig.h"
 //#include "Native.h"
 #include "Fonts/Fonts.h"
 //#include "Helpers.h"

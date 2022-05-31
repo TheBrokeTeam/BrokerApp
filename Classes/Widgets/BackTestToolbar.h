@@ -7,12 +7,24 @@
 
 #include "Widget.h"
 
-class BackTestToolbar :public Widget {
+class BackTestToolbar : public Widget {
 public:
+    typedef std::function<void(void)> ClickCallback;
     explicit BackTestToolbar(Context* context);
-    void updateVisible(float dt) override;
+    void updateAlways(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
+
+    void setStopCallback(ClickCallback c);
+    void setPlayCallback(ClickCallback c);
+
+    static float GetPadding() { return 8.0f; }
+
+private:
+    void ToolbarUI();
+    ClickCallback _stopCallback{nullptr};
+    ClickCallback _playCallback{nullptr};
+
 };
 
 
