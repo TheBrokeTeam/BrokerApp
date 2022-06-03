@@ -3,7 +3,8 @@ project(BrokerApp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(BrokerApp MACOSX_BUNDLE
+#add_executable(BrokerApp MACOSX_BUNDLE
+add_executable(BrokerApp
         Classes/Editor.cpp
         Classes/Editor.h
         Classes/Widgets/Widget.cpp

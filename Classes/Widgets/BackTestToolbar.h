@@ -9,21 +9,29 @@
 
 class BackTestToolbar : public Widget {
 public:
-    typedef std::function<void(void)> ClickCallback;
+    enum class Click{
+        PLAY,
+        PAUSE,
+        STOP
+    };
+    typedef std::function<void(Click)> ClickCallback;
     explicit BackTestToolbar(Context* context);
     void updateAlways(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
 
-    void setStopCallback(ClickCallback c);
-    void setPlayCallback(ClickCallback c);
+    void setClickCallback(ClickCallback c);
 
-    static float GetPadding() { return 8.0f; }
+    static float GetPadding() { return 2.0f; }
 
 private:
+    bool _playing = false;
+    bool _showingSpeeds = false;
+
+    void addButton(const char* icon, float xPos, float yPos, float w, std::function<void()> callback);
     void ToolbarUI();
-    ClickCallback _stopCallback{nullptr};
-    ClickCallback _playCallback{nullptr};
+    ClickCallback _clickCallback{nullptr};
+    void onClick(Click source);
 
 };
 

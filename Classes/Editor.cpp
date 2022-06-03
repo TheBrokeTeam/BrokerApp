@@ -31,6 +31,9 @@ void Editor::start() {
     loadImage(Icons::node_cross_black,"../Resources/Icons/node_cross.png");
     loadImage(Icons::node_trend_black,"../Resources/Icons/node_trend.png");
     loadImage(Icons::node_trade_black,"../Resources/Icons/node_trade.png");
+    loadImage(Icons::toolbar_play,"../Resources/Icons/toolbar_play.png");
+    loadImage(Icons::toolbar_stop,"../Resources/Icons/toolbar_stop.png");
+
 
     //----------------------------------------------
     //this way is the logic to change the context now

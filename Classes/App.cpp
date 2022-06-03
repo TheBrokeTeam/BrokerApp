@@ -251,9 +251,13 @@ App::App(std::string title, int w, int h, int argc, char const *argv[])
     _fonts[font_cfg.Name] = io.Fonts->AddFontFromMemoryTTF(Roboto_Regular_ttf, Roboto_Regular_ttf_len, 15.0f, &font_cfg);
     io.Fonts->AddFontFromMemoryTTF(fa_solid_900_ttf, fa_solid_900_ttf_len, 14.0f, &icons_config, fa_ranges);
 
-    ImStrncpy(font_cfg.Name, "Roboto Mono Bold", 40);
-    _fonts[font_cfg.Name] = io.Fonts->AddFontFromMemoryTTF(RobotoMono_Bold_ttf, RobotoMono_Bold_ttf_len, 15.0f, &font_cfg);
-    io.Fonts->AddFontFromMemoryTTF(fa_solid_900_ttf, fa_solid_900_ttf_len, 14.0f, &icons_config, fa_ranges);
+    ImStrncpy(font_cfg.Name, "RobotoMonoBold16", 40);
+    _fonts[font_cfg.Name] = io.Fonts->AddFontFromMemoryTTF(RobotoMono_Bold_ttf, RobotoMono_Bold_ttf_len, 16.0f, &font_cfg);
+    io.Fonts->AddFontFromMemoryTTF(fa_solid_900_ttf, fa_solid_900_ttf_len, 16.0f, &icons_config, fa_ranges);
+
+    ImStrncpy(font_cfg.Name, "RobotoMonoBold12", 40);
+    _fonts[font_cfg.Name] = io.Fonts->AddFontFromMemoryTTF(RobotoMono_Bold_ttf, RobotoMono_Bold_ttf_len, 12.0f, &font_cfg);
+    io.Fonts->AddFontFromMemoryTTF(fa_solid_900_ttf, fa_solid_900_ttf_len, 12.0f, &icons_config, fa_ranges);
 
     ImStrncpy(font_cfg.Name, "Roboto Mono Italic", 40);
     _fonts[font_cfg.Name] = io.Fonts->AddFontFromMemoryTTF(RobotoMono_Italic_ttf, RobotoMono_Italic_ttf_len, 15.0f, &font_cfg);
@@ -265,7 +269,7 @@ App::App(std::string title, int w, int h, int argc, char const *argv[])
 
     //setting custom font as default
     ImFont* font = io.Fonts->Fonts[4];
-    font->Scale = 1.2;
+    font->Scale = 1.0;
     io.FontDefault = font;
 }
 

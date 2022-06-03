@@ -36,6 +36,9 @@ public:
     inline static const ImVec4 broker_red = ImVec4(1.0f, 0.5f,0.35f, 1.00f);
     inline static const ImVec4 broker_dark_grey = ImVec4(24.0f/255, 26.0f/255,31.0f/255, 1.00f);
     inline static const ImVec4 broker_light_grey = ImVec4(44.0f/255, 44.0f/255,46.0f/255, 1.00f);
+    inline static const ImVec4 broker_very_light_grey = ImVec4(75.0f/255, 75.0f/255,75.0f/255, 1.00f);
+    inline static const ImVec4 broker_very_very_light_grey = ImVec4(117.0f/255, 117.0f/255,117.0f/255, 1.00f);
+
     inline static const ImVec4 broker_clear = ImVec4(0, 0,0, 0.00f);
 
     inline static const ImVec4 broker_pnl_profit = ImVec4(0.3f, 0.3f,1.0f, 0.3f);
@@ -69,7 +72,9 @@ public:
         node_bar_seq_down_black,
         node_bar_seq_up_black,
         node_trend_black,
-        node_trade_black
+        node_trade_black,
+        toolbar_play,
+        toolbar_stop
     };
 
     ImageInfo getTexture(Icons icon);

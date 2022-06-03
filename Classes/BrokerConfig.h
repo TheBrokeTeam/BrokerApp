@@ -8,6 +8,16 @@
 
 #define BrokerMenuBarHeight 32
 #define BrokerToolBarHeight 32
+#define BrokerToolBarButtonSide 32
+
+#define BrokerFontIconSize1 8
+#define BrokerFontIconSize2 16
+#define BrokerFontIconSize3 32
+
+
+
+
+
 
 #endif //BROKERAPP_BROKERCONFIG_H
 
