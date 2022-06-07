@@ -32,6 +32,14 @@ void Editor::start() {
     loadImage(Icons::node_trend_black,"../Resources/Icons/node_trend.png");
     loadImage(Icons::node_trade_black,"../Resources/Icons/node_trade.png");
 
+
+    //favoriteIcons
+    loadImage(Icons::fav_unselected, "../Resources/Icons/fav_unselected.png");
+    loadImage(Icons::fav_selected, "../Resources/Icons/fav_selected.png");
+
+    //garbageBin
+    loadImage(Icons::garbage_bin, "../Resources/Icons/garbage_bin.png");
+
     //----------------------------------------------
     //this way is the logic to change the context now
     // and not at the begining of the next frame

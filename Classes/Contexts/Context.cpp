@@ -3,6 +3,7 @@
 //
 
 #include "Context.h"
+#include "../Widgets/OrderLog.h"
 
 #include <utility>
 
@@ -26,8 +27,11 @@ void Context::updateData(float dt)
 
 }
 
-void Context::updateUI(float dt)
-{
+void Context::addOrder(Order order) {
+    _orders.push_back(order);
+}
+
+void Context::updateUI(float dt) {
     for(auto& w : _widgets)
         w->update(dt);
 }
@@ -55,7 +59,7 @@ Indicator *Context::getIndicatorById(const std::string &id)
 }
 
 //Strategy *Context::getStrategyById(const std::string &id) {
-//    for (const auto& strategy : _strategies)
+//    for (const auto& strategy : _bots)
 //    {
 //        if (strategy->getId() == id)
 //        {
@@ -78,7 +82,7 @@ Indicator *Context::getIndicatorByName(const std::string &name)
 }
 
 //Strategy *Context::getStrategyByName(const std::string &name) {
-//    for (const auto& strategy : _strategies)
+//    for (const auto& strategy : _bots)
 //    {
 //        if (strategy->getCode() == name)
 //        {
@@ -146,4 +150,9 @@ void Context::logout() {
     _sentAuthentication = false;
     _startingAuthentication = false;
     _user = nullptr;
+}
+
+void Context::selectBot(const Bot &bot) {
+    _currentBot = bot;
+    loadBot();
 }

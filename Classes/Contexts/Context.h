@@ -38,26 +38,23 @@ public:
     virtual bool isSimulating(){return false;};
 
     virtual void openUserDataStream() {};
-
     virtual void openOrder(const Symbol &symbol) {};
     virtual void closeAllOrders(const Symbol &symbol) {};
-
     virtual double getCurrentTimeStamp() = 0 ;
 
     virtual void initialize() = 0;
     virtual void updateUI(float dt);
 
-    virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false) = 0;
-    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator){
+    virtual std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode = false, std::optional<ImVec2> pos = std::nullopt) = 0;
+    virtual std::shared_ptr<INode> createIndicatorNode(UiNodeType type, std::shared_ptr<Indicator> indicator, std::optional<ImVec2> pos = std::nullopt){
         return nullptr;
     };
-    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type) {
+    virtual std::shared_ptr<INode> createNode(std::shared_ptr<graph::Graph<GraphNode>> _graph, UiNodeType type, std::optional<ImVec2> pos = std::nullopt, bool shouldCreateIndicatorNode = false) {
         return nullptr;
     };
 
     virtual void removeIndicator(std::shared_ptr<Indicator> indicator,bool shouldDeleteNode) = 0;
     virtual void removeAllIndicators() = 0;
-
 
     virtual void plotIndicators() = 0;
     virtual void plotSubplotIndicators() = 0;
@@ -133,6 +130,17 @@ public:
     void addUser(const rapidjson::Document &doc);
     void logout();
 
+    virtual std::vector<Bot> getBots(){};
+    virtual void addBot(const Bot&){};
+
+    virtual void setStrategyEditor(StrategyEditor* strategyEditor){};
+    virtual StrategyEditor* getStrategyEditor(){};
+
+
+    void selectBot(const Bot&);
+
+    void addOrder(Order order);
+
 protected:
     std::vector<std::shared_ptr<Widget>> _widgets;
     std::vector<std::shared_ptr<Indicator>> _indicators;
@@ -140,12 +148,16 @@ protected:
 
     std::vector<Order> _orders;
 
-    //    std::vector<std::shared_ptr<Strategy>> _strategies;
+    std::optional<Bot> _currentBot = std::nullopt;
+
+    virtual void loadBot(){};
+    //    std::vector<std::shared_ptr<Strategy>> _bots;
     std::vector<std::shared_ptr<INode>> _nodes;
 
     Editor* _editor{nullptr};
     User* _user{nullptr};
     DBManager _dbManager;
+
 
     void loadUser();
 

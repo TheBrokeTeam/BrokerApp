@@ -208,4 +208,3 @@ void Strategy::reset() {
 void Strategy::setClosePositionCallback(Strategy::ClosePositionCallback callback) {
     _closePositionCallback = callback;
 }
-

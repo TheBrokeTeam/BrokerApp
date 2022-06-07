@@ -69,7 +69,10 @@ public:
         node_bar_seq_down_black,
         node_bar_seq_up_black,
         node_trend_black,
-        node_trade_black
+        node_trade_black,
+        fav_selected,
+        fav_unselected,
+        garbage_bin
     };
 
     ImageInfo getTexture(Icons icon);

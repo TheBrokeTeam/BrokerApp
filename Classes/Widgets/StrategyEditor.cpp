@@ -16,11 +16,10 @@ void mini_map_node_hovering_callback(int node_id, void* user_data)
 }
 
 StrategyEditor::StrategyEditor(Ticker* ticker,Context* context) : Widget(context), Tickable(ticker) {
-    _title                  = "Strategy editor";
+    _title                  = "Bot Simulator";
     _is_window              = true;
     _graph = std::make_shared<graph::Graph<GraphNode>>();
     _nodesList = std::make_unique<NodesList>(context);
-
     _nodesList->setTrashCallback([this](){
         clear();
     });
@@ -28,9 +27,116 @@ StrategyEditor::StrategyEditor(Ticker* ticker,Context* context) : Widget(context
 
 void StrategyEditor::updateVisible(float dt) {
     Widget::updateVisible(dt);
+    buildTabBar(dt);
+}
 
+void StrategyEditor::buildTabBar(float dt) {
+    StrategyTab tabNames[] = { StrategyTab::StrategyTabEditor, StrategyTab::StrategyTabLog};
+
+    for (auto &tabName: tabNames) {
+        if (ImGui::BeginTabBar("StrategyEditorTabBar", ImGuiTabBarFlags_None)) {
+            std::string label = StrategyEditor::tabNameToString(tabName);
+            if(ImGui::BeginTabItem(label.c_str())) {
+                _selectedTab = tabName;
+                openTab(dt);
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
+    }
+
+
+}
+
+void StrategyEditor::openTab(float dt) {
+    switch(_selectedTab) {
+        case StrategyTab::StrategyTabEditor: {
+            buildNodeToolBar(dt);
+            buildNodeEditor(dt);
+            break;
+        }
+        case StrategyTab::StrategyTabLog: {
+            buildStrategyLogTable(dt);
+            break;
+        }
+
+    }
+}
+
+void StrategyEditor::buildStrategyLogTable(float dt) {
+    static ImGuiTableFlags flags =  ImGuiTableFlags_ScrollY     |
+                                    ImGuiTableFlags_SortMulti   |
+                                    ImGuiTableFlags_Sortable    |
+                                    ImGuiTableFlags_Borders     |
+                                    ImGuiTableFlags_RowBg
+    ;
+
+    const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
+    ImVec2 outer_size = ImVec2(0.0f, TEXT_BASE_HEIGHT * 8);
+    if (ImGui::BeginTable("table_advanced", int(_tableHeaders.size()), flags, outer_size))
+    {
+        ImGui::TableSetupScrollFreeze(0, 1); // Make top row always visible
+
+        for(const auto& header: _tableHeaders) {
+            ImGui::TableSetupColumn(header.c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize);
+        }
+
+        ImGui::TableHeadersRow();
+        if(getContext()->userSelected()) {
+            std::vector<Bot> bots = getContext()->getBots();
+            for(int i=0; i< bots.size(); i++) {
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                if (ImGui::Selectable(bots[i].GetUpdatedTime().c_str(), false, ImGuiSelectableFlags_SelectOnClick | ImGuiSelectableFlags_SpanAllColumns)) {
+                    std::cout << "User select the " << bots[i].GetName().c_str()  << "bot." << std::endl;
+                    getContext()->selectBot(bots[i]);
+                }
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text("%s", bots[i].GetName().c_str());
+
+                Symbol s = bots[i].GetSymbol();
+                ImGui::TableSetColumnIndex(2);
+                ImGui::Text("%s", s.getCode().c_str());
+
+                ImGui::TableSetColumnIndex(3);
+                ImGui::Text("%s", s.getInterval().c_str());
+
+                ImGui::TableSetColumnIndex(4);
+                ImGui::Text("%s", s.getStartDate().c_str());
+
+                ImGui::TableSetColumnIndex(5);
+                ImGui::Text("%s", s.getEndDate().c_str());
+
+                ImGui::TableSetColumnIndex(6);
+
+                std::string nodeNames;
+                std::vector<NodeInfo> nodes = bots[i].GetNodes();
+                for(int i=0; i < nodes.size(); i++) {
+                    nodeNames += nodes[i].name;
+                    if( i != nodes.size()-1 ) { nodeNames += ","; }
+                }
+
+                ImGui::Text("%s", nodeNames.c_str());
+
+            }
+        } else {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            std::string message = "No records found";
+            ImGui::Text("%s", message.c_str());
+        }
+
+        ImGui::EndTable();
+    }
+}
+
+void StrategyEditor::buildNodeToolBar(float dt) {
+    ImGui::NewLine();
     _nodesList->updateVisible(dt);
+}
 
+void StrategyEditor::buildNodeEditor(float dt) {
     ImGui::SameLine();
 
     ImNodes::PushColorStyle(ImNodesCol_Link, ImGui::ColorConvertFloat4ToU32(Editor::broker_yellow_active));
@@ -62,9 +168,17 @@ void StrategyEditor::updateVisible(float dt) {
 
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(NodesList::NODES_DRAG_ID)) {
             UiNodeType type = *(UiNodeType *) payload->Data;
-            auto node = getContext()->createNode(_graph,type);
-            if(node)
+            auto node = getContext()->createNode(_graph, type, std::nullopt, true);
+            if(node) {
+                ImVec2 mousePos = ImGui::GetMousePos();
+                ImVec2 winPos = ImGui::GetCurrentWindow()->Pos;
+                // TODO::understand why is that
+                //this values was by try and error: ImVec2(8,35)
+                ImVec2 pos = mousePos - winPos - ImVec2(8,35);
+                node->setPosition(pos);
+
                 _uiNodes.push_back(node);
+            }
         }
 
         ImGui::EndDragDropTarget();
@@ -141,9 +255,9 @@ void StrategyEditor::addNode(std::shared_ptr<INode> newNode) {
 
 void StrategyEditor::clear() {
     auto copyNodes = _uiNodes;
-    for(auto n : copyNodes){
-        if(!n->getIsIndicatorNode())
-            deleteUiNodeFromFromList(n->getId(),false);
+    for(auto& n : copyNodes){
+        bool shouldRemoveIndicator = n->getIsIndicatorNode();
+        deleteUiNodeFromFromList(n->getId(),shouldRemoveIndicator);
     }
 }
 
@@ -263,3 +377,72 @@ void StrategyEditor::onClose(BarHistory *barHistory) {
             n->endEvaluate();
     }
 }
+
+std::vector<std::shared_ptr<INode>> StrategyEditor::getNodes() {
+    return this->_uiNodes;
+}
+
+INode& StrategyEditor::addUiNode(NodeInfo nodeInfo) {
+    auto node = getContext()->createNode(_graph, nodeInfo.nodeType, nodeInfo.position);
+    if(node) {
+        node->setPosition(nodeInfo.position);
+        _uiNodes.push_back(node);
+    }
+    return *node;
+}
+
+rapidjson::Document StrategyEditor::toJson()
+{
+    rapidjson::Document jsonNodes;
+    jsonNodes.SetArray();
+    for(auto& node: this->getNodes())
+    {
+        auto n = node->toJson();
+        BAJson::append(jsonNodes, n);
+        std::cout << BAJson::stringfy(jsonNodes) << std::endl;
+    }
+
+    return jsonNodes;
+}
+
+void StrategyEditor::fixNodesConnections(const std::vector<NodeInfo>& nodesInfo) {
+    struct connection {
+        int id;
+        UiNodeType type;
+    };
+
+    std::map<int, connection> nodeConnectionsMap;
+
+    for(auto& oldNodeInfo: nodesInfo) {
+        for(auto& currentNode: _uiNodes) {
+            if(currentNode->getType() == oldNodeInfo.nodeType) {
+                nodeConnectionsMap.insert(std::pair<int, connection>(oldNodeInfo.id, {currentNode->getId(), currentNode->getType()}));
+                for(int i=0; i< oldNodeInfo.internalNodes.size(); i++) {
+                    nodeConnectionsMap.insert(std::pair<int, connection>(oldNodeInfo.internalNodes[i], {currentNode->getInternalNodes()[i], currentNode->getInternalNodes()[i] == currentNode->getId() ? currentNode->getType() : UiNodeType::VALUE }));
+                }
+            }
+        }
+    }
+
+    for(auto& nodeInfo: nodesInfo){
+        for(auto& internalEdge: nodeInfo.internalEdges) {
+            for(auto& edge: internalEdge.edges) {
+                connection from = nodeConnectionsMap.at(edge.from);
+                connection to = nodeConnectionsMap.at(edge.to);
+                if(from.type != UiNodeType::VALUE || to.type != UiNodeType::VALUE
+                    && nodeInfo.nodeType != to.type) {
+                    _graph->insert_edge(from.id, to.id);
+                }
+            }
+        }
+    }
+
+}
+
+std::string StrategyEditor::tabNameToString(StrategyTab tabName) {
+    if(tabName == StrategyTab::StrategyTabEditor) { return "Strategy Editor"; }
+    if(tabName == StrategyTab::StrategyTabLog) { return "Logs"; }
+    else {return "Unknown";}
+}
+
+

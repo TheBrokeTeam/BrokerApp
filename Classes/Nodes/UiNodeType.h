@@ -20,7 +20,8 @@ enum class UiNodeType
     BAR_SEQ_DOWN,
     BAR_SEQ_UP,
     TREND,
-    TRADE
+    TRADE,
+    VALUE
 };
 
 

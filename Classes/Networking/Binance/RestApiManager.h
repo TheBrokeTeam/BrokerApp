@@ -9,6 +9,7 @@
 #include <binapi/api.hpp>
 #include <binapi/websocket.hpp>
 #include "../../Data/Symbol.h"
+#include "SymbolInfo.h"
 #include "../../Data/Order.h"
 #include "../../Data/AccountInfo.h"
 
@@ -21,14 +22,17 @@ public:
     typedef std::function<void(AccountInfo& info)> AccountInfoCallback;
 
 
+    typedef std::function<void(bool success, const std::vector<SymbolInfo>)> ExchangeInfoCallback;
+
     RestApiManager();
     ~RestApiManager();
 
+    void getExchangeInfo(ExchangeInfoCallback callback);
     void getCandles(const Symbol& symbol,const CandlesCallback& callback);
     void openOrder(const Symbol& symbol,const OrderCallback& callback);
     void accountInfo(const AccountInfoCallback& callback);
     void startUserDataStream(UserDataStreamCallback callback);
-    void cancelOrder(const Order& order);
+    void cancelOrder(Order& order);
     void initialize(const std::string& pk, const std::string& sk);
 
 private:

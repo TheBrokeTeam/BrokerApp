@@ -15,6 +15,10 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/filereadstream.h>
+#include "imgui.h"
+#include "../../Data/Bot.h"
+
+//class INode;
 
 class BAJson
 {
@@ -65,10 +69,17 @@ public:
     static void set(rapidjson::Document& document, const std::string& key, float floatValue);
     static void set(rapidjson::Document& document, const std::string& key, int64_t longValue);
     static void set(rapidjson::Document& document, const std::string& key, double doubleValue);
+
+
     static void set(rapidjson::Document& document, const std::string& key, const std::string& stringValue);
     static void set(rapidjson::Document& document, const std::string& key, const char* stringValue);
     static void set(rapidjson::Document& document, const std::string& key, const char* stringValue, std::size_t size);
     static void set(rapidjson::Document& document, const std::string& key, rapidjson::Value& value);
+    static void set(rapidjson::Document& document, const std::string& key, const std::vector<float>& vec);
+    static void set(rapidjson::Document& document, const std::string& key, const std::vector<int>& vec);
+    static void set(rapidjson::Document& document, const std::string& key, const std::map<std::string, float>& dict);
+    static void set(rapidjson::Document& document, const std::string& key, const std::map<std::string, std::vector<int>>& internalEdges);
+
 
     template<typename T>
     static void set(rapidjson::Document& document,
@@ -93,6 +104,12 @@ public:
     static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const char* stringValue);
     static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const char* stringValue, std::size_t size);
     static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, rapidjson::Value& value);
+    static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<float>& vec);
+    static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<int>& vec);
+    static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::map<std::string, float>& dict);
+    static void set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::map<std::string, std::vector<int>>& internalEdges);
+
+    static void merge(rapidjson::Value& dstObject, rapidjson::Value& srcObject, rapidjson::Document::AllocatorType& allocator);
 
     static void append(rapidjson::Document& document, bool boolValue);
     static void append(rapidjson::Document& document, int intValue);
@@ -113,6 +130,7 @@ public:
     static void append(rapidjson::Document& document, rapidjson::Value& object, const char* stringValue);
     static void append(rapidjson::Document& document, rapidjson::Value& object, const char* stringValue, std::size_t size);
     static void append(rapidjson::Document& document, rapidjson::Value& object, rapidjson::Value& value);
+    static void append(rapidjson::Document& document, rapidjson::Document& object);
 
     static bool hasBool(const rapidjson::Value& object, const std::string& memberName);
     static bool hasNumber(const rapidjson::Value& object, const std::string& memberName);

@@ -27,3 +27,7 @@ User::User(const rapidjson::Document& obj) {
 const char* User::GetName() {
     return _name.c_str();
 }
+
+const char* User::GetId() {
+    return _id.c_str();
+}

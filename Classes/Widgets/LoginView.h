@@ -18,9 +18,7 @@ public:
     void updateVisible(float dt) override;
     int getWindowFlags() override;
     void onPushStyleVar() override;
-    static void runHttpServer(HttpServer *httpServer);
 private:
-    HttpServer* _httpServer{nullptr};
     void openAuthProvider(const std::string&);
     void Cancel();
 };

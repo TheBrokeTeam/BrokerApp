@@ -188,6 +188,74 @@ void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const 
     object.AddMember(name, value, document.GetAllocator());
 }
 
+void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<float>& vec)
+{
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+    rapidjson::Value  array(rapidjson::kArrayType);
+    for(auto &value: vec) {
+        array.PushBack(value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+//void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes)
+//{
+//    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+//
+//    rapidjson::Value array(rapidjson::kArrayType);
+//    array.SetObject();
+//    for(auto& node: nodes) {
+//        rapidjson::Document doc;
+//        doc.SetArray();
+//
+//        doc = node->toJson();
+//
+//        std::cout << BAJson::stringfy(doc) << std::endl;
+//
+//        array.PushBack(doc.GetArray(), document.GetAllocator());
+//    }
+//    document.AddMember(name, array, document.GetAllocator());
+//}
+
+void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::vector<int>& vec)
+{
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+    rapidjson::Value array(rapidjson::kArrayType);
+    for(auto &value: vec) {
+        array.PushBack(value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document& document, rapidjson::Value& object, const std::string& key, const std::map<std::string, float>& dict)
+{
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+    rapidjson::Value array(rapidjson::kArrayType);
+    array.SetObject();
+    for(auto &d: dict) {
+        rapidjson::Value dict_key(d.first.c_str(), (unsigned int)d.first.size(), document.GetAllocator());
+        rapidjson::Value dict_value(d.second);
+        array.AddMember(dict_key, dict_value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string& key, const std::map<std::string, float>& dict) {
+    set(document, document, key, dict);
+}
+
+//void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<std::shared_ptr<INode>>& nodes) {
+//    set(document, document, key, nodes);
+//}
+
+void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<int>& vec) {
+    set(document, document, key, vec);
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string& key, const std::vector<float>& vec) {
+    set(document, document, key, vec);
+}
+
 void BAJson::set(rapidjson::Document &document, const std::string &key, rapidjson::Value &value)
 {
     set(document, document, key, value);
@@ -211,11 +279,6 @@ void BAJson::set(rapidjson::Document& document, const std::string& key, float fl
 void BAJson::set(rapidjson::Document& document, const std::string& key, int64_t int64Value)
 {
     set(document, document, key, int64Value);
-}
-
-void BAJson::set(rapidjson::Document& document, const std::string& key, double doubleValue)
-{
-    set(document, document, key, doubleValue);
 }
 
 void BAJson::set(rapidjson::Document& document, const std::string& key, const std::string& stringValue)
@@ -437,3 +500,103 @@ std::string BAJson::stringfy(const rapidjson::Document &document) {
     return strbuf.GetString();
 }
 
+void BAJson::merge(rapidjson::Value &dstObject, rapidjson::Value &srcObject,
+                   rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> &allocator) {
+
+    for (auto srcIt = srcObject.MemberBegin(); srcIt != srcObject.MemberEnd(); ++srcIt)
+    {
+        auto dstIt = dstObject.FindMember(srcIt->name);
+        if (dstIt == dstObject.MemberEnd())
+        {
+            rapidjson::Value dstName ;
+            dstName.CopyFrom(srcIt->name, allocator);
+            rapidjson::Value dstVal ;
+            dstVal.CopyFrom(srcIt->value, allocator) ;
+
+            dstObject.AddMember(dstName, dstVal, allocator);
+
+            dstName.CopyFrom(srcIt->name, allocator);
+            dstIt = dstObject.FindMember(dstName);
+//            if (dstIt == dstObject.MemberEnd())
+//                return false ;
+        }
+        else
+        {
+            auto srcT = srcIt->value.GetType() ;
+            auto dstT = dstIt->value.GetType() ;
+//            if(srcT != dstT)
+//                return false ;
+
+            if (srcIt->value.IsArray())
+            {
+                for (auto arrayIt = srcIt->value.Begin(); arrayIt != srcIt->value.End(); ++arrayIt)
+                {
+                    rapidjson::Value dstVal ;
+                    dstVal.CopyFrom(*arrayIt, allocator) ;
+                    dstIt->value.PushBack(dstVal, allocator);
+                }
+            }
+//            else if (srcIt->value.IsObject())
+//            {
+//                if(!mergeObjects(dstIt->value, srcIt->value, allocator))
+//                    return false ;
+//            }
+            else
+            {
+                dstIt->value.CopyFrom(srcIt->value, allocator) ;
+            }
+        }
+    }
+}
+
+void BAJson::append(rapidjson::Document &document, rapidjson::Document &object) {
+    rapidjson::Value v(object, document.GetAllocator());
+    append(document, v);
+}
+
+void BAJson::set(rapidjson::Document &document, rapidjson::Value &object, const std::string &key,
+                 const std::map<std::string, std::vector<int>> &internalEdges) {
+    rapidjson::Value name(key.c_str(), (unsigned int)key.size(), document.GetAllocator());
+
+    rapidjson::Value array(rapidjson::kArrayType);
+    array.SetObject();
+    for(auto &edge: internalEdges) {
+        rapidjson::Value dict_key(edge.first.c_str(), (unsigned int)edge.first.size(), document.GetAllocator());
+
+        rapidjson::Value array2(rapidjson::kArrayType);
+        array2.SetObject();
+
+        rapidjson::Document doc = BAJson::document();
+
+        rapidjson::Document doc2 = BAJson::document();
+        doc2.SetArray();
+
+//        for(auto& from : graph->neighbors(nodeId))
+//        {
+//            rapidjson::Document edgeDoc = BAJson::document();
+//            BAJson::set(edgeDoc, "from", from);
+//            BAJson::set(edgeDoc, "to", nodeId);
+//            BAJson::append(doc2, edgeDoc);
+//        }
+//
+//        rapidjson::Value v(doc2, doc.GetAllocator());
+//
+//        BAJson::set(doc, std::to_string(nodeId),v);
+
+//            auto e = NodeInfo::getEdgeFromInternalNode(graph, nodeId);
+//        BAJson::append(edgesArray, e.GetObject());
+//
+//        rapidjson::Value dict_value(edge.second);
+//        array.AddMember(dict_key, dict_value, document.GetAllocator());
+    }
+    document.AddMember(name, array, document.GetAllocator());
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string &key,
+                 const std::map<std::string, std::vector<int>> &internalEdges) {
+    set(document, document, key, internalEdges);
+}
+
+void BAJson::set(rapidjson::Document &document, const std::string &key, double doubleValue) {
+    set(document, document, key, doubleValue);
+}
