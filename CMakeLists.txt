@@ -233,6 +233,53 @@ set(EditorDir
 		Classes/Editor.h
 		)
 
+set(FONTS
+		Resources/Fonts/FontAwesome5.cpp
+		Resources/Fonts/FontAwesome5Brands.cpp
+		Resources/Fonts/Fonts.h
+		Resources/Fonts/IconsFontAwesome5.h
+		Resources/Fonts/IconsFontAwesome5Brands.h
+		Resources/Fonts/RobotoBold.cpp
+		Resources/Fonts/RobotoItalic.cpp
+		Resources/Fonts/RobotoMonoBold.cpp
+		Resources/Fonts/RobotoMonoItalic.cpp
+		Resources/Fonts/RobotoMonoRegular.cpp
+		Resources/Fonts/RobotoRegular.cpp
+		)
+
+set(ICONS
+		Resources/Icons/close.png
+		Resources/Icons/fav_selected.png
+		Resources/Icons/fav_unselected.png
+		Resources/Icons/garbage_bin.png
+		Resources/Icons/ma.png
+		Resources/Icons/node_bar_seq_down.png
+		Resources/Icons/node_bar_seq_down_w.png
+		Resources/Icons/node_bar_seq_up.png
+		Resources/Icons/node_bar_seq_up_w.png
+		Resources/Icons/node_counter.png
+		Resources/Icons/node_counter_w.png
+		Resources/Icons/node_cross.png
+		Resources/Icons/node_cross_w.png
+		Resources/Icons/node_trade.png
+		Resources/Icons/node_trade_w.png
+		Resources/Icons/node_trend.png
+		Resources/Icons/node_trend_w.png
+		Resources/Icons/trash.png
+		)
+
+set(HTML
+		Resources/Html/failure.html
+		Resources/Html/failure-styles.css
+		Resources/Html/success.html
+		Resources/Html/success-styles.css
+		)
+
+file(GLOB_RECURSE FONTS_RESOURCE ${FONTS})
+file(GLOB_RECURSE ICONS_RESOURCE ${ICONS})
+file(GLOB_RECURSE HTML_RESOURCE ${HTML})
+file(GLOB_RECURSE RESOURCE Resources/api_keys.json)
+
 add_executable(BrokerApp
 		${CommonDir}
 		${ContextDir}
@@ -244,7 +291,26 @@ add_executable(BrokerApp
 		${TickersDir}
 		${WidgetDir}
 		${EditorDir}
+		${FONTS_RESOURCE}
+		${ICONS_RESOURCE}
+		${HTML_RESOURCE}
+		${RESOURCE}
 		)
+
+if(APPLE)
+
+	set_target_properties(BrokerApp PROPERTIES
+			MACOSX_BUNDLE TRUE
+			MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Resources/Info.plist.in"
+			MACOSX_FRAMEWORK_IDENTIFIER com.cmake.brokerapp
+			)
+
+	set_source_files_properties(${FONTS_RESOURCE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/Fonts)
+	set_source_files_properties(${ICONS_RESOURCE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/Icons)
+	set_source_files_properties(${HTML_RESOURCE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/Html)
+	set_source_files_properties(${RESOURCE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+endif()
 
 ###############################################################################
 # FETCH CONTENT LIBS

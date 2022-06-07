@@ -8,9 +8,6 @@
 LoginView::LoginView(Context *context) : Widget(context) {
     _title = "Profile";
     _is_window = true;
-    _httpServer = new HttpServer(context, 9494);
-    std::thread thrContext(LoginView::runHttpServer, _httpServer);
-    thrContext.detach();
 }
 
 void LoginView::updateVisible(float dt) {
@@ -170,9 +167,5 @@ void LoginView::openAuthProvider(const std::string& provider) {
     getContext()->_sentAuthentication = true;
     UserService userService = UserService();
     userService.openAuth(provider);
-}
-
-void LoginView::runHttpServer(HttpServer* httpServer) {
-    httpServer->Run();
 }
 
