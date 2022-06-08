@@ -8,6 +8,8 @@
 #include "Widget.h"
 #include "../Tickables/Strategies/Strategy.h"
 
+class BackTestingContext;
+
 class ProfitAndLossesView : public Widget {
 public:
     ProfitAndLossesView(Context* context);
@@ -26,6 +28,8 @@ private:
     double _baseLine = 0;
     double _cumulatedProfit;
     double _lastTime;
+    BackTestingContext* _context{nullptr};
+
 
 };
 

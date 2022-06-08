@@ -5,9 +5,10 @@
 #include "Strategy.h"
 #include "../../Helpers/Utils.h"
 #include <implot.h>
-#include "../../Contexts/Context.h"
+#include "../../Contexts/BackTestingContext.h"
 
 Strategy::Strategy(Ticker *ticker) : Tickable(ticker), PlotItem(ticker->getContext()) {
+    _context = dynamic_cast<BackTestingContext*>(ticker->getContext());
 }
 
 int Strategy::BinarySearchPositions(const Position* arr, int l, int r, double time, bool isStart, int maxSize) {
@@ -48,7 +49,7 @@ void Strategy::onRender() {
     std::vector<double> y;
 
     //call finish once if there is opened positions yet
-    if(!_ticker->getContext()->isSimulating() &&  !_openedPositions.empty()){
+    if(!_context->isSimulating() &&  !_openedPositions.empty()){
         onFinish();
     }
 

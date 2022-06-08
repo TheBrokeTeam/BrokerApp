@@ -29,10 +29,12 @@ public:
     void updateData(float dt) override;
     double getCurrentTimeStamp() override;
 
+    void startSimulation(Ticker* ticker);
+    void stopSimulation();
+    void pauseSimulation();
+    void setSimulationSpeed(float speed);
+    bool isSimulating();
 
-    void startSimulation(Ticker* ticker) override;
-    void setSimulationSpeed(float speed) override;
-    bool isSimulating() override;
     void handleDragDrop(PlotItem *plotItem) override;
 
     std::shared_ptr<Indicator> loadIndicator(IndicatorsView::CandleIndicatorsTypes type,bool shouldCreateNode = false) override;

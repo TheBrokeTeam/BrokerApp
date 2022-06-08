@@ -17,7 +17,6 @@
 
 #include "../Widgets/MainMenuBar.h"
 #include "../Widgets/DownloaderView.h"
-#include "../Widgets/SimulationController.h"
 #include "../Widgets/ProfitAndLossesView.h"
 #include "../Widgets/ChartView.h"
 #include "../Widgets/StrategyEditor.h"
@@ -52,7 +51,6 @@ void BackTestingContext::initialize() {
     // Initialize the context
     _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<DownloaderView>(this));
-    _widgets.emplace_back(std::make_shared<SimulationController>(this));
     _widgets.emplace_back(std::make_shared<ChartView>(this));
     _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
     _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
@@ -74,6 +72,8 @@ void BackTestingContext::initialize() {
     _strategyEditor->setPriority(2);
     _ticker->addTickable(_strategyEditor);
 }
+
+
 
 //void BackTestingContext::loadSymbol(Symbol symbol) {
 //
@@ -203,6 +203,17 @@ void BackTestingContext::startSimulation(Ticker* ticker) {
     _ticker->reset();
     _currentIndex = 0;
     _simulating = true;
+}
+
+void BackTestingContext::stopSimulation() {
+    _ticker->reset();
+    _currentIndex = 0;
+    _simulating = false;
+    loadTicker();
+}
+
+void BackTestingContext::pauseSimulation() {
+    _simulating = !_simulating;
 }
 
 void BackTestingContext::setSimulationSpeed(float speed) {

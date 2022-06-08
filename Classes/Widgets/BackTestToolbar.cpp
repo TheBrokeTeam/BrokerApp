@@ -4,10 +4,12 @@
 
 #include "BackTestToolbar.h"
 #include "../Editor.h"
+#include "../Contexts/BackTestingContext.h"
 
 BackTestToolbar::BackTestToolbar(Context* context) : Widget(context){
     _title                  = "BACKTEST";
     _is_window              = false;
+    _context = dynamic_cast<BackTestingContext*>(context);
 }
 
 void BackTestToolbar::updateAlways(float dt) {
@@ -72,8 +74,11 @@ void BackTestToolbar::ToolbarUI()
         ImGui::Text("%s", combo_preview_value);
         ImGui::Separator();
         for (int i = 0; i < IM_ARRAYSIZE(items); i++)
-            if (ImGui::Selectable(items[i]))
+            if (ImGui::Selectable(items[i])) {
                 item_current_idx = i;
+                _currentSpeedX = i + 1;
+                onClick(Click::CHANGE_SPEED);
+            }
         ImGui::EndPopup();
     }
     ImGui::PopStyleColor(3);
@@ -109,9 +114,6 @@ void BackTestToolbar::ToolbarUI()
         onClick(Click::PAUSE);
     });
     //--------
-
-
-
 
 
     ImGui::PopStyleColor(4);
@@ -150,5 +152,26 @@ void BackTestToolbar::setClickCallback(ClickCallback c){
 void BackTestToolbar::onClick(Click src) {
     if(_clickCallback)
         _clickCallback(src);
+
+    switch (src) {
+        case Click::PLAY:
+            puts("Clicou no botão play!!!");
+            _context->startSimulation(nullptr);
+            break;
+        case Click::STOP:
+            puts("Clicou no botão stop!!!");
+            _context->stopSimulation();
+            break;
+        case Click::PAUSE:
+            puts("Clicou no botão pause!!!");
+            _context->pauseSimulation();
+            break;
+        case Click::CHANGE_SPEED:
+            puts("Mudou speed!!!");
+            _context->setSimulationSpeed(_currentSpeedX);
+            break;
+        default:
+            break;
+    }
 }
 

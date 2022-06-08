@@ -6,10 +6,13 @@
 #include "../Editor.h"
 #include <implot.h>
 #include <implot_internal.h>
+#include "../Contexts/BackTestingContext.h"
+
 
 ProfitAndLossesView::ProfitAndLossesView(Context* context) : Widget(context) {
     _title                  = "Profit & Losses";
     _is_window              = true;
+    _context = dynamic_cast<BackTestingContext*>(context);
     clear();
 }
 
@@ -22,7 +25,7 @@ void ProfitAndLossesView::updateVisible(float dt) {
     static float ratios[] = {1};
 
     bool shouldLinkPlots;
-    if(getContext()->isSimulating())
+    if(_context->isSimulating())
         shouldLinkPlots = false;
     else
         shouldLinkPlots = false;
@@ -33,7 +36,7 @@ void ProfitAndLossesView::updateVisible(float dt) {
     int xFlags;
     int yFlags;
     bool shouldFitRange = true;
-    if(getContext()->isSimulating()) {
+    if(_context->isSimulating()) {
         xFlags = ImPlotAxisFlags_Time | ImPlotAxisFlags_AutoFit;
         yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
 //        shouldFitRange = true;

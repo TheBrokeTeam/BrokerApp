@@ -8,6 +8,8 @@
 #include "../Tickable.h"
 #include "../../Widgets/PlotItem/PlotItem.h"
 
+class BackTestingContext;
+
 class Strategy: public Tickable, public PlotItem {
 public:
     struct Position {
@@ -77,6 +79,7 @@ private:
     float _lineWidth = 1.0f;
     ClosePositionCallback _closePositionCallback{nullptr};
     ClosePositionCallback _openPositionCallback{nullptr};
+    BackTestingContext* _context{nullptr};
 
 };
 

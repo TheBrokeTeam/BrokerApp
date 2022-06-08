@@ -29,10 +29,6 @@ public:
     bool startSpinner = false;
     virtual void loadTicker() = 0;
     virtual void updateData(float dt);
-    virtual void startSimulation(Ticker* ticker){};
-    virtual void setSimulationSpeed(float speed){};
-    virtual bool isSimulating(){return false;};
-
     virtual void openUserDataStream() {};
 
     virtual void openOrder(const Order &order) {};

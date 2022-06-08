@@ -6,6 +6,7 @@
 #include "../Editor.h"
 #include <fmt/format.h>
 #include "iostream"
+#include "../Contexts/BackTestingContext.h"
 
 #define dataHist (*_ticker->getBarHistory())
 
@@ -14,6 +15,7 @@ CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
     _title                  = "Candle ChartView";
     _is_window              = false;
     _ticker = ticker;
+    _context = dynamic_cast<BackTestingContext*>(context);
 
     ImPlot::FormatDate(_t1,_t1_str,32,ImPlotDateFmt_DayMoYr,true);
     ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
@@ -32,13 +34,13 @@ std::vector<float> CandleChart::calculateRatios() {
 
     ratios.push_back(5);
 
-    for (int i = 0; i < getContext()->getSubplotIndicatorsCount(); i++) {
+    for (int i = 0; i < _context->getSubplotIndicatorsCount(); i++) {
         ratios.push_back(2);
     }
 
     ratios.push_back(3);
 
-    while (ratios.size() < getContext()->getSubplotIndicatorsCount() + _maxSubplots) {
+    while (ratios.size() < _context->getSubplotIndicatorsCount() + _maxSubplots) {
         ratios.push_back(0);
     }
 
@@ -47,7 +49,7 @@ std::vector<float> CandleChart::calculateRatios() {
 
 void CandleChart::render(float dt)
 {
-    if(!getContext()->getShouldRender()) return;
+    if(!_context->getShouldRender()) return;
     if(_ticker->getBarHistory()->size() <= 0) return;
 
 
@@ -92,7 +94,7 @@ void CandleChart::render(float dt)
 
         int flagsOHLC;
         flagsOHLC |= ImPlotFlags_NoMenus;
-//        if(getContext()->isSimulating())
+//        if(_context->isSimulating())
 //            flagsOHLC |= ImPlotFlags_NoInputs;
 
 
@@ -116,7 +118,7 @@ void CandleChart::render(float dt)
             }
 
 //            if simulating move the x axis
-            if(getContext()->isSimulating()) {
+            if(_context->isSimulating()) {
                  _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
                 double barsInTime = numberOfBarsToRender * _ticker->getSymbol()->getTimeIntervalInSeconds();
                 double currentTime = dataHist(0,BarDataType::TIME_S);
@@ -223,8 +225,8 @@ void CandleChart::render(float dt)
             }
 
             //plot candle indicators
-            getContext()->plotIndicators();
-            getContext()->plotStrategy();
+            _context->plotIndicators();
+            _context->plotStrategy();
 
             //allow candles plot area to be a DRAG AND DROP target ##
             if (ImPlot::BeginDragDropTargetPlot()) {
@@ -233,7 +235,7 @@ void CandleChart::render(float dt)
                     int i = *(int*)payload->Data;
 
                     puts("AGORA é a hora de plotar!!!");
-                    getContext()->loadIndicator(IndicatorsView::CandleIndicatorsTypes(i), true);
+                    _context->loadIndicator(IndicatorsView::CandleIndicatorsTypes(i), true);
                 }
                 ImPlot::EndDragDropTarget();
             }
@@ -242,7 +244,7 @@ void CandleChart::render(float dt)
         }
 
         //plot different views indicators
-        getContext()->plotSubplotIndicators();
+        _context->plotSubplotIndicators();
 
         if (ImPlot::BeginPlot("##Volume")) {
 

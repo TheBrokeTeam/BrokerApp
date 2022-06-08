@@ -7,12 +7,15 @@
 
 #include "Widget.h"
 
+class BackTestingContext;
+
 class BackTestToolbar : public Widget {
 public:
     enum class Click{
         PLAY,
         PAUSE,
-        STOP
+        STOP,
+        CHANGE_SPEED
     };
     typedef std::function<void(Click)> ClickCallback;
     explicit BackTestToolbar(Context* context);
@@ -26,12 +29,12 @@ public:
 
 private:
     bool _playing = false;
-    bool _showingSpeeds = false;
-
+    float _currentSpeedX = 1.0f;
     void addButton(const char* icon, float xPos, float yPos, float w, std::function<void()> callback);
     void ToolbarUI();
     ClickCallback _clickCallback{nullptr};
     void onClick(Click source);
+    BackTestingContext* _context{nullptr};
 
 };
 

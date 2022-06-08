@@ -116,12 +116,12 @@ void LiveCandleChart::render(float dt)
             }
 
 //            if simulating move the x axis
-            if(getContext()->isSimulating()) {
-                _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
-                double barsInTime = numberOfBarsToRender * _ticker->getSymbol()->getTimeIntervalInSeconds();
-                double currentTime = dataHist(0,BarDataType::TIME_S);
-                ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(currentTime - barsInTime, currentTime);
-            }
+//            if(getContext()->isSimulating()) {
+//                _ticker->getBarHistory()->size() > _ticker->getMaxBarsToRender() ? _ticker->getMaxBarsToRender() : _ticker->getBarHistory()->size();
+//                double barsInTime = numberOfBarsToRender * _ticker->getSymbol()->getTimeIntervalInSeconds();
+//                double currentTime = dataHist(0,BarDataType::TIME_S);
+//                ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(currentTime - barsInTime, currentTime);
+//            }
 
             ImDrawList* drawList =  ImPlot::GetPlotDrawList();
 

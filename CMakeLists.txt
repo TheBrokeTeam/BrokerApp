@@ -62,8 +62,6 @@ add_executable(BrokerApp
         Classes/Data/ReversedData.h
         Classes/Tickables/Indicators/Bollinger.cpp
         Classes/Tickables/Indicators/Bollinger.h
-        Classes/Widgets/SimulationController.cpp
-        Classes/Widgets/SimulationController.h
         Classes/Tickables/Strategies/IndicatorFromChartExample.cpp
         Classes/Tickables/Strategies/IndicatorFromChartExample.h
         Classes/Widgets/ProfitAndLossesView.cpp

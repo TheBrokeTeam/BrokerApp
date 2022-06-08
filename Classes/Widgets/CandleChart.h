@@ -15,6 +15,7 @@
 #include "../Tickables/Indicators/Indicator.h"
 
 class ImPlotTime;
+class BackTestingContext;
 
 class CandleChart : public Widget{
 public:
@@ -37,6 +38,8 @@ private:
     int _lastIdxX = 0;
 
     float _positionerValue = 1.0f;
+    BackTestingContext* _context{nullptr};
+
 };
 
 
