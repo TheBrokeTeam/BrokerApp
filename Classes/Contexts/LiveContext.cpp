@@ -52,7 +52,7 @@ void LiveContext::initialize() {
     // Initialize the context
     _widgets.emplace_back(std::make_shared<MainMenuBar>(this));
     _widgets.emplace_back(std::make_shared<ChartView>(this));
-    _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
+//    _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<SocketStreamController>(this));
     _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
 

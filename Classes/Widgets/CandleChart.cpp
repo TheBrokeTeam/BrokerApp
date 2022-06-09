@@ -21,10 +21,17 @@ CandleChart::CandleChart(Context* context, Ticker* ticker) : Widget(context)
     ImPlot::FormatDate(_t2,_t2_str,32,ImPlotDateFmt_DayMoYr,true);
 
     _lastIdxX = _ticker->getBarHistory()->size() - 1;
+
+    _indicatorsView = std::make_unique<IndicatorsView>(context);
+    _indicatorsView->setTrashCallback([this](){
+        _context->removeAllIndicators();
+    });
 }
 
 void CandleChart::updateVisible(float dt) {
-    Widget::updateVisible(dt);
+//    Widget::updateVisible(dt);
+    _indicatorsView->updateVisible(dt);
+    ImGui::SameLine();
     render(dt);
 }
 
@@ -72,21 +79,22 @@ void CandleChart::render(float dt)
     ImGui::PushStyleColor(ImGuiCol_FrameBgActive,Editor::broker_light_grey);
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,Editor::broker_light_grey);
 
-    if(ImGui::SliderFloat("##Positioner",&_positionerValue,0.000f,1.000f,"%.3f")){
-
-        int posIdxMax = int((dataHist.size() - 1)*_positionerValue);
-        int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
-
-        movedMin = dataHist.getData(BarDataType::TIME_S)[posIdxMin];
-        movedMax= dataHist.getData(BarDataType::TIME_S)[posIdxMax];
-
-        forceChangeMax =  true;
-    }
-    else{
-        //update postioner
-        float posPercent = float(_lastIdxX+1)/dataHist.size();
-        _positionerValue = posPercent;
-    }
+    //Todo::put the slider below the chart or make other navigation
+//    if(ImGui::SliderFloat("##Positioner",&_positionerValue,0.000f,1.000f,"%.3f")){
+//
+//        int posIdxMax = int((dataHist.size() - 1)*_positionerValue);
+//        int posIdxMin = posIdxMax - _ticker->getMaxBarsToRender() < 0 ? 0 : posIdxMax - _ticker->getMaxBarsToRender();
+//
+//        movedMin = dataHist.getData(BarDataType::TIME_S)[posIdxMin];
+//        movedMax= dataHist.getData(BarDataType::TIME_S)[posIdxMax];
+//
+//        forceChangeMax =  true;
+//    }
+//    else{
+//        //update postioner
+//        float posPercent = float(_lastIdxX+1)/dataHist.size();
+//        _positionerValue = posPercent;
+//    }
 
     ImGui::PopStyleColor(5);
 

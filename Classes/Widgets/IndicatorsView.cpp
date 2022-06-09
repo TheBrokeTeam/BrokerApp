@@ -11,31 +11,43 @@
 IndicatorsView::IndicatorsView(Context* context) : Widget(context) {
 
     _title                  = "Indicators";
-    _is_window = true;
+    _is_window = false;
 
     for(int i = 0; i< _numberOfItems; i++)
         _dragAndDropItems.push_back(DragAndDropIndicatorItem(static_cast<CandleIndicatorsTypes>(i)));
+
 }
 
 void IndicatorsView::updateVisible(float dt) {
-    Widget::updateVisible(dt);
+//    Widget::updateVisible(dt);
     drawView();
 }
-void IndicatorsView::drawView() {
-    PushStyleColor(ImGuiCol_Button, Editor::broker_black);
-    PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_light_grey);
-    PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_yellow);
 
-    if(ImGui::BeginChild("INDICATORS_ITEMS", ImVec2(ImGui::GetWindowWidth(), 600))) {
+void IndicatorsView::drawView() {
+    float nodeWidth = 60;
+    float buttonWidth = 40;
+
+    ImGui::PushStyleColor(ImGuiCol_Button, Editor::broker_black);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Editor::broker_light_grey);
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, Editor::broker_yellow);
+
+     if(ImGui::BeginChild("INDICATORS_ITEMS", ImVec2(nodeWidth, 340))) {
+
+
+         //change font for small icons
+//         ImGuiIO &io = ImGui::GetIO();
+//         //icons at size 12
+//         ImFont* font = io.Fonts->Fonts[5];
+//         ImGui::PushFont(font);
 
         //add items to the view
-        for (int k = 0; k < _dragAndDropItems.size(); ++k) {
+         for (int k = 0; k < _dragAndDropItems.size(); ++k) {
 
             if (ImGui::BeginChild("##indicator item")) {
 
-                ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - 25 - 8);
+                ImGui::SetCursorPosX(nodeWidth / 2 - buttonWidth/2);
 
-                ImGui::Button(_dragAndDropItems[k].label.c_str(), ImVec2(50, 30));
+                ImGui::Button(_dragAndDropItems[k].label.c_str(), ImVec2(buttonWidth, 30));
 
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
                     ImGui::SetDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID, &k, sizeof(int));
@@ -59,7 +71,7 @@ void IndicatorsView::drawView() {
 
                     auto info = getContext()->getEditor()->getTexture(Editor::Icons::trash);
 
-                    ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2 - info.my_image_width);
+                    ImGui::SetCursorPosX(nodeWidth / 2 - info.my_image_width/2 - 4);
 
                     if (ImGui::ImageButton((void *) (intptr_t) info.my_image_texture,
                                            ImVec2(info.my_image_width, info.my_image_height))) {
@@ -76,9 +88,12 @@ void IndicatorsView::drawView() {
             }
         }
 
+//         ImGui::PopFont();
+
     }
 
     ImGui::EndChild();
+
 
     if (ImGui::BeginDragDropTarget()) {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(IndicatorsView::CANDLE_INDICATORS_DRAG_ID_REMOVING)) {
@@ -96,6 +111,9 @@ void IndicatorsView::drawView() {
         }
         ImGui::EndDragDropTarget();
     }
+
+    ImGui::PopStyleColor(3);
+
 }
 
 

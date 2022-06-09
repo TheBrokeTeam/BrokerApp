@@ -53,7 +53,6 @@ void BackTestingContext::initialize() {
     _widgets.emplace_back(std::make_shared<DownloaderView>(this));
     _widgets.emplace_back(std::make_shared<ChartView>(this));
     _widgets.emplace_back(std::make_shared<ProfitAndLossesView>(this));
-    _widgets.emplace_back(std::make_shared<IndicatorsView>(this));
     _widgets.emplace_back(std::make_shared<StrategyEditor>(_ticker.get(),this));
     _widgets.emplace_back(std::make_shared<StockList>(this));
     _widgets.emplace_back(std::make_shared<BackTestToolbar>(this));
@@ -64,10 +63,6 @@ void BackTestingContext::initialize() {
     getWidget<DownloaderView>()->SetVisible(false);
 
     _strategyEditor = getWidget<StrategyEditor>();
-
-    getWidget<IndicatorsView>()->setTrashCallback([this](){
-        removeAllIndicators();
-    });
 
     _strategyEditor->setPriority(2);
     _ticker->addTickable(_strategyEditor);

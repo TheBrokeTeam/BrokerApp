@@ -42,6 +42,7 @@ public:
 
     IndicatorsView(Context* context);
     void updateVisible(float dt) override;
+
     std::vector<DragAndDropIndicatorItem>& getIndicators();
     void onPushStyleVar() override;
     void setTrashCallback(TrashClickCallback callback);

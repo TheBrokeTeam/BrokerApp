@@ -12,7 +12,6 @@
 #include <rapidjson/document.h>
 #include "../Networking/Binance/SocketManager.h"
 
-
 class BackTestingContext : public Context {
 public:
     struct DownloadResponse {

@@ -39,6 +39,7 @@ private:
 
     float _positionerValue = 1.0f;
     BackTestingContext* _context{nullptr};
+    std::unique_ptr<IndicatorsView> _indicatorsView{nullptr};
 
 };
 
