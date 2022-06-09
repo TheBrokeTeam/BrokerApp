@@ -24,8 +24,8 @@ public:
     void onPushStyleVar() override;
 
     void setClickCallback(ClickCallback c);
-
     static float GetPadding() { return 2.0f; }
+
 
 private:
     bool _playing = false;
@@ -35,6 +35,7 @@ private:
     ClickCallback _clickCallback{nullptr};
     void onClick(Click source);
     BackTestingContext* _context{nullptr};
+
 
 };
 

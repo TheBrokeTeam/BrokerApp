@@ -76,7 +76,7 @@ void BackTestToolbar::ToolbarUI()
         for (int i = 0; i < IM_ARRAYSIZE(items); i++)
             if (ImGui::Selectable(items[i])) {
                 item_current_idx = i;
-                _currentSpeedX = i + 1;
+                _currentSpeedX = i;
                 onClick(Click::CHANGE_SPEED);
             }
         ImGui::EndPopup();
@@ -103,16 +103,28 @@ void BackTestToolbar::ToolbarUI()
             std::cout << "Click Play" << std::endl;
             onClick(Click::PLAY);
         }
-        _playing = !_playing;
     });
+
+    _playing = _context->isSimulating();
+
     //--------
 
     //PAUSE
+    bool shouldPopPauseColor = false;
+    if(_context->isSimulationPaused()){
+        ImGui::PushStyleColor(ImGuiCol_Button,Editor::broker_light_grey);
+        shouldPopPauseColor = true;
+    }
+
     posX = ImGui::GetWindowWidth() - BrokerToolBarButtonSide*2 - buttonPadding*2;
     addButton(ICON_FA_PAUSE,posX,posY,widthBtn,[&](){
         std::cout << "Click Pause" << std::endl;
         onClick(Click::PAUSE);
     });
+
+    if(shouldPopPauseColor){
+        ImGui::PopStyleColor();
+    }
     //--------
 
 

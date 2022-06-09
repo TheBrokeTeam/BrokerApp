@@ -52,6 +52,7 @@ public:
     void plotStrategy() override;
 
     void showTabBars(bool show) override;
+    bool isSimulationPaused();
 
 private:
 
@@ -75,12 +76,15 @@ private:
     //simulating
     int _countTicks = 0;
     bool _simulating = false;
+    bool _simulatingPaused = false;
+
     int _currentIndex = 0;
     float _timeToTick = 0.5f; //sec
     float _currentTime = 0;
     double _currentTimeStamp = 0;
     float _speed = 1.0f;
-    float _speedLimit = 1000.0f;
+    float _minSpeed = 1.0f;
+    float _speedIncreaseFactor = 100.0f;
 
     //joke time
     bool _shouldShowLuizPopup = false;

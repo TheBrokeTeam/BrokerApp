@@ -168,7 +168,7 @@ void BackTestingContext::loadTicker() {
 
 void BackTestingContext::updateData(float dt) {
 
-    if(!_simulating) return;
+    if(!_simulating || _simulatingPaused) return;
 
     _currentTime += dt*_speed;
     if(_currentTime >= _timeToTick)
@@ -213,11 +213,11 @@ void BackTestingContext::stopSimulation() {
 }
 
 void BackTestingContext::pauseSimulation() {
-    _simulating = !_simulating;
+    _simulatingPaused = !_simulatingPaused;
 }
 
 void BackTestingContext::setSimulationSpeed(float speed) {
-    _speed = speed*_speedLimit;
+    _speed = _minSpeed + speed*_speedIncreaseFactor;
 }
 
 std::shared_ptr<Indicator> BackTestingContext::loadIndicator(IndicatorsView::CandleIndicatorsTypes type, bool shouldCreateNode) {
@@ -590,5 +590,9 @@ Ticker *BackTestingContext::fetchDataSymbol(Symbol symbol) {
     chart->addChart(std::make_shared<CandleChart>(this,_ticker.get()));
 
     return _ticker.get();
+}
+
+bool BackTestingContext::isSimulationPaused() {
+    return _simulatingPaused;
 }
 
