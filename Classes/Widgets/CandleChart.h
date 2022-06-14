@@ -13,6 +13,7 @@
 
 #include "IndicatorsView.h"
 #include "../Tickables/Indicators/Indicator.h"
+#include "SliderPosition.h"
 
 class ImPlotTime;
 class BackTestingContext;
@@ -21,6 +22,14 @@ class CandleChart : public Widget{
 public:
     CandleChart(Context* context, Ticker* ticker);
     void updateVisible(float dt) override;
+
+    SliderPosition* getSlider(){
+        return _slider.get();
+    }
+
+    IndicatorsView* getIndicatorsView(){
+        return _indicatorsView.get();
+    }
 
 protected:
 private:
@@ -40,6 +49,9 @@ private:
     float _positionerValue = 1.0f;
     BackTestingContext* _context{nullptr};
     std::unique_ptr<IndicatorsView> _indicatorsView{nullptr};
+    std::unique_ptr<SliderPosition> _slider{nullptr};
+    bool _forceChangeMax = false;
+    double _movedMin, _movedMax = 0;
 
 };
 
