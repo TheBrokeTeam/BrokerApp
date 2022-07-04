@@ -22,6 +22,8 @@ void ProfitAndLossesView::updateVisible(float dt) {
     //now draw the pnl chart
     if(_closedPositions.empty()) return;
 
+    if(!_strategy.lock()) return;
+
     static float ratios[] = {1};
 
     bool shouldLinkPlots;
@@ -30,67 +32,74 @@ void ProfitAndLossesView::updateVisible(float dt) {
     else
         shouldLinkPlots = false;
 
-    if(!shouldLinkPlots)
-        ImPlot::BeginSubplots("##NoLinkSubPlot",1,1,ImVec2(-1,-1),ImPlotSubplotFlags_None,ratios);
+    if(!shouldLinkPlots) {
+        if (ImPlot::BeginSubplots("##NoLinkSubPlot", 1, 1, ImVec2(-1, -1), ImPlotSubplotFlags_None, ratios)) {
 
-    int xFlags;
-    int yFlags;
-    bool shouldFitRange = true;
-    if(_context->isSimulating()) {
-        xFlags = ImPlotAxisFlags_Time | ImPlotAxisFlags_AutoFit;
-        yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
+            int xFlags;
+            int yFlags;
+            bool shouldFitRange = true;
+            if (_context->isSimulating()) {
+                xFlags = ImPlotAxisFlags_Time | ImPlotAxisFlags_AutoFit;
+                yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
 //        shouldFitRange = true;
-    }
-    else{
-        xFlags = ImPlotAxisFlags_Time;
-        yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
+            } else {
+                xFlags = ImPlotAxisFlags_Time;
+                yFlags = ImPlotAxisFlags_AutoFit | ImPlotAxisFlags_RangeFit | ImPlotAxisFlags_Opposite;
 //        shouldFitRange = false;
-    }
+            }
 
-    if (ImPlot::BeginPlot("##PnL",ImVec2(-1,0),ImPlotFlags_NoInputs)) {
-        ImPlot::SetupAxes(0, 0, xFlags, yFlags);
-        ImPlot::SetupAxisLimits(ImAxis_X1, _strategy.lock()->getTime().front(), _strategy.lock()->getTime().back());
-        ImPlot::SetupAxisLimits(ImAxis_Y1, _strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
+            if (ImPlot::BeginPlot("##PnL", ImVec2(-1, 0), ImPlotFlags_NoInputs)) {
+                ImPlot::SetupAxes(0, 0, xFlags, yFlags);
+                ImPlot::SetupAxisLimits(ImAxis_X1, _strategy.lock()->getTime().front(),
+                                        _strategy.lock()->getTime().back());
+                ImPlot::SetupAxisLimits(ImAxis_Y1, _strategy.lock()->drawDownMax, _strategy.lock()->profitMax);
 
-        ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
+                ImPlot::SetupAxisFormat(ImAxis_Y1, "$%.2f");
 
-        //Fit the data manually with some offset
-        if(shouldFitRange) {
-            double tenBars = 10 * 60 * _strategy.lock()->getTicker()->getSymbol()->getTimeIntervalInMinutes();
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy.lock()->getTime().front() - tenBars,
-                                                               _strategy.lock()->getTime().back() + tenBars);
-            ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy.lock()->drawDownMax*1.2, _strategy.lock()->profitMax*1.2);
+                //Fit the data manually with some offset
+                if (shouldFitRange) {
+                    double tenBars = 10 * 60 * _strategy.lock()->getTicker()->getSymbol()->getTimeIntervalInMinutes();
+                    ImPlot::GetCurrentPlot()->Axes[ImAxis_X1].SetRange(_strategy.lock()->getTime().front() - tenBars,
+                                                                       _strategy.lock()->getTime().back() + tenBars);
+                    ImPlot::GetCurrentPlot()->Axes[ImAxis_Y1].SetRange(_strategy.lock()->drawDownMax * 1.2,
+                                                                       _strategy.lock()->profitMax * 1.2);
+                }
+
+                if (!shouldLinkPlots)
+                    ImPlot::BeginItem("##PnL");
+
+                //now plot the data
+                ImPlot::SetNextLineStyle(Editor::broker_pnl_profit, 2.0);
+                ImPlot::PlotLine("##profitline", _plotTime.data(), _plotProfit.data(), _plotTime.size());
+                ImPlot::SetNextFillStyle(Editor::broker_pnl_profit, 0.35);
+                ImPlot::PlotShaded("profit", _plotTime.data(), _plotProfit.data(), _plotTime.size(), _baseLine);
+                ImPlot::SetNextLineStyle(Editor::broker_pnl_loss, 2.0);
+                ImPlot::PlotLine("##profitline", _plotTime.data(), _plotLosses.data(), _plotTime.size());
+                ImPlot::SetNextFillStyle(Editor::broker_pnl_loss, 0.35);
+                ImPlot::PlotShaded("losses", _plotTime.data(), _plotLosses.data(), _plotTime.size(), _baseLine);
+
+
+                //plot ticker range over plot
+                auto drawList = ImPlot::GetPlotDrawList();
+                auto colorSquare = ImGui::GetColorU32(
+                        ImVec4(Editor::broker_yellow_active.x, Editor::broker_yellow_active.y,
+                               Editor::broker_yellow_active.z, 0.2f));
+                ImVec2 minPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().startTime,
+                                                       _strategy.lock()->drawDownMax * 1.2);
+                ImVec2 maxPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().endTime,
+                                                       _strategy.lock()->profitMax * 1.2);
+                drawList->AddRectFilled(minPoint, maxPoint, colorSquare);
+
+                if (!shouldLinkPlots)
+                    ImPlot::EndItem();
+
+                ImPlot::EndPlot();
+            }
+
+            if (!shouldLinkPlots)
+                ImPlot::EndSubplots();
         }
-
-        if(!shouldLinkPlots)
-            ImPlot::BeginItem("##PnL");
-
-        //now plot the data
-        ImPlot::SetNextLineStyle(Editor::broker_pnl_profit,2.0);
-        ImPlot::PlotLine("##profitline", _plotTime.data(), _plotProfit.data(), _plotTime.size());
-        ImPlot::SetNextFillStyle(Editor::broker_pnl_profit, 0.35);
-        ImPlot::PlotShaded("profit", _plotTime.data(), _plotProfit.data(), _plotTime.size(), _baseLine);
-        ImPlot::SetNextLineStyle(Editor::broker_pnl_loss,2.0);
-        ImPlot::PlotLine("##profitline", _plotTime.data(), _plotLosses.data(), _plotTime.size());
-        ImPlot::SetNextFillStyle(Editor::broker_pnl_loss,0.35);
-        ImPlot::PlotShaded("losses", _plotTime.data(), _plotLosses.data(), _plotTime.size(), _baseLine);
-
-
-        //plot ticker range over plot
-        auto drawList = ImPlot::GetPlotDrawList();
-        auto colorSquare = ImGui::GetColorU32(ImVec4(Editor::broker_yellow_active.x,Editor::broker_yellow_active.y,Editor::broker_yellow_active.z,0.2f));
-        ImVec2 minPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().startTime,_strategy.lock()->drawDownMax*1.2);
-        ImVec2 maxPoint = ImPlot::PlotToPixels(_strategy.lock()->getTicker()->getRenderRange().endTime,_strategy.lock()->profitMax*1.2);
-        drawList->AddRectFilled(minPoint,maxPoint,colorSquare);
-
-        if(!shouldLinkPlots)
-            ImPlot::EndItem();
-
-        ImPlot::EndPlot();
     }
-
-    if(!shouldLinkPlots)
-        ImPlot::EndSubplots();
 
 }
 
