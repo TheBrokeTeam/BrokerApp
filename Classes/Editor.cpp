@@ -48,11 +48,20 @@ void Editor::start() {
 
     io.AddInputCharacter(GLFW_KEY_DELETE);
 
-    auto& style = ImGui::GetStyle();
+    ImVec4 *colors = ImGui::GetStyle().Colors;
+    colors[ImGuiCol_TitleBg] = Editor::broker_dark_grey;
+    colors[ImGuiCol_TitleBgActive] = Editor::broker_dark_grey;
+    colors[ImGuiCol_TabHovered] = Editor::broker_very_light_grey;
+    colors[ImGuiCol_TabUnfocused] = Editor::broker_light_grey;
+    colors[ImGuiCol_TabUnfocusedActive] = Editor::broker_light_grey;
+    colors[ImGuiCol_TabActive] = Editor::broker_very_light_grey;
+    colors[ImGuiCol_Tab] = Editor::broker_light_grey;
 
-    style.Colors[ImGuiCol_Separator] = Editor::broker_black;
-    style.Colors[ImGuiCol_SeparatorHovered] = Editor::broker_yellow;
-    style.Colors[ImGuiCol_SeparatorActive] = Editor::broker_yellow;
+
+
+    colors[ImGuiCol_Separator] = Editor::broker_dark_grey;
+    colors[ImGuiCol_SeparatorHovered] = Editor::broker_yellow;
+    colors[ImGuiCol_SeparatorActive] = Editor::broker_yellow;
 
     //TODO:: make a way to change the layout configuration at run time
     ImGui::LoadIniSettingsFromDisk("ui_num_1");
