@@ -25,8 +25,6 @@ public:
 
     typedef std::function<void(const Position& position)> ClosePositionCallback;
 
-
-
     Strategy(Ticker* ticker);
     virtual ~Strategy();
     void onClose(BarHistory* barHistory) override;

@@ -21,6 +21,7 @@ enum class NodeType
     BAR_SEQ_UP,
     TREND,
     TRADE,
+    SOURCE,
     VALUE
 };
 

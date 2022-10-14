@@ -103,9 +103,9 @@ void LiveContext::initialize() {
     strategyPtr->setPriority(3);
     _ticker->addTickable(strategyPtr);
 
-    getWidget<IndicatorsView>()->setTrashCallback([this](){
-        removeAllIndicators();
-    });
+//    getWidget<IndicatorsView>()->setTrashCallback([this](){
+//        removeAllIndicators();
+//    });
 }
 
 void LiveContext::updateData(float dt) {

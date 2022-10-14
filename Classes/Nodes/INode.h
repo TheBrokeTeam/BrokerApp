@@ -78,6 +78,9 @@ protected:
     void setNodeName(const std::string& name);
     int _id;
     UiNodeType _type;
+    StrategyEditor* getNodeEditor(){
+        return _nodeEditor;
+    }
 
 private:
     std::string _name = "Node name";

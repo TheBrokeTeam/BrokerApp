@@ -90,15 +90,6 @@ void NodesList::drawView() {
     ImGui::EndChild();
 
     ImGui::PopStyleColor(3);
-
-    if (ImGui::BeginDragDropTarget()) {
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(NodesList::NODES_DRAG_ID_REMOVING)) {
-            std::shared_ptr<INode> node = *(std::shared_ptr<INode>*) payload->Data;
-            //TODO::call remove node on context
-            puts("remove node here!");
-        }
-        ImGui::EndDragDropTarget();
-    }
 }
 
 std::vector<NodesList::DragAndDropNodeItem> &NodesList::getNodes() {
